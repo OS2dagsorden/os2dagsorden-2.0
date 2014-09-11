@@ -1,0 +1,4 @@
+name = OS2Dagsorden Content Modify
+description = A methot that allows to manually add/edit the content like user positions, committee etc.
+core = 7.x
+package = OS2Dagsorden

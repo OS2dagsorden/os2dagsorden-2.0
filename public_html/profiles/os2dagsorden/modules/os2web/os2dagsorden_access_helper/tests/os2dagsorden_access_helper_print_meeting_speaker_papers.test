@@ -1,0 +1,71 @@
+<?php
+
+class Os2dagsordenAccessHelper_PrintMeetingSpeakerPapers_WebTestCase extends Os2dagsordenAccessHelperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Os2dagsorden_access_helper_print_meeting_speaker_papers',
+      'description' => 'Test of Os2dagsorden_access_helper_print_meeting_speaker_papers function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+  
+  /**
+  * Text of meeting speaker papers is present on the page
+  */
+  public function test_os2dagsorden_access_helper_print_meeting_speaker_papers1(){
+    $this->drupalGet('print/meeting/' . $this->meeting->nid . '/speaker-papers/print');
+    $this->assertResponse('200');
+    
+    $this->assertText($this->meeting->title);
+    $this->assertText($this->bp1->title);
+    $this->assertText($this->sp1->title);
+    $this->assertText($this->sp1->body['und'][0]['value']);
+    $this->assertText($this->bp2->title);
+    $this->assertText($this->sp2->title);
+    $this->assertText($this->sp2->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text of meeting speaker papert (different user) IS NOT present on the page
+  */
+  public function test_os2dagsorden_access_helper_print_meeting_speaker_papers2(){
+    $this->drupalGet('print/meeting/' . $this->meeting->nid . '/speaker-papers/print');
+    $this->assertResponse('200');
+    
+    $this->assertNoText($this->sp3->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text of meeting speaker papert (different user) IS NOT present on the page
+  */
+  public function test_os2dagsorden_access_helper_print_meeting_speaker_papers3(){
+    $this->os2dagsordenLogin($this->user2);
+    
+    $this->drupalGet('print/meeting/' . $this->meeting->nid . '/speaker-papers/print');
+    $this->assertResponse('200');
+    
+    $this->assertNoText($this->sp1->body['und'][0]['value']);
+    $this->assertNoText($this->sp2->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+    
+  /**
+  * Text of meeting speakers IS NOT present for unauthorised user
+  */
+  public function test_os2dagsorden_access_helper_print_meeting_speaker_papers4(){
+    $this->os2dagsordenLogout();
+    $this->drupalGet('print/meeting/' . $this->meeting->nid . '/speaker-papers/print');
+    $this->assertResponse('403');
+    
+    $this->assertNoText($this->sp1->body['und'][0]['value']);
+    $this->assertNoText($this->sp2->body['und'][0]['value']);
+    $this->assertNoText($this->sp3->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+}

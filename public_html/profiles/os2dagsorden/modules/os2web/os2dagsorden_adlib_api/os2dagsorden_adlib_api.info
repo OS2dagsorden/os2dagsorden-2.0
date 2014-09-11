@@ -1,0 +1,15 @@
+; $Id$
+; 
+; @author Jesper Mathiassen <jm@bellcom.dk>
+; @copyright Bellcom Open Source aps.
+
+; Module name (human readable)
+name = OS2Dagsorden AdLib API Module
+; Module description
+description = Implements calls to allow access to the AdLib webservice
+
+package = OS2Dagsorden
+core = 7.x
+
+; Additional infomation
+version = "7.x-0.1"

@@ -1,0 +1,35 @@
+html body{
+  min-width: 0px !important;
+}
+
+#region-page-top, #section-header, #breadcrumb, #region-sidebar-first, #region-sidebar-second, #zone-user-wrapper, #zone-menu-wrapper, #section-footer, #zone-postscript-wrapper{
+  display: none;
+}
+
+.container-12{
+  background: #FFF !important;
+  width: 300px !important;
+  margin-left: 0px !important;
+}
+
+#cccwr {
+  display: none !important;
+}
+
+textarea {
+  width: 400px;
+  height: 100px;
+}
+
+input[type="submit"] {
+  float: right;
+}
+
+input[type="text"] {
+  width: 250px;
+}
+
+.vegas-overlay {
+  background: #FFF !important;
+  opacity: 1 !important;
+}

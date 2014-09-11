@@ -1,0 +1,4 @@
+name = OS2Dagsorden Print Meetings
+description = A module that nicely generates the HTML page for printing the meetings
+core = 7.x
+package = OS2Dagsorden

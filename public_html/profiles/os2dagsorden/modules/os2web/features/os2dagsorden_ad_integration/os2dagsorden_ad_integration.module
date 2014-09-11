@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Web AD Integration feature.
+ */
+
+include_once('os2dagsorden_ad_integration.features.inc');

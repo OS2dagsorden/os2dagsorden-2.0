@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Dagsorden Automated Logout Configuration feature.
+ */
+
+include_once 'os2dagsorden_automated_logout_configuration.features.inc';

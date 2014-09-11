@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * This module implements Acadre ESDH backend for use in os2web
+ */
+
+define('ACADRE_MM_IMPORT_DIR', 'public://acadre');
+define('ACADRE_MM_DEFAULT_APPROVED', '62,59,64,53,54,56,57,63,58,51,55,61,68,69,42');
+define('ACADRE_MM_DEFAULT_SEND_NOTIFICATION_OF', '28,44,71,72');
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ *
+ * Register as provider of esdh plugins
+ */
+function acadre_esdh_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'os2web_esdh_provider') {
+    return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Add configuration to the settings form.
+ */
+function acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state) {
+//   // MM configuration.
+  $form['meetings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Referat import',
+    '#description' => 'Indstillinger der vedrører importen af Acadre referater og dagsordener.',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['meetings']['os2web_meetings_path'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Sti til acadre publish folder.',
+    '#description' => 'Dette er stien hvor Acadre publisere .XML filer til.',
+    '#default_value' => variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+  );
+  $form['meetings']['os2web_meetings_approved_committee'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Godkendte Udvalg',
+    '#maxlength' => 200,
+    '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
+    '#default_value' => variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED),
+  );
+  $form['meetings']['os2dagsorden_send_notification_committee'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Send notification of committees',
+    '#maxlength' => 200,
+    '#description' => 'Comma-separated list of committees ID changing status of which should send an email notification.',
+    '#default_value' => variable_get('os2dagsorden_send_notification_committee', ACADRE_MM_DEFAULT_SEND_NOTIFICATION_OF),
+  );
+
+  // CM Configuration.
+//   $form['os2web_pws_config_group'] = array(
+//     '#type' => 'fieldset',
+//     '#title' => t('PWS Endpoint configuration'),
+//   );
+//   $form['os2web_pws_config_group']['os2web_pws_url'] = array(
+//     '#type' => 'textfield',
+//     '#default_value' => variable_get('os2web_pws_url'),
+//     '#title' => t('PWS URL for V4'),
+//     '#description' => t('URL to the PWS webservice endpoint.'),
+//   );
+//   $form['os2web_pws_config_group']['os2web_pws_url_v6'] = array(
+//     '#type' => 'textfield',
+//     '#default_value' => variable_get('os2web_pws_url_v6'),
+//     '#title' => t('PWS URL for  V6'),
+//     '#description' => t('URL to the PWSv6 webservice endpoint.'),
+//   );
+//   $form['os2web_pws_config_group']['os2web_pws_url_search'] = array(
+//     '#type' => 'textfield',
+//     '#default_value' => variable_get('os2web_pws_url_search'),
+//     '#title' => t('PWS URL for Search service'),
+//     '#description' => t('URL to the webservice endpoint that runs the search service.'),
+//   );
+//   $form['os2web_pws_config_group']['os2web_pws_user'] = array(
+//     '#type' => 'textfield',
+//     '#default_value' => variable_get('os2web_pws_user'),
+//     '#title' => t('PWS login user'),
+//     '#description' => t('PWS HTTP authentification user.'),
+//   );
+//   $form['os2web_pws_config_group']['os2web_pws_password'] = array(
+//     '#type' => 'textfield',
+//     '#default_value' => variable_get('os2web_pws_password'),
+//     '#title' => t('PWS password'),
+//     '#description' => t('PWS HTTP authentification password.'),
+//   );
+  $form['os2web_pws_adlib_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Adlib Endpoint configuration'),
+  );
+  $form['os2web_pws_adlib_group']['os2web_adlib_url'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('os2web_adlib_url', 'http://706CAR01/ExponentWSA/ExponentWSA.asmx?wsdl'),
+    '#title' => t('URL for Adlib service endpoint'),
+    '#description' => t('URL to the webservice endpoint that runs the Adlib service.'),
+  );
+}

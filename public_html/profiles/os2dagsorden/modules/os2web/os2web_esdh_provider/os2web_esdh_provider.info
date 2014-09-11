@@ -1,0 +1,35 @@
+name = OS2Web ESDH Provider service
+description = Implements provider abstraction for ESDH services.
+
+package = OS2Web - ESDH
+core = 7.x
+
+dependencies[]=ctools
+
+;Added by OS2Web 2012-10-15
+project=OS2Web
+version=7.x-1.5
+timestamp=1350300162
+
+;Added by OS2Web 2012-10-23
+project=OS2Web
+version=7.x-1.6
+timestamp=1350990827
+
+
+;Added by OS2Web 2012-11-05
+project=OS2Web
+version=7.x-1.7
+timestamp=1352123374
+
+;Added by OS2Web 2012-11-13
+project=OS2Web
+version=7.x-1.8
+timestamp=1352802164
+
+
+;Added by OS2Web 2012-11-19
+project=OS2Web
+version=7.x-1.10
+timestamp=1353326099
+

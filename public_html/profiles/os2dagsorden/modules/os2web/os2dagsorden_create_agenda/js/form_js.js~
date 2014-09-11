@@ -1,0 +1,17 @@
+(function ($) {
+  Drupal.behaviors.confirm = {
+    attach: function(context, settings) {
+      var events =  $('.bp_delete').clone(true).data('events');// Get the jQuery events.
+      $('.bp_delete').unbind('mousedown'); // Remove the click events.
+      $('.bp_delete').mousedown(function () {
+	if (confirm('Are you sure you want to delete that?')) {
+	  $.each(events.mousedown, function() {
+	    this.handler(); // Invoke the mousedown handlers that was removed.
+	  });
+	}
+	// Prevent default action.
+	return false;
+      });
+    }
+  }
+})(jQuery);

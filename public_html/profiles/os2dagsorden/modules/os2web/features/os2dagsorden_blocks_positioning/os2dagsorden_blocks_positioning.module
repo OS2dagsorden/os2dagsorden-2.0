@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the os2web_blocks_positioning feature.
+ */
+
+include_once 'os2dagsorden_blocks_positioning.features.inc';

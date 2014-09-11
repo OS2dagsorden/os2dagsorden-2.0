@@ -1,0 +1,140 @@
+<?php
+
+class Os2dagsordenAccessHelperTest extends TaxonomyWebTestCase {
+  protected $meeting;
+  protected $bp1;
+  protected $bp2;
+  protected $bp3_closed;
+  protected $sp1;
+  protected $sp2;
+  protected $sp3;
+  protected $bpa;
+  protected $user1;
+  protected $user2;
+  protected $committee1;
+  protected $committee1_member;
+  protected $committee1_follows;
+  protected $committee1_follows_plus;
+  protected $committee2;
+    
+  public function setUp() {
+    parent::setUp(array('os2dagsorden_content_types', 'os2dagsorden_access_helper', 'print'));
+    
+    //creating committee
+    $committee_vid = taxonomy_vocabulary_machine_name_load('committee');
+    $this->committee1 = $this->createTerm($committee_vid);
+    $this->committee2 = $this->createTerm($committee_vid);
+    
+    //committee member
+    $this->committee1_member = $this->drupalCreateUser(array('access content'));
+    $this->committee1_member->field_user_committee['und'][]['tid'] = $this->committee1->tid;
+    $this->committee1_member = user_save($this->committee1_member);
+    
+    //committee follower
+    $this->committee1_follows = $this->drupalCreateUser(array('access content'));
+    $this->committee1_follows->field_follows_committee['und'][]['tid'] = $this->committee1->tid;
+    $this->committee1_follows = user_save($this->committee1_follows);
+    
+    //committee follower plus
+    $this->committee1_follows_plus = $this->drupalCreateUser(array('access content'));
+    $this->committee1_follows_plus->field_follows_committee_plus['und'][]['tid'] = $this->committee1->tid;
+    $this->committee1_follows_plus = user_save($this->committee1_follows_plus);
+    
+    //simple users, no committee preferences
+    $this->user1 = $this->drupalCreateUser(array('access content', 'access print'));
+    $this->user2 = $this->drupalCreateUser(array('access content', 'access print'));
+    
+    $this->os2dagsordenLogin($this->user1);
+    
+    //Bullet point 1
+    $bp_info = array();
+    $bp_info['type'] = 'bullet_point';
+    $bp_info['title'] = $this->randomName(32);
+    $this->bp1 = $this->drupalCreateNode($bp_info);
+    
+    //Speaker paper 1 [user1, bp1]
+    $sp_info = array();
+    $sp_info['type'] = 'speaker_paper';
+    $sp_info['body']['und'][0]['value'] = $this->randomName(128);
+    $sp_info['uid'] = $this->user1->uid;
+    $sp_info['field_ref_bullet_point']['und'][0]['target_id'] = $this->bp1->nid;
+    $sp_info['title'] = $this->randomName(32);
+    $this->sp1 = $this->drupalCreateNode($sp_info);
+    
+    //Bullet point 2
+    $bp_info = array();
+    $bp_info['type'] = 'bullet_point';
+    $bp_info['title'] = $this->randomName(32);
+    $this->bp2 = $this->drupalCreateNode($bp_info);
+    
+    //Speaker paper 2 [user1, bp2]
+    $sp_info = array();
+    $sp_info['type'] = 'speaker_paper';
+    $sp_info['body']['und'][0]['value'] = $this->randomName(128);
+    $sp_info['uid'] = $this->user1->uid;
+    $sp_info['field_ref_bullet_point']['und'][0]['target_id'] = $this->bp2->nid;
+    $sp_info['title'] = $this->randomName(32);
+    $this->sp2 = $this->drupalCreateNode($sp_info);
+    
+    //Speaker paper 3 [user2, bp1]
+    $sp_info = array();
+    $sp_info['type'] = 'speaker_paper';
+    $sp_info['body']['und'][0]['value'] = $this->randomName(128);
+    $sp_info['uid'] = $this->user2->uid;
+    $sp_info['field_ref_bullet_point']['und'][0]['target_id'] = $this->bp1->nid;
+    $sp_info['title'] = $this->randomName(32);
+    $this->sp3 = $this->drupalCreateNode($sp_info);
+    
+    //Bullet point 3, closed
+    $bp_info = array();
+    $bp_info['type'] = 'bullet_point';
+    $bp_info['title'] = $this->randomName(32);
+    $bp_info['field_bul_point_closed']['und'][0]['value'] = 1;
+    $this->bp3_closed = $this->drupalCreateNode($bp_info);
+    
+    //Meeting 1
+    $meeting_info = array();
+    $meeting_info['type'] = 'meeting';
+    $meeting_info['field_ref_bullet_points']['und'][]['target_id'] = $this->bp1->nid;
+    $meeting_info['field_ref_bullet_points']['und'][]['target_id'] = $this->bp2->nid;
+    $meeting_info['field_ref_bullet_points']['und'][]['target_id'] = $this->bp3_closed->nid;
+    $meeting_info['field_committee']['und'][0]['tid'] = $this->committee1->tid;
+    $meeting_info['title'] = $this->randomName(32);
+    $this->meeting = $this->drupalCreateNode($meeting_info);
+    
+    //Bullet point attachment 1
+    $bpa_info = array();
+    $bpa_info['type'] = 'bullet_point_attachment';
+    $bpa_info['title'] = $this->randomName(32);
+    $this->bpa = $this->drupalCreateNode($bpa_info);
+  }
+  
+  /**
+  * Calls drupalLogin function AND sets the global user as well.
+  */
+  function os2dagsordenLogin($usr){
+    $this->os2dagsordenLogout();
+    $this->drupalLogin($usr);
+    global $user;
+    $user = $usr;
+  }
+  
+  /**
+  * Calls drupalLogout function AND sets the global user to null.
+  */
+  function os2dagsordenLogout(){
+    $this->drupalLogout();
+    global $user;
+    $user = null;
+    unset($GLOBALS['full_user']);
+  }
+  
+  /**
+  * Fixes the environment, as it was before test function call. Serves to make any test function atomic and independent.
+  */
+  function fixSetUp(){
+    if ($this->loggedInUser !== $this->user1){
+      $this->os2dagsordenLogin($this->user1);
+    }
+  }
+}

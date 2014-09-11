@@ -1,0 +1,4 @@
+name = OS2web audit log
+description = Handles logging of sensitive information
+package = OS2Web
+core = 7.x

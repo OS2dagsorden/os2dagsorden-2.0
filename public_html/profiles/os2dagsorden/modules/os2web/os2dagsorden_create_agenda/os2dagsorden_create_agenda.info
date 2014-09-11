@@ -1,0 +1,7 @@
+name = OS2Dagsorden Manual Create Agenda
+description = This module will enable the manual creation of the meetings, agenda etc
+package = OS2Dagsorden
+core = 7.x
+
+dependencies[] = "os2dagsorden_content_types"
+dependencies[] = "jquery_colorpicker"

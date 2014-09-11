@@ -1,0 +1,13 @@
+name = Simplify
+description = "Simplifies the user interface by hiding particular fields."
+core = 7.x
+package = User interface
+configure = admin/config/user-interface/simplify
+
+
+; Information added by drupal.org packaging script on 2013-02-14
+version = "7.x-3.0"
+core = "7.x"
+project = "simplify"
+datestamp = "1360839033"
+

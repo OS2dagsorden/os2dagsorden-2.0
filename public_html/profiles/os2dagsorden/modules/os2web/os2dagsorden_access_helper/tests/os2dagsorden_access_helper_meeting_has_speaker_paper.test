@@ -1,0 +1,48 @@
+<?php
+
+class Os2dagsordenAccessHelper_MeetingHasSpeakerPaper_WebTestCase extends Os2dagsordenAccessHelperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'os2dagsorden_access_helper_meeting_has_speaker_paper',
+      'description' => 'Test of os2dagsorden_access_helper_meeting_has_speaker_paper function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+  
+  /**
+  * Assert meeting has speaker paper
+  */
+  public function test_os2dagsorden_access_helper_meeting_has_speaker_paper1(){
+    $this->assertTrue(os2dagsorden_access_helper_meeting_has_speaker_paper($this->meeting->nid));
+  }
+  
+  /**
+  * Assert empty meeting does not have speaker paper
+  */
+  public function test_os2dagsorden_access_helper_meeting_has_speaker_paper2(){
+    $meeting_info = array();
+    $meeting_info['type'] = 'meeting';
+    $meeting_info['title'] = $this->randomName(32);
+    $temp_meeting = $this->drupalCreateNode($meeting_info);
+    
+    $this->assertFalse(os2dagsorden_access_helper_meeting_has_speaker_paper($temp_meeting->nid));
+  }
+  
+  /**
+  * Assert empty meeting with bullet points does not have speaker paper
+  */
+  public function test_os2dagsorden_access_helper_meeting_has_speaker_paper3(){
+    $bp_info = array();
+    $bp_info['type'] = 'bullet_point';
+    $bp_info['title'] = $this->randomName(32);
+    $temp_bp = $this->drupalCreateNode($bp_info);
+    
+    $meeting_info = array();
+    $meeting_info['type'] = 'meeting';
+    $meeting_info['title'] = $this->randomName(32);
+    $meeting_info['field_ref_bullet_points']['und'][]['target_id'] = $temp_bp->nid;
+    $temp_meeting = $this->drupalCreateNode($meeting_info);
+    
+    $this->assertFalse(os2dagsorden_access_helper_meeting_has_speaker_paper($temp_meeting->nid));
+  }
+}

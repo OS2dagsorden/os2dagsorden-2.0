@@ -1,0 +1,60 @@
+<?php
+/**
+ * @file
+ * Implements install hooks
+ */
+
+/**
+ * Imlpements hook_install().
+ */
+function os2web_esdh_provider_install() {
+  // Placeholder.
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function os2web_esdh_provider_uninstall() {
+  // Placeholder.
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function os2web_esdh_provider_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+  $t = get_t();
+  $plugins = os2web_esdh_provider_ctools_plugin_type();
+  $status = $count = count(array_keys($plugins));
+  foreach (array_keys($plugins) as $plugin) {
+    if (os2web_esdh_provider_has_api($plugin)) {
+      $status--;
+    }
+  }
+  if ($status == 0) {
+    $value = $t('Fully supported.');
+    $severity = REQUIREMENT_OK;
+    $desc = $t('All ESDH plugins seems to be working as intended. <a href="admin/config/os2web/esdh_provider">Status</a>');
+  }
+  elseif ($status < $count) {
+    $value = $t('Partial support.');
+    $severity = REQUIREMENT_WARNING;
+    $desc = $t('Some ESDH plugins not activated! This can lead to not-working or misleading behavior on the site! <a href="admin/config/os2web/esdh_provider">Check status</a>');
+  }
+  else {
+    $value = $t('Not support.');
+    $severity = REQUIREMENT_ERROR;
+    $desc = $t('No ESDH plugins activated! This can lead to not-working or misleading behavior on the site! <a href="admin/config/os2web/esdh_provider">Check status</a>');
+  }
+
+
+  $requirements['os2web_esdh_provider_plugins'] = array(
+    'title' => $t('OS2Web ESDH integration.'),
+    'value' => $value,
+    'severity' => $severity,
+    'description' => $desc,
+  );
+  return $requirements;
+}

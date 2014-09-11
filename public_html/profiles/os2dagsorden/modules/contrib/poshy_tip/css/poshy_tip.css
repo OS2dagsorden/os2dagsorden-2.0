@@ -1,0 +1,36 @@
+.tip-darkgray table,
+.tip-darkgray tbody,
+.tip-darkgray tr,
+.tip-darkgray td {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-collapse: collapse !important;
+}
+.tip-skyblue table,
+.tip-skyblue tbody,
+.tip-skyblue tr,
+.tip-skyblue td {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-collapse: collapse !important;
+}
+.tip-violet table,
+.tip-violet tbody,
+.tip-violet tr,
+.tip-violet td {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-collapse: collapse !important;
+}
+.tip-yellow table,
+.tip-yellow tbody,
+.tip-yellow tr,
+.tip-yellow td {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-collapse: collapse !important;
+}

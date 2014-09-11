@@ -1,0 +1,165 @@
+<?php
+/**
+ * os2dagsorden_ical_meetings_export
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Ical_Meetings_Export
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @return array of links.
+ */
+function os2dagsorden_ical_meetings_export_menu() {
+    $items = array();
+
+    $items['meetings-export/day/%'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_ical_meetings_export_day_callback',
+        'access arguments' => array('access content'),
+        'page arguments' => array(2)
+    );
+    
+    $items['meetings-export/month/%'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_ical_meetings_export_month_callback',
+        'access arguments' => array('access content'),
+        'page arguments' => array(2)
+    );
+    
+    $items['meetings-export/from_month/%/to_month/%'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_ical_meetings_export_month_period_callback',
+        'access arguments' => array('access content'),
+        'page arguments' => array(2,4)
+    );
+
+    return $items;
+}
+
+/**
+ * Serves the meetings in iCal format for the month period.
+ *
+ * @param data $date the period from which the meetings should be returned. Date comes in yyyy-mm format
+ *
+ * @return the ical formated meetings list.
+ */
+function _os2dagsorden_ical_meetings_export_month_callback($date) {
+    $date = explode('-', $date);//extracting the month
+    if (count($date) != 2) {
+        drupal_access_denied();
+    }
+    $year = $date[0];
+    $month = $date[1];
+
+    $date_start = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-1 00:00:00'));
+    $date_end = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-31 23:59:59'));
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_date', 'value', $date_start, '>=')
+            ->fieldCondition('field_date', 'value', $date_end, '<=');
+
+    $result = $query->execute();
+    $nids = array_keys($result['node']);
+    $meetings = node_load_multiple($nids);
+    _os2dagsorden_ical_meetings_export_make_ical($meetings, $year . '-' . $month);
+}
+
+/**
+ * Serves the meetings in iCal format for the day period.
+ *
+ * @param data $date the period from which the meetings should be returned. Date come in yyyy-mm-dd format
+ *
+ * @return the ical formated meetings list.
+ */
+function _os2dagsorden_ical_meetings_export_day_callback($date) {
+    $date = explode('-', $date);//extracting the day
+    if (count($date) != 3) {
+        drupal_access_denied();
+    }
+    $year = $date[0];
+    $month = $date[1];
+    $day = $date[2];
+
+    $date_start = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-' . $day . ' 00:00:00'));
+    $date_end = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-' . $day . ' 23:59:59'));
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_date', 'value', $date_start, '>=')
+            ->fieldCondition('field_date', 'value', $date_end, '<=');
+
+    $result = $query->execute();
+    $nids = array_keys($result['node']);
+    $meetings = node_load_multiple($nids);
+    _os2dagsorden_ical_meetings_export_make_ical($meetings, $year . '-' . $month . '-' . $day);
+}
+
+/**
+ * Serves the meetings in iCal format for the several month period.
+ *
+ * @param data $date the period from which the meetings should be returned.
+ *
+ * @return the ical formated meetings list.
+ */
+function _os2dagsorden_ical_meetings_export_month_period_callback($from_month, $to_month) {
+    $date_start = date('Y-m-d H:i:s', strtotime(date("Y") . '-' . $from_month . '-1 00:00:00'));//current year
+    $date_end = date('Y-m-t H:i:s', strtotime(date("Y") . '-' . $to_month . '-31 23:59:59'));//current year
+    
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_date', 'value', $date_start, '>=')
+            ->fieldCondition('field_date', 'value', $date_end, '<=');
+
+    $result = $query->execute();
+    $nids = array_keys($result['node']);
+    $meetings = node_load_multiple($nids);
+    
+    $cal_name = ($from_month == 1) ? '1. halvårskalender' : '2. halvårskalender';
+      
+    _os2dagsorden_ical_meetings_export_make_ical($meetings, $cal_name);
+}
+
+/**
+ * Helper function, composes the ical format from the array of meeting objects.
+ *
+ * @param array  $meetings array of meetings objects.
+ * @param string $name     custom name of the calendar
+ *
+ * @return the .ics file with the composed string.
+ */
+function _os2dagsorden_ical_meetings_export_make_ical($meetings, $name = 'kalendar') {
+    global $base_url;
+    header('Content-type: application/calendar');
+    header('Content-Disposition: attachment; filename="calendar_export.ics"');
+
+    print 'BEGIN:VCALENDAR' . PHP_EOL .
+            'VERSION:2.0' . PHP_EOL .
+            'METHOD:PUBLISH' . PHP_EOL .
+            'X-WR-CALNAME;VALUE=TEXT:OS2dagsorden - ' . $name . PHP_EOL .
+            'PRODID:-//Drupal iCal API//EN' . PHP_EOL;
+
+    foreach ($meetings as $meeting) {
+        $start_date = date('Ymd\THis\Z', strtotime($meeting->field_date['und'][0]['value']));
+        $end_date = date('Ymd\THis\Z', strtotime($meeting->field_date['und'][0]['value2']));
+
+        print 'BEGIN:VEVENT' . PHP_EOL .
+                'UID:meeting_' . $meeting->field_meeting_id['und'][0]['value'] . PHP_EOL .
+                'SUMMARY:' . $meeting->title . PHP_EOL .
+                'DTSTAMP:' . $start_date . PHP_EOL .
+                'DTSTART:' . $start_date . PHP_EOL .
+                'DTEND:' . $end_date . PHP_EOL .
+                'URL;VALUE=URI:' . $base_url . '?q=meeting/' . $meeting->nid . PHP_EOL .
+                'DESCRIPTION:' . 'Udvalg: ' . taxonomy_term_load($meeting->field_committee['und'][0]['tid'])->name .
+                ' Lokation: ' . taxonomy_term_load($meeting->field_location['und'][0]['tid'])->name . PHP_EOL .
+                'END:VEVENT' . PHP_EOL;
+    }
+    print 'END:VCALENDAR' . PHP_EOL;
+}

@@ -1,0 +1,84 @@
+<?php
+
+class Os2dagsordenAccessHelper_PrintSpeakerPaper_WebTestCase extends Os2dagsordenAccessHepperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Os2dagsorden_access_helper_print_speaker_paper',
+      'description' => 'Test of os2dagsorden_access_helper_print function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+  
+  /**
+  * Text present on the page for authorized user
+  */
+  public function test_os2dagsorden_access_helper_print_speaker_paper1() {
+    $this->drupalGet('print/bullet-point/' . $this->bp1->nid . '/speaker-paper/' . $this->sp1->nid . '/print');
+    $this->assertResponse('200');
+  
+    $this->assertText($this->bp1->title);
+    $this->assertText($this->sp1->title);
+    $this->assertText($this->sp1->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text of other speaker paper (same user) is not present on the page for authorized user
+  */
+  public function test_os2dagsorden_access_helper_print_speaker_paper2() {
+    $this->drupalGet('print/bullet-point/' . $this->bp1->nid . '/speaker-paper/' . $this->sp1->nid . '/print');
+    $this->assertResponse('200');
+  
+    $this->assertText($this->bp1->title);
+    $this->assertNoText($this->sp2->title);
+    $this->assertNoText($this->sp2->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text of other speaker paper (different user) is not present on the page for authorized user
+  */
+  public function test_os2dagsorden_access_helper_print_speaker_paper3() {
+    $this->drupalGet('print/bullet-point/' . $this->bp1->nid . '/speaker-paper/' . $this->sp1->nid . '/print');
+    $this->assertResponse('200');
+  
+    $this->assertText($this->bp1->title);
+    $this->assertNoText($this->sp3->title);
+    $this->assertNoText($this->sp3->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text not present on the page without any user logged in
+  */
+  public function test_os2dagsorden_access_helper_print_speaker_paper4(){
+    $this->os2dagsordenLogout();
+    $this->drupalGet('print/bullet-point/' . $this->bp1->nid . '/speaker-paper/' . $this->sp1->nid . '/print');
+    $this->assertResponse('403');
+    
+    $this->assertNoText($this->bp1->title);
+    $this->assertNoText($this->sp1->title);
+    $this->assertNoText($this->sp1->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Text not present on the page with other user logged in
+  */
+  public function test_os2dagsorden_access_helper_print_speaker_paper5(){
+    $this->os2dagsordenLogin($this->user2);
+    
+    $this->drupalGet('print/bullet-point/' . $this->bp1->nid . '/speaker-paper/' . $this->sp1->nid . '/print');
+    $this->assertResponse('403');
+    
+    $this->assertNoText($this->bp1->title);
+    $this->assertNoText($this->sp1->title);
+    $this->assertNoText($this->sp1->body['und'][0]['value']);
+    
+    $this->fixSetUp();
+  }
+}

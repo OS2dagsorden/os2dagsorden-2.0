@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Controls access to the user profile edit page
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function edit_own_user_account_permission_permission() {
+  return array(
+    'edit own user account' => array(
+      'title' => t('Edit own user account'),
+      'description' => t('User can edit their own account profile.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ *
+ * @param $items
+ *   Associative array of menu router definitions returned from hook_menu().
+ */
+function edit_own_user_account_permission_menu_alter(&$items) {
+  $items['user/%user/edit']['access callback'] = 'edit_own_user_account_permission_access';
+}
+
+/**
+ * Access callback for the user edit menu item
+ *
+ * @param $account
+ *   User account object that access is being determined for
+ * @return
+ *   Boolean whether or not the user has access to the menu item
+ */
+function edit_own_user_account_permission_access($account) {
+  global $user;
+  if ((user_access('edit own user account') && $user->uid == $account->uid)
+    || user_access('administer users')) {
+    return TRUE;
+  }
+
+  return FALSE;
+}

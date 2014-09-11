@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Web Meeting Views feature.
+ */
+
+include_once 'os2dagsorden_meeting_views.features.inc';
+include_once 'inc/os2dagsorden_meeting_views_common_fields.inc';
+
+include_once 'inc/os2dagsorden_meeting_views_meeting_details_fields.inc';
+include_once 'inc/os2dagsorden_meeting_views_bullet_point_fields.inc';
+include_once 'inc/os2dagsorden_meeting_views_meetings_search_fields.inc';
+include_once 'inc/os2dagsorden_meeting_views_last_8_meetings_fields.inc';
+include_once 'inc/os2dagsorden_meeting_views_coming_meetings_fields.inc';

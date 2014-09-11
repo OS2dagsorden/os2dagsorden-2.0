@@ -1,0 +1,15 @@
+name = OS2Dagsorden Access Helper
+description = Helps to check a complicated permissions for OS2Web (like if user can access closed bullet point)
+core = 7.x
+package = OS2Dagsorden
+files[] = tests/os2dagsorden_access_helper.test
+files[] = tests/os2dagsorden_access_helper_print_speaker_paper.test
+#files[] = tests/os2dagsorden_access_helper_print_meeting_speaker_papers.test
+#files[] = tests/os2dagsorden_access_helper_meeting_has_speaker_paper.test
+#files[] = tests/os2dagsorden_access_helper_file_download.test
+#files[] = tests/os2dagsorden_access_helper_check_user_can_see_closed_agenda.test
+
+#files[] = tests/os2dagsorden_access_helper_check_user_can_see_speaker_paper.test
+
+dependencies[] = simpletest
+testing_api = 2.x

@@ -1,0 +1,742 @@
+<?php
+
+/**
+ * os2dagsorden_annotator
+ *
+ * PHP version 5
+ *	
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Annotator
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+require drupal_get_path('module', 'os2dagsorden_annotator') . '/includes/os2dagsorden_annotator.common.inc';
+define('IS_IPAD', (bool) strpos($_SERVER['HTTP_USER_AGENT'],'iPad'));
+define('ANNOTATOR_PAGES_PER_VIEW', (IS_IPAD) ? 3 : 5);
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @return array of links.
+ */
+function os2dagsorden_annotator_menu() {
+    $items = array();
+
+    $items['meeting/%/bullet-point/%/bullet-point-attachment/%'] = array(
+        'title' => 'Bilag',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_view',
+        'access arguments' => array(1, 3, 5),
+        'access callback' => '_os2dagsorden_annotator_check_permission',
+        'page arguments' => array(1, 3, 5)
+    );
+    
+    $items['meeting/%/bullet-point/%/bullet-point-attachment/%/print'] = array(
+        'title' => 'Bilag Print Version',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_view_print',
+        'access arguments' => array(1, 3, 5),
+        'access callback' => '_os2dagsorden_annotator_check_permission',
+        'page arguments' => array(1, 3, 5)
+    );
+    
+    $items['meeting/%/bullet-point/%/bullet-point-attachment-raw/%'] = array(
+        'title' => 'Bilag',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_view_raw',
+        'access arguments' => array(1, 3, 5),
+        'access callback' => '_os2dagsorden_annotator_check_permission',
+        'page arguments' => array(1, 3, 5)
+    );
+    
+    $items['meeting/%/notes'] = array(
+        'title' => 'Mødenoter',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_meeting_all_notes_view',
+        'page arguments' => array(1),
+        'access arguments' => array('access content'),
+    );
+
+    $items['annotator/create'] = array(
+        'title' => 'Creating note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_create',
+	'access arguments' => array('access content')
+    );
+
+    $items['annotator/read/%'] = array(
+        'title' => 'Reading note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_read',
+	'access arguments' => array('access content'),
+	'page arguments' => array(2),
+    );
+
+    $items['annotator/update/%'] = array(
+        'title' => 'Updating note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_update',
+	'access arguments' => array('access content'),
+	'page arguments' => array(2),
+    );
+
+    $items['annotator/delete/%'] = array(
+        'title' => 'Updating note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_delete',
+	'access arguments' => array('access content'),
+	'page arguments' => array(2),
+    );
+
+    $items['annotator/search'] = array(
+        'title' => 'Creating note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_search',
+	'access arguments' => array('access content')
+    );
+    
+    $items['annotator/update'] = array(
+        'title' => 'Creating note',
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_annotator_dummy',
+	'access arguments' => array('access content')
+    );
+
+    return $items;
+}
+
+/**
+ * Implementation create note endpoint.
+ * Creates a note, saves it in the database and redirects to the read endpoint in order to update a note with generated ID.
+ *
+ * @return none.
+ */
+function _os2dagsorden_annotator_create() {
+    global $user;
+    
+    $note_json = json_decode(file_get_contents('php://input'), true);
+    
+    //saving fields, that fill be used for search
+    $bilag_id = $note_json['bilag_id'];
+    $bullet_point_id = $note_json['bullet_point_id'];
+    $meeting_id = $note_json['meeting_id'];
+
+    //filtering on fields - removing those, that are saved separatelly
+    unset($note_json['bilag_id']);
+    unset($note_json['bullet_point_id']);
+    unset($note_json['meeting_id']);
+    
+    $last_ins_id = db_insert('os2dagsorden_annotator_notes')
+    ->fields(array(
+      'bilag_id' => $bilag_id,
+      'bullet_point_id' => $bullet_point_id,
+      'meeting_id' => $meeting_id,
+      'uid' => $user->uid,
+      'note_info' => json_encode($note_json),
+    ))
+    ->execute();
+
+    //redirect to read - updating the note ID
+    header("HTTP/1.1 303 See Other");
+    header("Location: " . $GLOBALS['base_url'] . '/annotator/read/' . $last_ins_id);
+}
+
+/**
+ * Implementation read note endpoint.
+ * Updates a freshly created note with the generated id.
+ *
+ * @return the found note in JSON.
+ */
+function _os2dagsorden_annotator_read($id) {
+    global $user;
+    
+    $result = db_select('os2dagsorden_annotator_notes', 'notes')
+	->fields('notes')
+	->condition('id', $id,'=')
+	->condition('uid', $user->uid,'=')
+	->execute();
+
+    //print the found note
+    while($record = $result->fetchAssoc()) {
+      $note_arr = json_decode($record['note_info']);
+
+      //adding missing fields
+      $note_arr->id = $id;
+      $note_arr->user = $user->name;
+      $note_arr->permissions = array();
+    
+      print(json_encode($note_arr));
+    }
+}
+
+/**
+ * Implementation update note endpoint.
+ * Updates the content of the note.
+ *
+ * @param int $id the note id
+ *
+ * @return none.
+ */
+function _os2dagsorden_annotator_update($id) {    
+    global $user;
+    $note_json = json_decode(file_get_contents('php://input'), true);
+
+    //filtering on fields - removing those, that are saved separatelly
+    unset($note_json['id']);
+    unset($note_json['user']);
+    unset($note_json['permissions']);
+    unset($note_json['bilag_id']);
+    unset($note_json['bullet_point_id']);
+    unset($note_json['meeting_id']);
+
+    db_update('os2dagsorden_annotator_notes')
+      ->fields(array(
+	'note_info' => json_encode($note_json),
+      ))
+      ->condition('id', $id, '=')
+      ->execute();
+}
+
+/**
+ * Implementation delete note endpoint.
+ * Deletes the node from the database
+ *
+ * @param int $id the note id
+ *
+ * @return none.
+ */
+function _os2dagsorden_annotator_delete($id) {
+    db_delete('os2dagsorden_annotator_notes')
+      ->condition('id', $id)
+      ->execute();
+}
+
+/**
+ * Implementation search notes endpoint.
+ * Makes and sql-query to the database with a params taken from $_GET.
+ *
+ * @return list of notes in JSON.
+ */
+function _os2dagsorden_annotator_search() {
+    global $user;
+    
+    $result = db_select('os2dagsorden_annotator_notes', 'notes')
+	->fields('notes')
+	->condition('uid', $user->uid,'=')
+	->condition('bilag_id', $_GET['bilag_id'],'=')
+	->condition('bullet_point_id', $_GET['bullet_point_id'],'=')
+	->condition('meeting_id', $_GET['meeting_id'],'=')
+	->execute();
+
+    //start of json
+    print('
+      {
+      "total": "'.$result->rowCount().'",
+      "rows": [');
+
+    //looping through notes, adding them to array
+    $notes = array();
+    while($record = $result->fetchAssoc()) {
+      $note_arr = json_decode($record['note_info']);
+
+      //adding missing fields
+      $note_arr->id = $record['id'];
+      $note_arr->user = $user->name;
+      $note_arr->permissions = array();
+
+      $notes[] = json_encode($note_arr);
+    }
+
+    //printing each note and adding come, if note is not last one in the list
+    for ($i = 0; $i < count($notes); $i++){
+      print($notes[$i]);
+      if ($i < count($notes)-1)
+	print(',');
+    }
+
+    //end of json
+    print(']
+	    }');
+}
+
+/**
+ * Dummy function, in order to make annotate not throw the exception, when using Touch Plugin on Desktop device
+ * For some undiscovered reasons, annotator is making request to /annotator/update url, and throws an error if that url does not exist.
+ *
+ */
+function _os2dagsorden_annotator_dummy(){
+}
+
+/**
+ * Checks if a user is allowed to access the requested page.
+ *
+ * @param int $meeting_id      ID of the meeting
+ * @param int $bullet_point_id ID of the bullet point
+ * @param int $bilag_id        ID of the attachment (bilag)
+ *
+ * @return calls the function, that checks if a user is allowed 
+ * to see a specific bullet point.
+ */
+function _os2dagsorden_annotator_check_permission($meeting_id, $bullet_point_id, $bilag_id) {
+    return os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($meeting_id, $bullet_point_id, $bilag_id);
+}
+
+/**
+ * Serves the attachment with annotating option.
+ *
+ * @param int $meeting_id      ID of the meeting
+ * @param int $bullet_point_id ID of the bullet point
+ * @param int $bilag_id        ID of the attachment (bilag)
+ *
+ * @return the html code of the specific attachment with annotating option.
+ */
+function _os2dagsorden_annotator_view($meeting_id, $bullet_point_id, $bilag_id) {
+    $bilag = node_load($bilag_id);
+
+    global $base_url, $base_path, $user;
+    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/js/os2dagsorden_annotator_secure.js');
+    drupal_add_css(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/annotator-full.min.css');
+    drupal_add_css(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.css');
+
+    $html = "";
+
+    //check mode
+    $mode = (isset($_GET['search_param']))? 'search_mode' : 'annotator_mode';
+
+    if ($mode === 'search_mode'){
+      drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/jquery.highlight.js');
+      $search_param = $_GET['search_param'];
+      drupal_add_js('highlight_wrapper(".node","' . $search_param . '");',  'inline');
+
+      $path_to_annotate = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id;
+
+      $html .= <<<HTML
+        <div class="annotator-touch-widget annotator-touch-controls">
+          <div class="annotator-touch-widget-inner">
+            <a class="annotator-button annotator-add annotator-focus" href="{$path_to_annotate}">Skift til noter</a>
+          </div>
+        </div>
+HTML;
+    } else {
+      drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/annotator-full.min.js');
+      drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.min.js');
+      drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/json2.js');
+      drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/XPath.js');
+
+      drupal_add_js('add_annotator(' . $meeting_id . ',' . $bullet_point_id . ',' . $bilag_id . ',"#content","' . $base_path . '?q=", true, "' . $user->name . '");', 'inline');
+
+      drupal_add_css(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/annotator-full.min.css');
+      drupal_add_css(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.css');
+    }
+
+    //floating scrollbar
+    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/js/os2dagsorden_annotator_floatingscrollbar.min.js');
+    drupal_add_js('annotator_add_floatinscrollbar();', 'inline');
+
+    //hiding the side pane menu
+    drupal_add_js('annotator_hide_menu();', 'inline');
+
+    //overriding title for bilag
+    drupal_set_title($bilag->title);
+
+    //Help icon
+    $html .= '<div class="node">
+        <div class="help-button" title="Hvis du ønsker at lave en kommentar til et ord eller et afsnit, så marker blot dette hvorefter du får mulighed for at indtaste kommentaren."></div>
+        <div class="controls-right">';
+
+    //starting the breadcrumb - common for bilag/not bilag
+    $breadcrumb[] = l('Hjem', $base_url);
+    $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $meeting_id);
+    $breadcrumb[] .= l('Dagsordenspunkt', 'meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id);
+
+    if (!empty($bilag->field_bpa_file['und'][0]['uri'])){//is an actual bilag
+      //finishing breadcrumb
+      $breadcrumb[] .= '<span class="breadcrumb-active">Bilag</span>';
+      drupal_set_breadcrumb($breadcrumb);
+
+      //preparing the pager
+      $pageStart = intval($_GET['page'])+1;
+      $pageEnd = intval($_GET['page'])+ ANNOTATOR_PAGES_PER_VIEW;
+
+      //bilag has converter to HTML version of file, getting the text out of it
+      if (!empty($bilag->field_bpa_file_html['und'][0])){
+        $file_uri = $bilag->field_bpa_file_html['und'][0]['uri'];
+        $body_file = file_get_contents($file_uri);
+        $text = os2dagsorden_pdf2htmlex_hide_unused_pages($body_file, $pageStart, $pageEnd);
+        $pageAmount = $bilag->field_bpa_page_amount['und'][0]['value'];
+      }
+
+      //creating link for downloading pdf version
+      $download_pdf_link = file_create_url($bilag->field_bpa_file['und'][0]['uri']);
+
+      $file_name = $bilag->field_bpa_file['und'][0]['filename'];//for example, NAME.PDF
+      $file_name = explode('.', $file_name);
+      $extention = strtoupper($file_name[1]);
+
+      if (stripos($extention, 'xls') || stripos($extention, 'xls') === 0)//is excel file
+        $extention = 'EXCEL';
+
+      $html .= '<input class="form-submit" type="button" onclick="window.open(\'' . $download_pdf_link . '\')" value="Hent ' . $extention . '-version">';
+
+      //composing the print link
+      $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
+
+      //composing html output
+      $html .=
+        '<input class="form-submit next-control print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print noter">' .
+        '</div>' . '<div class="clearfix"></div>' .
+        _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageAmount) .
+        '<div id="content"><div class="attachment-text">' . $text . '</div></div>' .
+        _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageAmount) .
+        '</div>';
+    } else {//is not an actual bilag
+      //finishing breadcrumb
+      $breadcrumb[] .= '<span class="breadcrumb-active">' .$bilag->title. '</span>';
+      drupal_set_breadcrumb($breadcrumb);
+
+      //getting text
+      $text = '<div class="attachment-text">' . $bilag->field_bpa_body['und'][0]['value'] . '</div>';
+
+      //composing the print link
+      $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
+
+      //composing html output
+      $html .= '<input class="form-submit print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print"></div>' .
+          '<div class="clearfix"></div>' .
+          '<div class="clearfix" id="content">' . $text . '</div>' .
+          '</div>';
+    }
+
+    return $html;
+}
+
+/**
+ * Serves the raw (html) version of the first page of the attachment. Is used to load the attachment AJAX-way.
+ *
+ * @param int $meeting_id      ID of the meeting
+ * @param int $bullet_point_id ID of the bullet point
+ * @param int $bilag_id        ID of the attachment (bilag)
+ *
+ * @return the html code of the specific attachment.
+ */
+function _os2dagsorden_annotator_view_raw($meeting_id, $bullet_point_id, $bilag_id){
+    $bilag = node_load($bilag_id);
+    if (strcmp($bilag->type, 'bullet_point_attachment') == 0) {
+        if (!empty($bilag->field_bpa_file['und'][0]['uri'])){//is an actual bilag
+	  if (!empty($bilag->field_bpa_file_html['und'][0])){
+	    $file_uri = $bilag->field_bpa_file_html['und'][0]['uri'];
+	    $body_file = file_get_contents($file_uri);
+	    $html = os2dagsorden_pdf2htmlex_print_first_page($body_file, $meeting_id, $bullet_point_id, $bilag_id);
+	  }
+	} else {//is not an actual bilag	  
+	  //getting text
+	  $html = $bilag->field_bpa_body['und'][0]['value'];
+	}
+    }
+    header('Content-Type: text/html; charset=utf-8');
+    print '<div class="attachment-text">' . $html . '</div>';
+}
+
+/**
+ * Renders the html for custom pager for bilag.
+ *
+ * @param int      $meeting_id      ID of the meeting
+ * @param int      $bullet_point_id ID of the bullet point
+ * @param int      $bilag_id        ID of the attachment (bilag)
+ * @param int      $pageLimit       maximum numbers of pages in this bilag
+ * @param boolean  $light           is used in the light mode
+ *
+ * @return the html code of pager.
+ */
+function _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageLimit, $light = FALSE){
+    $page = intval($_GET['page']);//value or 0 if not set
+    
+    if (!$light)
+      $current_bilag_url = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id;
+    else
+      $current_bilag_url = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment-light/' . $bilag_id;
+    
+    if ($page-ANNOTATOR_PAGES_PER_VIEW >= 0)
+      $prev_page_link = $current_bilag_url . '?page=' . ($page-ANNOTATOR_PAGES_PER_VIEW );
+    else if ($page-ANNOTATOR_PAGES_PER_VIEW < 0 && $page > 0)
+      $prev_page_link = $current_bilag_url; //go to the first page
+      
+    if ($page+5 <= $pageLimit)
+      $next_page_link = $current_bilag_url . '?page=' . ($page+ANNOTATOR_PAGES_PER_VIEW);
+    
+    $pager = '<div class="item-list clearfix annotator-pager">
+		<ul class="pager">';
+    if (isset($prev_page_link)) {
+	$pager .= '<li class="page-prev"> 
+		    <a rel="nofollow" href="' . $prev_page_link . '">« Tidligere</a>
+		  </li>';
+    }
+    if (isset($next_page_link)) {
+	$pager .= '<li class="page-next">
+		    <a rel="nofollow" href="' . $next_page_link . '">Næste »</a>
+		  </li>';
+    }	  
+    $pager .= '</ul>
+	      </div>';
+    return $pager;
+}
+
+/**
+ * Serves the print version of attachment with annotating option.
+ *
+ * @param int $meeting_id      ID of the meeting
+ * @param int $bullet_point_id ID of the bullet point
+ * @param int $bilag_id        ID of the attachment (bilag)
+ *
+ * @return the html code for print version of the specific attachment with annotating option.
+ */
+function _os2dagsorden_annotator_view_print($meeting_id, $bullet_point_id, $bilag_id) {
+    $bilag = node_load($bilag_id);
+    if (strcmp($bilag->type, 'bullet_point_attachment') == 0) {
+	//getting annotations from storage
+        $annotations = os2dagsorden_annotator_get_notes_by_attachment_id($bilag_id);
+
+	//initiating variabes
+	$annotation_list = '';//in a nice print format
+	$note_nr = 1;//used for enumerating
+	
+        //converted bilag
+        if (!empty($bilag->field_bpa_file['und'][0]['uri'])){
+	  drupal_set_title($bilag->title);
+	  $header = '<h3>' . $bilag->title . '</h3>';
+	  
+	  $text = $header;
+	  
+	  //printing annotations one by one in right order
+	  while (!empty($annotations)) {
+	      //flushing array indexing
+	      $annotations = array_values($annotations);
+
+	      $first_note_ind = 0;
+	      for ($i = 1; $i < count($annotations); $i++) {
+		  $location = _os2dagsorden_compare_xpath($annotations[$i]->ranges[0]->start, $annotations[$first_note_ind]->ranges[0]->start);
+		  
+		  if ($location == -1)
+		      $first_note_ind = $i;
+		  else if ($location == 0 && $annotations[$i]->ranges[0]->startOffset < $annotations[$first_note_ind]->ranges[0]->startOffset)
+		      $first_note_ind = $i;
+	      }
+	      $annotation_list .= _os2dagsorden_annotator_append_note($annotations[$first_note_ind], $note_nr, true);
+	      $note_nr++;
+
+	      unset($annotations[$first_note_ind]);
+	  }
+	} else {//just attachment
+	  drupal_set_title(t('Bilag') . ' - ' . $bilag->title);
+	  $header = '<h3>Bilag - ' . $bilag->title . '</h3>';
+	  $text = $header;
+	  
+	  $body = $bilag->field_bpa_body['und'][0]['value'];
+
+	  //printing annotations one by one in right order
+	  while (!empty($annotations)) {
+	      //flushing array indexing
+	      $annotations = array_values($annotations);
+
+	      $first_note_ind = 0;
+	      for ($i = 1; $i < count($annotations); $i++) {
+		  if ($annotations[$i]->ranges[0]->startOffset < $annotations[$first_note_ind]->ranges[0]->startOffset)
+		      $first_note_ind = $i;
+	      }
+	      $body = _os2dagsorden_annotator_append_index($body, $annotations[$first_note_ind], $note_nr);
+	      $annotation_list .= _os2dagsorden_annotator_append_note($annotations[$first_note_ind], $note_nr);
+	      $note_nr++;
+
+	      unset($annotations[$first_note_ind]);
+	  }
+	  $text .= $body;
+	  $text .= "<hr/>";
+	}
+    }
+    $text .= $annotation_list;
+  
+    return ('<div class="node" id="content">' . $text . '</div>');
+}
+
+/**
+ * Composes the view of all user's note for this meeting
+ *
+ * @param int  $meeting_id if of the meeting
+ *
+ * @return the html of the created page
+ */
+function _os2dagsorden_annotator_meeting_all_notes_view($meeting_id){
+    //overriding title for bilag
+    drupal_set_title("Mødenoter");
+    
+    //breadcrumb
+    $breadcrumb[] = l('Hjem', $base_url);
+    $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $meeting_id);
+    $breadcrumb[] .= '<span class="breadcrumb-active">Mødenoter</span>';
+    drupal_set_breadcrumb($breadcrumb);
+    
+    //Help icon
+    $html = '<div class="node">';
+	    //. '<div class="help-button" title=""></div>'
+	      
+    $html .= '<div id="content" class="view-content">';
+    
+    $meeting = node_load($meeting_id);
+    if (isset($meeting->field_ref_bullet_points['und'])) {	
+	//eliminating duplicates in bullet points
+	foreach($meeting->field_ref_bullet_points['und'] as $bullet_point){
+	  $hash = $bullet_point['target_id'];
+	  $bullet_points[$hash] = $bullet_point;
+	}
+    
+        foreach ($bullet_points as $bullet_point) {
+	    $bullet_point = node_load($bullet_point['target_id']);
+            if (isset($bullet_point->field_ref_attachment['und'])){
+	      //eliminating duplicates in bullet points attachments
+	      $attachments = array();
+	      foreach ($bullet_point->field_ref_attachment['und'] as $attachment_id){
+		$hash = $attachment_id['target_id'];
+		$attachments[$hash] = $attachment_id;
+	      }
+	
+	      foreach ($attachments as $attachment_id){
+		  $bilag = node_load($attachment_id['target_id']);
+		  
+		  //getting annotations from storage
+		  $annotations = os2dagsorden_annotator_get_notes_by_attachment_id($bilag->nid);
+
+		  //initiating variabes
+		  $annotation_list = '';//in a nice print format
+		  $note_nr = 1;//used for enumerating
+		  
+		 
+		  while (!empty($annotations)) {
+		      //flushing array indexing
+		      $annotations = array_values($annotations);
+
+		      $first_note_ind = 0;
+		      for ($i = 1; $i < count($annotations); $i++) {
+			  if ($annotations[$i]->ranges[0]->startOffset < $annotations[$first_note_ind]->ranges[0]->startOffset)
+			      $first_note_ind = $i;
+		      }
+		      $annotation_list .= _os2dagsorden_annotator_append_note($annotations[$first_note_ind], $note_nr, true, 
+					  '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point->nid . '/bullet-point-attachment/' . $bilag->nid);
+		      $note_nr++;
+
+		      unset($annotations[$first_note_ind]);
+		  }
+		  
+		  if (!empty($annotation_list)){
+		    $html .= '<h3>' . $bilag->title . ': [' . $bullet_point->title . ']</h3>';
+		    $html .= $annotation_list . "<br/>";
+		  }
+	      }
+	    }
+        }
+    }
+    
+    
+    $html .= '</div>';
+    $html .= '</div>';
+    
+    return $html;
+}
+
+/**
+ * Compares two xpath.
+ *
+ * @param string $path1 first xpath
+ * @param string $path2 first xpath
+ *
+ * @return -1 if $path1 is before, 1 if $path1 is after, 0 if equal.
+ */
+function _os2dagsorden_compare_xpath($path1, $path2){
+  $path1_el = explode('/', $path1);
+  $path2_el = explode('/', $path2);
+  
+  //finding the array to start with
+  if (count($path1_el) > count($path2_el))
+    $start_with = $path1_el;
+  else 
+    $start_with = $path2_el;
+    
+  for ($i = 0; $i < count($start_with); $i++){
+    if (!strpos($path1_el[$i], '[') && !strpos($path2_el[$i], '['))//if none of them have container index 
+      continue;
+    else if (!strpos($path1_el[$i], '[') && strpos($path2_el[$i], '['))//only second has contained index, means that the first path is before
+      return -1;
+    else if (strpos($path1_el[$i], '[') && !strpos($path2_el[$i], '['))//only first has contained index, means that the second path is before 
+      return 1;
+    else { //all the paths have [..]
+      $num1 = substr($path1_el[$i], strpos($path1_el[$i], '[')+1, strpos($path1_el[$i], ']') - (strpos($path1_el[$i], '[')+1));
+      $num2 = substr($path2_el[$i], strpos($path2_el[$i], '[')+1, strpos($path2_el[$i], ']') - (strpos($path2_el[$i], '[')+1));
+      if ($num1 > $num2)
+	return 1;
+      else if ($num1 < $num2)
+	return -1;
+      else 
+	continue;
+    }
+  }
+  return 0;//equal
+}
+
+
+/**
+ * Appends the right index number to a word/set of words, that has a annotation attached.
+ *
+ * @param string $body    the entire text of the attachment
+ * @param string $note    the note object
+ * @param int    $note_nr the ordinal number of the note
+ *
+ * @return the modified body text with attached index.
+ */
+function _os2dagsorden_annotator_append_index($body, $note, $note_nr) {
+    $positionStart = strpos($body, $note->quote, $note->ranges['0']->startOffset);
+    $positionEnd = $positionStart + strlen($note->quote);
+    $body = substr_replace($body, '<sup><b>[' . $note_nr . ']</b></sup>', $positionEnd, 0);
+
+    return $body;
+}
+
+/**
+ * Composes the line with note ordinal index and the note text.
+ * Is used below the attachment text as footnotes.
+ *
+ * @param string  $note        the note object
+ * @param int     $index       the ordinal number of the note
+ * @param boolaen $print_text  print or not print the annotated text
+ * @param string  $link        the link that needs to be associated with the note text
+ *
+ * @return the footnote with note text.
+ */
+function _os2dagsorden_annotator_append_note($note, $index, $print_text = false, $link = false) {
+    $to_return = '<b>[' . $index . ']</b> ';
+    if (!$print_text) {
+      $to_return .= $note->text . '<br/>';
+    } else {
+      $sp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      $xpath = $note->ranges[0]->start;
+      $xpath_arr = explode('/', $xpath);
+      $page_nr = trim($xpath_arr[2], 'div[]');
+      if (!$page_nr)
+	$page_nr = 1;
+      
+      if (is_numeric($page_nr))
+	$to_return .= ' Side ' . $page_nr . '.';
+	
+      $to_return .= ' <b>' . $note->quote . '</b>:<br/><i>' . $sp . $note->text . '</i>';
+      if ($link){
+	if (intval($page_nr) > ANNOTATOR_PAGES_PER_VIEW){
+	    $link .= '?page=' . intval($page_nr / ANNOTATOR_PAGES_PER_VIEW) * ANNOTATOR_PAGES_PER_VIEW;//if pages per view is 5, then the page number will be 5, 10, 15 etc
+	}
+	
+	global $base_url;
+	$to_return .= '<a target="_blank" href="' . $base_url . $link . '"> >>> </a>';
+	
+      }
+      $to_return .= '<br/>';
+    }
+    return $to_return;
+}

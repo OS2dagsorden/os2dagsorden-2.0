@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<definitions name="AcadrePublishingHandler" targetNamespace="urn:AcadrePublishingHandler" xmlns:tns="urn:AcadrePublishingHandler"  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:AcadrePublishingHandler">
+      <xsd:element name="getParentGuid" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="getGuid" type="xsd:string" minOccurs="1"/>     
+      
+      <xsd:element name="getLocationId" type="xsd:string" minOccurs="1"/>
+      
+      <xsd:element name="getPublishedItemInfo" minOccurs="1">
+        <complexType>
+          <sequence>
+            <xsd:element name="itemId" type="xsd:string" minOccurs="1"/>
+            <xsd:element name="startDate" type="xsd:date" minOccurs="1"/>
+            <xsd:element name="endDate" type="xsd:date" minOccurs="1"/>
+            <xsd:element name="locationId" type="xsd:string" minOccurs="1"/>
+            <xsd:element name="metadata" type="xsd:string" minOccurs="1"/>
+            <xsd:element name="physicalFileReference">
+              <complexType>
+                <sequence>
+                  <xsd:element name="itemId" type="xsd:string" minOccurs="1"/>
+                  <xsd:element name="version" type="xsd:string" minOccurs="1"/>
+                </sequence>
+              </complexType>
+            </xsd:element>
+          </sequence>
+        </complexType>
+      </xsd:element>
+    </xsd:schema>			
+  </types>
+  
+  <message name="publish">
+    <part name="info" type="tns:getPublishedItemInfo" />
+    <part name="parentItemId" type="tns:getParentGuid"/>
+  </message>
+  
+  <message name="publishResponse">
+    <part name="return" type="xsd:string" />
+  </message>  
+  
+  <portType name="PublishPort">
+    <operation name="publish">
+      <input message="tns:publish" />
+      <output message="tns:publishResponse" />
+    </operation>
+  </portType>
+  
+  <binding name="PublishBinding" type="tns:PublishPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="publish">
+      <soap:operation soapAction="urn:PublishAction" />
+      <input>
+        <soap:body use="encoded" namespace="urn:AcadrePublishingHandler" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" minOccurs="1" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:AcadrePublishingHandler" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" minOccurs="1" />
+      </output>
+    </operation>
+  </binding>
+   
+  <service name="PublishService">
+    <port name="PublishPort" binding="tns:PublishBinding">
+      <soap:address location="!endpointurl" />
+    </port>
+  </service>
+  
+  
+  
+  
+  
+  
+  
+  
+  <message name="unpublish">
+    <part name="itemId" type="tns:getGuid" />
+    <part name="locationId" type="tns:getLocationId" />
+  </message>
+  
+  <message name="unpublishResponse">
+    <part name="return" type="xsd:string" />
+  </message>  
+  
+  <portType name="UnpublishPort">
+    <operation name="unpublish">
+      <input message="tns:unpublish" />
+      <output message="tns:unpublishResponse" />
+    </operation>
+  </portType>
+  
+  <binding name="UnpublishBinding" type="tns:UnpublishPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="unpublish">
+      <soap:operation soapAction="urn:UnpublishAction" />
+      <input>
+        <soap:body use="encoded" namespace="urn:AcadrePublishingHandler" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" minOccurs="1" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:AcadrePublishingHandler" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+  </binding>
+  
+  <service name="UnpublishService">
+    <port name="UnpublishPort" binding="tns:UnpublishBinding">
+      <soap:address location="!endpointurl" />
+    </port>
+  </service>
+  
+</definitions>

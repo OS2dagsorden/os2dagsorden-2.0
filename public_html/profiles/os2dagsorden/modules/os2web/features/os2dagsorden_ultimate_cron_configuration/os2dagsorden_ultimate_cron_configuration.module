@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Dagsorden Ultimate Cron configuration feature.
+ */
+
+include_once 'os2dagsorden_ultimate_cron_configuration.features.inc';

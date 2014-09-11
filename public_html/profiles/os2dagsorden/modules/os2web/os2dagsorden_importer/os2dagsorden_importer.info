@@ -1,0 +1,5 @@
+name = OS2Dagsorden importer module
+description = This module will import meetings, user's committees, user positions and committees.
+package = OS2Dagsorden
+core = 7.x
+version = "dev"

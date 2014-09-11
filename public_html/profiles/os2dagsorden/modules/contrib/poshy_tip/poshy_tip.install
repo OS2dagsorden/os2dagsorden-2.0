@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function poshy_tip_uninstall() {
+  variable_del('poshy_tip_default_class');
+  variable_del('poshy_tip_theme');
+  variable_del('poshy_tip_visibility');
+  variable_del('poshy_tip_visibility_pages');
+}

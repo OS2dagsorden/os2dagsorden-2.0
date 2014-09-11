@@ -1,0 +1,367 @@
+<?php
+
+/**
+ * Implementation of hook_menu
+ *
+ * @return list of links
+ */
+function os2dagsorden_content_modify_menu() {
+  $items = array();
+  
+  $items['admin/config/os2dagsorden/create_committee'] = array(
+    'title' => 'Committees',
+    'description' => 'Module that supports manual creation or editing of the committee',
+    'page callback' => '_os2dagsorden_content_modify_committee',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_NORMAL_ITEM | MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  $items['admin/config/os2dagsorden/create_user_position'] = array(
+    'title' => 'User positions',
+    'description' => 'Module that supports manual creation or editing of the user position',
+    'page callback' => '_os2dagsorden_content_modify_user_position',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_NORMAL_ITEM | MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  $items['admin/config/os2dagsorden/attach_user_position'] = array(
+    'title' => 'Assign user positions to users',
+    'description' => 'Module that supports assigning/removing roles from the users',
+    'page callback' => '_os2dagsorden_content_modify_users',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_NORMAL_ITEM | MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  $items['user/%/simple_edit'] = array(
+    'title' => 'User edit simple',
+    'page callback' => '_os2dagsorden_content_modify_user_edit_page',
+    'page arguments' => array(1),
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  
+  $items['user/simple_edit'] = array(
+    'title' => 'Kontoindstillinger',
+    'page callback' => '_os2dagsorden_content_modify_user_edit_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'menu-sidepane-menu',
+    'options' => array(
+      'attributes' => array('id' => 'menu-simple-user-edit'),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Helper function, redirects to taxonomy creation page.
+ *
+ * @return none
+ */
+function _os2dagsorden_content_modify_committee(){
+    drupal_goto('admin/structure/taxonomy/committee');
+}
+
+/**
+ * Helper function, redirects to taxonomy user position creation page.
+ *
+ * @return none
+ */
+function _os2dagsorden_content_modify_user_position(){
+    drupal_goto('admin/structure/taxonomy/user_position');
+}
+
+/**
+ * Helper function, redirects to taxonomy users edit page.
+ *
+ * @return none
+ */
+function _os2dagsorden_content_modify_users(){
+    drupal_goto('admin/people');
+}
+
+/**
+ * Hook to user operations.
+ * Adds custom user edit page.
+ *
+ * @return none
+ */
+function os2dagsorden_content_modify_user_operations() {
+  $operations = array(
+    'Add position' => array(
+      'label' => t('Add the position to selected user'),
+      'callback' => '_os2dagsorden_content_modify_user_edit_redirect',
+    ),
+  );
+  return $operations;
+}
+
+/**
+ * Redirect for the user edit link from user operation menu.
+ * Redirects to simple edit link.
+ *
+ * @param $accounts array array of the user ids. 
+ *
+ * @return none
+ */
+function _os2dagsorden_content_modify_user_edit_redirect($accounts){
+  $account = array_pop($accounts);
+  drupal_goto('user/' . $account . '/simple_edit');
+}
+
+/**
+ * Calls form for user simple edit. 
+ * If user has no administer os2web rights, he will be allowed only to edit his own profile.
+ *
+ * @param $uid int id of the user to modify.
+ *
+ * @return form
+ */
+function _os2dagsorden_content_modify_user_edit_page($uid = null){
+  $full_user = os2dagsorden_access_helper_get_user();
+  
+  if (empty($uid)){
+      $uid = $full_user->uid;
+  }
+  
+  if (!user_access('administer os2web', $full_user)){
+    if ($full_user->uid != $uid){
+      drupal_goto('user/simple_edit');
+    }
+  }
+  return drupal_get_form('os2dagsorden_content_modify_user_edit_form', $uid);
+}
+
+/**
+ * Generates user edit form and (if uid is not null) loads and sets the parameters.
+ * Depending on the user rights form is either limited (with no right) of full (with administer os2web right).
+ *
+ * @param $form       mixed the form
+ * @param $form_state mixed the state of the form
+ * @param $uid        int   the id of the user to be modified
+ *
+ * @return form
+ */
+function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
+  $form[] = array(
+    '#markup' => '<div class="node">',
+  );
+  
+  $form['full_name'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Full name:'), 
+    '#size' => 60, 
+    '#maxlength' => 128, 
+    '#description' => t('Is displayed in the top right corner.'),
+  );
+  
+  $form['calendar_pref'] = array(
+    '#access' => user_access('administer os2web', $full_user),
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'pol' => t('Political'), 
+      'org' => t('Organizational')
+    ),
+    '#title' => t('Calendar preferences:'),
+    '#description' => t('Which types of meetings should user see in the calendar'),
+  );
+  
+  $user_pos = taxonomy_vocabulary_machine_name_load('user_position');
+  $user_pos_terms = taxonomy_get_tree($user_pos->vid);
+  $user_pos_select = array();
+  foreach ($user_pos_terms as $user_pos_term) {
+    $user_pos_term = taxonomy_term_load($user_pos_term->tid);
+    
+    //only manually created User positions - without ID
+    if (field_get_items('taxonomy_term', $user_pos_term, 'field_user_pos_id')){
+      continue;
+    }
+    
+    if (field_get_items('taxonomy_term', $user_pos_term, 'field_priority')){
+      $priority_field = array_pop(field_get_items('taxonomy_term', $user_pos_term, 'field_priority'));
+      $priority = ' [' . $priority_field['value'] .']';
+    }
+    $user_pos_select[$user_pos_term->tid] = $user_pos_term->name . $priority;
+  }
+  $form['user_pos'] = array(
+      '#access' => user_access('administer os2web', $full_user),
+      '#type' => 'select',
+      '#title' => t('User positions:'),
+      '#options' => $user_pos_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      '#description' => t('You can choose only from the user positions, created manually. For multiple selection hold <b>CTRL</b>.<br/>
+      The number in <b>[X]</b> shows the role\'s priority. 
+      Role with the highest priority is shown next to user\'s full name in the top right conter.'),
+  );
+  
+  $com = taxonomy_vocabulary_machine_name_load('committee');
+  $com_terms = taxonomy_get_tree($com->vid);
+  $com_select = array();
+  foreach ($com_terms as $com_term) {
+    $com_select[$com_term->tid] = $com_term->name;
+  }
+  $form['member_of'] = array(
+      '#access' => user_access('administer os2web', $full_user),
+      '#type' => 'select',
+      '#title' => t('Member of:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      The committees user is member of are presented in the right side pane.'),
+  );
+  
+  $form['follows'] = array(
+      '#type' => 'select',
+      '#title' => t('Follows:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      The committees user follows are presented in the right side pane.'),
+  );
+  
+  $form['follows_plus'] = array(
+      '#access' => user_access('administer os2web', $full_user),
+      '#type' => 'select',
+      '#title' => t('Follows+:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      The committees user follows+ are presented in the right side pane.'),
+  );
+  
+  if ($uid) {
+    $form_state['uid'] = $uid;//saving for usage in the submit function
+    $user = user_load($uid);
+    
+    //filling the fields
+    if (field_get_items('user', $user, 'field_user_full_name')){
+      $full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
+      $form['full_name']['#default_value'] = $full_name_field['value'];
+    }
+    
+    if (field_get_items('user', $user, 'field_user_meetings_category')){
+      $calendar_prefs_field = field_get_items('user', $user, 'field_user_meetings_category');
+      $selection = array();
+      foreach ($calendar_prefs_field as $cal_pref){
+	$selection[] = $cal_pref[value];
+      }
+      $form['calendar_pref']['#default_value'] = $selection;
+    }
+    
+    if (field_get_items('user', $user, 'field_user_positions')){
+      $user_positions_field = field_get_items('user', $user, 'field_user_positions');
+      $selection = array();
+      foreach ($user_positions_field as $user_pos){
+	$selection[] = $user_pos['tid'];
+      }
+      $form['user_pos']['#default_value'] = $selection;
+    }
+    
+    if (field_get_items('user', $user, 'field_user_committee')){
+      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+      $selection = array();
+      foreach ($user_member_of_field as $member_of){
+	$selection[] = $member_of['tid'];
+      }
+      $form['member_of']['#default_value'] = $selection;
+    }
+    
+    if (field_get_items('user', $user, 'field_follows_committee')){
+      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+      $selection = array();
+      foreach ($user_follows_field as $follows){
+	$selection[] = $follows['tid'];
+      }
+      $form['follows']['#default_value'] = $selection;
+    }
+    
+    if (field_get_items('user', $user, 'field_follows_committee_plus')){
+      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+      $selection = array();
+      foreach ($user_follows_plus_field as $follows_plus){
+	$selection[] = $follows_plus['tid'];
+      }
+      $form['follows_plus']['#default_value'] = $selection;
+    }
+  }
+  
+  $form['save_user'] = array(
+    '#type' => 'submit',
+    '#attributes' => array(
+      'class' => array('form-save-submit'),
+    ),
+    '#value' => t('Save User'),
+    '#submit' => array('os2dagsorden_content_modify_user_submit'),
+  );
+  
+  $form[] = array(
+      '#markup' => '</div>',
+  ); 
+  
+  return $form;
+}
+
+/**
+ * Submit for user edit form. Updates user profile.
+ * 
+ * @param $form       mixed the form
+ * @param $form_state mixed state of the form
+ *
+ * @return none
+ */
+function os2dagsorden_content_modify_user_submit($form, $form_state){
+  $input = $form_state['input'];
+   
+  //input extraction
+  extract($input);
+
+  $user = user_load($form_state['uid']);
+  $user->field_user_full_name['und'][0]['value'] = $full_name;
+  
+  //unsetting calendar preferences
+  $user->field_user_meetings_category['und'] = array();
+  foreach ($calendar_pref as $cal_pref){
+    $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+  }
+  
+  //unsetting follows committees
+  $user->field_follows_committee['und'] = array();
+  if ($follows){
+    foreach ($follows as $tid){
+      $user->field_follows_committee['und'][]['tid'] = $tid;
+    }
+  }
+  
+  if (user_access('administer os2web')){//only for the full form submit
+    //unsetting positions
+    $user->field_user_positions['und'] = array();
+    if ($user_pos){
+      foreach ($user_pos as $tid){
+	$user->field_user_positions['und'][]['tid'] = $tid;
+      }
+    }
+    
+    //unsetting committees
+    $user->field_user_committee['und'] = array();
+    if ($member_of){
+      foreach ($member_of as $tid){
+	$user->field_user_committee['und'][]['tid'] = $tid;
+      }
+    }
+    
+    //unsetting follows plus committees
+    $user->field_follows_committee_plus['und'] = array();
+    if ($follows_plus){
+      foreach ($follows_plus as $tid){
+	$user->field_follows_committee_plus['und'][]['tid'] = $tid;
+      }
+    }
+  }
+  
+  user_save($user);
+}

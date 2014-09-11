@@ -1,0 +1,17 @@
+name = Poshy Tip
+description = Poshy Tip is a jQuery Plugin for stylish tooltips.
+package = User interface
+core = 7.x
+
+; Module dependencies
+dependencies[] = libraries
+
+; Configuration page
+configure = admin/config/user-interface/poshy_tip
+
+; Information added by drupal.org packaging script on 2012-07-17
+version = "7.x-1.0-beta2"
+core = "7.x"
+project = "poshy_tip"
+datestamp = "1342550848"
+

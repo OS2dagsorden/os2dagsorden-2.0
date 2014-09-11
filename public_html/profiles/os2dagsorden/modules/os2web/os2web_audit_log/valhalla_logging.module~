@@ -1,0 +1,75 @@
+<?php
+
+/*
+ *
+ * @author Jesper Mathiassen <jm@bellcom.dk>
+ * @copyright Bellcom Open Source aps.
+ */
+
+/**
+ * Implementation of hook_menu()
+ *
+ */
+function valhalla_logging_menu() {
+    $items['valhalla_log'] = 
+    $items['valhalla_log/%'] = array(
+      'access callback' => TRUE,
+      'page arguments' => array(1),
+      'page callback' => 'valhalla_logging_page',
+      'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function valhalla_logging_page($arg = false) {
+  header("Expires: 0");
+  header("Cache-control: private");
+  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+  header("Content-Description: File Transfer");
+  header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+  header("Content-disposition: attachment; filename=access_log.csv");
+  $query = db_select('valhalla_logging','v')->fields('v');
+  if (is_numeric($arg)) {
+    $query->condition('nid',$arg,'=');
+  }
+  $result = $query->execute();
+  echo '"Time";"uid";"nid";"action";"info"';
+  echo "\r\n";
+  foreach ($result as $record) {
+    echo '"'. $record->time . '";';
+    echo '"'. $record->guilty . '";';
+    echo '"'. $record->victim . '";';
+    echo '"'. $record->action . '";';
+    echo '"'. $record->information . '"';
+    echo "\r\n";
+//    print_r($record);
+  }
+
+  die(); // Break for non-themed output
+}
+
+function valhalla_logging_node_load($nodes, $types) {
+  global $user;
+  foreach ($nodes as $node) {
+      _valhalla_logging_do_log(gmdate("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']), $user->uid, $node->nid, $node->type, 'load', 'node load');
+  }
+}
+
+function valhalla_logging_load($nodes) {
+  global $user;
+  foreach ($nodes as $node) {
+      _valhalla_logging_do_log(gmdate("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']), $user->uid, $node->nid, $node->type, 'load', 'load');
+  }
+}
+
+function _valhalla_logging_do_log($time, $uid, $nid, $node_type, $action, $add_info = '') {
+  db_insert('valhalla_logging')
+      ->fields(array(
+          'time' => $time,
+          'uid' => $uid,
+          'nid' => $nid,
+          'node_type' => $node_type,
+          'action' => $action,
+          'information' => $add_info))
+      ->execute();
+}

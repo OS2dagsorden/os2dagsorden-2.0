@@ -1,0 +1,47 @@
+.no-pad {
+padding: 0px 0px 0px 0px;
+}
+
+td.inside {
+border-style:solid;
+border-color: #000000;
+border-width:1px;
+padding: 1px;
+background-color: #ffffff !important;
+}
+
+td.number {
+width: 5%;
+}
+
+td.content {
+width: 90%;
+}
+
+table.print-meetings, table.print-meetings-form {
+width: 100%;
+font-size:10px;
+}
+
+table.print-meetings-form{
+margin-bottom:10px;
+}
+
+.valign_top {
+vertical-align: top;
+}
+
+th.con_center{
+text-align:center;
+
+}
+
+td.gray{
+background-color: #cdc9c9 !important;
+}
+
+div.print-meetings-content{
+    margin: 0px 5px 0px 5px;
+}
+
+

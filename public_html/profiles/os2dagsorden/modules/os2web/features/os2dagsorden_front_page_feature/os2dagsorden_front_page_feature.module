@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Web Front page feature feature.
+ */
+
+include_once 'os2dagsorden_front_page_feature.features.inc';

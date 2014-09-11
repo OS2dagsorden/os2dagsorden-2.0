@@ -1,0 +1,39 @@
+<?php
+
+/**
+ /
+
+/**
+ * Creates a table in the database that will controll the workflow of the module.
+ *
+ * @return created schema
+ */
+function os2dagsorden_file_conversion_manager_schema() {
+    $schema['os2dagsorden_file_conversion_manager_files'] = array(
+        'description' => 'This table is used for save file info  for * -> PDF convertion',
+        'fields' => array(
+            'fid' => array(
+                'description' => 'The file entry fid.',
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'defualt' => 0,
+            ),
+            'filename' => array(
+                'description' => 'Name of the file',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+            'tmp_filename' => array(
+                'description' => 'Temporary filename',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+	    
+        ),
+        'primary key' => array('fid'),
+    );
+    return $schema;
+}

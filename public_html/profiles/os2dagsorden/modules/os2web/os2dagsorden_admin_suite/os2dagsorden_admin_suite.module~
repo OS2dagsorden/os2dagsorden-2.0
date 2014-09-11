@@ -1,0 +1,628 @@
+<?php
+
+/**
+ * Implementation of hook_menu
+ *
+ * @return list of links
+ */
+function os2dagsorden_admin_suite_menu() {
+    $items = array();
+    
+    $items['os2dagsorden/admin_suite/update_files_path'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_update_files_path',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/set_bullet_point_number'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_set_bullet_point_number',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/update_meeting_status'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_update_meeting_status',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/force_meeting_description_converting'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_force_meeting_description_converting',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/delete_converted_files'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_delete_converted_files',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/delete_extra_files'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_delete_extra_files',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/delete_unused_files'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_delete_unused_files',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/calc_damaged_meetings'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_calculate_damaged_meetings',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/resave_all_meetings'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_resaved_all_meetings',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    $items['os2dagsorden/admin_suite/update_meetings_sysid'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_update_meetings_sysid',
+        'access arguments' => array('administer os2web'),
+    );
+    
+    
+    return $items;
+}
+
+function os2dagsorden_admin_suite_update_meetings_sysid(){
+  $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
+  foreach ($meetings as $meeting_id){
+    //print_r($meeting_id);
+    $meeting_versions = os2web_esdh_provider_invoke('mm', 'import_meeting', $meeting_id);
+    foreach ($meeting_versions as $meeting_version){      
+      //trying to get meeting from id
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+	  ->fieldCondition('field_meeting_acadre_id', 'value', $meeting_id['id'], '=');
+
+      $result = $query->execute();
+      if (isset($result['node'])) {
+	  $nids = array_keys($result['node']);
+	  $node = reset(entity_load('node', $nids));
+      }
+      else {//if fails, trying to get meeting from date and committe combination. Assuming this is unique
+	  //getting committee tid
+	  $vid = db_select('taxonomy_vocabulary', 'tv')->fields('tv', array('vid'))->condition('machine_name', 'committee')->execute()->fetchField();
+
+	  $query = new EntityFieldQuery();
+	  $query->entityCondition('entity_type', 'taxonomy_term')
+	      ->propertyCondition('vid', $vid)
+	      ->fieldCondition('field_committee_acadre_id', 'value', $meeting_version['committee_id'], '=');
+
+	  $result = $query->execute();
+	  if (isset($result['taxonomy_term'])) {
+	      $tids = array_keys($result['taxonomy_term']);
+	      $com_tid = reset($tids);
+	  }
+
+	  //getting meeting
+	  $meeting_start_date_0000 = date('Y-m-d 00:00:00', strtotime($meeting_version['meeting_date_start']));
+	  $meeting_start_date_2359 = date('Y-m-d 23:59:59', strtotime($meeting_version['meeting_date_start']));
+
+	  $query = new EntityFieldQuery();
+	  $query->entityCondition('entity_type', 'node')
+	      ->fieldCondition('field_date', 'value', $meeting_start_date_0000, '>=')
+	      ->fieldCondition('field_date', 'value', $meeting_start_date_2359, '<=')
+	      ->fieldCondition('field_committee', 'tid', $com_tid, '=');
+	  $result = $query->execute();
+
+	  if (isset($result['node'])) {
+	      $nids = array_keys($result['node']);
+	      $node = reset(entity_load('node', $nids));
+	  }
+	  else {//if fails, creating a new meeting
+	      print_r('could not be found: ' . $meeting_id['id']);
+	      print_r("<br/>");
+	  }
+      }
+      //if (!empty($node->field_meeting_sysid['und'][0]))//break if already filled
+	//continue;
+	  
+      //setting sysid
+      $node->field_meeting_sysid['und'][0]['value'] = $meeting_version['meeting_id'];
+      
+      $contains_acadre_version = FALSE;
+      //updating acadre versions
+      if (isset($node->field_meeting_acadre_version['und'])){
+	foreach($node->field_meeting_acadre_version['und'] as $field){
+	  //print_r($field);
+	  //print_r($meeting_version['acadre_version']);
+	  if (strcmp($field['value'], $meeting_version['acadre_version']) == 0){
+	    $contains_acadre_version = TRUE;
+	    break;
+	  } 
+	} 
+      }
+      
+      if (!$contains_acadre_version){
+	$node->field_meeting_acadre_version['und'][]['value'] = $meeting_version['acadre_version'];
+      }
+	
+      print_r($node->field_meeting_acadre_version['und']);
+      print_r("Found nid: " . $node->nid);
+      print_r("<br/>");
+      //print_r($node);
+      print_r("<br/>");
+    }
+  }
+}
+
+/**
+ * Function to resave all the meetings.
+ * That will update the meetings meta data field (user for the search)
+ */
+function os2dagsorden_admin_suite_resaved_all_meetings(){
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', array('meeting'));
+  
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    foreach ($nids as $nid){
+      node_save(node_load($nid));
+    }
+  }
+      
+}
+
+function os2dagsorden_admin_suite_calculate_damaged_meetings(){
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', array('meeting'))
+      ->fieldCondition('field_meeting_acadre_id', 'value', '', '!=');
+      
+  $result = $query->execute();
+  
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    foreach ($nids as $nid){
+      $meeting = node_load($nid);
+      foreach ($meeting->field_ref_bullet_points['und'] as $bullet_point) {
+	  $bp = node_load($bullet_point['target_id']);
+	  if (empty($bp)){
+	    print_r($meeting->field_meeting_acadre_id['und'][0]['value']);
+	    print_r("<br/>");
+	    continue;
+	  }
+      }
+    }
+  }
+}
+
+/**
+  * Forces the file deletion of thos file that were successfully conveted to PDF.
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_delete_converted_files(){
+  $acadre_dir =  drupal_realpath("private://");
+  $dirs = scandir($acadre_dir);
+  foreach ($dirs as $dir){
+    if (preg_match("/^Files/i",$dir)){
+      print_r($dir . "<br/>");
+      $files = scandir($acadre_dir . '/' . $dir);
+      
+      $not_pdf_files = array();
+      $pdf_files = array();
+      foreach ($files as $file){
+	if ($file === '.' || $file === '..') continue;
+	
+	if (!preg_match("/\.xml$/i",$file) && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
+	  $not_pdf_files[] = $file;
+	} else if (preg_match("/\.pdf$/i",$file)){
+	  $pdf_files[] = $file;
+	}
+      }
+      
+      //going through not pdf files, to decide which to delete
+      $files_to_delete = array();
+      foreach ($not_pdf_files as $not_pdf_file){
+	$file_name = explode(".",$not_pdf_file);
+	if (preg_grep("/^" . $file_name[0] . "/i",$pdf_files)){//case insensitive array_contains
+	    //$files_to_delete[] = $acadre_dir . '/' . $dir . '/' . $not_pdf_file;
+	    $files_to_delete[] = $not_pdf_file;
+	}
+      }
+      
+      //deleting file
+      foreach ($files_to_delete as $file){
+	unlink($acadre_dir . '/' . $dir . '/' . $file);
+      }
+      print_r('not pdf files: ');
+      print_r($not_pdf_files);
+      print_r("<br/>");
+      print_r('pdf files: ');
+      print_r($pdf_files);
+      print_r("<br/>");
+      print_r('to be deleted: ');
+      print_r($files_to_delete);
+      print_r("<br/>");
+      print_r("<br/>");
+      print_r("<br/>");
+    }
+  }
+}
+
+/**
+  * Deletes the extra files from the acadre directory, which are copied together with the new acadre version but are never used
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_delete_extra_files(){
+    $to_delete = array();
+    
+    $results = db_query("SELECT * FROM file_managed WHERE filename LIKE '%.doc' 
+		    OR filename like '%.docx' 
+		    OR filename like '%.xls' 
+		    OR filename like '%.xlsx' 
+		    OR filename like '%.ppt' 
+		    OR filename like '%.pptx' 
+		    OR filename like '%.tif' 
+		    OR filename like '%.msg' 
+		    OR filename like '%.jpg'  
+		    OR filename like '%.rtf' 
+		    OR filename like '%.docm' 
+		    OR filename like '%.mpp' 
+		    OR filename like '%.tiff' 
+		    OR filename like '%.txt'
+		    OR filename like '%.pdf'");
+		    
+    while ($file = $results->fetchAssoc()){
+      print_r($file);
+      print_r("<br/>");
+      
+      //checking bullet point
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_bpa_file', 'fid', $file['fid'], '=');
+      $bpa = $query->execute();
+      if (isset($bpa['node'])) {
+	  continue;
+      }
+      
+      //checking meeting description closed
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_meeting_description_closed', 'fid', $file['fid'], '=');
+      $meeting = $query->execute();
+      if (isset($meeting['node'])) {
+	  continue;
+      }
+      
+      //checking meeting description opened
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_meeting_description', 'fid', $file['fid'], '=');
+      $meeting = $query->execute();
+      if (isset($meeting['node'])) {
+	  continue;
+      }
+      
+      //not used anywhere
+      $to_delete[] = $file;
+    }
+    print_r("<br/>");
+    print_r("<br/>");
+    print_r("<br/>");
+    print_r('to be deleted:');
+    foreach ($to_delete as $file){
+      file_delete(file_load($file['fid']));
+      print_r($file);
+      print_r("<br/>");
+    }
+    print_r("<br/>");
+    print_r("<br/>");
+    print_r("<br/>");
+}
+
+/**
+  * Deletes the files from acadre dir (not xml or pdf) that are not used by dagsorden.
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_delete_unused_files(){
+    $acadre_dir =  drupal_realpath("private://");
+    $dirs = scandir($acadre_dir);
+    foreach ($dirs as $dir){
+      if (preg_match("/^Files/i",$dir)){
+	print_r($dir . "<br/>");
+	$files = scandir($acadre_dir . '/' . $dir);
+	
+	$not_pdf_files = array();
+	foreach ($files as $file){
+	  if ($file === '.' || $file === '..') continue;
+	  
+	  if (!preg_match("/\.xml$/i",$file) && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
+	    $not_pdf_files[] = $file;
+	  }
+	}
+	
+	//going through not pdf files, to decide which to delete
+	$files_to_delete = array();
+	foreach ($not_pdf_files as $not_pdf_file){
+	  $result = db_query("SELECT COUNT(*) FROM file_managed WHERE filename ='" . $not_pdf_file . "'")->fetchField();
+	  if ($result == 0)
+	    $files_to_delete[] = $not_pdf_file;
+	  }
+	
+	//deleting file
+	foreach ($files_to_delete as $file){
+	  //unlink($acadre_dir . '/' . $dir . '/' . $file);
+	}
+	print_r('not pdf files: ');
+	print_r($not_pdf_files);
+	print_r("<br/>");
+	print_r('pdf files: ');
+	print_r($pdf_files);
+	print_r("<br/>");
+	print_r('to be deleted: ');
+	print_r($files_to_delete);
+	print_r("<br/>");
+	print_r("<br/>");
+	print_r("<br/>");
+      }
+    }
+}
+
+/**
+  * Forces the meeting description files to be converted to pdf.
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_force_meeting_description_converting(){
+    $nodes = entity_load('node', FALSE, array('type' => 'meeting'));
+    foreach ($nodes as $node){
+      if (isset($node->field_meeting_description[$node->language][0])){
+	$file = $node->field_meeting_description[$node->language][0];
+	$ext = explode('.', $file['filename']);
+	print_r('OPENED: nid[' . $node->nid . '] fid[' . $file['fid'] . '] type[' . $file['filename'] . '] ext[' . $ext[1] . ']');
+	print_r("<br/>");
+	if (strcasecmp($ext[1], 'PDF') != 0){
+	  print_r("conversion scheduled");
+	  os2dagsorden_adlib_api_convert_to_pdf($file['fid'], $node->nid);
+	}
+	print_r("<br/><br/>");
+      } 
+      if (isset($node->field_meeting_description_closed[$node->language][0])){
+	$file = $node->field_meeting_description_closed[$node->language][0];
+	$ext = explode('.', $file['filename']);
+	print_r('CLOSED: nid[' . $node->nid . '] fid[' . $file['fid'] . '] type[' . $file['filename'] . '] ext[' . $ext[1] . ']');
+	print_r("<br/>");
+	if (strcasecmp($ext[1], 'PDF') != 0){
+	  print_r("conversion scheduled");
+	  os2dagsorden_adlib_api_convert_to_pdf($file['fid'], $node->nid);
+	}
+	print_r("<br/><br/>");
+      }
+    }
+}
+
+/**
+  * Updates the meeting statuses to dagsorden/dagsorden+, referat/referat+
+  * also sets the right acadre id to the meeting
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_update_meeting_status(){
+    $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
+    foreach ($meetings as $meeting){
+      $versions = os2web_esdh_provider_invoke('mm', 'import_meeting', $meeting);
+      foreach ($versions as $version){
+	$type = $version['type'];
+	print_r($version['committee_id']);
+	print_r("<br/>");
+      }
+      
+      $last_ver = end($versions);
+      
+      //trying to get meeting from id
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+	  ->fieldCondition('field_meeting_acadre_id', 'value', $meeting['id'], '=');
+	  
+      $result = $query->execute();
+      if (isset($result['node'])) {
+	  $nids = array_keys($result['node']);
+	  $node = reset(entity_load('node', $nids));
+      }
+      else {//if fails, trying to get meeting from date and committe combination. Assuming this is unique
+	  //getting committee tid
+	  $vid = db_select('taxonomy_vocabulary', 'tv')->fields('tv', array('vid'))->condition('machine_name', 'committee')->execute()->fetchField();
+
+	  $query = new EntityFieldQuery();
+	  $query->entityCondition('entity_type', 'taxonomy_term')
+	      ->propertyCondition('vid', $vid)
+	      ->fieldCondition('field_committee_acadre_id', 'value', $last_ver['committee_id'], '=');
+
+	  $result = $query->execute();
+	  if (isset($result['taxonomy_term'])) {
+	      $tids = array_keys($result['taxonomy_term']);
+	      $com_tid = reset($tids);
+	  }
+
+	  //getting meeting
+	  $meeting_start_date_0000 = date('Y-m-d 00:00:00', strtotime($last_ver['meeting_date_start']));
+	  $meeting_start_date_2359 = date('Y-m-d 23:59:59', strtotime($last_ver['meeting_date_start']));
+
+	  $query = new EntityFieldQuery();
+	  $query->entityCondition('entity_type', 'node')
+	      ->fieldCondition('field_date', 'value', $meeting_start_date_0000, '>=')
+	      ->fieldCondition('field_date', 'value', $meeting_start_date_2359, '<=')
+	      ->fieldCondition('field_committee', 'tid', $com_tid, '=');
+	  $result = $query->execute();
+
+	  if (isset($result['node'])) {
+	      $nids = array_keys($result['node']);
+	      $node = reset(entity_load('node', $nids));
+	  }
+	  else {
+	      print_r('FAILED: meeting id[' . $meeting['id'] . '] NOT FOUND');
+	      print_r("<br/>");
+	      print_r("<br/>");
+	      continue;
+	  }
+      }
+      
+      $node->field_meeting_acadre_id[LANGUAGE_NONE][0]['value'] = $meeting['id'];
+      
+      if (strcmp($type, 'Dagsorden') == 0){//is dagsorden
+	if (os2dagsorden_access_helper_meeting_fully_converted($node))//everything is converted
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Dagsorden+');
+	else
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Dagsorden');
+      }
+      else {//is is referat
+	if (os2dagsorden_access_helper_meeting_fully_converted($node))//everything is converted
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Referat+');
+	else
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Referat');
+      }
+	
+      print_r('DONE: nid[' . $node->nid . '] meeting id[' . $meeting['id'] . '] - ' . $node->field_meeting_status['und'][0]['value']);
+      print_r("<br/>");
+      print_r("<br/>");
+    }    
+}
+
+/**
+  * Sets the bullet point number from the bullet point title, assuming that title is "Punkt [number] ...]
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_set_bullet_point_number(){
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+		->propertyCondition('type', array('bullet_point'));
+		//->fieldCondition('field_bul_point_number', 'value', 'NULL', '!=');
+    $result = $query->execute();
+    
+    
+    if (isset($result['node'])) {
+      $nids = array_keys($result['node']);
+      foreach ($nids as $nid){
+	$bullet_point = node_load($nid);
+	if (field_get_items('node', $bullet_point, 'field_bul_point_number') == NULL) {
+	  print_r("Doing: " . $nid);
+	  $title = $bullet_point->title;
+	  $title_arr = explode(" ", $title);
+	  if (strcmp($title_arr[1], "Punkt") != 0){
+	    $number = $title_arr[1];
+	  } 
+	  else {
+	    $number = $title_arr[2];
+	  }
+	  
+	  $bullet_point->field_bul_point_number['und'][0]['value'] = $number;
+	  node_save($bullet_point);
+	  print_r(" Done");
+	  print_r("<br/><br/>");
+	} else {
+	  print_r("Skipped: " . $nid);
+	  print_r("<br/><br/>");
+	}
+      }
+    }
+	
+}
+
+/**
+  * Updates the all the files (and the notes they are attached to: either meeting or bullet point attachment) 
+  * which have url set as 'public://acadre/Files_...' to 'private:///Files...'
+  *
+  * @return none
+  */
+function os2dagsorden_admin_suite_update_files_path(){
+  $files = entity_load('file');
+  foreach ($files as $file){
+    //add check of path
+    print_r($file);
+    print_r("<br/>");
+    
+    $public = 'public://acadre';
+    $private = 'private://';
+    
+    //bullet_point_attachment
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+		->propertyCondition('type', array('bullet_point_attachment'))
+		->fieldCondition('field_bpa_file', 'fid', $file->fid, '=');
+    $result = $query->execute();
+	
+    if (isset($result['node'])) {
+	 $nids = array_keys($result['node']);
+	 $bullet_point_attachment = reset(entity_load('node', $nids));
+		 
+	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
+	    $file->uri = str_replace($public,$private,$file->uri);
+	    file_save($file);
+	    node_save($bullet_point_attachment);
+	    print_r("hit meeting bpa");
+	    print_r("<br/><br/><br/>");
+	    continue;
+	 }
+    }
+        
+    //meeting - opened
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+		->propertyCondition('type', array('meeting'))
+		->fieldCondition('field_meeting_description', 'fid', $file->fid, '=');
+    $result = $query->execute();
+    if (isset($result['node'])) {
+	 $nids = array_keys($result['node']);
+	 $meeting = reset(entity_load('node', $nids));
+		 
+	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
+	    $file->uri = str_replace($public,$private,$file->uri);
+	    file_save($file);
+	    node_save($meeting);
+	    print_r("hit meeting closed");
+	    print_r("<br/><br/><br/>");
+	    continue;
+	 }
+    }
+    
+    //meeting - opened
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+		->propertyCondition('type', array('meeting'))
+		->fieldCondition('field_meeting_description_closed', 'fid', $file->fid, '=');
+    $result = $query->execute();
+    if (isset($result['node'])) {
+	 $nids = array_keys($result['node']);
+	 $meeting = reset(entity_load('node', $nids));
+	 
+	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
+	    $file->uri = str_replace($public,$private,$file->uri);
+	    file_save($file);
+	    node_save($meeting);
+	    print_r("hit meeting opened");
+	    print_r("<br/><br/><br/>");
+	    continue;
+	 }
+    }
+  }
+}
+
+
+/**
+  * Return is a string is starting with some other string
+  *
+  * @param string $haystack where to look
+  * @param string $needle   what to look for
+  *
+  * @return TRUE of FALSE
+  */
+function os2dagsorden_admin_suite_starts_with($haystack, $needle)
+{
+    return !strncmp($haystack, $needle, strlen($needle));
+}

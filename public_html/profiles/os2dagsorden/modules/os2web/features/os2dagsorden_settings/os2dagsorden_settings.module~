@@ -1,0 +1,70 @@
+<?php
+/**
+* os2dagsorden_settings
+*
+* PHP version 5
+*
+* @category OS2Dagsorden
+* @package  OS2Dagsorden_Importer
+* @file     Code for the OS2Dagsorden settings feature.
+* @author   Stanislav Kutasevits <stan@bellcom.dk>
+* @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+* @link     http://bellcom.dk
+*/
+
+include_once('os2dagsorden_settings.features.inc');
+
+/**
+ * Implementation of hook_menu()
+ *
+ * @return list of links
+ */
+function os2dagsorden_settings_menu() {
+    $items['admin/config/os2dagsorden'] = array(
+        'title' => 'OS2Dagsorden Setup',
+        'description' => 'Set up OS2 cms services',
+        'position' => 'right',
+        'weight' => -15,
+        'access arguments' => array('administer os2web'),
+        'page callback' => 'system_admin_menu_block_page',
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['admin/config/os2dagsorden/settings'] = array(
+        'title' => 'OS2Dagsorden Settings',
+        'description' => 'General settings for the OS2Dagsorden project',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('os2dagsorden_settings_settings_form'),
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_NORMAL_ITEM | MENU_DEFAULT_LOCAL_TASK,
+        'file' => 'os2dagsorden_settings.admin.inc',
+    );
+    $items['admin/config/os2dagsorden/flush_calendar_preferences'] = array(
+        'title' => 'Calendar preferences flushing',
+        'description' => 'Clicking on this link all the calendar preferences (pol/org) will be flushed. The preferences are retrieved again from SOFD, once "Importer cron" is run',
+        'page callback' => 'os2dagsorden_settings_flush_calendar_preferences',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    
+    return $items;
+}
+
+function os2dagsorden_settings_flush_calendar_preferences(){
+    $users = db_select('users', 'u')
+	  ->fields('u', array('uid'))
+	  ->execute()
+	  ->fetchAll();
+    foreach ($users as $user) {
+      if ($user->uid == 0)
+	continue;
+      
+      $user = user_load($user->uid);
+      $user->field_user_meetings_category['und'] = array();
+      user_save($user);
+    }
+    
+    drupal_set_message('The calendar preferences have been flushed');
+    drupal_goto('admin/config');
+}

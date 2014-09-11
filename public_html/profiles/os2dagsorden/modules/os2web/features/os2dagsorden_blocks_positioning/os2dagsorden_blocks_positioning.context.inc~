@@ -1,0 +1,516 @@
+<?php
+/**
+ * @file
+ * os2dagsorden_blocks_positioning.context.inc
+ */
+
+/**
+ * Implements hook_context_default_contexts().
+ */
+function os2dagsorden_blocks_positioning_context_default_contexts() {
+  $export = array();
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_annotator_light';
+  $context->description = 'The light version of annotator page';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'meeting/*/bullet-point/*/bullet-point-attachment-light/*' => 'meeting/*/bullet-point/*/bullet-point-attachment-light/*',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'region' => array(
+      'bartik' => array(
+        'disable' => array(
+          'header' => 0,
+          'help' => 0,
+          'page_top' => 0,
+          'page_bottom' => 0,
+          'highlighted' => 0,
+          'featured' => 0,
+          'content' => 0,
+          'sidebar_first' => 0,
+          'sidebar_second' => 0,
+          'triptych_first' => 0,
+          'triptych_middle' => 0,
+          'triptych_last' => 0,
+          'footer_firstcolumn' => 0,
+          'footer_secondcolumn' => 0,
+          'footer_thirdcolumn' => 0,
+          'footer_fourthcolumn' => 0,
+          'footer' => 0,
+          'dashboard_main' => 0,
+          'dashboard_sidebar' => 0,
+          'dashboard_inactive' => 0,
+        ),
+      ),
+      'seven' => array(
+        'disable' => array(
+          'content' => 0,
+          'help' => 0,
+          'page_top' => 0,
+          'page_bottom' => 0,
+          'sidebar_first' => 0,
+          'dashboard_main' => 0,
+          'dashboard_sidebar' => 0,
+          'dashboard_inactive' => 0,
+        ),
+      ),
+      'syddjurs_omega_subtheme' => array(
+        'disable' => array(
+          'page_top' => 'page_top',
+          'page_bottom' => 'page_bottom',
+          'user_first' => 'user_first',
+          'user_second' => 'user_second',
+          'branding' => 'branding',
+          'menu' => 'menu',
+          'sidebar_first' => 'sidebar_first',
+          'sidebar_second' => 'sidebar_second',
+          'header_first' => 'header_first',
+          'header_second' => 'header_second',
+          'preface_first' => 'preface_first',
+          'preface_second' => 'preface_second',
+          'preface_third' => 'preface_third',
+          'postscript_first' => 'postscript_first',
+          'postscript_second' => 'postscript_second',
+          'postscript_third' => 'postscript_third',
+          'postscript_fourth' => 'postscript_fourth',
+          'footer_first' => 'footer_first',
+          'footer_second' => 'footer_second',
+          'dashboard_main' => 'dashboard_main',
+          'dashboard_sidebar' => 'dashboard_sidebar',
+          'dashboard_inactive' => 'dashboard_inactive',
+          'content' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('The light version of annotator page');
+  $export['os2dagsorden_annotator_light'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_calendar_block';
+  $context->description = 'Sidepane and the calendar block. Will be shown everywhere except the month view of a big calendar, and the pages with text (attachments).';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '~calendar-field-date/month*' => '~calendar-field-date/month*',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'administrator' => 'administrator',
+        'authenticated user' => 'authenticated user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-events-block_1' => array(
+          'module' => 'views',
+          'delta' => 'events-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-23',
+        ),
+        'menu-menu-sidepane-menu' => array(
+          'module' => 'menu',
+          'delta' => 'menu-sidepane-menu',
+          'region' => 'sidebar_second',
+          'weight' => '-22',
+        ),
+        'views-user_committee-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_committee-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-21',
+        ),
+        'views-user_follow_committees-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_follow_committees-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-20',
+        ),
+        'views--exp-meetings_search-page' => array(
+          'module' => 'views',
+          'delta' => '-exp-meetings_search-page',
+          'region' => 'sidebar_second',
+          'weight' => '-19',
+        ),
+        'block-2' => array(
+          'module' => 'block',
+          'delta' => 2,
+          'region' => 'sidebar_second',
+          'weight' => '-18',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Sidepane and the calendar block. Will be shown everywhere except the month view of a big calendar, and the pages with text (attachments).');
+  $export['os2dagsorden_calendar_block'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_calendar_block_ballerup';
+  $context->description = 'Sidepane and the calendar block. Will be shown everywhere except the month view of a big calendar, and the pages with text (attachments).';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '~calendar-field-date/month*' => '~calendar-field-date/month*',
+        '~admin/*' => '~admin/*',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'administrator' => 'administrator',
+        'authenticated user' => 'authenticated user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views--exp-meetings_search-page' => array(
+          'module' => 'views',
+          'delta' => '-exp-meetings_search-page',
+          'region' => 'content',
+          'weight' => '-22',
+        ),
+        'menu-menu-sidepane-menu' => array(
+          'module' => 'menu',
+          'delta' => 'menu-sidepane-menu',
+          'region' => 'sidebar_second',
+          'weight' => '-22',
+        ),
+        'views-events-block_1' => array(
+          'module' => 'views',
+          'delta' => 'events-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-21',
+        ),
+        'views-user_committee-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_committee-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-20',
+        ),
+        'views-user_follow_committees-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_follow_committees-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-19',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Sidepane and the calendar block. Will be shown everywhere except the month view of a big calendar, and the pages with text (attachments).');
+  $export['os2dagsorden_calendar_block_ballerup'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_content';
+  $context->description = 'content is shown everywhere';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '~<front>' => '~<front>',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'system-main' => array(
+          'module' => 'system',
+          'delta' => 'main',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('content is shown everywhere');
+  $export['os2dagsorden_content'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_front_page';
+  $context->description = 'Front page blocks positioning';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '<front>' => '<front>',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-bae826754ab8812775bd594878d7fdb1' => array(
+          'module' => 'views',
+          'delta' => 'bae826754ab8812775bd594878d7fdb1',
+          'region' => 'content',
+          'weight' => '-21',
+        ),
+        'views-c8c6c91b397acf23018fcefd40a1fa29' => array(
+          'module' => 'views',
+          'delta' => 'c8c6c91b397acf23018fcefd40a1fa29',
+          'region' => 'content',
+          'weight' => '-20',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Front page blocks positioning');
+  $export['os2dagsorden_front_page'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_login_block';
+  $context->description = 'shown only to the unauthorized users';
+  $context->tag = '';
+  $context->conditions = array(
+    'user' => array(
+      'values' => array(
+        'anonymous user' => 'anonymous user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'user-login' => array(
+          'module' => 'user',
+          'delta' => 'login',
+          'region' => 'content',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('shown only to the unauthorized users');
+  $export['os2dagsorden_login_block'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_show_hide_menu';
+  $context->description = 'show or hides the side pane';
+  $context->tag = '';
+  $context->conditions = array(
+    'sitewide' => array(
+      'values' => array(
+        1 => 1,
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'administrator' => 'administrator',
+        'authenticated user' => 'authenticated user',
+        'os2dagsorden' => 'os2dagsorden',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'block-1' => array(
+          'module' => 'block',
+          'delta' => 1,
+          'region' => 'menu',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('show or hides the side pane');
+  $export['os2dagsorden_show_hide_menu'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_sidepane';
+  $context->description = 'Will be shown on calendar month view only. Other time os2web_calendar (sidepane included will be shown))';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'calendar-field-date/month*' => 'calendar-field-date/month*',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'administrator' => 'administrator',
+        'authenticated user' => 'authenticated user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'menu-menu-sidepane-menu' => array(
+          'module' => 'menu',
+          'delta' => 'menu-sidepane-menu',
+          'region' => 'sidebar_second',
+          'weight' => '-22',
+        ),
+        'views-user_committee-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_committee-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-21',
+        ),
+        'views-user_follow_committees-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_follow_committees-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-20',
+        ),
+        'views--exp-meetings_search-page' => array(
+          'module' => 'views',
+          'delta' => '-exp-meetings_search-page',
+          'region' => 'sidebar_second',
+          'weight' => '-19',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Will be shown on calendar month view only. Other time os2web_calendar (sidepane included will be shown))');
+  $export['os2dagsorden_sidepane'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_sidepane_ballerup';
+  $context->description = 'Will be shown on calendar month view only. Other time os2web_calendar (sidepane included will be shown))';
+  $context->tag = '';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'calendar-field-date/month*' => 'calendar-field-date/month*',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'authenticated user' => 'authenticated user',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views--exp-meetings_search-page' => array(
+          'module' => 'views',
+          'delta' => '-exp-meetings_search-page',
+          'region' => 'content',
+          'weight' => '-22',
+        ),
+        'menu-menu-sidepane-menu' => array(
+          'module' => 'menu',
+          'delta' => 'menu-sidepane-menu',
+          'region' => 'sidebar_second',
+          'weight' => '-22',
+        ),
+        'views-user_committee-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_committee-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-21',
+        ),
+        'views-user_follow_committees-block_1' => array(
+          'module' => 'views',
+          'delta' => 'user_follow_committees-block_1',
+          'region' => 'sidebar_second',
+          'weight' => '-20',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 1;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Will be shown on calendar month view only. Other time os2web_calendar (sidepane included will be shown))');
+  $export['os2dagsorden_sidepane_ballerup'] = $context;
+
+  $context = new stdClass();
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
+  $context->name = 'os2dagsorden_user_logout';
+  $context->description = 'Modified log out menu';
+  $context->tag = '';
+  $context->conditions = array(
+    'sitewide' => array(
+      'values' => array(
+        1 => 1,
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-user_logout_menu-block' => array(
+          'module' => 'views',
+          'delta' => 'user_logout_menu-block',
+          'region' => 'menu',
+          'weight' => '-10',
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Modified log out menu');
+  $export['os2dagsorden_user_logout'] = $context;
+
+  return $export;
+}

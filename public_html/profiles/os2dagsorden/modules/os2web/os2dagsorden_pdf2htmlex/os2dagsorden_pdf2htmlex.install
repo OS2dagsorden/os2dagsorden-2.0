@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * os2dagsorden_adlib_api
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Adlib_Api
+ * @file     Install file
+ * @author   Jesper Mathiassen <jm@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+
+/**
+ * Creates a table in the database that will controll the workflow of the module.
+ *
+ * @return created schema
+ */
+function os2dagsorden_pdf2htmlex_schema() {
+    $schema['os2dagsorden_pdf2htmlex_files'] = array(
+        'description' => 'This table is used as schedule for PDF -> HTML convertion',
+        'fields' => array(
+            'fid' => array(
+                'description' => 'The file entry fid.',
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'defualt' => 0,
+            ),
+            'did' => array(
+                'description' => 'The destination nid.',
+                'type' => 'int',
+                'unsigned' => TRUE,
+            ),
+            'filename' => array(
+                'description' => 'Name of the file',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+            'created_filepath' => array(
+                'description' => 'The path of the created HTML output',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+	    'progress' => array(
+                'description' => 'The information about the job',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+        ),
+        'primary key' => array('fid', 'did'),
+    );
+    return $schema;
+}

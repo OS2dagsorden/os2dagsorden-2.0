@@ -1,0 +1,14 @@
+name = OS2Web indstillinger
+description = Indstillinger til div. moduler samt administration sektion
+core = 7.x
+package = OS2Web
+php = 5.2.4
+version = 7.x-0.5
+project = os2web_settings
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = print
+dependencies[] = strongarm
+datestamp = 1338117520
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1

@@ -1,0 +1,47 @@
+<?php 
+
+function os2dagsorden_annotator_schema() {
+    $schema['os2dagsorden_annotator_notes'] = array(
+        'description' => 'This table stores the user added notes',
+        'fields' => array(
+            'id' => array(
+                'description' => 'The note id',
+                'type' => 'serial',
+                'not null' => TRUE,
+            ),
+            'bilag_id' => array(
+                'description' => 'Node id of the attachment',
+                'type' => 'int',
+		'not null' => TRUE,
+            ),
+	    'bullet_point_id' => array(
+                'description' => 'Node id of the bullet point',
+                'type' => 'int',
+		'not null' => TRUE,
+            ),
+	    'meeting_id' => array(
+                'description' => 'Node id of the meeting',
+                'type' => 'int',
+		'not null' => TRUE,
+            ),
+	    'uid' => array(
+                'description' => 'The user id of the note author',
+                'type' => 'int',
+		'not null' => TRUE,
+            ),
+	    'note_info' => array(
+                'description' => 'The information of the note object',
+                'type' => 'text',
+            ),
+        ),
+        'primary key' => array('id'),
+	'indexes' => array(
+	    'ind_bilag_id'        => array('bilag_id'),
+	    'ind_bullet_point'    => array('bullet_point_id'),
+	    'ind_meeting'         => array('meeting_id'),
+	    'ind_combined'        => array('bilag_id', 'bullet_point_id', 'meeting_id'),
+	    'uid'                 => array('uid'),
+	),
+    );
+    return $schema;
+}

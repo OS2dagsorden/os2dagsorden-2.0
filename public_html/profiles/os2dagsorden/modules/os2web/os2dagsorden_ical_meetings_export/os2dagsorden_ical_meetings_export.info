@@ -1,0 +1,5 @@
+name = OS2Dagsorden iCal meetings export
+description = This module allows exporting the meetings in iCal format. Was made as an alternative to Date iCal module (actually is simplified and specialized version of it), which turns out to be buggy.
+package = OS2Dagsorden
+core = 7.x
+version = "dev"

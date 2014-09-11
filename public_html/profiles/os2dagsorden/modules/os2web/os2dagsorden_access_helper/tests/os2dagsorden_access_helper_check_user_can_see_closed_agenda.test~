@@ -1,0 +1,56 @@
+<?php
+
+class Os2dagsordenAccessHelper_CheckUserCanSeeClosedAgenda_WebTestCase extends Os2dagsordenAccessHelperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'os2dagsorden_access_helper_check_user_can_see_closed_agenda',
+      'description' => 'Test of os2dagsorden_access_helper_check_user_can_see_closed_agenda function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+  
+  /**
+  * Member can see closed agenda
+  */
+  function test_os2dagsorden_access_helper_check_user_can_see_closed_agenda1(){
+    $this->os2dagsordenLogin($this->committee1_member);
+    $this->assertTrue(os2dagsorden_access_helper_check_user_can_see_closed_agenda($this->meeting->nid));
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Follows+ can see closed agenda
+  */
+  function test_os2dagsorden_access_helper_check_user_can_see_closed_agenda2(){
+    $this->os2dagsordenLogin($this->committee1_follows_plus);
+    $this->assertTrue(os2dagsorden_access_helper_check_user_can_see_closed_agenda($this->meeting->nid));
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Follow cannot see closed agenda
+  */
+  function test_os2dagsorden_access_helper_check_user_can_see_closed_agenda3(){
+    $this->os2dagsordenLogin($this->committee1_follows);
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_closed_agenda($this->meeting->nid));
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Logged in user, without permission cannot see closed agenda
+  */
+  function test_os2dagsorden_access_helper_check_user_can_see_closed_agenda4(){
+    $this->os2dagsordenLogin($this->user1);
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_closed_agenda($this->meeting->nid));
+    $this->fixSetUp();
+  }
+  
+  /**
+  * Anonymous user cannot see closed agenda
+  */
+  function test_os2dagsorden_access_helper_check_user_can_see_closed_agenda5(){
+    $this->os2dagsordenLogout();
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_closed_agenda($this->meeting->nid));
+    $this->fixSetUp();
+  }
+}

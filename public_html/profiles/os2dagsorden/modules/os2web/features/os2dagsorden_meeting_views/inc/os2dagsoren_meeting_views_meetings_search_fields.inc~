@@ -1,0 +1,139 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Web Meeting Views - meetings search view.
+ */
+
+/////////////////////////////////////////header START /////////////////////////////////////////
+function os2dagsorden_meeting_views_meetings_search_breadcrumb(){
+  global $base_url;
+  $q = explode('/',$_GET['q']);
+  $breadcrumb[] = l('Hjem', $base_url);
+  $breadcrumb[] .= '<span class="breadcrumb-active">Møde søgning</span>';
+  drupal_set_breadcrumb($breadcrumb);
+}
+
+function os2dagsorden_meeting_views_meetings_search_help_text(){
+  print '<div class="help-button" title="Her vises de møder der indeholdt møder, 
+  punkter eller bilag der matchede dine søgekriterier. Søgeresultatet vises på mødeniveau i listen."></div>';
+}
+/////////////////////////////////////////header END /////////////////////////////////////////
+
+/////////////////////////////////////////PAGE START/////////////////////////////////////////
+function os2dagsorden_meeting_views_meetings_search_fields_bp_id($meta_data){
+  $search_param = $_GET['search_params'];
+  if (!empty($search_param)){
+    $search_param_pos_s = stripos($meta_data, $search_param);
+    $search_param_pos_e = $search_param_pos_s + strlen($search_param);
+    //part of the text before the found occurence
+    $meta_data = substr($meta_data, 0, $search_param_pos_e+1);
+
+    $search_token_pos_s = strripos($meta_data, '[search_token]');
+    $search_token_pos_e = $search_token_pos_s+strlen('[search_token]');
+
+    $bullet_point_token_pos_s = strripos($meta_data, '[bp]');
+    $bullet_point_token_pos_e = $bullet_point_token_pos_s + strlen('[bp]');
+
+    $bpa_token_pos_s = strripos($meta_data, '[bpa]');
+    $bpa_token_pos_e = $bpa_token_pos_s + strlen('[bpa]');
+
+    if ($bullet_point_token_pos_s == $search_token_pos_e){//is in bullet point
+      $bullet_point_id = substr($meta_data, $bullet_point_token_pos_e+1, $bpa_token_pos_s-$bullet_point_token_pos_e-2);
+      if ($bullet_point_id){
+	print("/bullet-point/" . $bullet_point_id);
+      }
+
+    }
+  }
+}
+
+function os2dagsorden_meeting_views_meetings_search_fields_bpa_id($meta_data){
+  $search_param = $_GET['search_params'];
+  if (!empty($search_param)){
+    $search_param_pos_s = stripos($meta_data, $search_param);
+    $search_param_pos_e = $search_param_pos_s + strlen($search_param);
+    //part of the text before the found occurence
+    $meta_data = substr($meta_data, 0, $search_param_pos_e+1);
+
+    $search_token_pos_s = strripos($meta_data, '[search_token]');
+    $search_token_pos_e = $search_token_pos_s+strlen('[search_token]');
+
+    $bullet_point_token_pos_s = strripos($meta_data, '[bp]');
+    $bullet_point_token_pos_e = $bullet_point_token_pos_s + strlen('[bp]');
+
+    $bpa_token_pos_s = strripos($meta_data, '[bpa]');
+    $bpa_token_pos_e = $bpa_token_pos_s + strlen('[bpa]');
+
+    if ($bullet_point_token_pos_s == $search_token_pos_e){//is in bullet point
+      $bullet_point_id = substr($meta_data, $bullet_point_token_pos_e+1, $bpa_token_pos_s-$bullet_point_token_pos_e-2);
+      $bullet_point = node_load($bullet_point_id);
+
+      $bpa_id = substr($meta_data, $bpa_token_pos_e+1, strripos($meta_data, ']')-$bpa_token_pos_e-1);
+      if ($bpa_id){
+	print("/bullet-point-attachment/" . $bpa_id);
+      }
+    }
+  }
+}
+
+function os2dagsorden_meeting_views_meetings_search_fields_meeting_has_sp($meeting_id){
+  if (os2dagsorden_access_helper_meeting_has_speaker_paper($meeting_id))
+    print '<div class="indicator-has-speaker-paper"></div>';
+  else
+    print '<div class="indicator-empty"></div>';
+}
+
+function os2dagsorden_meeting_views_meetings_search_fields_meeting_has_notes($meeting_id){
+  $annotations = os2dagsorden_annotator_get_notes_by_meeting_id($meeting_id);
+  if (!empty($annotations))
+    print '<div class="indicator-has-notes"></div>';
+  else 
+    print '<div class="indicator-empty"></div>';
+}
+
+function os2dagsorden_meeting_views_meetings_search_fields_meeting_title($data){
+  os2dagsorden_meeting_views_common_meeting_title_listed
+}
+
+function os2dagsorden_meeting_views_meetings_search_fields_placering($meta_data){
+  $search_param = $_GET['search_params'];
+  if (!empty($search_param)){
+    $search_param_pos_s = stripos($meta_data, $search_param);
+    $search_param_pos_e = $search_param_pos_s + strlen($search_param);
+    //part of the text before the found occurence
+    $meta_data = substr($meta_data, 0, $search_param_pos_e+1);
+
+    $search_token_pos_s = strripos($meta_data, '[search_token]');
+    $search_token_pos_e = $search_token_pos_s+strlen('[search_token]');
+
+    $bullet_point_token_pos_s = strripos($meta_data, '[bp]');
+    $bullet_point_token_pos_e = $bullet_point_token_pos_s + strlen('[bp]');
+
+    $bpa_token_pos_s = strripos($meta_data, '[bpa]');
+    $bpa_token_pos_e = $bpa_token_pos_s + strlen('[bpa]');
+
+    if ($bullet_point_token_pos_s == $search_token_pos_e){//is in bullet point
+      $bullet_point_id = substr($meta_data, $bullet_point_token_pos_e+1, $bpa_token_pos_s-$bullet_point_token_pos_e-2);
+      $bullet_point = node_load($bullet_point_id);
+
+      $bpa_id = substr($meta_data, $bpa_token_pos_e+1, strripos($meta_data, ']')-$bpa_token_pos_e-1);
+      $bpa = node_load($bpa_id);
+
+      $to_print = $bpa->title . ': [' . $bullet_point->title . ']';
+      if (os2dagsorden_access_helper_is_touch()){
+	if (mb_strlen($to_print) > 40)
+	  $to_print = mb_substr($to_print, 0, 37) . '...';
+      } else {
+	if (mb_strlen($to_print) > 60)
+	  $to_print = mb_substr($to_print, 0, 57) . '...';
+      }
+    }
+  }
+  if (!empty($to_print)){
+    print($to_print);
+  }
+  else {
+    print('&nbsp;');
+  }
+}
+/////////////////////////////////////////PAGE END /////////////////////////////////////////

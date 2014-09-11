@@ -1,0 +1,11 @@
+.form-actions input {
+  margin-right: 0.5em;
+}
+
+.form-actions input:hover {
+  background: #ffffff;
+}
+
+label {
+  font-weight: bold;
+}

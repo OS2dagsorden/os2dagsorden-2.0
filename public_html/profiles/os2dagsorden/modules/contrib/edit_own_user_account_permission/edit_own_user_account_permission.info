@@ -1,0 +1,11 @@
+name = Edit own user account permission
+description = Provides a permission to control whether or not users can edit their own account
+package = Permissions
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-10-29
+version = "7.x-2.0-beta1"
+core = "7.x"
+project = "edit_own_user_account_permission"
+datestamp = "1319852437"
+

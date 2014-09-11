@@ -1,0 +1,17 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Dagsorden Sidepane menu
+ */
+
+/**
+ * Sets the title of the menu block to nothing
+ */
+function os2dagsorden_sidepane_menu_enable(){
+ db_update('block')->fields(array(
+    'title' => '<none>',
+  ))
+  ->condition('delta', 'menu-sidepane-menu', '=')
+  ->execute();
+}
+

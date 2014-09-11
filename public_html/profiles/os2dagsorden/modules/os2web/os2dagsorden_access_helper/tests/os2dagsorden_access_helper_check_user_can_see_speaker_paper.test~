@@ -1,0 +1,52 @@
+<?php
+
+class Os2dagsordenAccessHelper_CheckUserCanSeeSpeakerPaper_WebTestCase extends Os2dagsordenAccessHelperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'os2dagsorden_access_helper_check_user_can_see_speaker_paper',
+      'description' => 'Test of os2dagsorden_access_helper_check_user_can_see_speaker_paper function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+  
+  /**
+  * Can see own speaker paper
+  */
+  public function test_os2dagsorden_access_helper_check_user_can_see_speaker_paper1(){
+    $this->assertTrue(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp1->nid));
+    $this->assertTrue(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp2->nid));
+  }
+  
+  /**
+  * Cannot other speaker papers
+  */
+  public function test_os2dagsorden_access_helper_check_user_can_see_speaker_paper2(){
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp3->nid));
+  }
+
+  /**
+  * Can see own speaker paper, different user
+  */
+  public function test_os2dagsorden_access_helper_check_user_can_see_speaker_paper3(){
+    $this->os2dagsordenLogin($this->user2);
+    
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp1->nid));
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp2->nid));
+    
+    $this->fixSetUp();
+  }
+  
+  /**
+  * No user
+  */
+  public function test_os2dagsorden_access_helper_check_user_can_see_speaker_paper4(){
+    $this->os2dagsordenLogout();
+    
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp1->nid));
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp2->nid));
+    $this->assertFalse(os2dagsorden_access_helper_check_user_can_see_speaker_paper($this->sp3->nid));
+    
+    $this->fixSetUp();
+  }
+  
+}

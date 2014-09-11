@@ -1,0 +1,4 @@
+name = OS2Dagsorden Annotator
+description = A module allowing to add notes documents.
+core = 7.x
+package = OS2Dagsorden

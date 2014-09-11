@@ -1,0 +1,8 @@
+7.x-2.0
+-----------
+
+- Issue #2278945 by xtfer: Fixed Permission for admin settings page
+- Issue #2244399 by xtfer: Update File Lock to File Entity 2.0-alpha-3 compatibility, and add support for VBO
+- Issue #1514378 by lsolesen|David_Rothstein: Fixed File Lock locks temporary files.
+- Menu link names should be sentence case & descriptions should be translatable
+- Coding standards clean up

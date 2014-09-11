@@ -1,0 +1,64 @@
+<?php
+
+/*
+ *
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @copyright Bellcom Open Source aps.
+ */
+function os2web_audit_log_schema() {
+  $schema['os2web_audit_log'] = array(
+      'description' => 'Table used for logging data access in valhalla',
+      'fields' => array(
+          'lid' => array(
+              'type' => 'serial',
+              'description' => 'Log id',
+              'size' => 'big',
+              'unsigned' => TRUE,
+              'not null' => TRUE,
+          ),
+          'time' => array(
+              'description' => 'Timestamp for the event.',
+              'mysql_type' => 'datetime',
+              'pgsql_type' => 'timestamp',
+          ),
+          'uid' => array(
+              'description' => 'The user involved in the action.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'user_ip' => array(
+              'description' => 'The user\'s IP-address involved in the action.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'nid' => array(
+              'description' => 'The node involved in the action.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'action' => array(
+              'description' => 'The action.',
+              'type' => 'varchar',
+              'length' => 32,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+          'information' => array(
+              'description' => 'Any additional information available.',
+              'type' => 'varchar',
+              'length' => 255,
+              'not null' => TRUE,
+              'default' => '',
+          ),
+      ),
+      'primary key' => array('lid'),
+  );
+  return $schema;
+}
+?>

@@ -1,0 +1,58 @@
+<?php
+
+/*
+ *
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @copyright Bellcom Open Source aps.
+ */
+
+/**
+ * Implementation of hook_menu()
+ *
+ */
+function os2web_audit_log_menu() {
+  $items['admin/config/os2web/audit_log'] = array(
+    'title' => 'OS2web audit log',
+    'description' => 'Configure audit log settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2web_audit_log_admin_configure'),
+    'access arguments' => array('administer os2web'),
+    'file' => 'os2web_audit_log.admin.inc',
+  );
+    
+  $items['admin/reports/audit_log'] = array(
+    'title' => 'OS2web audit log',
+    'description' => 'Shows all logged events.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2web_audit_log_overview_page_form'),
+    'access arguments' => array('administer os2web'),
+    'file' => 'os2web_audit_log.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+function os2web_audit_log_node_load($nodes, $types) {
+  global $user;
+  
+  $node_types = variable_get('os2web_audit_log_nodes', array());
+  
+  foreach ($nodes as $node) {
+      if (in_array($node->type, $node_types, TRUE)){
+	_os2web_audit_log_do_log(gmdate("Y-m-d H:i:s", $_SERVER['REQUEST_TIME']), $user->uid, empty($_SERVER['REMOTE_ADDR'])? '': $_SERVER['REMOTE_ADDR'], $node->nid, $node->type, 'load');
+      }
+  }
+}
+
+function _os2web_audit_log_do_log($time, $uid, $ip, $nid, $node_type, $action, $add_info = '') {
+  db_insert('os2web_audit_log')
+      ->fields(array(
+          'time' => $time,
+          'uid' => $uid,
+          'user_ip' => $ip,
+          'nid' => $nid,
+          'node_type' => $node_type,
+          'action' => $action,
+          'information' => $add_info))
+      ->execute();
+}

@@ -1,0 +1,17 @@
+diff --git a/views.module b/views.module
+index 3b9eff1..35d10c5 100644
+--- a/views.module
++++ b/views.module
+@@ -518,8 +518,10 @@ function views_arg_load($value, $name, $display_id, $index) {
+ function views_page($name, $display_id) {
+   $args = func_get_args();
+   // Remove $name and $display_id from the arguments.
+-  array_shift($args);
+-  array_shift($args);
++  //this line changed to the previous implementation of views module by Stanislav Kutasevits (stanbellcom)
++  //to make it possible to use two contextual filters at the same time
++  //refer to http://www.scrumdo.com/projects/project/politiker-webapp/iteration/45959#story_319638 for more information
++  unset($args[0], $args[1]);
+ 
+   // Load the view and render it.
+   if ($view = views_get_view($name)) {

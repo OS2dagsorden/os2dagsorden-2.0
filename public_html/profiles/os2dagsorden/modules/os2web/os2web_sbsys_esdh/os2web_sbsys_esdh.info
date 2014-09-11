@@ -1,0 +1,13 @@
+name = OS2Web SBSYS ESDH System
+description = OS2Web SBSYS backend for ESDH system.
+
+package = OS2Web - ESDH
+core = 7.x
+version = 7.x-1.0-beta1
+
+dependencies[] = os2web_esdh_provider
+dependencies[] = ctools
+dependencies[] = features
+features[features_api][] = api:1
+
+files[] = plugins/mm/os2web_sbsys_esdh_mm.inc

@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * os2dagsorden_adlib_api
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Adlib_Api
+ * @file     Install file
+ * @author   Jesper Mathiassen <jm@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+
+/**
+ * Creates a table in the database that will controll the adlib api workflow.
+ *
+ * @return created schema
+ */
+function os2dagsorden_adlib_api_schema() {
+    $schema['os2web_adlib_api_doc_files'] = array(
+        'description' => 'This table relates cached files from the PWS to the drupal file entry',
+        'fields' => array(
+            'fid' => array(
+                'description' => 'The file entry id.',
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'defualt' => 0,
+            ),
+            'did' => array(
+                'description' => 'The document identifier from PWS.',
+                'type' => 'int',
+                'unsigned' => TRUE,
+            ),
+            'jobtype' => array(
+                'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
+                'type' => 'int',
+                'unsigned' => TRUE,
+            ),
+            'job_id' => array(
+                'description' => 'ID used for the pdf conversion job.',
+                'type' => 'varchar',
+                'length' => 128,
+            ),
+            'job_info' => array(
+                'description' => 'Information object about the pdf conversion job.',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+        ),
+        'primary key' => array('fid', 'jobtype'),
+    );
+    return $schema;
+}
+
+/**
+ * Sandbox 7002 test method
+ *
+ * @param mixed &$sandbox sandbox
+ * 
+ * @return database update command
+ */
+function os2dagsorden_adlib_api_update_7002(&$sandbox) {
+    $ret = array();
+    $ret[] = db_add_field(
+            'os2web_adlib_api_doc_files', 'jobtype', array(
+        'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
+        'type' => 'int',
+        'unsigned' => TRUE,
+            )
+    );
+    $ret[] = db_add_primary_key('os2web_adlib_api_doc_files', array('fid', 'jobtype'));
+    return $ret;
+}

@@ -1,0 +1,925 @@
+<?php
+/**
+ * os2dagsorden_importer
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Importer
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+define('DEFAULT_ACADRE_VIEWS_IMPORT_DIR', 'public://acadre_views');
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @return array of links.
+ */
+function os2dagsorden_importer_menu() {
+    $items = array();
+
+    $items['os2dagsorden/sync'] = array(
+        'page callback' => 'os2dagsorden_importer_sync',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+/**
+ * Link fallback. Fires all the imports.
+ *
+ * @return none
+ */
+function os2dagsorden_importer_sync() {
+    os2dagsorden_importer_import_user_committees();
+    //os2dagsorden_importer_import_committees();
+    //os2dagsorden_importer_import_meetings();
+}
+
+function os2dagsorden_importer_cronapi($op, $job = NULL) {
+  switch ($op) {
+    case 'list':
+      return array('os2dagsorden_importer_cron' => t("Imports meetings, user's committees, user positions and committees"));
+  }
+}
+
+/**
+ * Implementation of hook_cron().
+ * Fires all imports.
+ *
+ * @return none
+ */
+function os2dagsorden_importer_cron() {
+    os2dagsorden_importer_import_user_committees();
+    os2dagsorden_importer_import_committees();
+    os2dagsorden_importer_import_meetings();
+}
+
+/**
+ * Imports the user committees (user roles: member of, follows, follows+) from the remotely located xml view.
+ *
+ * @return none
+ */
+function os2dagsorden_importer_import_user_committees() {
+    if (!variable_get('os2dagsorden_pws_use_local_copy')){
+      $url = curl_init(variable_get('os2dagsorden_pws_v_meetinggroups_url'));
+
+      if (variable_get('os2web_pws_proxy')) {
+	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+      }
+
+      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+      $userCommittees_raw = curl_exec($url);
+      $userCommittees = new SimpleXMLElement($userCommittees_raw);
+    } else {
+      $userCommittees = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_MeetingGroups.xml');
+    }
+    _os2dagsorden_importer_process_user_committees($userCommittees);
+}
+
+/**
+ * Imports the committees (udvalg) from the remotely located xml view.
+ *
+ * @return none
+ */
+function os2dagsorden_importer_import_committees() {
+    if (!variable_get('os2dagsorden_pws_use_local_copy')){
+      $url = curl_init(variable_get('os2dagsorden_pws_v_acadregroups_url'));
+
+      if (variable_get('os2web_pws_proxy')) {
+	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+      }
+
+      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+      $acadreGroups_raw = curl_exec($url);
+      $acadreGroups = new SimpleXMLElement($acadreGroups_raw);
+    } else {
+      $acadreGroups = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_AcadreGroups.xml');
+    }
+    _os2dagsorden_importer_process_committees($acadreGroups);
+}
+
+/**
+ * Imports the meetings from the remotely located xml view.
+ *
+ * @return none
+ */
+function os2dagsorden_importer_import_meetings() {
+    if (!variable_get('os2dagsorden_pws_use_local_copy')){
+      $url = curl_init(variable_get('os2dagsorden_pws_v_meetings_url'));
+
+      if (variable_get('os2web_pws_proxy')) {
+	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+      }
+      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+      $meetings_raw = curl_exec($url);
+      $meetings = new SimpleXMLElement($meetings_raw);
+    } else {
+      $meetings = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_Meetings.xml');
+    }
+    _os2dagsorden_importer_process_meetings($meetings);
+}
+
+/**
+ * Helper function. Processes the user committees xml file.
+ * Delegates to create/delete method based on the xml controller.
+ *
+ * @param mixed $xml_file xml file
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_process_user_committees($xml_file) {
+    $result = $xml_file->xpath('//Row');
+
+    foreach ($result as $row) {
+        $xml_data = array(
+            'user_pos_id' => (int) array_shift($row->xpath('SystemID')),
+            'committee_id' => (int) array_shift($row->xpath('GroupID')),
+            'committee_name' => (string) array_shift($row->xpath('GroupLongName')),
+            'follower_id' => (int) array_shift($row->xpath('FollowerID')),
+            'follower_initials' => (string) array_shift($row->xpath('FollowerInitials')),
+	    'follower_name' => (string) array_shift($row->xpath('FollowerName')),
+            'follower_plus_id' => (int) array_shift($row->xpath('FollowerPlusID')),
+            'follower_plus_initials' => (string) array_shift($row->xpath('FollowerPlusInitials')),
+	    'follower_plus_name' => (string) array_shift($row->xpath('FollowerPlusName')),
+            'member_id' => (int) array_shift($row->xpath('MemberID')),
+	    'member_name' => (string) array_shift($row->xpath('MemberName')),
+            'member_start_date' => (string) array_shift($row->xpath('MemberStartDate')),
+            'member_end_date' => (string) array_shift($row->xpath('MemberEndDate')),
+            'member_initials' => (string) array_shift($row->xpath('MemberInitials')),
+            'role' => (string) array_shift($row->xpath('Role')),
+            'role_priority' => (int) array_shift($row->xpath('RolePriority')),
+            'deactivated' => (int) array_shift($row->xpath('Deactivated')),
+            'meeting_category' => (string) array_shift($row->xpath('CalendarCategory')),
+        );
+
+        //getting user
+        $user = '';
+        //trying to get user from "Is member of" association 
+        if ($xml_data['member_id'] != 0) {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'user')
+                    ->fieldCondition('field_user_id', 'value', intval($xml_data['member_id']), '=');
+
+            $result = $query->execute();
+            if (isset($result['user'])) {
+                $uids = array_keys($result['user']);
+                $user = reset(entity_load('user', $uids));
+            }
+
+            if (empty($user)) {
+                $user = user_load_by_name($xml_data['member_initials']);
+            }
+
+        }
+
+        //trying to get user from "Follows" association 
+        if ($xml_data['follower_id'] != 0) {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'user')
+                    ->fieldCondition('field_user_id', 'value', intval($xml_data['follower_id']), '=');
+
+            $result = $query->execute();
+            if (isset($result['user'])) {
+                $uids = array_keys($result['user']);
+                $user = reset(entity_load('user', $uids));
+            }
+
+            if (empty($user)) {
+                $user = user_load_by_name($xml_data['follower_initials']);
+            }
+
+        }
+
+        //trying to get user from "Follows+" association 
+        if ($xml_data['follower_plus_id'] != 0) {
+            $query = new EntityFieldQuery();
+            $query->entityCondition('entity_type', 'user')
+                    ->fieldCondition('field_user_id', 'value', intval($xml_data['follower_plus_id']), '=');
+
+            $result = $query->execute();
+            if (isset($result['user'])) {
+                $uids = array_keys($result['user']);
+                $user = reset(entity_load('user', $uids));
+            }
+
+            if (empty($user)) {
+                $user = user_load_by_name($xml_data['follower_plus_initials']);
+            }
+
+        }
+
+        //if the entry is not deleted
+        if ($xml_data['deactivated'] == 0) {
+            //create committee
+            if ($xml_data['committee_id'] != 0) {
+                $com_term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
+		
+                if (isset($com_term)){
+		  $com_tid = $com_term->tid;
+		  if ($xml_data['member_id'] != 0 && !empty($user)) {
+		      //add committee to user
+		      _os2dagsorden_importer_add_committee_to_user($com_tid, $user);
+		  }
+		  if ($xml_data['follower_id'] != 0 && !empty($user)) {
+		      //add user follows committee
+		      _os2dagsorden_importer_add_user_follows_committee($com_tid, $user);
+		  }
+		  if ($xml_data['follower_plus_id'] != 0 && !empty($user)) {
+		      //add user follows committee PLUS
+		      _os2dagsorden_importer_add_user_follows_committee_plus($com_tid, $user);
+		  }
+                }
+            }
+
+            if (!empty($user)) {
+		//update full name
+		if (!empty($xml_data['member_name'])){
+		    if (strcmp($user->field_user_full_name['und'][0]['value'], $xml_data['member_name']) != 0) {
+			_os2dagsorden_importer_set_user_fullname($user, $xml_data['member_name']);
+		    }
+		}
+		if (!empty($xml_data['follower_name'])){
+		    if (strcmp($user->field_user_full_name['und'][0]['value'], $xml_data['follower_name']) != 0) {
+			_os2dagsorden_importer_set_user_fullname($user, $xml_data['follower_name']);
+		    }
+		}
+		if (!empty($xml_data['follower_plus_name'])){
+		    if (strcmp($user->field_user_full_name['und'][0]['value'], $xml_data['follower_plus_name']) != 0) {
+			_os2dagsorden_importer_set_user_fullname($user, $xml_data['follower_plus_name']);
+		    }
+		}
+
+		//create user role
+		if (isset($xml_data['role'])) {
+		    $role_tid = _os2dagsorden_importer_create_user_role($xml_data, $com_tid);
+		    //update user if needed
+		    _os2dagsorden_importer_add_role_to_user($role_tid, $user);
+		}
+		
+		//update meeting category
+		if (isset($xml_data['meeting_category'])) {
+		    _os2dagsorden_importer_update_meeting_category($user, $xml_data['meeting_category']);
+		}
+            }
+        }
+        else {
+	    //unsetting user rights
+	    if ($xml_data['committee_id'] != 0) {
+                $com_term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
+		
+                if (isset($com_term)){
+		  $com_tid = $com_term->tid;
+		  if ($xml_data['member_id'] != 0 && !empty($user)) {
+		      //unset is part of
+		      _os2dagsorden_importer_unset_committee_from_user($com_tid, $user);
+		  }
+		  if ($xml_data['follower_id'] != 0 && !empty($user)) {
+		      //unset follows committee
+		      _os2dagsorden_importer_unset_user_follows_committee($com_tid, $user);
+		  }
+		  if ($xml_data['follower_plus_id'] != 0 && !empty($user)) {
+		      //unset follows committee PLUS
+		      _os2dagsorden_importer_unset_user_follows_committee_plus($com_tid, $user);
+		  }
+                }
+            }
+            
+            //deleting role
+            _os2dagsorden_importer_delete_user_role($xml_data, $user);
+        }
+    }
+}
+
+/**
+ * Helper function. Will update user's full name field
+ *
+ * @param mixed  $user user object  
+ * @param string $name new name
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_set_user_fullname($user, $name) {
+    $user->field_user_full_name['und'][0]['value'] = $name;
+    user_save($user);
+}
+
+/**
+ * Helper function. Will update user's meetings category
+ *
+ * @param mixed  $user user object  
+ * @param string $category meeting category
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_update_meeting_category($user, $category) {
+    if (isset($user->field_user_meetings_category['und'])) {
+      foreach ($user->field_user_meetings_category['und'] as $user_category){
+	if (strcasecmp($user_category['value'], $category) == 0){//already has this category
+	  return $user;
+	}
+      }
+    }
+    $user->field_user_meetings_category['und'][]['value'] = strtolower($category);
+    
+    user_save($user);
+}
+
+/**
+ * Helper function. Creates/updates the user role object and attaches it to the right user.
+ *
+ * @param array $xml_data xml
+ * @param int   $com_tid  committee id
+ *
+ * @return the id of the 
+ */
+function _os2dagsorden_importer_create_user_role($xml_data, $com_tid) {
+    $vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'user_position')
+            ->execute()
+            ->fetchField();
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term')
+            ->propertyCondition('vid', $vid)
+            ->fieldCondition('field_user_pos_id', 'value', intval($xml_data['user_pos_id']), '=');
+
+    $result = $query->execute();
+    if (isset($result['taxonomy_term'])) {
+        $tids = array_keys($result['taxonomy_term']);
+        $tid = reset($tids);
+        $term = taxonomy_term_load($tid);
+    }
+    else {
+        $term = new stdClass();
+        $term->vid = $vid;
+        $term->field_user_pos_id['und'][0]['value'] = $xml_data['user_pos_id'];
+    }
+
+    if (!empty($xml_data['member_start_date'])) {
+        $term->field_user_pos_valid['und'][0]['value'] = $xml_data['member_start_date'];
+    }
+    if (!empty($xml_data['member_end_date'])) {
+        $term->field_user_pos_valid['und'][0]['value2'] = $xml_data['member_end_date'];
+    }
+
+    if (!empty($com_tid)) {
+        $term->field_user_pos_committee['und'][0]['tid'] = $com_tid;
+    }
+
+    $term->name = $xml_data['role'];
+    $term->field_priority['und'][0]['value'] = $xml_data['role_priority'];
+
+    taxonomy_term_save($term);
+
+    return $term->tid;
+}
+
+/**
+ * Helper function. Deletes the user role.
+ *
+ * @param array $xml_data xml
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_delete_user_role($xml_data) {
+    $vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'user_position')
+            ->execute()
+            ->fetchField();
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term')
+            ->propertyCondition('vid', $vid)
+            ->fieldCondition('field_user_pos_id', 'value', intval($xml_data['user_pos_id']), '=');
+
+    $result = $query->execute();
+    if (isset($result['taxonomy_term'])) {
+        $tids = array_keys($result['taxonomy_term']);
+        $tid = reset($tids);
+        taxonomy_term_delete($tid);
+    }
+}
+
+/**
+ * Helper function. Adds the role to the user
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_add_role_to_user($tid, $user) {
+    $user_has_this_role = FALSE;
+    if (isset($user->field_user_positions['und'])) {
+        foreach ($user->field_user_positions['und'] as $position_id) {
+            if (intval($tid) == $position_id['tid']) {
+                $user_has_this_role = TRUE;
+            }
+        }
+    }
+
+    if (!$user_has_this_role) {
+        $user_positions = $user->field_user_positions;
+        $user_positions['und'][]['tid'] = $tid;
+
+        $edit = array(
+            'field_user_positions' => $user_positions,
+        );
+
+        user_save($user, $edit);
+    }
+}
+
+/**
+ * Helper function. Returns the committee based on its group id.
+ *
+ * @param int $com_id committee id
+ *
+ * @return the committee term, of found.
+ */
+function _os2dagsorden_importer_get_committee_by_id($com_id){
+    $vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'committee')
+            ->execute()
+            ->fetchField();
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'taxonomy_term')
+            ->propertyCondition('vid', $vid)
+            ->fieldCondition('field_id', 'value', intval($com_id), '=');
+
+    $result = $query->execute();
+    if (isset($result['taxonomy_term'])) {   
+        $tids = array_keys($result['taxonomy_term']);
+        $tid = reset($tids);
+        $term = taxonomy_term_load($tid);
+        return $term;
+    }
+}
+
+/**
+ * Helper function. Creates/updates the committee
+ *
+ * @param mixed $xml_data xml
+ *
+ * @return the id of created/updated entry.
+ */
+function _os2dagsorden_importer_create_committee($xml_data) {
+    $term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
+    if (!isset($term)){
+	$vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'committee')
+            ->execute()
+            ->fetchField();
+            
+        $term = new stdClass();
+        $term->vid = $vid;
+        $term->field_id['und'][0]['value'] = $xml_data['committee_id'];
+    }
+
+    $term->name = $xml_data['committee_name'];
+
+    if (!empty($xml_data['committee_name_short']))
+        $term->field_name_short['und'][0]['value'] = $xml_data['committee_name_short'];
+    if (!empty($xml_data['committee_abbr']))
+        $term->field_committee_abbr['und'][0]['value'] = $xml_data['committee_abbr'];
+
+    if (!empty($xml_data['acadre_id'])) {
+	//check if is in the list of import committees
+	$can_be_imported = FALSE;
+
+	$import_committees = explode(',',variable_get('os2web_meetings_approved_committee'));
+	  foreach($import_committees as $imp_com){
+	    if (intval($imp_com) == intval($xml_data['acadre_id'])){
+	      $can_be_imported = TRUE;
+	      break;
+	    }
+	}
+
+	
+        $contains = FALSE;
+        if (isset($term->field_committee_acadre_id['und'])) {
+            foreach ($term->field_committee_acadre_id['und'] as $id_raw) {
+                if (intval($id_raw['value']) == intval($xml_data['acadre_id'])) {
+                    $contains = TRUE;
+                    break;
+                }
+            }
+        }
+        if (!$contains) {
+            $term->field_committee_acadre_id['und'][]['value'] = $xml_data['acadre_id'];
+        }
+    }
+    
+    if ($can_be_imported){
+      taxonomy_term_save($term);
+      return $term->tid;
+    } else {
+      return;
+    }
+}
+
+/**
+ * Helper function. Adds the committee to the user (member of)
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_add_committee_to_user($tid, $user) {
+    $user_is_part_of_committee = FALSE;
+    if (isset($user->field_user_committee['und'])) {
+        foreach ($user->field_user_committee['und'] as $committee_id) {
+            if ($tid == $committee_id['tid']) {
+                $user_is_part_of_committee = TRUE;
+            }
+        }
+    }
+
+    if (!$user_is_part_of_committee) {
+        $user_committees = $user->field_user_committee;
+        $user_committees['und'][]['tid'] = $tid;
+
+        $edit = array(
+            'field_user_committee' => $user_committees,
+        );
+
+        user_save($user, $edit);
+    }
+}
+
+/**
+ * Helper function. Unsets the committee to the user (member of)
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_unset_committee_from_user($tid, $user){
+    //composing new array
+    $user_committees = array();
+    if (isset($user->field_user_committee['und'])) {
+        foreach ($user->field_user_committee['und'] as $committee_id) {
+	    //add everything except the one that has to be deleted
+            if ($tid != $committee_id['tid']) {
+                $user_committees['und'][]['tid'] = $committee_id['tid'];
+            }
+        }
+    }
+
+   
+    $edit = array(
+	'field_user_committee' => $user_committees,
+    );
+
+    user_save($user, $edit);
+}
+
+
+/**
+ * Helper function. Adds the follows committee to the user
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_add_user_follows_committee($tid, $user) {
+    $user_follows_committee = FALSE;
+    if (isset($user->field_follows_committee['und'])) {
+        foreach ($user->field_follows_committee['und'] as $committee_id) {
+            if ($tid == $committee_id['tid']) {
+                $user_follows_committee = TRUE;
+            }
+        }
+    }
+
+    if (!$user_follows_committee) {
+        $old_list = $user->field_follows_committee;
+        $old_list['und'][]['tid'] = $tid;
+
+        $edit = array(
+            'field_follows_committee' => $old_list,
+        );
+
+        user_save($user, $edit);
+    }
+}
+
+/**
+ * Helper function. Unsets the follows committee of the user
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_unset_user_follows_committee($tid, $user) {
+    $user_follows = array();
+    if (isset($user->field_follows_committee['und'])) {
+        foreach ($user->field_follows_committee['und'] as $committee_id) {
+            if ($tid != $committee_id['tid']) {
+                $user_follows['und'][]['tid'] = $committee_id['tid'];
+            }
+        }
+    }
+
+    $edit = array(
+	'field_follows_committee' => $user_follows,
+    );
+
+    user_save($user, $edit);
+}
+
+/**
+ * Helper function. Adds the follows+ committee to the user
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_add_user_follows_committee_plus($tid, $user) {
+    $user_follows_committee_plus = FALSE;
+    if (isset($user->field_follows_committee_plus['und'])) {
+        foreach ($user->field_follows_committee_plus['und'] as $committee_id) {
+            if ($tid == $committee_id['tid']) {
+                $user_follows_committee_plus = TRUE;
+            }
+        }
+    }
+
+    if (!$user_follows_committee_plus) {
+        $old_list = $user->field_follows_committee_plus;
+        $old_list['und'][]['tid'] = $tid;
+
+        $edit = array(
+            'field_follows_committee_plus' => $old_list,
+        );
+
+        user_save($user, $edit);
+    }
+}
+
+/**
+ * Helper function. Unsets the follows+ committee to the user
+ *
+ * @param int   $tid  role id
+ * @param mixed $user user object
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_unset_user_follows_committee_plus($tid, $user) {
+    $user_follows_plus = array();
+    if (isset($user->field_follows_committee_plus['und'])) {
+        foreach ($user->field_follows_committee_plus['und'] as $committee_id) {
+            if ($tid != $committee_id['tid']) {
+                $user_follows_plus['und'][]['tid'] = $committee_id['tid'];
+            }
+        }
+    }
+
+    $edit = array(
+	'field_follows_committee_plus' => $user_follows_plus,
+    );
+
+    user_save($user, $edit);
+}
+
+/**
+ * Helper function. Processes the committees xml.
+ * Delegates to create committees.
+ *
+ * @param mixed $xml_file xml file
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_process_committees($xml_file) {
+    $result = $xml_file->xpath('//Row');
+
+    foreach ($result as $row) {
+        $xml_data = array(
+            'committee_id' => (int) array_shift($row->xpath('GroupId')),
+            'committee_name' => (string) array_shift($row->xpath('GroupLongName')),
+            'committee_name_short' => (string) array_shift($row->xpath('GroupShortName')),
+            'committee_abbr' => (string) array_shift($row->xpath('GroupAbbreviation')),
+            'acadre_name' => (string) array_shift($row->xpath('AcadreName')),
+            'acadre_id' => (int) array_shift($row->xpath('AcadreID')),
+            'com_start_date' => (string) array_shift($row->xpath('StartDate')),
+            'com_end_date' => (string) array_shift($row->xpath('EndDate')),
+        );
+        if (empty($xml_data['committee_name_short'])) {
+            $xml_data['committee_name_short'] = $xml_data['committee_name'];
+        }
+
+        _os2dagsorden_importer_create_committee($xml_data);
+    }
+}
+
+/**
+ * Helper function. Processes the meetings xml.
+ * Delegates to create meeings, unpublish meetings, create committee function based on controllers.
+ *
+ * @param mixed $xml_file xml file
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_process_meetings($xml_file) {
+    $result = $xml_file->xpath('//Row');
+
+    foreach ($result as $row) {
+        $xml_data = array(
+            'meeting_id' => (int) array_shift($row->xpath('MeetingID')),
+            'title' => (string) array_shift($row->xpath('MeetingTitel')),
+            'title_short' => trim((string) array_shift($row->xpath('MeetingTitelShort'))),
+            'committee_id' => (int) array_shift($row->xpath('GroupID')),
+            'committee_name' => (string) array_shift($row->xpath('GroupLongName')),
+            'committee_abbr' => (string) array_shift($row->xpath('GroupAbbreviation')),
+            'meeting_start_date' => (string) array_shift($row->xpath('MeetingDate')),
+            'meeting_start_time' => (string) array_shift($row->xpath('MeetingStartTime')),
+            'meeting_end_time' => (string) array_shift($row->xpath('MeetingEndTime')),
+            'hex_color' => (string) array_shift($row->xpath('HEXColorCode')),
+            'deactivated' => (int) array_shift($row->xpath('Deactivated')),
+            'cancelled' => (int) array_shift($row->xpath('Cancelled')),
+            'changed' => (int) array_shift($row->xpath('Changed')),
+            'meeting_category' => (string) array_shift($row->xpath('MeetingCategory')),
+        );
+
+        if ($xml_data['deactivated'] == 0) {
+            if (!empty($xml_data['meeting_start_date'])) {//start time
+		 if (empty($xml_data['meeting_start_time'])){
+		  $xml_data['meeting_start_time'] = "00:01";
+		 }
+                $xml_data['meeting_start_date'] = substr_replace($xml_data['meeting_start_date'], $xml_data['meeting_start_time'], 11);
+            }
+            if (!empty($xml_data['meeting_end_time'])){//end time
+		$xml_data['meeting_end_date'] = substr_replace($xml_data['meeting_start_date'], $xml_data['meeting_end_time'], 11);
+            }
+  
+	    $term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
+            if (isset($term))
+	      _os2dagsorden_importer_create_meeting($xml_data, $term->tid);
+        }
+        else {
+            _os2dagsorden_importer_unpublish_meeting($xml_data);
+        }
+    }
+}
+
+/**
+ * Helper function. Creates/updates the meeting
+ *
+ * @param array $xml_data entry parameters
+ * @param int   $tid      committee id.
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_meeting_id', 'value', intval($xml_data['meeting_id']), '=');
+
+    $result = $query->execute();
+    if (isset($result['node'])) {//getting the meeting from meeting ID
+        $nids = array_keys($result['node']);
+        $node = reset(entity_load('node', $nids));
+    }
+    else {//if fails, trying to get meeting from date and committee combination. Assuming this is unique
+        //getting meeting
+        $meeting_start_date_0000 = date('Y-m-d 00:00:00', strtotime($xml_data['meeting_start_date']));
+        $meeting_start_date_2359 = date('Y-m-d 23:59:59', strtotime($xml_data['meeting_start_date']));
+
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node')
+                ->fieldCondition('field_date', 'value', $meeting_start_date_0000, '>=')
+                ->fieldCondition('field_date', 'value', $meeting_start_date_2359, '<=')
+                ->fieldCondition('field_committee', 'tid', $tid, '=');
+        $result = $query->execute();
+
+        if (isset($result['node'])) {
+            $nids = array_keys($result['node']);
+            $node = reset(entity_load('node', $nids));
+            
+            //sofd id is missing, fill it for future use
+	    $node->field_meeting_id['und'][0]['value'] = intval($xml_data['meeting_id']);
+	    node_submit($node);
+	    node_save($node);
+        }
+        else {
+            //if fails, creating a new meeting
+            $node = new stdClass();
+            $node->type = "meeting";
+            $node->language = LANGUAGE_NONE;
+
+            node_object_prepare($node);
+        }
+    }
+    
+    //avoiding reimports, or value overriding
+    if (!empty($node->field_meeting_acadre_version['und']['0']['value'])) {
+	
+	$need_to_update = FALSE;
+	
+	//updating meetings category
+	if (strcmp($node->field_meeting_category[$node->language][0]['value'], strtolower($xml_data['meeting_category'])) != 0){
+	  $node->field_meeting_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
+	  $need_to_update = TRUE;//setting to flag to update
+	}
+	
+	//updating the color
+	if (strcmp($node->field_hex[$node->language][0]['value'], strtolower($xml_data['hex_color'])) != 0){
+	  $node->field_hex[$node->language][0]['value'] = strtolower($xml_data['hex_color']);
+	  $need_to_update = TRUE;//setting to flag to update
+	}
+	
+	//if meeting is to be cancelled, but is not cancelled yet, then cancell it.
+	if ($xml_data['cancelled'] == 1 && strcmp($node->field_meeting_status[$node->language][0]['value'],'Aflyst') != 0){
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Aflyst');
+	  $need_to_update = FALSE;//already updated, resetting flag
+	} //if meeting is changed, but is not marked as changed then mark is as changed
+	else if ($xml_data['changed'] == 1 && strcmp($node->field_meeting_status[$node->language][0]['value'],'Planlagt') == 0){
+	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Ændret');
+	  $need_to_update = FALSE;//already updated, resetting flag
+	}
+	
+	if ($need_to_update) {
+	  node_submit($node);
+	  node_save($node);
+	}
+	
+	return $node;
+    }
+
+    $node->title = $xml_data['title'];
+    if (!empty($xml_data['title_short'])){
+	$node->field_title_short[$node->language][0]['value'] = $xml_data['title_short'];
+    }     
+    else {
+        $node->field_title_short[$node->language][0]['value'] = $xml_data['title'];
+    }
+
+    $node->field_meeting_id[$node->language][0]['value'] = $xml_data['meeting_id']; 
+    $node->field_meeting_sysid[$node->language][0]['value'] = '0';
+
+    if (!empty($xml_data['meeting_start_date'])) {
+        $node->field_date[$node->language][0]['value'] = $xml_data['meeting_start_date'];
+    }
+    
+    if (!empty($xml_data['meeting_end_date'])) {
+	$node->field_date[$node->language][0]['value2'] = $xml_data['meeting_end_date'];
+    } else {//to represent that there is no end date
+	$node->field_date[$node->language][0]['value2'] = $xml_data['meeting_start_date'];
+    }
+    
+    $node->field_meeting_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
+    $node->field_hex[$node->language][0]['value'] = strtolower($xml_data['hex_color']);
+
+    $node->field_committee[$node->language][0]['tid'] = $tid;
+    
+    if ($xml_data['cancelled'] == 1){
+      os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Aflyst');
+    } else if ($xml_data['changed'] == 1){
+      os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Ændret');
+    }
+    else {
+      os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Planlagt');
+    }
+}
+
+/**
+ * Helper function. Marks the meeting as unpublished.
+ *
+ * @param array $xml_data entry params
+ *
+ * @return none
+ */
+function _os2dagsorden_importer_unpublish_meeting($xml_data) {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_meeting_id', 'value', intval($xml_data['meeting_id']), '=');
+
+    $result = $query->execute();
+    if (isset($result['node'])) {
+        $nids = array_keys($result['node']);
+        $node = reset(entity_load('node', $nids));
+
+        node_unpublish_action($node);
+        node_save($node);
+    }
+}

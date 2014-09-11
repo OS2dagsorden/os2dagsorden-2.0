@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Module file for the poshy_tip module.
+ * 
+ */
+
+define('POSHY_TIP_DEFAULT_CLASS', '.poshy-tip');
+define('POSHY_TIP_DEFAULT_THEME', 'tip-yellow');
+define('POSHY_TIP_DEFAULT_VISIBILITY', '0');
+
+/**
+ * Implements hook_requirements().
+ */
+function poshy_tip_requirements($phase) {
+
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase === 'install' || $phase === 'runtime') {
+    $plugin_path = libraries_get_path('poshy_tip');
+    $plugin_file = $plugin_path . '/src/jquery.poshytip.min.js'; 
+    
+    if (!is_file($plugin_file)) {
+      $requirements['poshy_tip'] = array(
+        'title' => $t('Poshy Tip'),
+        'value' => 'Library not found.',
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    else {
+      $requirements['poshy_tip'] = array(
+        'title' => $t('Poshy Tip'),
+        'value' => 'Poshy Tip library found at ' . $plugin_file,
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+  
+  return $requirements;
+}
+
+/**
+ * Implements hook_init().
+ */
+function poshy_tip_init() {
+
+  $module_path = drupal_get_path('module', 'poshy_tip');
+  $plugin_path = libraries_get_path('poshy_tip');
+  $plugin_file = $plugin_path . '/src/jquery.poshytip.min.js'; 
+  
+  $classes = variable_get('poshy_tip_default_class', POSHY_TIP_DEFAULT_CLASS);
+  $theme = variable_get('poshy_tip_theme', POSHY_TIP_DEFAULT_THEME);
+  $visibility = variable_get('poshy_tip_visibility', POSHY_TIP_DEFAULT_VISIBILITY);
+  $pages = variable_get('poshy_tip_visibility_pages', '');
+
+  $match = drupal_match_path($_GET['q'], $pages);
+
+  if (($visibility == '0' && !$match) || ($visibility == '1' && $match)) {
+    if (is_file($plugin_file)) {
+      drupal_add_css($plugin_path . '/src/' . $theme . '/' . $theme . '.css');
+      drupal_add_css($module_path . '/css/poshy_tip.css');
+      drupal_add_js($plugin_file);
+      drupal_add_js($module_path . '/js/poshy_tip.js');
+      drupal_add_js(array('poshy_tip' => array('selectors' => $classes, 'theme' => $theme)), 'setting');
+    }
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function poshy_tip_permission() {
+  return array(
+    'administer poshy tip' => array(
+      'title' => t('Administer Poshy Tip'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function poshy_tip_menu() {
+  
+  $items = array();
+  
+  $items['admin/config/user-interface/poshy_tip'] = array(
+    'title' => 'Poshy Tip',
+    'description' => 'Poshy Tip settings form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('admin_settings_poshy_tip'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer poshy tip')
+  );
+  
+  return $items;
+}
+
+/**
+ * Poshy Tip settings form
+ */
+function admin_settings_poshy_tip() {
+
+  $plugin_path = libraries_get_path('poshy_tip');
+  $plugin_file = $plugin_path . '/src/jquery.poshytip.min.js'; 
+
+  $classes = variable_get('poshy_tip_default_class', POSHY_TIP_DEFAULT_CLASS);
+  $theme = variable_get('poshy_tip_theme', POSHY_TIP_DEFAULT_THEME);
+  $visibility = variable_get('poshy_tip_visibility', POSHY_TIP_DEFAULT_VISIBILITY);
+  $pages = variable_get('poshy_tip_visibility_pages', '');
+
+  $form = array();
+  $form['poshy_tip_settings_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Poshy Tip settings'),
+    '#collapsible' => TRUE,
+  );
+  $form['poshy_tip_settings_fieldset']['poshy_tip_default_class'] = array(
+    '#type' => 'textarea',
+    '#title' => t('CSS Selectors'),
+    '#default_value' => $classes,
+    '#description' => 'Selectors must be separated by commas. Ex. .poshy_tip, a, img',
+  );
+
+  if (is_file($plugin_file)) {
+    $directories = array();
+    $nomask = array('.', '..');
+    $dir = 'sites/all/libraries/poshy_tip/src';
+    if (is_dir($dir) && $handle = opendir($dir)) {
+      while (FALSE !== ($theme_file = readdir($handle))) {
+        if (!in_array($theme_file, $nomask) && $theme_file[0] != '.') {
+          if (is_dir($dir . '/' . $theme_file)) {
+            $directories[$theme_file] = $theme_file;
+          }
+        }
+      }
+      closedir($handle);
+    }
+
+    $form['poshy_tip_settings_fieldset']['poshy_tip_theme'] = array(
+      '#type' => 'select',
+      '#title' => t('Global theme'),
+      '#options' => $directories,
+      '#default_value' => $theme
+    );
+  }
+
+  $form['poshy_tip_visibility_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Page specific visibility settings'),
+    '#collapsible' => TRUE,
+  );
+  $form['poshy_tip_visibility_fieldset']['poshy_tip_visibility'] = array(
+    '#type' => 'radios',
+    '#title' => t('Show Poshy Tip on specific pages'),
+    '#options' => array(
+      t('Show on every page except the listed pages.'),
+      t('Show on only the listed pages.')
+    ),
+    '#default_value' => $visibility,
+  );
+  $form['poshy_tip_visibility_fieldset']['poshy_tip_visibility_pages'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Pages'),
+    '#default_value' => $pages,
+    '#description' => t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+  );
+
+  $form = system_settings_form($form);
+
+  return $form;
+}

@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * This module implements Acadre ESDH backend for use in os2web
+ */
+
+define('ACADRE_MM_IMPORT_DIR', 'public://acadre');
+define('ACADRE_MM_DEFAULT_APPROVED', '62,59,64,53,54,56,57,63,58,51,55,61,68,69,42');
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ *
+ * Register as provider of esdh plugins
+ */
+function acadre_esdh_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'os2web_esdh_provider') {
+    return "plugins/$plugin";
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Add configuration to the settings form.
+ */
+function acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state) {
+//   // MM configuration.
+  $form['meetings'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Referat import',
+    '#description' => 'Indstillinger der vedrører importen af Acadre referater og dagsordener.',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['meetings']['os2web_meetings_path'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Sti til acadre publish folder.',
+    '#description' => 'Dette er stien hvor Acadre publisere .XML filer til.',
+    '#default_value' => variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+  );
+  $form['meetings']['os2web_meetings_approved_committee'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Godkendte Udvalg',
+    '#maxlength' => 200,
+    '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
+    '#default_value' => variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED),
+  );
+  $form['meetings']['os2web_meetings_participants_import_path'] = array(
+    '#type' => 'radios',
+    '#title' => t('Participants import path'),
+    '#options' => array("//table[@name='committee']/table[@name='commember']/table[@name='member']" => "Committee table => //table[@name='committee']/table[@name='commember']/table[@name='member']",
+			"//table[@name='meeting']/table[@name='meetmember']/table[@name='member']" => "Meeting table => //table[@name='meeting']/table[@name='meetmember']/table[@name='member']"),
+    '#description' => t('Path of where the participants of the meetings should be imported from'),
+    '#default_value' => variable_get('os2web_meetings_participants_import_path', "//table[@name='committee']/table[@name='commember']/table[@name='member']"),
+  );
+  
+  $form['os2web_case_bilag_import'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Case/Bilag import configuration'),
+  );
+  $form['os2web_case_bilag_import']['os2web_case_import'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Import cases to separate bullet point'),
+    '#description'=>t('This decides whether all cases of meetigs imported to separate bullet point or under each agend point.'),
+    '#default_value' => variable_get('os2web_case_import', false),
+  );
+  $form['os2web_case_bilag_import']['os2web_bilag_import'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Import bilag to separate bullet point'),
+    '#description'=>t('This decides whether all bilags of meetigs imported to separate bullet point or under each agend point.'),
+    '#default_value' => variable_get('os2web_bilag_import', false),
+  );
+ $form['meetings']['os2web_acadre_add_committee_to_title'] = array(
+     '#type' => 'checkbox',
+     '#default_value' => variable_get('os2web_acadre_add_committee_to_title', false),
+     '#title' => t('Add committee name to meeting title'), 
+     '#description' =>'This decides whether a committee name will be added to meeting title'
+  );
+  $form['os2web_pws_adlib_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Adlib Endpoint configuration'),
+  );
+  $form['os2web_pws_adlib_group']['os2web_adlib_url'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('os2web_adlib_url', 'http://706CAR01/ExponentWSA/ExponentWSA.asmx?wsdl'),
+    '#title' => t('URL for Adlib service endpoint'),
+    '#description' => t('URL to the webservice endpoint that runs the Adlib service.'),
+  );
+}

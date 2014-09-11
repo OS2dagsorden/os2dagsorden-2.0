@@ -1,0 +1,91 @@
+<?php
+/**
+ * @file
+ * Code for the os2dagsorden_acadre_meeting_reimport feature.
+ */
+
+include_once 'os2dagsorden_acadre_meeting_reimport.features.inc';
+
+include_once 'inc/os2dagsorden_acadre_meeting_reimport_fields.inc';
+
+function os2dagsorden_acadre_meeting_reimport_menu(){
+  $items = array();
+
+  $items['meeting/%/reimport'] = array(
+      'type' => MENU_CALLBACK,
+      'page callback' => 'os2dagsorden_acadre_meeting_reimport_callback',
+      'page arguments' => array(1),
+      'access arguments' => array('administer os2web'),
+  );
+  
+  $items['admin/config/os2dagsorden/meeting_reimport_red'] = array(
+      'title' => 'Meetings reimport',
+      'description' => 'Allows reimport the meeting which was initially imported by Acadre ESDH',
+      'page callback' => 'os2dagsorden_acadre_meeting_reimport_redirect',
+      'access arguments' => array('administer os2web'),
+      'type' => MENU_NORMAL_ITEM | MENU_LOCAL_TASK,
+  );
+  
+  return $items;
+}
+
+function os2dagsorden_acadre_meeting_reimport_redirect(){
+  drupal_goto('admin/config/os2dagsorden/meeting_reimport');
+}
+
+function os2dagsorden_acadre_meeting_reimport_callback($meeting_id){
+  $node = node_load($meeting_id);
+  
+  $operations[] = array('os2dagsorden_acadre_meeting_reimport_run_reimport', array($meeting_id));
+  
+  $batch = array(
+    'init_message' => t('Starting meeting delete: ' . $node->title),
+    'progress_message' => t('Deleting is in progress: ' . $node->title),
+    'error_message' => t('An error occurred during processing'),
+    'title' => 'Reimport',
+    'operations' => $operations,
+    'finished' => 'os2dagsorden_acadre_meeting_reimport_import_finished',
+  );
+  
+  batch_set($batch);
+  batch_process('admin/config/meetings-reimport');
+}
+
+function os2dagsorden_acadre_meeting_reimport_run_reimport($meeting_id, &$context){
+  $node = node_load($meeting_id);
+  
+  $import_dir = drupal_realpath(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR));
+  $skip_meeting = TRUE;
+  
+  $meeting_folders = array();
+  $meeting_acadre_ids = array();
+  foreach($node->field_meeting_acadre_version['und'] as $acadre_version){
+    if (array_pop(glob($import_dir . "/*" . $acadre_version['value']))){
+      $folder_path = array_pop(glob($import_dir . "/*" . $acadre_version['value']));
+      $meeting_folders[] = $folder_path;
+      
+      $acadre_id = array_pop(explode('/', $folder_path));// example: /var/www/webapp_politik/sites/default/files/acadre/Files_1582_338743
+      $acadre_id = explode('_', $acadre_id);//example: Files_1582_338743
+      $meeting_acadre_ids[$acadre_id[1]] = $acadre_id[1];//example: 1582
+    }
+  }
+  //deleting node
+  node_delete($node->nid);
+  
+  //deleting meeting folders, example: Files_1582_338743
+  foreach ($meeting_folders as $folder){
+    file_unmanaged_delete_recursive($folder);
+  }
+  foreach ($meeting_acadre_ids as $id){
+    file_unmanaged_delete($import_dir . '/XML_' . $id . '.xml');
+  }
+}
+
+function os2dagsorden_acadre_meeting_reimport_import_finished($success, $results, $operations){
+  if ($success) {
+    drupal_set_message('Meeting has been successfully deleted and will be reimported during next cronjob.');
+  } else {
+    drupal_set_message('Error has occured during meeting reimport, please contact site administrator');
+    //$error_operation = reset($operations);
+  }
+}

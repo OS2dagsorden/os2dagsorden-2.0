@@ -1,0 +1,25 @@
+/* This file will hold styles that are loaded using the same media query as the wide grid. */
+.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_text_full_container{
+  max-width: 600px;
+}
+
+.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_container .attachment_text_full_container.attachment_text_max_size{
+  max-width: 800px;
+}
+
+.attachment_text_container .attachment-text{
+  overflow: hidden;
+  max-width: 600px;
+}
+
+.attachment_text_container .attachment_text_max_size .attachment-text{
+  max-width: 800px;
+}
+
+/*---------------------------- Date override START ----------------------------*/
+
+div.date-heading h3 a, div.date-heading h3 {
+  font-size: 22px;
+}
+
+/*---------------------------- Date override END ----------------------------*/

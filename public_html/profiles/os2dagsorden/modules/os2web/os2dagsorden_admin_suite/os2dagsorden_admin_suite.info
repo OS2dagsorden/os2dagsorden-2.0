@@ -1,0 +1,4 @@
+name = OS2Dagsorden Admin Suite
+description = Various functions that help to fix the consecuences of some error. Should be used or extended in seldom cases.
+package = OS2Dagsorden
+core = 7.x

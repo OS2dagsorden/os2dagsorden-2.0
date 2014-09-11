@@ -1,0 +1,12 @@
+<?php
+
+
+class Os2dagsordenAccessHelper_FileDownload_WebTestCase extends Os2dagsordenAccessHepperTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'os2dagsorden_access_helper_file_download',
+      'description' => 'Test of os2dagsorden_access_helper_file_download function',
+      'group' => 'os2dagsorden_access_helper',
+    );
+  }
+}
