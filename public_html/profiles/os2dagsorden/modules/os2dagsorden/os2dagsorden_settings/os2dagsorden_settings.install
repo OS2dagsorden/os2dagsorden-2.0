@@ -1,0 +1,47 @@
+<?php
+/**
+* os2dagsorden_settings
+*
+* PHP version 5
+*
+* @category OS2Dagsorden
+* @package  OS2Dagsorden_Importer
+* @file     Install file
+* @author   Stanislav Kutasevits <stan@bellcom.dk>
+* @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+* @link     http://bellcom.dk
+*/
+
+/**
+ * Implementation of module uninstall. Resets the variables.
+ *
+ * @return array of links.
+ */
+function os2dagsorden_settings_uninstall() {
+  variable_del('os2dagsorden_pws_v_meetings_url');
+  variable_del('os2dagsorden_pws_v_meetinggroups_url');
+  variable_del('os2dagsorden_pws_v_acadregroups_url');
+  variable_del('os2dagsorden_annotator_url');
+  variable_del('os2dagsorden_annotator_port_nr');
+  variable_del('os2dagsorden_pdf2htmlex_path ');
+}
+
+function os2dagsorden_settings_requirements($phase){
+    $requirements = array();
+    $t = get_t();
+
+    if (module_exists('os2dagsorden_pdf2htmlex')) {
+        if ($phase != 'install') {
+            $exec = shell_exec(variable_get('os2dagsorden_pdf2htmlex_path', "") . ' --version 2>&1');
+            $requirements['os2dagsorden_settings'] = array(
+                'title' => $t('pdf2htmlEX path'),
+                'value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
+                'severity' => (strpos($exec, 'pdf2htmlEX version') !== false) ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+            );
+            if (strpos($exec, 'pdf2htmlEX version') === false) {
+                $requirements['os2dagsorden_settings']['description'] = $t('Specified pdf2htmlEX path is not correct. Please check pdf2htmlEX path in OS2dagsorner setup page.');
+            }
+        }
+    }
+    return $requirements;
+}

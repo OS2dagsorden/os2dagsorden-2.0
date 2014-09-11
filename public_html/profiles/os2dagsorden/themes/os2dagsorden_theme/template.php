@@ -32,19 +32,18 @@ function os2dagsorden_theme_preprocess_page(&$variables)
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
     drupal_add_js('add_indicator_help_text();', 'inline');
     drupal_add_js('hide_print_buttons();', 'inline');
-    if (variable_get('os2dagsorden_collapse_menu', true)=="false")
-		  drupal_add_js('resize_listener();', 'inline');
+    drupal_add_js('resize_listener();', 'inline');
     if (variable_get('os2dagsorden_show_search_block_title', 'true')==='false')
         drupal_add_js('hide_search_block_title()', 'inline');
-		
     $view = views_get_page_view();
     if (!empty($view)) {
 	global $base_path;	
         if ($view->name == 'meeting_details') {
             //adding expand/collapse behaviour to meeting details view
             $os2dagsorden_expand_all_bullets= variable_get('os2dagsorden_expand_all_bullets', false)?true:'false';
-            drupal_add_js('bullet_point_add_expand_behaviour("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ',  ' . $os2dagsorden_expand_all_bullets . ', ' . variable_get('os2dagsorden_expand_attachment_onload', 'false') .' )', 'inline');
-            $variables['views'] = '';
+            drupal_add_js('bullet_point_add_expand_behaviour("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ',  ' . $os2dagsorden_expand_all_bullets . ' , ' . variable_get('os2dagsorden_expand_attachment_onload', 'false') . ')', 'inline');
+            drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ','. variable_get('os2dagsorden_expand_cases', "false") .')', 'inline');
+            $variables['views'] = '';  
             
             //adding pagescroll
 		    drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme') . '/css/pagescroller.skins.css');	    
@@ -52,6 +51,7 @@ function os2dagsorden_theme_preprocess_page(&$variables)
 		    drupal_add_js('addPagescroller();', 'inline');
         }
         if ($view->name == 'meeting_details' || $view->name == 'speaking_paper') {
+                                
 	    //adding has notes indicator to attachment
             $annotations = os2dagsorden_annotator_get_notes_by_meeting_id(arg(1));
 	    
@@ -79,14 +79,16 @@ function os2dagsorden_theme_preprocess_page(&$variables)
         }
         if ($view->name == 'speaking_paper') {
             //adding expand/collapse behaviour bullet point details view
-            drupal_add_js('bullet_point_details_init("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_bilag', true) . ', ' . variable_get('os2dagsorden_expand_attachment_onload', false) . ')', 'inline');
+            drupal_add_js('bullet_point_details_init("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ', ' . variable_get('os2dagsorden_expand_attachment_onload', 'false') . ')', 'inline');
+            drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ','. variable_get('os2dagsorden_expand_cases', "false") .')', 'inline');
+              
         }
-        if (variable_get('os2dagsorden_show_massive_expand_collapse_button', 'true')==='false' && ($view->name == 'speaking_paper' || $view->name == 'meeting_details'))
+       if (variable_get('os2dagsorden_show_massive_expand_collapse_button', 'true')==='false' && ($view->name == 'speaking_paper' || $view->name == 'meeting_details'))
          drupal_add_js('hide_massive_expand_collapse_button();', 'inline');  
-    } else if ($variables['page']['content']['content']['content']['system_main']['content']['#attributes']['class'][1] == 'node-speaker_paper-form'){ 
+    } else if ($variables['page']['content']['content']['content']['system_main']['content']['#attributes']['class'][1] == 'node-os2web_meetings_spaper-form'){ 
       //in "creating speaker paper"
       //hide extra fields
-      drupal_add_js("jQuery(document).ready(function(){jQuery('.form-item-field-ref-bullet-point-und-0-target-id').hide();});","inline");
+      drupal_add_js("jQuery(document).ready(function(){jQuery('.form-item-field-os2web-meetings-sp-bullet-und-0-target-id').hide();});","inline");
       
       //setting breadcrumb
       $destination = $_GET['destination'];

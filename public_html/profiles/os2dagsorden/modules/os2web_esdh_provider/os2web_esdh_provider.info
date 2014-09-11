@@ -1,0 +1,11 @@
+name = OS2Web ESDH Provider service
+description = Implements provider abstraction for ESDH services.
+core = 7.x
+package = OS2Web - ESDH
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = os2web_esdh_provider
+dependencies[] = ctools
+dependencies[] = features
+dependencies[] = os2web_adlib_api
+features[features_api][] = api:1

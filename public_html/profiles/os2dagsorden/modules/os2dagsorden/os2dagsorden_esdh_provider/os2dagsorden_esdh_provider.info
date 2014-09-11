@@ -1,0 +1,8 @@
+name = OS2Dagsorden ESDH Provider service
+description = Adds the functionality to original OS2Web esdh provider module. Is neede for OS2Dagsorden to handle the imports properly.
+core = 7.x
+package = OS2Dagsorden
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = os2web_esdh_provider
+dependencies[] = os2web_esdh_provider

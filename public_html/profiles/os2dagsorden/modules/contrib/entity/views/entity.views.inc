@@ -316,6 +316,7 @@ function entity_views_plugins() {
     $base_tables = $data->data;
   }
   else {
+    $base_tables = array();
     foreach (views_fetch_data() as $table => $data) {
       if (!empty($data['table']['entity type']) && !empty($data['table']['base'])) {
         $base_tables[] = $table;
@@ -378,6 +379,7 @@ class EntityDefaultViewsController {
       $label = isset($this->info['plural label']) ? $this->info['plural label'] : $this->info['label'];
       $data[$table]['table']['base'] = array(
         'field' => $this->info['entity keys']['id'],
+        'access query tag' => $this->type . '_access',
         'title' => drupal_ucfirst($label),
         'help' => isset($this->info['description']) ? $this->info['description'] : '',
       );

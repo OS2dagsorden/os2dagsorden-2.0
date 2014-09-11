@@ -1,0 +1,367 @@
+<?php
+
+/**
+ * @file
+ * Implements a field for displaying ESDH Cases directly.
+ */
+
+define('ACADRE_CM_ACCESS_OPEN_CASE', '3');
+define('ACADRE_CM_ACCESS_OPEN_DOCUMENT', '3');
+
+/* Field information hooks */
+
+/**
+ * Implements hook_field_info().
+ */
+function os2web_esdh_field_field_info() {
+  return array(
+    'os2web_esdh_field_case_ident' => array(
+      'label' => t('ESDH Case'),
+      'description' => t('Sags-id skal være på formen år/nummer eller år-nummer. Kun én værdi er tilladte.'),
+      'default_widget' => 'os2web_esdh_field_case_ident_wid',
+      'default_formatter' => 'os2web_esdh_field_case_ident_for',
+    ),
+    'os2web_esdh_field_doc_ident' => array(
+      'label' => t('ESDH Document'),
+      'description' => t('Dokument-id skal være på formen nummer/år eller nummer-år. Flere dokumenter skal være adskildt af , (komma).'),
+      'default_widget' => 'os2web_esdh_field_doc_ident_wid',
+      'default_formatter' => 'os2web_esdh_field_doc_ident_for',
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function os2web_esdh_field_field_formatter_info() {
+  return array(
+    'os2web_esdh_field_case_ident_for' => array(
+      'label' => t('ESDH Case includer'),
+      'field types' => array('os2web_esdh_field_case_ident'),
+    ),
+    'os2web_esdh_field_doc_ident_for' => array(
+      'label' => t('ESDH Document includer'),
+      'field types' => array('os2web_esdh_field_doc_ident'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function os2web_esdh_field_field_widget_info() {
+
+  return array(
+    'os2web_esdh_field_case_ident_wid' => array(
+      'label' => t('Case Identifier'),
+      'field types' => array('os2web_esdh_field_case_ident'),
+    ),
+    'os2web_esdh_field_doc_ident_wid' => array(
+      'label' => t('Document Identifier'),
+      'field types' => array('os2web_esdh_field_doc_ident'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function os2web_esdh_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $field_name = $field['field_name'];
+  $field_type = $field['type'];
+  $default = '';
+  if (isset($form_state['node']->{$field_name}[$langcode][$delta][$field_type])) {
+    $default = ($form_state['node']->{$field_name}[$langcode][$delta][$field_type])? : 0;
+  }
+  switch ($instance['widget']['type']) {
+    case 'os2web_esdh_field_case_ident_wid':
+      $element['os2web_esdh_field_case_ident'] = array(
+        '#type' => 'textfield',
+        '#title' => check_plain($element['#title']),
+        '#description' => check_plain($element['#description']),
+        '#default_value' => $default,
+        '#required' => $element['#required'],
+        '#weight' => isset($element['#weight']) ? $element['#weight'] : 0,
+        '#delta' => $delta,
+      );
+      break;
+
+    case 'os2web_esdh_field_doc_ident_wid':
+      $element['os2web_esdh_field_doc_ident'] = array(
+        '#type' => 'textfield',
+        '#title' => check_plain($element['#title']),
+        '#description' => check_plain($element['#description']),
+        '#default_value' => $default,
+        '#required' => $element['#required'],
+        '#weight' => isset($element['#weight']) ? $element['#weight'] : 0,
+        '#delta' => $delta,
+      );
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function os2web_esdh_field_field_is_empty($item, $field) {
+  if (isset($item['os2web_esdh_field_case_ident']) && empty($item['os2web_esdh_field_case_ident'])) {
+    return TRUE;
+  }
+  if (isset($item['os2web_esdh_field_doc_ident']) && empty($item['os2web_esdh_field_doc_ident'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function os2web_esdh_field_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+
+    // Validate all esdh case fields
+    if (isset($item['os2web_esdh_field_case_ident'])) {
+      $cases = explode(',', $item['os2web_esdh_field_case_ident']);
+      foreach ($cases as $value) {
+        $value = trim($value);
+        // Adopt this for further testing.
+        $valid = preg_match('/^\d{2,4}[-,\/]\d{1,20}$/', $value);
+        if (!$valid && ($value != '')) {
+          $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'Ugyldig fremstilling af sags-id. Sags-id skal være på formen år/nummer eller år-nummer. Flere sager skal være adskilt af , (komma).',
+            'message' => t('%name: illegal value.', array('%name' => $instance['label'])),
+          );
+        }
+      }
+    }
+
+    if (isset($item['os2web_esdh_field_doc_ident'])) {
+      // Validate all esdh doc fields
+      $docids = explode(',', $item['os2web_esdh_field_doc_ident']);
+      foreach ($docids as $docid) {
+        $docid = trim($docid);
+        // Adopt this for further testing.
+        $valid = preg_match('/^\d{1,20}[-,\/]\d{2}$/', $docid);
+        if (!$valid && ($docid != '')) {
+          $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'Ugyldig fremstilling af dokument-id. Dokument-id skal være på formen nummer/år eller nummer-år. Flere dokumenter skal være adskildt af , (komma).',
+            'message' => t('%name: illegal value.', array('%name' => $instance['label'])),
+          );
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function os2web_esdh_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'os2web_esdh_field_case_ident_for':
+      foreach ($items as $delta => $item) {
+        if ($item['os2web_esdh_field_case_ident']) {
+          $cases = array();
+          $ids = explode(',', $item['os2web_esdh_field_case_ident']);
+          // error_log("Var: \$ids = " . print_r($ids, 1));
+          foreach ($ids as $id) {
+            $cases[] = trim($id);
+          }
+          $element[$delta]['#markup'] = '<div class="fullcaserender">' . theme('os2web_esdh_case', array('id' => $cases)) . '</div>';
+        }
+      }
+      break;
+
+    case 'os2web_esdh_field_doc_ident_for':
+      foreach ($items as $delta => $item) {
+        if ($item['os2web_esdh_field_doc_ident']) {
+          $docs = array();
+          $ids = explode(',', $item['os2web_esdh_field_doc_ident']);
+          foreach ($ids as $id) {
+            $docs[] = trim($id);
+          }
+          $element[$delta]['#markup'] = '<div class="documenttable">' . theme('os2web_esdh_document', array('id' => $docs)) . '</div>';
+        }
+      }
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function os2web_esdh_field_theme() {
+  return array(
+    'os2web_esdh_case' => array(
+      'variables' => array('id' => FALSE),
+    ),
+    'os2web_esdh_document' => array(
+      'variables' => array('id' => FALSE),
+    ),
+  );
+}
+
+/**
+ * Implements theme_IDENTIFIER().
+ */
+function theme_os2web_esdh_case($vars) {
+
+  if (!function_exists('os2web_esdh_provider_has_api')) {
+    return '';
+  }
+
+  // Check for correct api and required functions are implemented.
+  if (!os2web_esdh_provider_has_api('cm')) {
+    drupal_set_message(t('Error in case lookup API. Check status.'), 'error');
+    return '';
+  }
+  $ids = $vars['id'];
+  if (!is_array($ids)) {
+    $ids = array($ids);
+  }
+  $docids = array();
+  foreach ($ids as $id) {
+    $case = os2web_esdh_provider_invoke('cm', 'get_case_data', $id);
+    // error_log("Var: \$case = " . print_r($case, 1));
+    if (FALSE === $case) {
+      // Ignore failed case lookups.
+      continue;
+    }
+    $valid = _os2web_esdh_field_case_access($id);
+    if (!$valid) {
+      // Ignore hidden cases.
+      continue;
+    }
+    $docids = array_merge($docids, os2web_esdh_provider_invoke('cm', 'get_case_docs', $id));
+  }
+  $html = theme('os2web_esdh_document', array('id' => $docids, 'iscase' => TRUE));
+  return $html;
+}
+
+/**
+ * Implements theme_IDENTIFIER().
+ */
+function theme_os2web_esdh_document($vars) {
+
+  if (!function_exists('os2web_esdh_provider_has_api')) {
+    return '';
+  }
+
+  // Check for correct api and required functions are implemented.
+  if (!os2web_esdh_provider_has_api('cm')) {
+    drupal_set_message(t('Error in document lookup API. Check status.'), 'error');
+    return '';
+  }
+  $id = $vars['id'];
+  if (!is_array($id)) {
+    $id = array($id);
+  }
+  $html = '';
+  $rows = array();
+  foreach ($id as $docid) {
+    $doc = os2web_esdh_provider_invoke('cm', 'get_document', $docid);
+    if (_os2web_esdh_field_doc_access($docid)) {
+      // Only show public documents.
+      if (($doc !== FALSE) && _os2web_esdh_field_case_access($doc['case_reference'])) {
+        $rows[] = array(
+          l($doc['title'], os2web_esdh_provider_invoke('cm', 'get_document_file', $docid)) . '<span class="documentdate">' . format_date(strtotime($doc['last_update']), 'custom', 'd/m/Y') . '</span>',
+        );
+      }
+    }
+  }
+  if (count($rows) == 0) {
+    if ($vars['iscase']) {
+      $html .= '<p>' . t('This case contains no public documents.') . '</p>';
+    }
+    return $html;
+  }
+  $html .= theme('table', array('rows' => $rows));
+  return $html;
+}
+/**
+ * Checks access conditions for a case.
+ *
+ * @param int $caseid
+ *   Case id
+ *
+ * @return bool
+ *   True on access granted
+ */
+function _os2web_esdh_field_case_access($caseid) {
+  $case = os2web_esdh_provider_invoke('cm', 'get_case_data', $caseid);
+  if (FALSE === $case) {
+    return FALSE;
+  }
+  $access_grant = array(
+    'accesscode' => 'KK',
+    'restricted' => ACADRE_CM_ACCESS_OPEN_CASE,
+  );
+  $access = array(
+    'accesscode' => $case['access_code'],
+    'restricted' => $case['restricted_from_public'],
+  );
+  return _os2web_esdh_field_array_compare($access, $access_grant);
+}
+
+/**
+ * Checks access conditions for a document.
+ *
+ * @param int $docid
+ *   Document id
+ *
+ * @return bool
+ *   True on access granted
+ */
+function _os2web_esdh_field_doc_access($docid) {
+  $doc = os2web_esdh_provider_invoke('cm', 'get_document', $docid);
+  $access_grant = array(
+    'accesscode' => 'KK',
+    'publication' => ACADRE_CM_ACCESS_OPEN_DOCUMENT,
+    'lockstatus' => TRUE,
+  );
+  $access = array(
+    'accesscode' => $doc['access_code'],
+    'publication' => $doc['publication_indicator'],
+    'lockstatus' => $doc['lock_status'],
+  );
+  return _os2web_esdh_field_array_compare($access, $access_grant);
+}
+
+/**
+ * Helper function that compares two arrays.
+ * @access protected
+ *
+ * @param array $a1
+ *   First array
+ * @param array $a2
+ *   Second array
+ *
+ * @return bool
+ *   True if all keys in $a1 is equivilent in $a2
+ */
+function _os2web_esdh_field_array_compare(array $a1, array $a2) {
+  $result = TRUE;
+  foreach ($a1 as $key => $value) {
+    if (isset($a2[$key]) && $a2[$key] === $value) {
+      $result = $result && TRUE;
+    }
+    else {
+      $result = $result && FALSE;
+    }
+  }
+  return $result;
+}
+
+/**
+ * Implements hook_os2web_help().
+ */
+function os2web_esdh_field_os2web_help($sections) {
+
+  // Fields.
+  $sections['fields'] = t('<p><b>Link to cases and documents:</b> Many contenttypes has ability to link to cases and documents in the ESDH case system. When pages gets linked to cases and documents, links to them will automatically gets generated at the bottom of the page.</p>');
+
+  return $sections;
+}

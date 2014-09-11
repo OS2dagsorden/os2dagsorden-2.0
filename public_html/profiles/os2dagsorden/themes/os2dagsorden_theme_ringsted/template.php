@@ -31,22 +31,23 @@ function os2dagsorden_theme_ringsted_preprocess_page(&$variables) {
 	drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme_ringsted') . '/css/ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
         if (variable_get('os2dagsorden_show_search_block_title', 'true')==='false')
             drupal_add_js('hide_search_block_title_ringsted()', 'inline');
-        
+        /*
 	$view = views_get_page_view();
 	if (!empty($view)) {
 	global $base_path;	
 	if ($view->name == 'meeting_details') {
 	    //adding expand/collapse behaviour to meeting details view
-	    drupal_add_js('bullet_point_add_expand_behaviour_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_bilag', true) . ',  ' . variable_get('os2dagsorden_expand_all_bullets', false) . ')', 'inline');
-            drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ','. variable_get('os2dagsorden_expand_cases', "false") .')', 'inline');
-              
-	    
+	    drupal_add_js('bullet_point_add_expand_behaviour_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ',  ' . variable_get('os2dagsorden_expand_all_bullets', false) . ')', 'inline');
+	    if (variable_get('os2dagsorden_expand_bilag_sag_bullet', true)){
+		drupal_add_js('open_all_bilag_case_bullet_points();', 'inline');
+	    }
 	}
 	if ($view->name == 'speaking_paper') {
             //adding expand/collapse behaviour bullet point details view
-            drupal_add_js('bullet_point_details_init_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_bilag', true) . ')', 'inline');
-	    drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ','. variable_get('os2dagsorden_expand_cases', "false") .')', 'inline');
-              
+            drupal_add_js('bullet_point_details_init_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ')', 'inline');
+	    if (variable_get('os2dagsorden_expand_bilag_sag_bullet', true)){
+		drupal_add_js('open_all_bilag_case_bullet_points();', 'inline');
+	    }
         }
-}
+}*/
 }

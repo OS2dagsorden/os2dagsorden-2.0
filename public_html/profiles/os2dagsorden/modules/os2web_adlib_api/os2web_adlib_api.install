@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Install file for the AdLib API implementation module
+ */
+
+
+/**
+ * Implements hook_schema().
+ */
+function os2web_adlib_api_schema() {
+  $schema['os2web_adlib_api_doc_files'] = array(
+    'description' => 'This table relates cached files from the PWS to the drupal file entry',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'The file entry id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'defualt' => 0,
+      ),
+      'did' => array(
+        'description' => 'The document identifier from PWS.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'jobtype' => array(
+        'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
+        'type' => 'int',
+        'unsigned' => TRUE,
+      ),
+      'job_id' => array(
+        'description' => 'ID used for the pdf conversion job.',
+        'type' => 'varchar',
+        'length' => 128,
+      ),
+      'job_info' => array(
+        'description' => 'Information object about the pdf conversion job.',
+        'type' => 'varchar',
+        'length' => 1024,
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('fid', 'jobtype'),
+  );
+  return $schema;
+}
+
+/**
+ * Adds job_type field if missing.
+ */
+function os2web_adlib_api_update_7002(&$sandbox) {
+  $ret = array();
+  if (!db_field_exists('os2web_adlib_api_doc_files', 'jobtype')) {
+    $ret[] = db_add_field('os2web_adlib_api_doc_files', 'jobtype', array(
+      'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
+      'type' => 'int',
+      'unsigned' => TRUE,
+        ));
+    $ret[] = db_add_primary_key('os2web_adlib_api_doc_files', array('fid', 'jobtype'));
+  }
+  return $ret;
+}

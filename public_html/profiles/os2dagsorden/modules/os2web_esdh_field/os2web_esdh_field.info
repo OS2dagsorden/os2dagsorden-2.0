@@ -1,0 +1,11 @@
+name = OS2Web ESDH Fields
+description = Fields which displaya a case or doc from the pws webservice.
+core = 7.x
+package = OS2Web - ESDH
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = os2web_esdh_field
+dependencies[] = features
+configure = admin/config/os2web/pws
+features[features_api][] = api:1
+tags[] = os2web

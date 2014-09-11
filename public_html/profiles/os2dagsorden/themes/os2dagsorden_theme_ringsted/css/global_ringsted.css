@@ -25,7 +25,7 @@ body{
   border-top-right-radius: 3px;
  
 }
-#edit-field-committee-tid {
+#edit-field-os2web-meetings-committee-tid {
   border : 1px solid #b9b9b9;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -97,7 +97,7 @@ body{
      width:35%;
    }
  
-  #block-views-exp-meetings-search-page #edit-field-committee-tid-wrapper {
+  #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper {
     width:35%;
    }
  
@@ -161,7 +161,7 @@ body{
      width:15%;
    }
  
-   #block-views-exp-meetings-search-page #edit-field-committee-tid-wrapper{
+   #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper{
     width:18%;
    }
  
@@ -225,7 +225,6 @@ body{
   .page-meetings-search .view-meetings-search .view-header .help-button {
       top: 7px; 
   }
- 
 }  
 /*-----------------------------  End of Search exp- meetings -----------------*/  
 
@@ -342,8 +341,11 @@ a.form-submit, a.button {
 
 /* ---------------------------- Table Styles START---------------------------- */
 .attachment-text table {
-  max-width: 100% !important;
-  width: 100% !important;
+  /*max-width: 100% !important;
+  width: 100% !important;*/
+}
+.attachment-text img{
+  padding-right: 22px;
 }
 table.views-table tr td a,
 table.views-table tr td a:hover {

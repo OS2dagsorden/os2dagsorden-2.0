@@ -1,0 +1,272 @@
+<?php
+
+/**
+ * Creates additional attachment from the raw enlosure.
+ * Also if enclosures has a file in PDF, PDF->HTML conversion is scheduled.
+ * @access protected
+ *
+ * @param array $enclosure  raw information about the enclosure
+ * @param mixed $file       file object to be attached to the attachment
+ *
+ * @return int  $nid        node id of the created attachment
+ */
+function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
+  //creating attachment content
+  $node = new stdClass();
+  $node->type = "os2web_meetings_bullet_attach";
+  $node->language = LANGUAGE_NONE;
+
+  node_object_prepare($node);
+
+  if (variable_get('os2dagsorden_add_type_prefix', 'true') === 'true'  && !isset($enclosure['is_bp_summary']))
+      $node->title = $enclosure['type'].': ' . $enclosure['title'];
+ else
+     $node->title = $enclosure['title'];
+ 
+  if ($node->title > 254)
+    $node->title = substr($node->title, 0, 254);
+    
+  $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;
+  if (!$enclosure['access'])//TODO: Look here
+    $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 1;
+  else
+    $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 0;
+  
+  $node->field_os2web_meetings_bpa_type[$node->language][0]['value']=$enclosure['type'];
+  
+  node_submit($node);
+  node_save($node);
+
+  //PDF conversion
+  if (module_exists(os2dagsorden_pdf2htmlex)){
+    if (file_get_mimetype($file->uri) === 'application/pdf')//if is PDF, schedule for HTML conversion
+      os2dagsorden_pdf2htmlex_schedule($file->fid, $node->nid);
+  }
+  
+  return $node->nid;
+}
+
+/**
+ * Adds the subid to the committee term, if this subid has not been added there before.
+ * @access protected
+ *
+ * @param term Object $committee_term committee term object
+ * @param int         $sub_id         subid to be added
+ *
+ * @return none
+ */
+function os2dagsorden_esdh_provider_committee_add_subid($committee_term, $sub_id){
+  //check already has this subid
+  $contains = FALSE;
+  if (isset($committee_term->field_os2web_meetings_com_subid['und'])) {
+      foreach ($committee_term->field_os2web_meetings_com_subid['und'] as $id_raw) {
+          if (intval($id_raw['value']) == intval($sub_id)) {
+              $contains = TRUE;
+              break;
+          }
+      }
+  }
+  
+  //if does not have
+  if (!$contains) {
+    $committee_term->field_os2web_meetings_com_subid['und'][]['value'] = $sub_id;
+    taxonomy_term_save($committee_term);
+  }
+}
+
+/**
+ * Checks if there is a meeting analogue imported from SOFD system.
+ * @access protected
+ *
+ * @param term Object $committee      committee term object
+ * @param String      $meeting_start  start date of the meeting
+ * @param String      $meeting_finish end date of the meeting
+ *
+ * @return Object     $found_meeting  found meeting, if any, void otherwise
+ */
+function os2dagsorden_esdh_provider_find_sofd_meeting($committee, $meeting_start, $meeting_finish){
+  //getting meeting
+  $meeting_start_date_0000 = date('Y-m-d 00:00:00', strtotime($meeting_start));
+  $meeting_start_date_2359 = date('Y-m-d 23:59:59', strtotime($meeting_finish));
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('type', 'os2web_meetings_meeting')
+      ->fieldCondition('field_os2web_meetings_date', 'value', $meeting_start_date_0000, '>=')
+      ->fieldCondition('field_os2web_meetings_date', 'value', $meeting_start_date_2359, '<=')
+      //no meeting system ID's - avoiding overlapping meetings of same committee on the same date
+      ->fieldCondition('field_os2web_meetings_system_id', 'value', '0', '=')
+      ->fieldCondition('field_os2web_meetings_committee', 'tid', $committee->tid, '=');
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+      $found_meeting = node_load(array_shift($result['node'])->nid);
+      return $found_meeting;
+  }
+}
+
+/**
+ * Processed the closed bullet point same way as the opened bullet point it processed (code is a bit simplified)
+ *
+ * @param node object $node the created bullet node
+ * @param array       $item raw bullet information
+ *
+ * @return Object     $node updated bullet node
+ */
+function os2dagsorden_esdh_provider_process_closed_bullet($node, $item){
+  $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][]['value'] = 0;
+
+  // Gather the bullets for the item.
+  if (isset($item['bullets']) && is_array($item['bullets'])) {
+    $bullet_nids = _os2web_esdh_provider_import_bullets($item['bullets']);
+    foreach ($bullet_nids as $nid) {
+      $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = $nid;
+    }
+  }
+  else {
+    $node->field_os2web_meetings_attach[LANGUAGE_NONE] = array();
+  }
+
+  // Gather enclosures.
+  foreach ($item['enclosures'] as $enclosure) {
+      if ($file = _os2web_esdh_provider_import_file($enclosure)) {
+        $node->field_os2web_meetings_enclosures[LANGUAGE_NONE][] = (array) $file;
+        $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = os2dagsorden_esdh_provider_process_enclosure($enclosure, $file);
+      }
+      else {
+        watchdog('acadre MM', 'There was an error importing file %uri ', array('%uri' => $enclosure['uri']), WATCHDOG_ERROR);
+      }
+  }
+
+  return $node;
+}
+
+/**
+ * Adds a number to the bullet point
+ *
+ * @param node object $node   bullet point
+ * @param int         $number the number to add
+ *
+ * @return Object     $node   updated bullet point
+ */
+function os2dagsorden_esdh_provider_bullet_add_number($node, $number){
+  $node->field_os2web_meetings_bul_number[LANGUAGE_NONE][]['value'] = $number;
+  return $node;
+}
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Deletes the associated speaker papers when deleting bullets
+ */
+function os2dagsorden_esdh_provider_node_delete($node){
+  if ($node->type === 'os2web_meetings_bullet') {
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+        ->propertyCondition('type', array('os2web_meetings_spaper'))
+        ->fieldCondition('field_os2web_meetings_sp_bullet', 'target_id', $node->nid, '=');
+
+    $result = $query->execute();
+    if (isset($result['node'])){
+      drupal_set_message('here');
+      $nids = array_keys($result['node']);
+      foreach ($nids as $nid)
+        node_delete($nid);
+    }
+  }
+}
+
+/**
+ * Appends word "Tillægsdagsorden" to the bullet title if bullet is of type additional dagsorden
+ *
+ * @param $node
+ * @param $is_additional
+ * @return mixed
+ */
+function os2dagsorden_esdh_provider_handle_additional_bullet($node, $is_additional){
+  if ($is_additional){
+    $node->title = 'Tillægsdagsorden: ' . $node->title;
+  }
+  return $node;
+}
+
+/**
+ * Appends word "Tillægsdagsorden" to the meeting title if meeting is of type additional dagsorden
+ *
+ * @param $node
+ * @param $agenda_name
+ * @return mixed
+ */
+function os2dagsorden_esdh_provider_handle_additional_meeting($node, $agenda_name){
+  if (stripos($agenda_name, 'tillæg') !== FALSE){
+    $node->title = 'Tillægsdagsorden: ' . $node->title;
+    //$node->title = $agenda_name . ' ' . $node->title;
+  }
+  return $node;
+}
+/**
+ * return TRUE if closed attachments must be imported
+ *
+ * @return boolean
+ */
+function os2dagsorden_esdh_provider_import_closed_attachment () {
+    return TRUE;
+}
+
+/**
+ * Assigned meeting's category based on the list of committees provided in the settings
+ *
+ * @param $node
+ * @param $committee_subid
+ * @return mixed
+ */
+function os2dagsorden_esdh_provider_assign_meeting_category($node, $committee_subid){
+  $pol_committees = array_map('trim', explode(',', variable_get('os2dagsorden_committee_category_pol', '')));
+  if (in_array($committee_subid, $pol_committees))
+    $node->field_os2web_meetings_category[LANGUAGE_NONE][0]['value'] = 'pol';
+
+  $org_committees = array_map('trim', explode(',', variable_get('os2dagsorden_committee_category_org', '')));
+  if (in_array($committee_subid, $org_committees))
+    $node->field_os2web_meetings_category[LANGUAGE_NONE][0]['value'] = 'org';
+
+  return $node;
+}
+
+/**
+ * Returns the corresponding bullet if exists, bases on the name
+ *
+ * @param $title
+ * @param $bullet_nids
+ * @return mixed
+ */
+function os2dagsorden_esdh_provider_find_corresponding_bullet($title, $bullet_nids){
+  foreach($bullet_nids as $bullet_nid){
+    $bullet = node_load($bullet_nid['target_id']);
+    if (strcasecmp($title, $bullet->title) == 0){
+      return $bullet;
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Returns the corresponding attachment if exists, bases on the name and content
+ *
+ * @param $bullet_entity
+ * @param $attachment_nids
+ * @return mixed
+ */
+function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity, $attachment_nids){
+  err_debug('=====here');
+  foreach($attachment_nids as $attachment_nid){
+    err_debug('=====Starting to compare');
+    $attachment = node_load($attachment_nid['target_id']);
+    err_debug('=======Comparing ' . $attachment->title . '[' . $attachment->nid . '] vs ' . $bullet_entity['title'] . ' result: ');
+    if (strcasecmp($bullet_entity['title'], $attachment->title) == 0
+      && strcasecmp($bullet['body'], $attachment->field_os2web_meetings_bpa_body[$node->language][0]['value']) == 0){
+      err_debug('Match');
+      return $attachment;
+    }
+  }
+  return NULL;
+}

@@ -3,17 +3,9 @@
   max-width: 600px;
 }
 
-.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_container .attachment_text_full_container.attachment_text_max_size{
-  max-width: 800px;
-}
-
 .attachment_text_container .attachment-text{
-  overflow: hidden;
+  overflow-y: hidden;
   max-width: 600px;
-}
-
-.attachment_text_container .attachment_text_max_size .attachment-text{
-  max-width: 800px;
 }
 
 /*---------------------------- Date override START ----------------------------*/

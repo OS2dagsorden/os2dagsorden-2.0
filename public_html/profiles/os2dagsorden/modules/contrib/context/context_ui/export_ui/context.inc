@@ -1,7 +1,6 @@
 <?php
 
 $plugin = array(
-  'access' => 'administer contexts',
   'schema' => 'context',
   'menu' => array(
     'menu prefix' => 'admin/structure',

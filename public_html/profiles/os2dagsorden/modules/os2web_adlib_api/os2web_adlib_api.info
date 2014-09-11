@@ -1,0 +1,8 @@
+name = OS2Web AdLib API Module
+description = Implements calls to allow access to the AdLib webservice
+
+package = OS2Web - Backend
+core = 7.x
+version=7.x-1.0-beta1
+dependencies[] = features
+features[features_api][] = api:1

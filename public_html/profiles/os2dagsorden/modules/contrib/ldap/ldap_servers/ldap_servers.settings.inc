@@ -1,5 +1,4 @@
 <?php
-// $Id: ldap_servers.settings.inc,v 1.3.2.1 2011/02/08 06:01:00 johnbarclay Exp $
 
 /**
  * @file
@@ -8,7 +7,7 @@
  */
 
 function ldap_servers_settings() {
-  ldap_server_module_load_include('inc', 'ldap_servers', 'ldap_servers.functions');
+  ldap_servers_module_load_include('inc', 'ldap_servers', 'ldap_servers.functions');
 
   if (! ldap_servers_ldap_extension_loaded()) {
     drupal_set_message(t('PHP LDAP Extension is not loaded.'), "warning");
@@ -27,7 +26,7 @@ function ldap_servers_settings() {
       be entered on or submitted to HTTP pages, only HTTPS. This option should be used with an
       approach to get all logon forms to be https, such as:') .
       theme('item_list', array('items' => $https_approaches)),
-    '#default_value' => variable_get('ldap_servers_require_ssl_for_credentails', 1),
+    '#default_value' => variable_get('ldap_servers_require_ssl_for_credentails', 0),
   );
 
   $options = ldap_servers_encrypt_types('encrypt');

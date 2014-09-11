@@ -1,0 +1,11 @@
+name = QBrick integration for OS2Web
+description = This generates links for agenda items. NOTE: Module requires naming convention on Qbrick site.
+core = 7.x
+package = OS2Web - Frontend
+php = 5.2.4
+version = 7.x-1.0-beta1
+project = os2web_qbrick
+dependencies[] = features
+explanation = Anvendte felttyper - se <a href="/admin/reports/fields">feltliste</a>
+features[features_api][] = api:1
+required = 1

@@ -35,7 +35,6 @@ class context_reaction {
   }
 
   function options_form($context) {
-    return array();
   }
 
   /**

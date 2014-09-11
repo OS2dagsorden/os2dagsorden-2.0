@@ -1,0 +1,103 @@
+<?php
+/**
+* os2dagsorden_settings
+*
+* PHP version 5
+*
+* @category OS2dagsorden
+* @package  OS2dagsorden_Importer
+* @file     Code for the OS2dagsorden settings feature.
+* @author   Stanislav Kutasevits <stan@bellcom.dk>
+* @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+* @link     http://bellcom.dk
+*/
+
+//include_once('os2dagsorden_settings.features.inc');
+
+/**
+ * Implementation of hook_menu()
+ *
+ * @return list of links
+ */
+function os2dagsorden_settings_menu() {
+    $items['admin/config/os2dagsorden'] = array(
+        'title' => 'OS2dagsorden Setup',
+        'description' => 'Set up OS2 cms services',
+        'position' => 'right',
+        'weight' => -15,
+        'access arguments' => array('administer os2web'),
+        'page callback' => 'system_admin_menu_block_page',
+        'file' => 'system.admin.inc',
+        'file path' => drupal_get_path('module', 'system'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['admin/config/os2dagsorden/settings'] = array(
+        'title' => 'OS2dagsorden Settings',
+        'description' => 'General settings for the OS2dagsorden project',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('os2dagsorden_settings_settings_form'),
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'os2dagsorden_settings.admin.inc',
+    );
+    $items['admin/config/os2dagsorden/flush_calendar_preferences'] = array(
+        'title' => 'Calendar preferences flushing',
+        'description' => 'Clicking on this link all the calendar preferences (pol/org) will be flushed. The preferences are retrieved again from SOFD, once "Importer cron" is run',
+        'page callback' => 'os2dagsorden_settings_flush_calendar_preferences',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['get_committee/autocomplete'] = array(
+    'page callback' => 'os2dagsorden_settings_committee_autocomplete_callback',
+      'page arguments' => array(2),
+      'access arguments' => array('use autocomplete'),
+    'type' => MENU_CALLBACK,  
+    );
+    
+    return $items;
+}
+
+/**
+ * Flushed the preferences of all the users regarding the calendar (pol/org)
+ *
+ * @return none
+ */
+function os2dagsorden_settings_flush_calendar_preferences(){
+    $users = db_select('users', 'u')
+	  ->fields('u', array('uid'))
+	  ->execute()
+	  ->fetchAll();
+    foreach ($users as $user) {
+      if ($user->uid == 0)
+	continue;
+      
+      $user = user_load($user->uid);
+      $user->field_user_meetings_category['und'] = array();
+      user_save($user);
+    }
+    
+    drupal_set_message('All users calendar preferences have been flushed');
+    drupal_goto('admin/config');
+}
+
+function os2dagsorden_settings_committee_autocomplete_callback($string = '') {
+    $vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'os2web_meetings_tax_committee')
+            ->execute()
+            ->fetchField();
+    $vocabulary_terms = taxonomy_get_tree($vid);
+    $array = drupal_explode_tags($string);
+    $last_string = trim(array_pop($array));
+    $matches = array();
+    $prefix = count($array) ? implode(', ', $array) . ', ' : '';
+    foreach ($vocabulary_terms as $term)
+        $terms[$prefix . $term->name] = $term->name;
+    drupal_json_output($terms);
+}
+
+function os2dagsorden_settings_views_pre_render(&$view) {
+  if ($view->name == 'user_committee') {
+    $view->build_info['title'] = variable_get('os2dagsorden_my_committees_block_title', 'Medlem af');
+  }
+}

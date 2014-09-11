@@ -1,0 +1,8 @@
+name = OS2dagsorden settings
+description = Set of settings for OS2dagsorden solution, includes language settings
+core = 7.x
+package = OS2Dagsorden
+php = 5.2.4
+version = 7.x-1.0-alpha
+project = os2dagsorden_settings
+configure = admin/config/os2dagsorden/settings

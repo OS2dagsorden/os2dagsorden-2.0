@@ -1,0 +1,5 @@
+name = OS2Web PDF conversion manager
+description = The functionality of this module is checks the  conversion directory to see if some of the files there have been converted to pdf
+package = OS2Web
+core = 7.x
+version=dev

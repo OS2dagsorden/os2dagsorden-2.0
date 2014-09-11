@@ -73,13 +73,13 @@ function os2dagsorden_install() {
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
 
-  theme_enable(array('os2dagsorden_theme_ringsted'));
+  theme_enable(array('os2dagsorden_theme'));
   theme_disable(array('bartik'));
   //turn off notification error messages
   variable_set('error_level', ERROR_REPORTING_DISPLAY_SOME);
 
   //Set current theme
-  variable_set('theme_default', 'os2dagsorden_theme_ringsted');
+  variable_set('theme_default', 'os2dagsorden_theme');
   
   // Set admin theme to Seven
   variable_set('admin_theme', 'seven');
@@ -91,4 +91,25 @@ function os2dagsorden_install() {
   variable_set('date_default_timezone', "Europe/Berlin");
   variable_set('date_first_day', "1");
   variable_set('configurable_timezones', "0");
+  
+  $role = user_role_load_by_name('authenticated user');
+  if($role != false){
+  $roles = array(
+	'create os2web_meetings_spaper content',
+	'delete own os2web_meetings_spaper content',
+	'edit own os2web_meetings_spaper content',
+  );
+  foreach($roles as $name){
+  db_merge('role_permission')->key(array(
+	  'rid' => $role->rid,
+	  'permission' => $name,
+	))->fields(array(
+	  'module' => 'node',
+	))->execute();  
+  }
+  }
+  else{
+	drupal_set_message('"authenticated user" role was not found.', 'error');
+  }
+
 }

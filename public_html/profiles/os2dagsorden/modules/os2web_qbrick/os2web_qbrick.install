@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * This file installs the QBrick module for use in meeting views
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function os2web_qbrick_field_schema($field) {
+  $columns = array();
+  if ($field['type'] === 'os2web_qbrick_movie') {
+    $columns = array(
+      'seek' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => '0',
+      ),
+      'id' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    );
+  }
+  return array(
+    'columns' => $columns,
+  );
+}

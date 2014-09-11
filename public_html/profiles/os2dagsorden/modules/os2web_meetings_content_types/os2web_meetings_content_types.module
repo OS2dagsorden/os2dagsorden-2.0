@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Os2web - meetings content types feature.
+ */
+
+include_once 'os2web_meetings_content_types.features.inc';

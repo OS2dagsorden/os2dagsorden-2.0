@@ -1,0 +1,372 @@
+<?php
+/**
+ * os2dagsorden_print_meetings
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Print_Meetings
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @return array of links.
+ */
+function os2dagsorden_print_meetings_menu() {
+    $items = array();
+
+    $items['meetings/print'] = array(
+        'title' => 'MØDEKALENDER ' . date('Y'),
+        'type' => MENU_CALLBACK,
+        'page callback' => '_os2dagsorden_print_meetings_callback',
+        'access arguments' => array('access content')
+    );
+
+    return $items;
+}
+
+/**
+ * Print meetings callback
+ *
+ * @return rendered form.
+ */
+function _os2dagsorden_print_meetings_callback() {
+    global $base_url;
+    $breadcrumb[] = l('Hjem', $base_url);
+    $breadcrumb[] .= '<span class="breadcrumb-active">Halvårs-kalender</span>';
+    drupal_set_breadcrumb($breadcrumb);
+
+    drupal_add_css(drupal_get_path('module', 'os2dagsorden_print_meetings') . '/css/os2dagsorden_print_meetings.css');
+    drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme') . '/css/global.css');
+
+    return drupal_get_form('_os2dagsorden_print_meetings_form');
+}
+
+/**
+ * Composes the filter form.
+ *
+ * @param mixed $form        form object
+ * @param mixed &$form_state form state
+ *
+ * @return form.
+ */
+function _os2dagsorden_print_meetings_form($form, &$form_state) {
+    //init
+    if (date('m') <= 6){
+      $from_month = 1;
+      $to_month = 6;
+    }
+    else {
+      $from_month = 7;
+      $to_month = 12;
+    }
+
+    if (!empty($form_state['values']['from_month'])) {
+        $from_month = $form_state['values']['from_month'];
+    }
+    elseif (!empty($_GET['from_month'])) {
+        $from_month = $_GET['from_month'];
+    }
+
+    
+    if (!empty($form_state['values']['to_month'])) {
+        $to_month = $form_state['values']['to_month'];
+    }
+    elseif (!empty($_GET['to_month'])) {
+        $to_month = $_GET['to_month'];
+    }
+
+    //excludig form from display on print page
+    if (empty($_GET['print'])) {
+        //formign div block if not print page
+        $form[] = array(
+            '#markup' => '<div class="view-display-id-page">',
+        );
+
+        $form[] = array(
+            '#markup' => '<table class="print-meetings-form"><tr><td>'
+        );
+
+	
+        $form['submit_1_half'] = array(
+            '#type' => 'submit',
+            '#submit' => array('_os2dagsorden_print_meetings_form_submit_1_half'),
+            '#value' => t('Hent tabellen for det første halvår'),
+	    '#attributes' => ($from_month == 1 ? array('class' => array('button-active')) : ''),
+        );
+
+        $form[] = array(
+            '#markup' => '</td><td>'
+        );
+
+        $form['submit_2_half'] = array(
+            '#type' => 'submit',
+            '#submit' => array('_os2dagsorden_print_meetings_form_submit_2_half'),
+            '#value' => t('Hent tabellen for det sidste halvår'),
+	    '#attributes' => ($from_month == 7 ? array('class' => array('button-active')) : ''),
+        );
+
+        $form[] = array(
+            '#markup' => '</td><td>'
+        );
+
+        $link = $GLOBALS['base_url'] . '?q=printpdf/meetings/print&from_month=' . $from_month . '&to_month=' . $to_month . '&print=true';
+        $form[] = array(
+            '#markup' => "<input type='button' value='Print' class='form-submit print-button' onClick='window.open(\"" . $link . "\")' />",
+        );
+
+        $form[] = array(
+            '#markup' => '</td></tr></table>'
+        );
+    }
+    else {
+        $form[] = array(
+            '#markup' => "<h1>MØDEKALENDER " . date('Y') . "</h2>",
+        );
+    }
+
+    $form['result'] = array(
+        '#markup' => _os2dagsorden_print_meetings_get_table($from_month, $to_month),
+    );
+
+    //finishing div block if not print page
+    if (empty($_GET['print'])) {
+        $form[] = array(
+            '#markup' => "</div>",
+        );
+    }
+
+    return $form;
+}
+
+/**
+ * Presets the form parameter. Form will show the result for the first half year (1-6 month)
+ *
+ * @param mixed $form        form object
+ * @param mixed &$form_state form state
+ *
+ * @return none
+ */
+function _os2dagsorden_print_meetings_form_submit_1_half($form, &$form_state) {
+    $form_state['rebuild'] = TRUE;
+    $form_state['values']['from_month'] = 1;
+    $form_state['values']['to_month'] = 6;
+}
+
+/**
+ * Presets the form parameter. Form will show the result for the second half year (7-12 month)
+ *
+ * @param mixed $form        form object
+ * @param mixed &$form_state form state
+ *
+ * @return none
+ */
+function _os2dagsorden_print_meetings_form_submit_2_half($form, &$form_state) {
+    $form_state['rebuild'] = TRUE;
+    $form_state['values']['from_month'] = 7;
+    $form_state['values']['to_month'] = 12;
+}
+
+/**
+ * Cascade method to generates the table of dates filled with meetings.
+ *
+ * @param date $from_month start month
+ * @param date $to_month   end month
+ *
+ * @return generated table
+ */
+function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
+    global $user;
+    $user = user_load($user->uid);
+    
+    //selecting the node of type meetings
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('status', 1) // Getting published meetings only
+      ->propertyCondition('type', array('os2web_meetings_meeting'))
+      ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $from_month . '-01 00:00:00', '>=')//selecting meetings from the from_month
+      ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $to_month . '-31 23:59:59', '<=')//selecting meetings up to the to_month
+      ->fieldOrderBy('field_os2web_meetings_date', 'value', 'ASC');
+    
+    if (!empty($user->field_user_meetings_category['und'])){
+      if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
+	$query->fieldCondition('field_os2web_meetings_category', 'value', $user->field_user_meetings_category['und'][0]['value'], '=');
+      }
+    }
+    $result = $query->execute();
+    
+    $meetings = array();
+    if (isset($result['node'])) {
+	  $results = array_keys($result['node']);
+	  $meetings = node_load_multiple($results, array('type' => array('os2web_meetings_meeting')));
+    }
+
+    return _os2dagsorden_print_meetings_get_six_month_data($from_month, $to_month, $meetings);
+}
+
+/**
+ * Generates the table of 6 month filled with meetings.
+ *
+ * @param date  $from_month start month
+ * @param date  $to_month   end month
+ * @param array $meetings   array of meetings
+ *
+ * @return generated table
+ */
+function _os2dagsorden_print_meetings_get_six_month_data($from_month, $to_month, $meetings) {
+    //headers
+    $html = "<div class='print-meetings-content'>";
+    $html .= "<table class='print-meetings'>";
+    $html .= os2dagsorden_print_meetings_generate_month_headers($from_month, $to_month);
+    //body - generating selected month
+    $html .= os2dagsorden_print_meetings_generate_month($from_month, $to_month, $meetings);
+    //end of body
+    $html .= "</table>";
+    $html .= "</div>";
+    
+    $html .= '<div class="view-footer">';
+    //$html .= '<a href="' . $base_url . '?q=meetings-export/from_month/' . $from_month . '/to_month/' . $to_month . '" class="button">Eksporter halvårets møder til egen kalender</a>';
+    $html .= '</div>';
+
+    return $html;
+}
+
+/**
+ * Generates the headers (month names)
+ *
+ * @param date $from_month start month
+ * @param date $to_month   end month
+ *
+ * @return generated headers
+ */
+function os2dagsorden_print_meetings_generate_month_headers($from_month, $to_month) {
+    $months_names = os2dagsorden_print_meetings_get_months();
+    $html = "<tr>";
+    for ($month = $from_month; $month <= $to_month; $month++) {
+        $html .= "<th class='con_center'>" . $months_names[$month] . "</th>";
+    }
+    $html .= "</tr>";
+
+    return $html;
+}
+
+/**
+ * Generates the one month and fills it with meetings.
+ *
+ * @param date  $from_month start month
+ * @param date  $to_month   end month
+ * @param array $meetings   array of meetings
+ *
+ * @return generated month
+ */
+function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $meetings) {
+    global $base_url;
+    $html = "<tr>";
+    for ($month = $from_month; $month <= $to_month; $month++) {
+        $html .= "<td width='16.6%' class='no-pad valign_top'>";
+        $html .= "<table class='print-meetings'>";
+        for ($i = 1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, date('Y')); $i++) {
+            $html .= "<tr>";
+            $html .= "<td class='inside number" . _os2dagsorden_print_meetings_mark_weekend_gray($month, $i) . "'>" . $i . "</td>";
+            $html .= "<td class='inside content" . _os2dagsorden_print_meetings_mark_weekend_gray($month, $i) . "'" . _os2dagsorden_print_meetings_add_col_span($month, $i) . ">";
+            //filling with the content
+            foreach ($meetings as $met) {
+                if (substr($met->field_os2web_meetings_date['und'][0]['value'], 0, 10) === date('Y-m-d', mktime(0, 0, 0, $month, $i, date("Y")))) {
+                    $link = $base_url . '/meeting/' . $met->nid;
+
+                    $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
+		    $title = '';
+                    if (!empty($committee->field_os2web_meetings_com_abbr['und'][0]['value']))
+			 $title = $committee->field_os2web_meetings_com_abbr['und'][0]['value'];
+                    elseif (!empty($met->field_os2web_meetings_abbr['und'][0]['value']))
+			 $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
+                    else
+			 $title = $met->title;
+                    
+                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
+                }
+            }
+            //end of content
+            $html .= "</td>";
+            $html .= _os2dagsorden_print_meetings_mark_week_start($month, $i);
+            $html .= "</tr>";
+        }
+        $html .= "</table>";
+        $html .= "</td>";
+    }
+    $html .= "</tr>";
+
+    return $html;
+}
+
+/**
+ * Determines and marks the day with the gray color if the given day is a weekend. 
+ *
+ * @param int $month month number   
+ * @param int $day   day number
+ *
+ * @return string with added/not added "gray" flag.
+ */
+function _os2dagsorden_print_meetings_mark_weekend_gray($month, $day) {
+    if (date('N', mktime(0, 0, 0, $month, $day, date('Y'))) >= 6)
+        return ' gray ';
+    else
+        return '';
+}
+
+/**
+ * Adds week number if the day is Monday.
+ *
+ * @param int $month month number   
+ * @param int $day   day number
+ *
+ * @return string with added/not added week number.
+ */
+function _os2dagsorden_print_meetings_mark_week_start($month, $day) {
+    if (date('N', mktime(0, 0, 0, $month, $day, date('Y'))) == 1)
+        return '<td class="inside number">' . date('W', mktime(0, 0, 0, $month, $day, date('Y'))) . '</td>';
+    else
+        return '';
+}
+
+/**
+ * Modifies the html markup for the day-cell, if the day is not Monday
+ *
+ * @param int $month month number   
+ * @param int $day   day number
+ *
+ * @return modified string.
+ */
+function _os2dagsorden_print_meetings_add_col_span($month, $day) {
+    if (date('N', mktime(0, 0, 0, $month, $day, date('Y'))) != 1)
+        return " colspan='2'";
+    else
+        return '';
+}
+
+/**
+ * Danish names of the months
+ *
+ * @return array of months
+ */
+function os2dagsorden_print_meetings_get_months() {
+    return (array(1 => t('Januar'),
+        2 => t('Februar'),
+        3 => t('Marts'),
+        4 => t('April'),
+        5 => t('Maj'),
+        6 => t('Juni'),
+        7 => t('Juli'),
+        8 => t('August'),
+        9 => t('September'),
+        10 => t('Oktober'),
+        11 => t('November'),
+        12 => t('December')
+            ));
+}
+
+?>

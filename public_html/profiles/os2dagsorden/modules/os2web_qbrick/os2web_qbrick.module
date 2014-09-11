@@ -1,0 +1,232 @@
+<?php
+
+/**
+ * @file
+ * Implements methods that allows the use of QBrick movies in fields.
+ */
+
+/**
+ * Helper function. Makes danish characters ascii-safe.
+ * @access protected
+ *
+ * @param string $str
+ *   Input string
+ *
+ * @return string
+ *   Safe string
+ */
+function _os2web_qbrick_safedk($str) {
+  return str_replace('å', 'aa', str_replace('æ', 'ae', str_replace('ø', 'oe', strtolower($str))));
+}
+
+/**
+ * Gets the chapters of a movie.
+ * @access protected
+ *
+ * @param string $movie_id
+ *   Movie id
+ *
+ * @return array
+ *   List of chapters. False on error.
+ */
+function _os2web_qbrick_get_chapters($movie_id) {
+  $getmedia = 'http://vms.api.qbrick.com/rest/v3/GetMedia/' . $movie_id;
+  $xml = simplexml_load_file($getmedia);
+  if (is_object($xml)) {
+    $tmp_chapters = $xml->xpath('//media/item/playlist/stream/chapterlist/chapter');
+    $chapters = array();
+    foreach ($tmp_chapters as $chapter) {
+      $id = explode(' ', (string) $chapter);
+      $chapters[$id[1]] = (int) $chapter['time'];
+    }
+    return $chapters;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Returns the movie_id for a given meeting.
+ * @access protected
+ *
+ * @param int $nid
+ *   Node id
+ *
+ * @return string
+ *   Movie id, or False on error.
+ */
+function _os2web_qbrick_get_movie_id($nid) {
+  $search_url = 'http://vms.api.qbrick.com/rest/v3/Search/444777D8/';
+  if (is_numeric($nid)) {
+    $node = node_load($nid);
+  }
+  else {
+    $node = $nid;
+  }
+  if (!is_object($node)) {
+    return FALSE;
+  }
+  $committee = taxonomy_term_load($node->field_os2web_meetings_committee[$node->language][0]['tid']);
+  $committee = _os2web_qbrick_safedk($committee->name);
+  $date = format_date(strtotime($node->field_os2web_meetings_date[$node->language][0]['value']), 'custom', 'dmY', $node->field_os2web_meetings_date[$node->language][0]['timezone']);
+  // $html.=$committee . ' ' . $date;
+  // $html.='
+  // ' . print_r($node, 1);
+  $url = $search_url . rawurlencode($committee . ' ' . $date);
+  $xml = simplexml_load_file($url);
+  $movie_id = (string) ($xml->media->item['id']);
+  if (strlen($movie_id) == 8) {
+    return $movie_id;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+// -- QBrick movie field:
+// --- Info:
+/**
+ * Implements hook_field_info().
+ */
+function os2web_qbrick_field_info() {
+  $field['os2web_qbrick_movie'] = array(
+    'label' => t('QBrick movie'),
+    'description' => t('Add a QBrick movie to this field.'),
+    'default_widget' => 'os2web_qbrick_movie_simple',
+    'default_formatter' => 'os2web_qbrick_movie_simple',
+  );
+  return $field;
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function os2web_qbrick_field_is_empty($item, $field) {
+  if ($item['seek'] === 0 && trim($item['id']) === '') {
+    return TRUE;
+  }
+}
+
+// --- Widget:
+/**
+ * Implments hook_field_widget_info().
+ */
+function os2web_qbrick_field_widget_info() {
+  $widgets['os2web_qbrick_movie_simple'] = array(
+    'label' => 'Qbrick Movie simple entry',
+    'field types' => array('os2web_qbrick_movie'),
+  );
+  $widgets['os2web_qbrick_movie_noedit'] = array(
+    'label' => 'Qbrick Movie deny edit',
+    'field types' => array('os2web_qbrick_movie'),
+  );
+  return $widgets;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function os2web_qbrick_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $default = array('id' => '', 'seek' => 0);
+  if (isset($form_state['node']->{$field['field_name']}[$langcode][$delta])) {
+    $default = $form_state['node']->{$field['field_name']}[$langcode][$delta];
+  }
+  switch ($instance['widget']['type']) {
+    case 'os2web_qbrick_movie_noedit':
+      break;
+
+    case 'os2web_qbrick_movie_simple':
+      $element += array(
+        '#type' => 'fieldset',
+        '#tree' => TRUE,
+        'id' => array(
+          '#type' => 'textfield',
+          '#title' => t('Movie Id'),
+          '#description' => t('ID Of QBrick movie ie. 05C8A352'),
+          '#default_value' => $default['id'],
+          '#required' => FALSE,
+          '#weight' => 0,
+          '#delta' => $delta,
+        ),
+        'seek' => array(
+          '#type' => 'textfield',
+          '#title' => t('Seek time'),
+          '#description' => t('Chapter time to seek to.'),
+          '#default_value' => $default['seek'],
+          '#required' => FALSE,
+          '#weight' => 1,
+          '#delta' => $delta,
+        ),
+      );
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function os2web_qbrick_field_formatter_info() {
+  $formatters['os2web_qbrick_movie_simple'] = array(
+    'label' => t('QBrick movie render'),
+    'field types' => array('os2web_qbrick_movie'),
+  );
+  $formatters['os2web_qbrick_movie_seek'] = array(
+    'label' => t('QBrick movie seek-only'),
+    'field types' => array('os2web_qbrick_movie'),
+  );
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function os2web_qbrick_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $player_id = 'AC80F5D9';
+  $element = array();
+  switch ($display['type']) {
+    case 'os2web_qbrick_movie_seek':
+      $icon = drupal_get_path('module', 'os2web_qbrick') . '/images/video.jpg';
+      foreach ($items as $delta => $item) {
+        if ($item['seek']) {
+          $seek_link = '<a href="#qbrick_professional_qbrick1" onclick="javascript:play(' . $item['seek'] . ');"><img src="/' . $icon . '" alt="Show video"/></a>';
+          $element[$delta]['#markup'] = $seek_link;
+        }
+      }
+      break;
+
+    case 'os2web_qbrick_movie_simple':
+      foreach ($items as $delta => $item) {
+        if ($item['id']) {
+          $embed_script = '<div data-qbrick-as="0" data-qbrick-fs="1" data-qbrick-rp="0" data-qbrick-cb="1" data-qbrick-il="1" data-qbrick-sp="1" data-qbrick-width="320" data-qbrick-height="180" data-qbrick-mcid="!movieid!playerid">&nbsp;</div>
+    <script type="text/javascript" src="http://professional.player.qbrick.com/playerembed.js"></script>
+    <script type="text/javascript">
+      function play(amount) {
+        var pro = document.getElementById("qbrick_professional_qbrick1");
+        if (pro) {
+              pro.qbProSeekMedia(amount);
+          }
+        }
+    </script>';
+          $element[$delta]['#markup'] = format_string($embed_script, array(
+            '!playerid' => $player_id,
+            '!movieid' => $item['id'],
+            '!seek' => $item['seek']));
+        }
+      }
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Implements hook_os2web_help().
+ */
+function os2web_qbrick_os2web_help($sections) {
+
+  // Module specific.
+  $sections['os2web_qbrick'] = t('<h2>Qbrick:</h2><p>Qbrick is used to upload videos of meetings, and to seperate that video into chapters. <a href="http://qbrick.com" target="_blank">Qbrick website</a></p>', array('@url' => url('job')));
+
+  return $sections;
+}
