@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Defines permissions for Context module and implements
+ * hook_ctools_plugin_pre_alter() to alter context actions
+ * access callbacks. Also overwrites ctools_export_ui_task_access()
+ * callback to check for new permissions user access.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function context_permissions_permission() {
+  return array(
+    'list context' => array(
+      'title' => t('Overview context'),
+      'description' => t('Allow to overview contexts'),
+    ),
+    'add context' => array(
+      'title' => t('Add context'),
+      'description' => t('Allow to add contexts'),
+    ),
+    'edit context' => array(
+      'title' => t('Edit context'),
+      'description' => t('Allow to edit contexts'),
+    ),
+    'import context' => array(
+      'title' => t('Import context'),
+      'description' => t('Allow to import contexts (you also need to enable the "use PHP for settings" permission)'),
+    ),
+    'export context' => array(
+      'title' => t('Export context'),
+      'description' => t('Allow to export contexts'),
+    ),
+    'revert context' => array(
+      'title' => t('Revert context'),
+      'description' => t('Allow to revert contexts'),
+    ),
+    'delete context' => array(
+      'title' => t('Delete context'),
+      'description' => t('Allow to delete contexts'),
+    ),
+    'clone context' => array(
+      'title' => t('Clone context'),
+      'description' => t('Allow to clone contexts'),
+    ),
+    'enable context' => array(
+      'title' => t('Enable context'),
+      'description' => t('Allow to enable contexts'),
+    ),
+    'disable context' => array(
+      'title' => t('Disable context'),
+      'description' => t('Allow to disable contexts'),
+    ),
+    'administer context settings' => array(
+      'title' => t('Administer Context Settings'),
+      'description' => t('Give permissions to administer context settings'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function context_permissions_menu_alter(&$items) {
+  $items['admin/structure/context/settings']['access arguments'] = array('administer context settings');
+}
+
+/**
+ * Implements hook_ctools_plugin_pre_alter().
+ */
+function context_permissions_ctools_plugin_post_alter(&$plugin, &$info) {
+  if ($plugin['plugin module'] == 'ctools' && $plugin['plugin type'] == 'export_ui' && $plugin['module'] == 'context_ui') {
+    foreach ($plugin['menu']['items'] as $key => $item) {
+      $plugin['menu']['items'][$key]['access callback'] = 'context_permissions_export_ui_task_access';
+
+      $plugin['access'] = 'list context';
+      $plugin['create access'] = 'add context';
+      $plugin['delete access'] = 'delete context';
+    }
+  }
+}
+
+/**
+ * Overwritten menu access callback for various tasks of export-ui.
+ */
+function context_permissions_export_ui_task_access($plugin_name, $op, $item = NULL) {
+  if (user_access("$op context")) {
+    ctools_include('export-ui');
+    $plugin = ctools_get_export_ui($plugin_name);
+    $handler = ctools_export_ui_get_handler($plugin);
+
+    if ($handler) {
+      return $handler->access($op, $item);
+    }
+
+    // Deny access if the handler cannot be found.
+    return FALSE;
+  }
+
+  return FALSE;
+}

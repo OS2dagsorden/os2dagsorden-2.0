@@ -1,0 +1,10 @@
+table.views-table tr td a,
+table.views-table tr td a:hover {
+  white-space: normal !important;
+}
+.views-meeting-search-field-date {
+  width: 20% !important;
+}
+.views-meeting-search-field-title {
+  width: 25% !important;
+}

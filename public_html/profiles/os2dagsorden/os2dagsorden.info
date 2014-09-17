@@ -25,7 +25,7 @@ dependencies[] = path
 dependencies[] = ctools
 dependencies[] = context
 dependencies[] = context_ui
-dependencies[] = context_permisssions
+dependencies[] = context_permissions
 dependencies[] = calendar
 dependencies[] = date
 dependencies[] = date_api
@@ -72,6 +72,7 @@ dependencies[] = smtp
 dependencies[] = lightbox2
 dependencies[] = content_taxonomy
 dependencies[] = php
+dependencies[] = field_collection
 
 ; Development - Disable on prod.
 ;dependencies[] = features_tools
@@ -102,7 +103,7 @@ dependencies[] = os2dagsorden_front_page_feature
 dependencies[] = os2dagsorden_front_page_views
 dependencies[] = os2dagsorden_meetings_calendar_view
 dependencies[] = os2dagsorden_meeting_views
-dependencies[] = os2dagsorden_rules_and_permissions
+;dependencies[] = os2dagsorden_rules_and_permissions
 dependencies[] = os2dagsorden_settings_export
 dependencies[] = os2dagsorden_sidepane_menu
 dependencies[] = os2dagsorden_ultimate_cron_configuration
