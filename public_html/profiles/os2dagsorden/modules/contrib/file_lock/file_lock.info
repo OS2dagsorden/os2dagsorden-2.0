@@ -4,9 +4,9 @@ package = Media
 core = 7.x
 dependencies[] = file
 
-; Information added by drupal.org packaging script on 2013-09-30
-version = "7.x-2.0+2-dev"
+; Information added by Drupal.org packaging script on 2014-09-02
+version = "7.x-2.0+0-dev"
 core = "7.x"
 project = "file_lock"
-datestamp = "1380579278"
+datestamp = "1409625829"
 

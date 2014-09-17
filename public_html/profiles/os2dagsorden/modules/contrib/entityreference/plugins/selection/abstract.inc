@@ -1,7 +1,6 @@
 <?php
 
 /**
- * @file
  * Abstraction of the selection logic of an entity reference field.
  *
  * Implementations that wish to provide an implementation of this should

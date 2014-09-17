@@ -58,10 +58,16 @@ error_log(print_r($uris, 1));
  */
 function utf8_for_xml($string)
 {
-    #$replace_me = "&#xC;";
-    $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_char');
-    $str_new = str_replace($replace_me, "", $string);
-    return $str_new;
+  if (variable_get('os2web_sbsys_esdh_banned_activate_regex', FALSE)) {//using regex
+    $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_regex','');
+    $str_new = preg_replace($replace_me, "", $string);  
+  }
+  else {//using CSV list
+    $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_char','');
+    $str_new = str_replace(explode(',', $replace_me), "", $string);
+  }
+
+  return $str_new;
 }
 
 /**

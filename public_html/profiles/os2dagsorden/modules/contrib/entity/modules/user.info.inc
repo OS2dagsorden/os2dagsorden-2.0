@@ -59,7 +59,6 @@ function entity_metadata_user_entity_property_info() {
     'description' => t("The date the user last accessed the site."),
     'getter callback' => 'entity_metadata_user_get_properties',
     'type' => 'date',
-    'access callback' => 'entity_metadata_user_properties_access',
     'schema field' => 'access',
   );
   $properties['last_login'] = array(
@@ -67,7 +66,6 @@ function entity_metadata_user_entity_property_info() {
     'description' => t("The date the user last logged in to the site."),
     'getter callback' => 'entity_metadata_user_get_properties',
     'type' => 'date',
-    'access callback' => 'entity_metadata_user_properties_access',
     'schema field' => 'login',
   );
   $properties['created'] = array(
@@ -75,7 +73,6 @@ function entity_metadata_user_entity_property_info() {
     'description' => t("The date the user account was created."),
     'type' => 'date',
     'schema field' => 'created',
-    'setter permission' => 'administer users',
   );
   $properties['roles'] = array(
     'label' => t("User roles"),
@@ -83,6 +80,7 @@ function entity_metadata_user_entity_property_info() {
     'type' => 'list<integer>',
     'getter callback' => 'entity_metadata_user_get_properties',
     'setter callback' => 'entity_metadata_user_set_properties',
+    'setter permission' => 'administer users',
     'options list' => 'entity_metadata_user_roles',
     'access callback' => 'entity_metadata_user_properties_access',
   );
@@ -94,7 +92,7 @@ function entity_metadata_user_entity_property_info() {
     // it is an integer, so we follow the schema definition.
     'type' => 'integer',
     'options list' => 'entity_metadata_user_status_options_list',
-    'access callback' => 'entity_metadata_user_properties_access',
+    'setter permission' => 'administer users',
     'schema field' => 'status',
   );
   $properties['theme'] = array(

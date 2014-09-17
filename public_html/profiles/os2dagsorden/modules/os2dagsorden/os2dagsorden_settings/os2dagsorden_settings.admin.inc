@@ -287,6 +287,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
             ->fetchField();
 
   $committees = taxonomy_get_tree($vid);
+  $options_committee = array();
   foreach ($committees as $committee){
     $options_committee[$committee->tid] = $committee->name;
   }

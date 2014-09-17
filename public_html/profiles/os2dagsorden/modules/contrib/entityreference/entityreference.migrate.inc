@@ -9,10 +9,7 @@
  * Implement hook_migrate_api().
  */
 function entityreference_migrate_api() {
-  return array(
-    'api' => 2,
-    'field handlers' => array('MigrateEntityReferenceFieldHandler'),
-  );
+  return array('api' => 2);
 }
 
 class MigrateEntityReferenceFieldHandler extends MigrateSimpleFieldHandler {

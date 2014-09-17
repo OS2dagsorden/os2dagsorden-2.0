@@ -12,11 +12,11 @@ function autologout_permission() {
   return array(
     'change own logout threshold' => array(
       'title' => t('Change own logout threshold'),
-      'description' => t('Selected users will be able to edit there own logout threshold.'),
+      'description' => t('Selected users will be able to edit their own logout threshold.'),
     ),
     'administer autologout'  => array(
       'title' => t('Administer Autologout'),
-      'description' => t('Administer the autologout settings'),
+      'description' => t('Administer the autologout settings.'),
     ),
   );
 }
@@ -336,8 +336,13 @@ function autologout_user_profile_submit(&$form, &$form_state) {
   // display but wont sumbit without access.
   if ($access) {
     $userid = $form_state['user'] -> uid;
-    $val = $form_state['values']['autologout_user_' . $userid];
-    variable_set('autologout_user_' . $userid, $val);
+    $val = trim($form_state['values']['autologout_user_' . $userid]);
+    if (empty($val)) {
+      variable_del('autologout_user_' . $userid);
+    }
+    else {
+      variable_set('autologout_user_' . $userid, $val);
+    }
   }
 }
 

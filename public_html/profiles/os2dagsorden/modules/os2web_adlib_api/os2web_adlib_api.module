@@ -262,7 +262,7 @@ function os2web_adlib_api_status() {
       );
     }
   }
-  drupal_add_js(drupal_get_path('module', 'os2web_adlib_api') . '/os2web_adlib_api.js', 'file');
+  drupal_add_js(drupal_get_path('module', 'os2web_adlib_api') . '/js/os2web_adlib_api.js', 'file');
   $html = '<h2>Connector information</h2>';
   $html .= theme('table', array('header' => $head, 'rows' => $rows));
   $head = array('Fid', 'Job-id', 'Status', 'action');
@@ -318,6 +318,13 @@ function os2web_adlib_api_page() {
     }
   }
   return theme('table', array('rows' => $rows));
+}
+
+function os2web_adlib_api_cronapi($op, $job = NULL) {
+  switch ($op) {
+    case 'list':
+      return array('os2web_adlib_api_cron' => t('Converts files to PDF or HTML through AdLib'));
+  }
 }
 
 /**
@@ -417,7 +424,12 @@ function os2web_adlib_api_convert_to_pdf($fid, $docref = NULL) {
         'did' => $docref,
         'jobtype' => 0,
       );
-      drupal_write_record('os2web_adlib_api_doc_files', $record, array('fid', 'jobtype'));
+      db_delete('os2web_adlib_api_doc_files')
+        ->condition('fid', $fid)
+        ->condition('did', $docref)
+        ->condition('jobtype', 0)
+        ->execute();
+      drupal_write_record('os2web_adlib_api_doc_files', $record);
       if (ADLIB_TEST_FID) {
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File queued for processing.");
       }
@@ -435,7 +447,12 @@ function os2web_adlib_api_convert_to_pdf($fid, $docref = NULL) {
       'did' => $docref,
       'job_id' => 'Complete',
     );
-    drupal_write_record('os2web_adlib_api_doc_files', $record, array('fid', 'jobtype'));
+    db_delete('os2web_adlib_api_doc_files')
+      ->condition('fid', $fid)
+      ->condition('did', $docref)
+      ->condition('jobtype', 0)
+      ->execute();
+    drupal_write_record('os2web_adlib_api_doc_files', $record);
     return FALSE;
   }
 }
@@ -624,6 +641,9 @@ function _os2web_adlib_api_process_file($file) {
             );
             drupal_write_record('os2web_adlib_api_doc_files', $record, array('fid', 'jobtype'));
             drupal_write_record('file_managed', $upd_file, array('fid'));
+            if (module_exists('os2dagsorden_pdf2htmlex')) {
+                os2dagsorden_pdf2htmlex_schedule_if_bpa($file->fid);
+           }
             field_cache_clear();
             watchdog('adlib_api', 'File (fid: %fid) was converted successfully to pdf.', array('%fid' => $file->fid), WATCHDOG_INFO);
             error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File saved, file record updated. New URI: " . $uri);

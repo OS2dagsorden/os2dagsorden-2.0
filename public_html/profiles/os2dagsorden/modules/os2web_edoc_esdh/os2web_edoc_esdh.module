@@ -10,6 +10,7 @@ include_once('os2web_edoc_esdh.features.inc');
 define('MM_IMPORT_DIR', 'public://edoc');
 define('MM_DEFAULT_APPROVED', 'Sundheds- og Forebyggelsesudvalget, Internationalt Udvalg, Kommunalbestyrelsen');
 define('MM_DEFAULT_BANNED_CHAR', '&#xC;');
+define('MM_DEFAULT_BANNED_REGEX', '/&#x.*;/');
 
 /**
  * Implements hook_ctools_plugin_directory().
@@ -42,6 +43,29 @@ function os2web_edoc_esdh_form_os2web_settings_settings_form_alter(&$form, &$for
     '#description' => 'Dette er stien hvor ESDH publisere .XML filer til.',
     '#default_value' => variable_get('os2web_edoc_esdh_mm_path', MM_IMPORT_DIR),
   );
+  $form['meetings']['os2web_edoc_esdh_mm_is_abs'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Is import path an absolute path'),
+    '#description' => t('Mark this checkbox if you import path is a absolute and not relative (e.g. public://) path'),
+    '#default_value' => variable_get('os2web_edoc_esdh_mm_is_abs', FALSE),
+  );
+  $form['meetings']['os2web_edoc_esdh_mm_abs_path_subs'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Substution for the absolute path'),
+    '#description' => t('Which part of the absolute path should be substitued with the <i>public://</i> suffix. <br/> <b>NOTE</b> trailing slash is required !!! <br/>
+    To use this functionality a symlink has to be created in <i>sites/default/files</i>, which would lead to absolute path.<br/>
+    <br/>
+    <b>Example: </b><br/>
+    symlink = <i>sites/default/files/edoc_copy</i><br/>
+    absolute path = <i>/var/wwwn/ballerup_edoc/edoc_copy</i> <br/>
+    substituion part = <i>/var/wwwn/ballerup_edoc/</i>'),
+    '#default_value' => variable_get('os2web_edoc_esdh_mm_abs_path_subs'),
+    '#states' => array(
+      'invisible' => array(
+       ':input[name="os2web_edoc_esdh_mm_is_abs"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
   $form['meetings']['os2web_edoc_esdh_approved_committees'] = array(
     '#type' => 'textfield',
     '#title' => 'Godkendte Udvalg',
@@ -49,12 +73,43 @@ function os2web_edoc_esdh_form_os2web_settings_settings_form_alter(&$form, &$for
     '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
     '#default_value' => variable_get('os2web_edoc_esdh_approved_committees', MM_DEFAULT_APPROVED),
   );
+  $form['meetings']['os2web_edoc_esdh_import_closed_agenda'] = array(   
+    '#type' => 'checkbox',
+    '#title' => 'Import closed agenda',
+    '#maxlength' => 200,
+    '#description' => t('This decides if the closed agenda bullet points\' content will be imported.'),
+    '#default_value' => variable_get('os2web_edoc_esdh_import_closed_agenda',FALSE)
+  );
+  $form['meetings']['os2web_edoc_esdh_banned_activate_regex'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Aktiver regex',
+    '#description' => t('This decides whether the regulax expression or CSV list will be used to trim out the unneeded content from XMLs.'),
+    '#default_value' => variable_get('os2web_edoc_esdh_banned_activate_regex', FALSE),
+  );
+
   $form['meetings']['os2web_edoc_esdh_banned_special_char'] = array(
     '#type' => 'textfield',
-    '#title' => 'Ikke standard XML tegn der skal fjernes ved import',
+    '#title' => 'Ikke standard XML tegn der skal fjernes ved import (CSV)',
     '#maxlength' => 200,
     '#description' => 'Komma sepereret liste over ikke standard tegn der skal fjernes ved import.',
     '#default_value' => variable_get('os2web_edoc_esdh_banned_special_char', MM_DEFAULT_BANNED_CHAR),
+    '#states' => array(
+      'invisible' => array(
+       ':input[name="os2web_edoc_esdh_banned_activate_regex"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['meetings']['os2web_edoc_esdh_banned_special_regex'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Ikke standard XML tegn der skal fjernes ved import (regex)',
+    '#maxlength' => 200,
+    '#description' => 'Regular expression over ikke standard tegn der skal fjernes ved import.',
+    '#default_value' => variable_get('os2web_edoc_esdh_banned_special_regex', MM_DEFAULT_BANNED_REGEX),
+    '#states' => array(
+      'invisible' => array(
+       ':input[name="os2web_edoc_esdh_banned_activate_regex"]' => array('checked' => FALSE),
+      ),
+    ),
   );
   $form['meetings']['os2web_edoc_esdh_nl2br'] = array(
     '#type' => 'checkbox',
@@ -76,7 +131,7 @@ function os2web_edoc_esdh_form_os2web_settings_settings_form_alter(&$form, &$for
     '#maxlength' => 200,
     '#description' => 'This will be used as bullet point title for bullet points imported from PDF files',
     '#default_value' => variable_get('os2web_edoc_esdh_empty_bullet_title','Indhold')
-    );    
+  );
 }
 
 /**
