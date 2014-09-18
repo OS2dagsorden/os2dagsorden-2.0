@@ -73,6 +73,7 @@ dependencies[] = lightbox2
 dependencies[] = content_taxonomy
 dependencies[] = php
 dependencies[] = field_collection
+dependencies[] = delete_all
 
 ; Development - Disable on prod.
 ;dependencies[] = features_tools
