@@ -3,5 +3,4 @@
  * @file
  * Drupal needs this blank file.
  */
-
 include_once 'os2dagsorden_settings_export.features.inc';

@@ -48,13 +48,106 @@ function os2dagsorden_settings_menu() {
         'type' => MENU_NORMAL_ITEM,
     );
     $items['get_committee/autocomplete'] = array(
-    'page callback' => 'os2dagsorden_settings_committee_autocomplete_callback',
+       'page callback' => 'os2dagsorden_settings_committee_autocomplete_callback',
       'page arguments' => array(2),
       'access arguments' => array('use autocomplete'),
     'type' => MENU_CALLBACK,  
     );
+
+    $items['os2dagsorden/export_settings'] = array(
+        'page callback' => 'os2dagsorden_settings_export_to_file',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
     
     return $items;
+}
+
+function os2dagsorden_settings_export_to_file(){
+    header("Content-type: text/plain");
+    header("Content-Disposition: attachment; filename=os2dagsorden_settings.settings");
+
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee'] = variable_get('os2dagsorden_show_meeting_committee', TRUE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_enddate'] = variable_get('os2dagsorden_show_meeting_enddate', TRUE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_type'] = variable_get('os2dagsorden_show_meeting_type', TRUE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_samlet_dokument_link'] =variable_get('os2dagsorden_show_samlet_dokument_link', TRUE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_participants_afbud'] = variable_get('os2dagsorden_show_participants_afbud', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon'] = variable_get('os2dagsorden_show_print_icon', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = variable_get('os2dagsorden_show_comments', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_closed_bullet_point_content'] = variable_get('os2dagsorden_show_closed_bullet_point_content', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag'] = variable_get('os2dagsorden_show_bilag', TRUE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = variable_get('os2dagsorden_sager_group_title', 'Sager');
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points'] = variable_get('os2dagsorden_group_closed_bullet_points', 'false');
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF');
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent till¾gsdokument i PDF');
+
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_all_bullets'] = variable_get('os2dagsorden_expand_all_bullets',FALSE);
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_attachment_onload'] = variable_get('os2dagsorden_expand_attachment_onload', FALSE);
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_bilags'] = variable_get('os2dagsorden_expand_bilags', 'true');
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_cases'] = variable_get('os2dagsorden_expand_cases', 'false');
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_massive_expand_collapse_button'] = variable_get('os2dagsorden_show_massive_expand_collapse_button', 'true');
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bilag_bullet_point'] = variable_get('os2dagsorden_show_bilag_bullet_point', FALSE);
+    $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_case_bullet_point'] = variable_get('os2dagsorden_show_case_bullet_point', FALSE);
+
+    $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_latest_meetings_view_mode'] = variable_get('os2dagsorden_latest_meetings_view_mode', 'all');
+    $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_committee'] = variable_get('os2dagsorden_meetings_views_last_8_show_meeting_committee', TRUE);
+    $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_location'] = variable_get('os2dagsorden_meetings_views_last_8_show_meeting_location', TRUE);
+
+    $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu'] = variable_get('os2dagsorden_collapse_menu', TRUE);
+    $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = variable_get('os2dagsorden_show_search_block_title', 'true');
+    $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_my_committees_block_title'] = variable_get('os2dagsorden_my_committees_block_title', 'Medlem af');
+ 
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
+  
+    $setting_array['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee'] = variable_get('os2dagsorden_budget_committee', FALSE);
+
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_participants_delimeter'] = variable_get('os2dagsorden_participants_delimeter', ', ');
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_notification_committee'] = variable_get('os2dagsorden_send_notification_committee', FALSE);
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_email_subject'] = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_email_body'] = variable_get('os2dagsorden_send_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
+      'Du abonnerer pŒ !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.');
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_follows_committee_send_notification'] = variable_get('os2dagsorden_follows_committee_send_notification', FALSE);
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_timespan_of_notification'] = variable_get('os2dagsorden_send_timespan_of_notification', 10);
+
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_add_type_prefix'] = variable_get('os2dagsorden_add_type_prefix', 'true');
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_committee_category_pol'] = variable_get('os2dagsorden_committee_category_pol', FALSE);
+    $setting_array['os2dagsorden_meeting_import']['os2dagsorden_committee_category_org'] = variable_get('os2dagsorden_committee_category_org', FALSE);
+
+    if (module_exists('os2web_pdf_conversion_manager')) {
+	$setting_array['os2dagsorden_file_import']['os2web_copied_filetype'] = variable_get('os2web_copied_filetype', OS2WEB_COPIED_FILETYPE);
+        $setting_array['os2dagsorden_file_import']['os2web_convertion_dir'] = variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR);
+    }
+
+    if (module_exists('os2dagsorden_pdf2htmlex')) {
+	$setting_array['os2dagsorden_pdf2htmlex_settings']['os2dagsorden_pdf2htmlex_path'] = variable_get('os2dagsorden_pdf2htmlex_path', "");
+	$setting_array['os2dagsorden_pdf2htmlex_settings']['pdf2html_rendering_path'] = variable_get('pdf2html_rendering_path', '');
+    }
+
+    $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_show_meeting_category'] = variable_get('os2dagsorden_show_meeting_category');
+    $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_user_default_meeting_category']= variable_get('os2dagsorden_user_default_meeting_category', 'pol');
+    $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_default_meeting_cateroty'] = variable_get('os2dagsorden_default_meeting_cateroty','pol');
+
+
+    $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
+    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+    $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
+    $setting_array['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+    $conf = ultimate_cron_get_settings("os2dagsorden_pdf2htmlex_cron");
+    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_pdf2htmlex_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+    $conf = ultimate_cron_get_settings("os2dagsorden_adlib_api_cron");
+    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_adlib_api_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+  
+    if (module_exists('os2dagsorden_importer')){
+	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_use_local_copy'] = variable_get('os2dagsorden_pws_use_local_copy');
+	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetings_url'] = variable_get('os2dagsorden_pws_v_meetings_url');
+	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url'] = variable_get('os2dagsorden_pws_v_meetinggroups_url');
+	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = variable_get('os2dagsorden_pws_v_acadregroups_url');
+    }
+
+    print os2dagsorden_settings_write_ini_file($setting_array, TRUE);
+    print $content;
 }
 
 /**
@@ -100,4 +193,35 @@ function os2dagsorden_settings_views_pre_render(&$view) {
   if ($view->name == 'user_committee') {
     $view->build_info['title'] = variable_get('os2dagsorden_my_committees_block_title', 'Medlem af');
   }
+}
+
+function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) { 
+    $content = "";
+    if ($has_sections){ 
+        foreach ($assoc_arr as $key=>$elem){ 
+            $content .= "[".$key."]\n"; 
+            foreach ($elem as $key2=>$elem2){ 
+                if(is_array($elem2)){ 
+                    for($i=0;$i<count($elem2);$i++){ 
+                        $content .= $key2."[] = \"".$elem2[$i]."\"\n"; 
+                    } 
+                } 
+                else if($elem2=="") $content .= $key2." = \n"; 
+                else $content .= $key2." = \"".$elem2."\"\n"; 
+            } 
+        } 
+    } 
+    else { 
+        foreach ($assoc_arr as $key=>$elem){ 
+            if(is_array($elem)){ 
+                for($i=0;$i<count($elem);$i++){ 
+                    $content .= $key."[] = \"".$elem[$i]."\"\n"; 
+                } 
+            } 
+            else if($elem=="") $content .= $key." = \n"; 
+            else $content .= $key." = \"".$elem."\"\n"; 
+        } 
+    }
+
+    return $content;
 }

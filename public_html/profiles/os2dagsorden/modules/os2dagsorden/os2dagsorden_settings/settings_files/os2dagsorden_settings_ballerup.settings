@@ -1,0 +1,65 @@
+[os2dagsorden_meeting_view_settings]
+os2dagsorden_show_meeting_committee = 
+os2dagsorden_show_meeting_enddate = 
+os2dagsorden_show_meeting_type = "1"
+os2dagsorden_show_samlet_dokument_link = "1"
+os2dagsorden_show_participants_afbud = "1"
+os2dagsorden_show_print_icon = "1"
+os2dagsorden_show_comments = "1"
+os2dagsorden_show_closed_bullet_point_content = "1"
+os2dagsorden_show_bilag = "1"
+os2dagsorden_sager_group_title = "Sagsdokumenter"
+os2dagsorden_group_closed_bullet_points = "true"
+os2dagsorden_hidden_agenda_committee = "28"
+os2dagsorden_meeting_description_download_title = "Hent samlet dokument i PDF"
+os2dagsorden_meeting_description_download_title_additional = "Hent tillægsdokument i PDF"
+[os2dagsorden_meeting_view_layout]
+os2dagsorden_expand_all_bullets = 
+os2dagsorden_expand_attachment_onload = "1"
+os2dagsorden_expand_bilags = "true"
+os2dagsorden_expand_cases = "false"
+os2dagsorden_show_massive_expand_collapse_button = "true"
+os2dagsorden_show_bilag_bullet_point = "1"
+os2dagsorden_show_case_bullet_point = "1"
+[os2dagsorden_latest_meetings_view_settings]
+os2dagsorden_latest_meetings_view_mode = "all"
+os2dagsorden_meetings_views_last_8_show_meeting_committee = 
+os2dagsorden_meetings_views_last_8_show_meeting_location = 
+[os2dagsorden_frontpage_layout]
+os2dagsorden_collapse_menu = "true"
+os2dagsorden_show_search_block_title = "false"
+os2dagsorden_my_committees_block_title = "Adgang lukket dagsorden"
+[os2dagsorden_meeting_search_view_settings]
+os2dagsorden_meetings_search_show_meeting_committee = "1"
+os2dagsorden_meetings_search_show_meeting_status = 
+[os2dagsorden_sidepane_menu_layout]
+os2dagsorden_budget_committee = 
+[os2dagsorden_meeting_import]
+os2dagsorden_participants_delimeter = "<br/>"
+os2dagsorden_send_notification_committee = "138,28,136,59,62,59,64,53,54,56,57,63,58,51,55,61,68,69,42,28,71,36,44,53,67,72,66,34"
+os2dagsorden_send_email_subject = "!meeting_type til !committee er publiceret"
+os2dagsorden_send_email_body = "Til !user
+
+Du abonnerer på !committee.
+Der er publiceret !meeting_type til !meeting_name !meeting_date."
+os2dagsorden_follows_committee_send_notification = 
+os2dagsorden_send_timespan_of_notification = "10"
+os2dagsorden_add_type_prefix = "true"
+os2dagsorden_committee_category_pol = 
+os2dagsorden_committee_category_org = 
+[os2dagsorden_file_import]
+os2web_copied_filetype = "doc,docx,xls,xlsx"
+os2web_convertion_dir = "private://os2convert"
+[os2dagsorden_pdf2htmlex_settings]
+os2dagsorden_pdf2htmlex_path = "/usr/bin/pdf2htmlEX"
+pdf2html_rendering_path = 
+[os2dagsorden_political_organizational_settings]
+os2dagsorden_show_meeting_category = 
+os2dagsorden_user_default_meeting_category[] = ""
+os2dagsorden_user_default_meeting_category[] = ""
+os2dagsorden_default_meeting_cateroty = "pol"
+[os2dagsorden_cron_job_freq]
+os2dagsorden_importer_cron = "0 */3 * * *"
+os2web_esdh_provider_cron = "0 */3 * * *"
+os2dagsorden_pdf2htmlex_cron = "0 */3 * * *"
+os2dagsorden_adlib_api_cron = "0 */3 * * *"

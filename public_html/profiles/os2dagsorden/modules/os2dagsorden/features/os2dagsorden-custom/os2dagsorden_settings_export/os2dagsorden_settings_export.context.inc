@@ -17,6 +17,12 @@ function os2dagsorden_settings_export_context_default_contexts() {
   $context->description = 'Will be shown on calendar month view only. Other time os2web_calendar (sidepane included will be shown))';
   $context->tag = '';
   $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        '~admin*' => '~admin*',
+        '~user/*' => '~user/*',
+      ),
+    ),
     'user' => array(
       'values' => array(
         'authenticated user' => 'authenticated user',
@@ -26,15 +32,21 @@ function os2dagsorden_settings_export_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-events-block_1' => array(
+        'views--exp-meetings_search-page' => array(
           'module' => 'views',
-          'delta' => 'events-block_1',
-          'region' => 'sidebar_second',
+          'delta' => '-exp-meetings_search-page',
+          'region' => 'content',
           'weight' => '-10',
         ),
         'menu-menu-sidepane-menu' => array(
           'module' => 'menu',
           'delta' => 'menu-sidepane-menu',
+          'region' => 'sidebar_second',
+          'weight' => '-10',
+        ),
+        'views-events-block_1' => array(
+          'module' => 'views',
+          'delta' => 'events-block_1',
           'region' => 'sidebar_second',
           'weight' => '-9',
         ),
@@ -49,12 +61,6 @@ function os2dagsorden_settings_export_context_default_contexts() {
           'delta' => 'user_follow_committees-block_1',
           'region' => 'sidebar_second',
           'weight' => '-7',
-        ),
-        'views--exp-meetings_search-page' => array(
-          'module' => 'views',
-          'delta' => '-exp-meetings_search-page',
-          'region' => 'sidebar_second',
-          'weight' => '-6',
         ),
       ),
     ),
