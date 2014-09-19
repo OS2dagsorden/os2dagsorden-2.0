@@ -100,6 +100,8 @@ function os2dagsorden_settings_export_to_file(){
  
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate'] = variable_get('os2dagsorden_search_startdate', 1);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate'] = variable_get('os2dagsorden_search_enddate', 1);
   
     $setting_array['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee'] = variable_get('os2dagsorden_budget_committee', FALSE);
 
@@ -224,4 +226,15 @@ function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
     }
 
     return $content;
+}
+
+function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
+  if($form['#id'] == 'views-exposed-form-meetings-search-page') {
+    if (empty($_GET['from_date']))  {
+	$form['from_date']['value']['#default_value'] = date('Y-m-d', strtotime('-' . variable_get('os2dagsorden_search_startdate', 1) . ' months'));
+    }
+    if (empty($_GET['to_date']))  {
+	$form['to_date']['value']['#default_value'] = date('Y-m-d', strtotime('+' . variable_get('os2dagsorden_search_enddate', 1) . ' months'));
+    }
+  }
 }

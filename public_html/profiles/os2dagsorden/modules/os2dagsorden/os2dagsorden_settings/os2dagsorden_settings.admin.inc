@@ -298,6 +298,29 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a meeting status is visible on meeting search view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE),
   );
+
+  $month_choise = array();
+  foreach (range(0, 12) as $number) {
+    $month_choise[$number] = $number;
+  }
+
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate'] = array(
+    '#type' => 'select',
+    '#title' => t('Search start date'),
+    '#field_suffix' => t('months before today'),
+    '#description' => t('This sets the default search start date for meeting search'),
+    '#options' => $month_choise,
+    '#default_value' => variable_get('os2dagsorden_search_startdate', 1),
+  );
+
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate'] = array(
+    '#type' => 'select',
+    '#title' => t('Search end date'),
+    '#field_suffix' => t('months after today'),
+    '#description' => t('This sets the default search end date for meeting search'),
+    '#options' => $month_choise,
+    '#default_value' => variable_get('os2dagsorden_search_enddate', 1),
+  );
   
   // sidemenu layout settings
   $form['os2dagsorden_sidepane_menu_layout'] = array(
@@ -776,7 +799,6 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_meeting_description_download_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title']);
     variable_set('os2dagsorden_meeting_description_download_title_additional', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional']);
 
-  
     variable_set('os2dagsorden_expand_all_bullets',$setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_all_bullets']);
     variable_set('os2dagsorden_expand_attachment_onload', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_attachment_onload']);
     variable_set('os2dagsorden_expand_bilags', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_bilags']);
@@ -795,6 +817,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
+    variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
+    variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
 
     variable_set('os2dagsorden_budget_committee', $setting_array['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee']);
 
