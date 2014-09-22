@@ -219,8 +219,6 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
             'member_start_date' => (string) array_shift($row->xpath('MemberStartDate')),
             'member_end_date' => (string) array_shift($row->xpath('MemberEndDate')),
             'member_initials' => (string) array_shift($row->xpath('MemberInitials')),
-            'role' => (string) array_shift($row->xpath('Role')),
-            'role_priority' => (int) array_shift($row->xpath('RolePriority')),
             'deactivated' => (int) array_shift($row->xpath('Deactivated')),
             'meeting_category' => (string) array_shift($row->xpath('CalendarCategory')),
         );
@@ -347,11 +345,6 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                     }
                 }
 
-                //create user role
-                if (isset($xml_data['role'])) {
-                   _os2dagsorden_importer_add_role_to_user($xml_data, $user, $com_tid);                    
-                }
-
                 //update meeting category
                 if (isset($xml_data['meeting_category'])) {
                     _os2dagsorden_importer_update_meeting_category($user, $xml_data['meeting_category']);
@@ -383,9 +376,6 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                     }
                 }
             }
-            //deleting role  
-            if (!empty($user))
-                _os2dagsorden_importer_delete_user_role($xml_data['user_pos_id'], $user);
         }
     }
 }
@@ -475,15 +465,6 @@ function _os2dagsorden_importer_process_user_committees_delete($xml_file){
      _os2dagsorden_importer_unset_user_follows_committee_plus_plus($com['tid'], $full_user);        
     }
    }
-   $user_role_items = field_get_items('user', $full_user, 'field_os2web_user_pos');
-    if (is_array($user_role_items)) {
-    foreach ($user_role_items as $item) {
-     $currnet_role_item = field_collection_field_get_entity($item);
-     $pos_id = intval($currnet_role_item->field_os2web_user_pos_id['und'][0]['value']);
-     if (!in_array($pos_id, $userSystemID))
-      _os2dagsorden_importer_delete_user_role($pos_id, $full_user);
-    }
-  }
  }
 }
 
@@ -518,26 +499,6 @@ function _os2dagsorden_importer_update_meeting_category($user, $category) {
     }
     $user->field_user_meetings_category['und'][]['value'] = strtolower($category);
     user_save($user);
-}
-
-/**
- * Helper function. Deletes the user role.
- *
- * @param array $xml_data xml
- *
- * @return none
- */
-function _os2dagsorden_importer_delete_user_role($user_pos_id, $user) {
-    $user_role_items = Array();
-    $user_role_items = field_get_items('user', $user, 'field_os2web_user_pos');
-    foreach ($user_role_items as $item_id => $item) {
-        $currnet_role_item = field_collection_field_get_entity($item);
-        if (intval($currnet_role_item->field_os2web_user_pos_id['und'][0]['value']) == intval($user_pos_id)) {
-            entity_delete_multiple('field_collection_item', array($item['value']));
-            unset($user->field_os2web_user_pos['und'][$item_id]);
-            user_save($user);
-        }
-    }
 }
 
 /**
@@ -1111,48 +1072,3 @@ function _os2dagsorden_importer_unpublish_meeting($xml_data) {
         node_save($node);
     }
 }
-/**
- * Helper function. Adds the role to the user
- *
- * @param int   $com_tid  committee id
- * @param mixed $user user object
- *
- * @return none
- */
-function _os2dagsorden_importer_add_role_to_user($xml_data, $user, $com_tid) {
-    $user_role_items = Array();
-    $user_role_items = field_get_items('user', $user, 'field_os2web_user_pos');
-     $user_has_this_role = FALSE;
-     if (is_array($user_role_items)) {
-        foreach (@$user_role_items as $item) {
-            $currnet_role_item = field_collection_field_get_entity($item);
-            if (intval($currnet_role_item->field_os2web_user_pos_id['und'][0]['value']) == intval($xml_data['user_pos_id'])) {
-                $user_has_this_role = TRUE;
-                $role_item = $currnet_role_item;
-                break;
-            }
-        }
-    }
-    if (!$user_has_this_role) {
-        $role_item = entity_create('field_collection_item', array('field_name' => 'field_os2web_user_pos'));
-        $role_item->setHostEntity('user', $user);
-    }
-    if (!empty($xml_data['member_start_date'])) {
-        $role_item->field_os2web_user_pos_valid['und'][0]['value'] = $xml_data['member_start_date'];
-    }
-    if (!empty($xml_data['member_end_date'])) {
-        $role_item->field_os2web_user_pos_valid['und'][0]['value2'] = $xml_data['member_end_date'];
-    } 
-    if (!empty($com_tid)) {
-       $role_item->field_os2web_user_pos_committee['und'][0]['tid'] = $com_tid;
-    }
-    $role_item->field_os2web_user_pos_name['und'][0]['value'] = $xml_data['role'];
-    $role_item->field_os2web_user_pos_priority['und'][0]['value'] = $xml_data['role_priority'];
-    $role_item->field_os2web_user_pos_id['und'][0]['value'] = $xml_data['user_pos_id'];
-
-    $role_item->save();
-    
-     user_save($user);
-     
-     
-    }
