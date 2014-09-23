@@ -355,7 +355,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   foreach ($committees as $committee){
     $options_committee[$committee->tid] = $committee->name;
   }
-  
+
   $form['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee'] = array(
     '#type' => 'select',
     '#title' => t('Select a committee which meeting will be available in <b>Budget</b> menu link'),
@@ -426,7 +426,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#size' => 10,
     '#description' => 'If meeting is not older than the set amount of day, notification is sent. <br/>Otherwise notification process is skipped',
     '#default_value' => variable_get('os2dagsorden_send_timespan_of_notification', 10),
-  ); 
+  );
+
   $form['os2dagsorden_meeting_import']['os2dagsorden_add_type_prefix'] = array(
     '#type' => 'radios',
     '#title' => t('Add prefix to Bilag/Sag bullet point attachments'),
