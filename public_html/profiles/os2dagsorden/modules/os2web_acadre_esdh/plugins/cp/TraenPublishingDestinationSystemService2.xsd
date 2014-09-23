@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://traen.com/Publishing" elementFormDefault="qualified" targetNamespace="http://traen.com/Publishing" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="RecievedConfiguration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="configuration" nillable="true" type="tns:Configuration" />
+        <xs:element minOccurs="0" name="batchGUID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Configuration">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DestinationName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FileServiceURL" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Configuration" nillable="true" type="tns:Configuration" />
+  <xs:element name="RecievedConfigurationResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecievedEntityLayout">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="entityLayout" nillable="true" type="tns:EntityLayout" />
+        <xs:element minOccurs="0" name="batchGUID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="EntityLayout">
+    <xs:sequence>
+      <xs:element name="Entities" nillable="true" type="tns:ArrayOfEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntityLayout" nillable="true" type="tns:EntityLayout" />
+  <xs:complexType name="ArrayOfEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entity" nillable="true" type="tns:Entity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEntity" nillable="true" type="tns:ArrayOfEntity" />
+  <xs:complexType name="Entity">
+    <xs:sequence>
+      <xs:element name="DestinationSystemID" type="xs:int" />
+      <xs:element name="DestinationSystemName" nillable="true" type="xs:string" />
+      <xs:element name="Fields" nillable="true" type="tns:ArrayOfEntityField" />
+      <xs:element name="ID" type="xs:int" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ParentEntityID" type="xs:int" />
+      <xs:element name="SourceSystemID" type="xs:int" />
+      <xs:element name="SourceSystemName" nillable="true" type="xs:string" />
+      <xs:element name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Entity" nillable="true" type="tns:Entity" />
+  <xs:complexType name="ArrayOfEntityField">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EntityField" nillable="true" type="tns:EntityField" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEntityField" nillable="true" type="tns:ArrayOfEntityField" />
+  <xs:complexType name="EntityField">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ColumnName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Datatype" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FileReference" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Nullable" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ParentKey" type="xs:boolean" />
+      <xs:element minOccurs="0" name="PrimaryKey" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ViewName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntityField" nillable="true" type="tns:EntityField" />
+  <xs:element name="RecievedEntityLayoutResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecievedItemPublished">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="entityItem" nillable="true" type="tns:EntityItem" />
+        <xs:element minOccurs="0" name="batchGUID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="EntityItem">
+    <xs:sequence>
+      <xs:element name="EntityID" type="xs:int" />
+      <xs:element name="EntityName" nillable="true" type="xs:string" />
+      <xs:element name="Fields" nillable="true" type="tns:ArrayOfField" />
+      <xs:element name="Key" nillable="true" type="tns:ArrayOfField" />
+      <xs:element minOccurs="0" name="ParentKey" nillable="true" type="tns:ArrayOfField" />
+      <xs:element name="Status" type="tns:EntityStatus" />
+      <xs:element minOccurs="0" name="SubEntityItemGroups" nillable="true" type="tns:ArrayOfSubEntityItemGroup" />
+      <xs:element minOccurs="0" name="TriggerRules" nillable="true" type="tns:ArrayOfTriggerRule" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EntityItem" nillable="true" type="tns:EntityItem" />
+  <xs:complexType name="ArrayOfField">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Field" nillable="true" type="tns:Field" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfField" nillable="true" type="tns:ArrayOfField" />
+  <xs:complexType name="Field">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:anyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Field" nillable="true" type="tns:Field" />
+  <xs:simpleType name="EntityStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Created" />
+      <xs:enumeration value="Updated" />
+      <xs:enumeration value="Deleted" />
+      <xs:enumeration value="Unchanged" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="EntityStatus" nillable="true" type="tns:EntityStatus" />
+  <xs:complexType name="ArrayOfSubEntityItemGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SubEntityItemGroup" nillable="true" type="tns:SubEntityItemGroup" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSubEntityItemGroup" nillable="true" type="tns:ArrayOfSubEntityItemGroup" />
+  <xs:complexType name="SubEntityItemGroup">
+    <xs:sequence>
+      <xs:element name="EntityItems" nillable="true" type="tns:ArrayOfEntityItem" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SubEntityItemGroup" nillable="true" type="tns:SubEntityItemGroup" />
+  <xs:complexType name="ArrayOfEntityItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EntityItem" nillable="true" type="tns:EntityItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfEntityItem" nillable="true" type="tns:ArrayOfEntityItem" />
+  <xs:complexType name="ArrayOfTriggerRule">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TriggerRule" nillable="true" type="tns:TriggerRule" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfTriggerRule" nillable="true" type="tns:ArrayOfTriggerRule" />
+  <xs:complexType name="TriggerRule">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:int" />
+      <xs:element name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Tag" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TriggerRule" nillable="true" type="tns:TriggerRule" />
+  <xs:element name="RecievedItemPublishedResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RecievedItemPublishedResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecievedItemUnPublished">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="entityItem" nillable="true" type="tns:EntityItem" />
+        <xs:element minOccurs="0" name="batchGUID" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecievedItemUnPublishedResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RecievedItemUnPublishedResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
