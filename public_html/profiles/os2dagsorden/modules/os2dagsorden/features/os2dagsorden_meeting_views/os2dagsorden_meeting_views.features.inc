@@ -18,5 +18,5 @@ function os2dagsorden_meeting_views_ctools_plugin_api() {
  * Implements hook_views_api().
  */
 function os2dagsorden_meeting_views_views_api() {
-  return array("api" => "3.0");
+  return array("version" => "3.0");
 }

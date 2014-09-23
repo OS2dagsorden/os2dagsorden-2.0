@@ -80,8 +80,6 @@ function os2dagsorden_meetings_calendar_view_fields_block_date_contextual_filter
 }
 
 function os2dagsorden_meetings_calendar_view_block_help_text(){
-  print '<div class="help-button" title="Her findes en dags- eller månedskalender med links 
-    til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere møderne til en fil, 
-    som så kan importeres til egen kalender, eks. i Outlook."></div>';
+  print '<div class="help-button" title="' . variable_get('os2dagsorden_calendar_help_text', 'Her findes en dags- eller månedskalender med links til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere møderne til en fil, som så kan importeres til egen kalender, eks. i Outlook.') . '"></div>';
 }
 /////////////////////////////////////////block END /////////////////////////////////////////

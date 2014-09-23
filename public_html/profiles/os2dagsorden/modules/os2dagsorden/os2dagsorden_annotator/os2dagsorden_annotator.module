@@ -341,7 +341,7 @@ HTML;
 
 	//Help icon
 	$html .= '<div class="node">
-		<div class="help-button" title="Hvis du ønsker at lave en kommentar til et ord eller et afsnit, så marker blot dette hvorefter du får mulighed for at indtaste kommentaren."></div>
+		<div class="help-button" title="' . variable_get('os2dagsorden_annotator_help_text', 'Hvis du ønsker at lave en kommentar til et ord eller et afsnit, så marker blot dette hvorefter du får mulighed for at indtaste kommentaren.') . '"></div>
 		<div class="controls-right">';
 		
 	//starting the breadcrumb - common for bilag/not bilag	

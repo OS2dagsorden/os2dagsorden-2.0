@@ -594,44 +594,107 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   
    // SOFD Integration settings
   if (module_exists('os2dagsorden_importer')){
-   $form['os2dagsorden_pws_sofd_group'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#title' => t('SOFD Integration settings'),
+    $form['os2dagsorden_pws_sofd_group'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t('SOFD Integration settings'),
+    );
+    $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_use_local_copy'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => variable_get('os2dagsorden_pws_use_local_copy'),
+      '#title' => t('Use local XML files'),
+      '#description' => variable_get('os2dagsorden_pws_use_local_copy') ? 'Diselect and click save to enable the fields below' : 'Selecting and clicking save will disable the textfields below',
+      '#element_validate' => array('_os2dagsorden_sofd_local_copy_validate'),
+    );
+    $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetings_url'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_pws_v_meetings_url'),
+      '#title' => t('Meeting (planned meetings) view url:'),
+      '#maxlength' => 256,
+      '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
+      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    );
+    $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_pws_v_meetinggroups_url'),
+      '#title' => t('Meeting groups (is member of/follows/follows+) view url:'),
+      '#maxlength' => 256,
+      '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
+      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    );
+    $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_pws_v_acadregroups_url'),
+      '#title' => t('Acadre groups (committees) url:'),
+      '#maxlength' => 256,
+      '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
+      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    );
+  }
+
+  $form['os2dagsorden_help_text_placeholder'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t('Help-button texts'),
   );
-  $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_use_local_copy'] = array(
-    '#type' => 'checkbox',
-    '#default_value' => variable_get('os2dagsorden_pws_use_local_copy'),
-    '#title' => t('Use local XML files'),
-    '#description' => variable_get('os2dagsorden_pws_use_local_copy') ? 'Diselect and click save to enable the fields below' : 'Selecting and clicking save will disable the textfields below',
-    '#element_validate' => array('_os2dagsorden_sofd_local_copy_validate'),
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_coming_meetings_help_text', 'Her vises de kommende 5 møder i "Mine udvalg". Det vil sige udvalg som man enten er medlem af eller følger. Udvalgene kan ses i boksene "Medlem af" og "Jeg følger" i højremenuen. Der er ikke en dagsorden tilgængelig før status er angivet til Dagsorden eller Dagsorden+.'),
+      '#title' => t('Coming meeting help text'),
   );
-  $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetings_url'] = array(
-    '#type' => 'textfield',
-    '#default_value' => variable_get('os2dagsorden_pws_v_meetings_url'),
-    '#title' => t('Meeting (planned meetings) view url:'),
-    '#maxlength' => 256,
-    '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-    '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de møder der indeholdt møder, punkter eller bilag der matchede dine søgekriterier. Søgeresultatet vises på mødeniveau i listen.'),
+      '#title' => t('Meetings search help text'),
   );
-  $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url'] = array(
-    '#type' => 'textfield',
-    '#default_value' => variable_get('os2dagsorden_pws_v_meetinggroups_url'),
-    '#title' => t('Meeting groups (is member of/follows/follows+) view url:'),
-    '#maxlength' => 256,
-    '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-    '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_block_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der søges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnævnte er konverteret til html. Søgning kan filtreres via dato, udvalg og søgeord.'),
+      '#title' => t('Meetings search help text'),
   );
-  $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = array(
-    '#type' => 'textfield',
-    '#default_value' => variable_get('os2dagsorden_pws_v_acadregroups_url'),
-    '#title' => t('Acadre groups (committees) url:'),
-    '#maxlength' => 256,
-    '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-    '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_last_8_meetings_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 møder i alle mødefora. Der er ikke et referat tilgængeligt før status er angivet til Referat eller Referat+.'),
+      '#title' => t('Last 8 meetings help text'),
   );
-  } 
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_annotator_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_annotator_help_text', 'Hvis du ønsker at lave en kommentar til et ord eller et afsnit, så marker blot dette hvorefter du får mulighed for at indtaste kommentaren.'),
+      '#title' => t('Annotator page help text'),
+  );
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_calendar_help_text', 'Her findes en dags- eller månedskalender med links til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere møderne til en fil, som så kan importeres til egen kalender, eks. i Outlook.'),
+      '#title' => t('Calendar block help text'),
+  );
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_user_committees_help_text', 'Her kan du se de udvalg du er medlem af. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.'),
+      '#title' => t('User committees help text'),
+  );
+
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text'] = array(
+      '#type' => 'textarea',
+      '#rows' => 2,
+      '#default_value' => variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.'),
+      '#title' => t('User follows help text'),
+  );
   
    return system_settings_form($form);
 }
@@ -770,6 +833,14 @@ function os2dagsorden_settings_cron_job_submit($form, &$form_state) {
   ultimate_cron_set_settings('os2dagsorden_adlib_api_cron', $conf);
 }
 
+/**
+ * Sets the variables to the ones imported from the file.
+ *
+ * @param $form       the settings form
+ * @param $form_state the state of the form
+ *
+ * @return none.
+ */
 function os2dagsorden_settings_import_from_file($form, &$form_state){
   if (!$form_state['values']['os2dagsorden_settings_file']){
     drupal_set_message(t('No file has beed added'), 'error');
@@ -859,5 +930,14 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 	variable_set('os2dagsorden_pws_v_meetinggroups_url', $setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url']);
 	variable_set('os2dagsorden_pws_v_acadregroups_url', $setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url']);
     }
+
+    variable_set('os2dagsorden_coming_meetings_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text']);
+    variable_set('os2dagsorden_meetings_search_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_help_text']);
+    variable_set('os2dagsorden_meetings_search_block_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_block_help_text']);
+    variable_set('os2dagsorden_last_8_meetings_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_last_8_meetings_help_text']);
+    variable_set('os2dagsorden_annotator_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_annotator_help_text']);
+    variable_set('os2dagsorden_calendar_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text']);
+    variable_set('os2dagsorden_user_committees_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text']);
+    variable_set('os2dagsorden_user_follows_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text']);
   }
 }

@@ -148,6 +148,15 @@ function os2dagsorden_settings_export_to_file(){
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = variable_get('os2dagsorden_pws_v_acadregroups_url');
     }
 
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text'] = variable_get('os2dagsorden_coming_meetings_help_text', 'Her vises de kommende 5 m¿der i "Mine udvalg". Det vil sige udvalg som man enten er medlem af eller f¿lger. Udvalgene kan ses i boksene "Medlem af" og "Jeg f¿lger" i h¿jremenuen. Der er ikke en dagsorden tilg¾ngelig f¿r status er angivet til Dagsorden eller Dagsorden+.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_help_text'] = variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de m¿der der indeholdt m¿der, punkter eller bilag der matchede dine s¿gekriterier. S¿geresultatet vises pŒ m¿deniveau i listen.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_block_help_text'] = variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der s¿ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstn¾vnte er konverteret til html. S¿gning kan filtreres via dato, udvalg og s¿geord.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_last_8_meetings_help_text'] = variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 m¿der i alle m¿defora. Der er ikke et referat tilg¾ngeligt f¿r status er angivet til Referat eller Referat+.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_annotator_help_text'] = variable_get('os2dagsorden_annotator_help_text', 'Hvis du ¿nsker at lave en kommentar til et ord eller et afsnit, sŒ marker blot dette hvorefter du fŒr mulighed for at indtaste kommentaren.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text'] = variable_get('os2dagsorden_calendar_help_text', 'Her findes en dags- eller mŒnedskalender med links til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere m¿derne til en fil, som sŒ kan importeres til egen kalender, eks. i Outlook.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text'] = variable_get('os2dagsorden_user_committees_help_text', 'Her kan du se de udvalg du er medlem af. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ¾ndres.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text'] = variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at f¿lge. F¿lger betyder at du kun kan se Œbne punkter og F¿lger+ betyder at du ogsŒ kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ¾ndres.');
+
     print os2dagsorden_settings_write_ini_file($setting_array, TRUE);
     print $content;
 }
@@ -237,4 +246,12 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
 	$form['to_date']['value']['#default_value'] = date('Y-m-d', strtotime('+' . variable_get('os2dagsorden_search_enddate', 1) . ' months'));
     }
   }
+}
+
+function os2dagsorden_settings_block_view_alter(&$data, $block){
+    switch ($block->delta) {
+	case '-exp-meetings_search-page':
+	    $data['content']['#markup'] = '<div class="help-button" title="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der s¿ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstn¾vnte er konverteret til html. S¿gning kan filtreres via dato, udvalg og s¿geord.') . '"></div>' . $data['content']['#markup'];
+	    break;
+    }
 }

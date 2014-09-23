@@ -6,9 +6,7 @@
  
 /////////////////////////////////////////header START /////////////////////////////////////////
 function os2dagsorden_front_page_views_user_follows_committees_help_text(){
-  print '<div class="help-button" title="Her kan du se de udvalg du er sat op til at følge. 
-  Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. 
-  Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres."></div>';
+  print '<div class="help-button" title="' . variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.') . '"></div>';
 }
 /////////////////////////////////////////header END /////////////////////////////////////////
 
