@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://traen.com/Publishing" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://traen.com/Publishing">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://traen.com/Publishing/Imports">
+      <xsd:import schemaLocation="!endpointurl?xsd=xsd0" namespace="http://traen.com/Publishing"/>
+      <xsd:import schemaLocation="!endpointurl?xsd=xsd1" namespace="http://traen.com/Publishing"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedConfiguration_InputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedConfiguration"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedConfiguration_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedConfigurationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedEntityLayout_InputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedEntityLayout"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedEntityLayout_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedEntityLayoutResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedItemPublished_InputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedItemPublished"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedItemPublished_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedItemPublishedResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedItemUnPublished_InputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedItemUnPublished"/>
+  </wsdl:message>
+  <wsdl:message name="ITraenPublishingDestinationSystemService_RecievedItemUnPublished_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RecievedItemUnPublishedResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="ITraenPublishingDestinationSystemService">
+    <wsdl:operation name="RecievedConfiguration">
+      <wsdl:input wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedConfiguration" message="tns:ITraenPublishingDestinationSystemService_RecievedConfiguration_InputMessage"/>
+      <wsdl:output wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedConfigurationResponse" message="tns:ITraenPublishingDestinationSystemService_RecievedConfiguration_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="RecievedEntityLayout">
+      <wsdl:input wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedEntityLayout" message="tns:ITraenPublishingDestinationSystemService_RecievedEntityLayout_InputMessage"/>
+      <wsdl:output wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedEntityLayoutResponse" message="tns:ITraenPublishingDestinationSystemService_RecievedEntityLayout_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="RecievedItemPublished">
+      <wsdl:input wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedItemPublished" message="tns:ITraenPublishingDestinationSystemService_RecievedItemPublished_InputMessage"/>
+      <wsdl:output wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedItemPublishedResponse" message="tns:ITraenPublishingDestinationSystemService_RecievedItemPublished_OutputMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="RecievedItemUnPublished">
+      <wsdl:input wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedItemUnPublished" message="tns:ITraenPublishingDestinationSystemService_RecievedItemUnPublished_InputMessage"/>
+      <wsdl:output wsaw:Action="http://traen.com/Publishing/ITraenPublishingDestinationSystemService/RecievedItemUnPublishedResponse" message="tns:ITraenPublishingDestinationSystemService_RecievedItemUnPublished_OutputMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

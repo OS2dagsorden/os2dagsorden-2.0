@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * This file cleansup variables from the settings module
+ *
+ * @author Jesper Mathiassen <jm@bellcom.dk>
+ * @copyright Bellcom Open Source aps.
+ */
+
+function os2web_acadre_esdh_uninstall() {
+  variable_del('os2web_pws_proxy');
+  variable_del('os2web_pws_proxy_host');
+  variable_del('os2web_pws_proxy_port');
+}
