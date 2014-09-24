@@ -611,10 +611,10 @@ ul li.leaf {
 /*---------------------------- User logout End ----------------------------*/
 
 /*---------------------------- Show hide menu Start ----------------------------*/
-.content #show_hide_menu_container{
-    position:absolute;
-    right:0;
-    top: 35px;
+#block-block-1 {
+	float:right;
+	top:28px;
+	position: relative;
 }
 
 .content #show_hide_menu_container #show_hide_menu_button{

@@ -103,7 +103,6 @@ dependencies[] = os2dagsorden_front_page_views
 dependencies[] = os2dagsorden_meetings_calendar_view
 dependencies[] = os2dagsorden_meeting_views
 ;dependencies[] = os2dagsorden_rules_and_permissions
-dependencies[] = os2dagsorden_settings_export
 dependencies[] = os2dagsorden_sidepane_menu
 dependencies[] = os2dagsorden_ultimate_cron_configuration
 dependencies[] = os2dagsorden_fields_and_content_types
