@@ -15,9 +15,10 @@ define('ACADRE_MM_DEFAULT_APPROVED', '62,59,64,53,54,56,57,63,58,51,55,61,68,69,
  *
  * Register as provider of esdh plugins
  */
-function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'os2web_esdh_provider') {
-    return "plugins/$plugin";
+function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {  
+  $enabled_plugins = variable_get('os2web_acadre_esdh_enabled_plugins', drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type())));
+  if ($module == 'os2web_esdh_provider' && $enabled_plugins[$plugin]) {
+        return "plugins/$plugin";
   }
 }
 
@@ -42,6 +43,13 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => 'Dette er stien hvor Acadre publisere .XML filer til.',
     '#default_value' => variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
   );
+  $form['meetings']['os2web_acadre_add_committee_to_title'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('os2web_acadre_add_committee_to_title', false),
+    '#title' => t('Add committee name to meeting title'), 
+    '#description' =>'This decides whether a committee name will be added to meeting title'
+ );
+
   $form['meetings']['os2web_meetings_approved_committee'] = array(
     '#type' => 'textfield',
     '#title' => 'Godkendte Udvalg',
@@ -56,7 +64,19 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description'=>t('This decides if closed agenda is or is not to be imported'),
     '#default_value' => variable_get('os2web_meetings_import_closed_agenda', false),
   );
-      
+  
+  $form['os2web_acadre_plugins'] =array(
+    '#type' => 'fieldset',
+    '#title' => t('Acadre plugins configuration'),
+  );
+  $form['os2web_acadre_plugins']["os2web_acadre_esdh_enabled_plugins"] =array(
+    '#type' => 'checkboxes',
+     '#title' => t('Enabled plugins'),
+     '#description'=>t('This decides which acadre plugins should be enabled'), 
+     '#options' => drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type())),
+     '#default_value' => variable_get('os2web_acadre_esdh_enabled_plugins', drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type()))),
+  );
+
 
   // CM Configuration.
   $form['os2web_pws_config_group'] = array(
@@ -126,6 +146,7 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#title' => t('URL for Adlib service endpoint'),
     '#description' => t('URL to the webservice endpoint that runs the Adlib service.'),
   );
+  
 }
 
 /**
