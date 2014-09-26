@@ -316,7 +316,7 @@ function _os2web_esdh_provider_import_items($items) {
     $node->type = "os2web_meetings_bullet";
     $node->language = LANGUAGE_NONE;
     $node->uid = 1;
-    $node->title = $item['title'];
+    $node->title = substr($item['title'], 0, 254);
     // Set some default values.
     node_object_prepare($node);
     

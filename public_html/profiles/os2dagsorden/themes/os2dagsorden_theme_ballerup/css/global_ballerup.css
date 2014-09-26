@@ -42,6 +42,10 @@ body{
 #block-views-exp-meetings-search-page {
   margin-bottom : 10px !important;
 }
+
+#block-views-exp-meetings-search-page .help-button{
+	display: none;
+}
 /*LOGO region*/
 .region-branding-inner{
 	min-width:170px;

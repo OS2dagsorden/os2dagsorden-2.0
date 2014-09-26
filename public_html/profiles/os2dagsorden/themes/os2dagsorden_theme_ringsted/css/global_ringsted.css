@@ -42,6 +42,10 @@ body{
 #block-views-exp-meetings-search-page {
   margin-bottom : 10px !important;
 }
+
+#block-views-exp-meetings-search-page .help-button{
+	display: none;
+}
 /*LOGO region*/
 .region-branding-inner{
 	min-width:170px;
@@ -431,6 +435,13 @@ table.views-table tr td li.bilag a:hover {
 }	
 
 /* ---------------------------- Meeting details attachment text END ---------------------------- */
+
+/*---------------------------- Show hide menu Start ----------------------------*/
+#block-block-1 {
+	top:59px;	
+}
+/*---------------------------- Show hide menu End ----------------------------*/
+
 .views-table .annotator-wrapper{
 	position:initial!important;
 }
