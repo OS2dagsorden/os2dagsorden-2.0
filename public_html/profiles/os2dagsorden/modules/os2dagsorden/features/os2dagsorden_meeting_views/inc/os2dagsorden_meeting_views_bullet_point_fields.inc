@@ -351,4 +351,41 @@ function os2dagsorden_meeting_views_bullet_point_fields_print_link($bp_id, $sp_i
   print ')" value="Print Talepapir">';
   print "</div>";
 }
+
+function os2dagsorden_meeting_views_bullet_point_fields_create_new_speaker_paper(){
+  $q = $_GET['q'];
+  $q_exp = explode('/', $q);
+  $bullet_point = node_load($q_exp[3]);
+  print '<a href="/node/add/os2web-meetings-spaper?edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bullet_point->title . ' (' . $bullet_point->nid . ')&destination=' . $q . '">Opret et nyt talepapir</a>';
+}
+
+function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id){
+  if (variable_get('os2dagsorden_shared_speaker_paper', TRUE)){
+    $sp = node_load($sp_id);
+    $shared_with_str = null;
+    if (isset($sp->field_os2web_meetings_sp_shared['und'])){
+      foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
+	  $shared_with_user = user_load($shared_with['target_id']);
+	  $shared_with_str .= ($shared_with_user->field_user_full_name['und'])? $shared_with_user->field_user_full_name['und'][0]['value'] : $shared_with_user->name . ', ';
+      }
+    }
+    if ($shared_with_str)
+      $shared_with_str = t('Deles med: ') . substr($shared_with_str, 0, -2);
+    print $shared_with_str;
+  }
+}
+
+function os2dagsorden_meeting_views_bullet_point_fields_filter($sp_id){
+  $sp = node_load($sp_id);
+  global $user;
+  if ($sp->uid == $user->uid)
+    return FALSE;
+  else if (variable_get('os2dagsorden_shared_speaker_paper', TRUE) && isset($sp->field_os2web_meetings_sp_shared['und'])){
+    foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
+	if ($shared_with['target_id'] == $user->uid)
+	  return FALSE;
+    }
+  }
+  return TRUE;
+}
 /////////////////////////////////////////SPEAKER PAPER END /////////////////////////////////////////

@@ -72,7 +72,7 @@ function os2dagsorden_meeting_views_common_bullet_point_has_notes($bp_id){
 }
 
 function os2dagsorden_meeting_views_common_bullet_point_has_sp($bp_id){
-  if(os2dagsorden_access_helper_bullet_point_has_speaker_paper($bp_id))
+  if(os2dagsorden_access_helper_bullet_point_has_speaker_paper($bp_id, variable_get('os2dagsorden_shared_speaker_paper', TRUE)))
     print '<div class="indicator-has-speaker-paper"></div>';
 }
 /////////////////////////////////////////bullet point END/////////////////////////////////////////
