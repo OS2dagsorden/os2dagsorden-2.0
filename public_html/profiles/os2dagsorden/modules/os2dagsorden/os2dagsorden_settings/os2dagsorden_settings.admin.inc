@@ -701,12 +701,14 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
 }
 
 function _os2dagsorden_pdf2htmlEX_validate($element, &$form_state){
-    $value = $element['#value'];
+  $value = $element['#value'];
+  if(!empty($value)) {
     $exec = shell_exec("which " . $value);
     if(empty($exec)){
             form_error($element, "Incorrect pdf2htmlEX path");
             watchdog("os2dagsorden", t('Incorrect pdf2htmlEX path'));
-        }
+    }
+  }
 }
 
 function _os2dagsorden_url_responce_validate($element, &$form_state){
