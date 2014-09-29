@@ -1,0 +1,20 @@
+/* This file will hold styles that are loaded using the same media query as the narrow grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the normal and widescreen layouts. You may override these styles in the normal
+ *  and widescreen CSS files as appropriate. */
+#region-content, #region-sidebar-second {
+  width: inherit;
+  margin-right: auto;
+  margin-left: auto;
+}
+ 
+#region-content .region-content-inner, #region-sidebar-second .region-sidebar-second-inner{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+ 
+#region-sidebar-second .region-sidebar-second-inner.fixed {
+  position: relative;
+  top: 0;
+  width: auto;
+}
