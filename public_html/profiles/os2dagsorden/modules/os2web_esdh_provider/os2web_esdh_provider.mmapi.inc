@@ -394,7 +394,7 @@ function _os2web_esdh_provider_import_bullets($bullets) {
     $node->type = "os2web_meetings_bullet_attach";
     $node->language = LANGUAGE_NONE;
     $node->uid = 1;
-    $node->title = $bullet['title'];
+    $node->title = ($bullet['title'])? substr($bullet['title'],0,254) : 'Indhold';
     // Set some default values.
     node_object_prepare($node);
     // Let's add body field.

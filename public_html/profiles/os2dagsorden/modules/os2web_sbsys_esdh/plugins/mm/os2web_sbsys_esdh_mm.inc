@@ -376,6 +376,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
             'title' => trim((string) $enclosure->Name),
             'access' => ((string)$enclosure->IsProtected) === 'True'? FALSE : TRUE, //inverting the value
             'sysid' => (string) $enclosure['ID'],
+            'type' => 'Bilag',
           );
         }
       }
