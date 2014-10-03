@@ -18,6 +18,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'machine_name' => 'show_hide_menu_block',
       'module' => 'block',
     ),
+    'user-login' => array(
+      'delta' => 'login',
+      'module' => 'user',
+    ),
     'views--exp-meetings_search-page' => array(
       'delta' => '-exp-meetings_search-page',
       'module' => 'views',
@@ -71,6 +75,20 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'title' => '<none>',
     'cache' => -1,
     'machine_name' => 'show_hide_menu_block',
+  );
+
+  $theme['user-login'] = array(
+    'module' => 'user',
+    'delta' => 'login',
+    'theme' => 'os2dagsorden_theme',
+    'status' => '1',
+    'weight' => '0',
+    'region' => 'content',
+    'custom' => '0',
+    'visibility' => '0',
+    'pages' => '',
+    'title' => '',
+    'cache' => -1,
   );
 
   $theme['views--exp-meetings_search-page'] = array(
@@ -218,6 +236,20 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'machine_name' => 'show_hide_menu_block',
   );
 
+  $theme['user-login'] = array(
+    'module' => 'user',
+    'delta' => 'login',
+    'theme' => 'os2dagsorden_theme_ballerup',
+    'status' => '1',
+    'weight' => '-19',
+    'region' => 'content',
+    'custom' => '0',
+    'visibility' => '0',
+    'pages' => '',
+    'title' => '',
+    'cache' => -1,
+  );
+
   $theme['views--exp-meetings_search-page'] = array(
     'module' => 'views',
     'delta' => '-exp-meetings_search-page',
@@ -361,6 +393,20 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'title' => '<none>',
     'cache' => -1,
     'machine_name' => 'show_hide_menu_block',
+  );
+
+  $theme['user-login'] = array(
+    'module' => 'user',
+    'delta' => 'login',
+    'theme' => 'os2dagsorden_theme_ringsted',
+    'status' => '1',
+    'weight' => '0',
+    'region' => 'content',
+    'custom' => '0',
+    'visibility' => '0',
+    'pages' => '',
+    'title' => '',
+    'cache' => -1,
   );
 
   $theme['views--exp-meetings_search-page'] = array(
