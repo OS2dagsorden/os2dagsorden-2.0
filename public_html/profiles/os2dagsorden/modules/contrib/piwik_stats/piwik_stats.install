@@ -1,0 +1,113 @@
+<?php
+/**
+ * @file
+ * Installation file of piwik statistical field module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ *
+ * This defines the database schema of the piwik statistical field.
+ */
+function piwik_stats_field_schema($field) {
+  $schema = array(
+    'description' => 'Stores statistical piwik data.',
+    'columns' => array(
+      'nb_visits' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unique pageviews.',
+      ),
+      'nb_hits' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Overall pageviews.',
+      ),
+      'entry_nb_visits' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of visits that started on a node.',
+      ),
+      'entry_nb_actions' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of page views for visits that started on that node.',
+      ),
+      'entry_sum_visit_length' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Time spent, in seconds, by visits that started on this node.',
+      ),
+      'entry_bounce_count' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of visits that started on this node and bounced (viewed only one page).',
+      ),
+      'exit_nb_visits' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Number of visits that finished on this node.',
+      ),
+      'sum_time_spent' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Total time spent on this node, in seconds.',
+      ),
+      'bounce_rate' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Ratio of visitors leaving the website after landing on this node (in percent).',
+      ),
+      'exit_rate' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Ratio of visitors that do not view any other page after this node (in percent).',
+      ),
+    ),
+    'indexes' => array(
+      'visits' => array('nb_visits', 'entry_nb_visits', 'exit_nb_visits'),
+      'hits' => array('nb_hits', 'entry_nb_actions'),
+      'rate' => array('bounce_rate', 'exit_rate'),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function piwik_stats_uninstall() {
+  // Delete used variables.
+  variable_del('piwik_stats_token_auth');
+  variable_del('piwik_stats_cron_fill');
+  variable_del('piwik_stats_cron_fill_time');
+  variable_del('piwik_stats_request_timeout');
+}
+
+/**
+ * Update piwik_stats field settings as 'show_in_statistics_page' was added.
+ */
+function piwik_stats_update_7101() {
+  // Get all piwik_stats fields.
+  $fields = field_read_fields(array(
+    'type' => 'piwik_stats',
+  ));
+
+  // Iterate through all existing field tables and alter them as needed.
+  foreach ($fields as $field) {
+    // Set the default values for the new setting.
+    $field['settings']['show_in_statistics_page'] = TRUE;
+    // Update the field config.
+    field_update_field($field);
+  }
+}
