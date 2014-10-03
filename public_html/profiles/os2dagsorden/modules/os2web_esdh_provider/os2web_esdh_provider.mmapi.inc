@@ -55,7 +55,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
   $nids = array();
   $nid = NULL;
-
+  
   // Do an initially check on if there are any approved meetings.
   if (count($meetings) === 0) {
     watchdog('acadre MM', 'There was no meetings to import. See if all manifests are OK? ', WATCHDOG_WARNING);
@@ -154,7 +154,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     // Set some default values.
     node_object_prepare($node);
     // Set field values:
-    $node->title = $meeting['title'];
+    if (strlen($meeting['title'])>=255) 
+        $node->title= substr($meeting['title'], 0, 250) . '...';
+    else
+         $node->title = $meeting['title'];
 
     /* The original field for title came from $meeting['title'];
      * This is a rewrite of the function to set the path automaticaly and with
@@ -455,6 +458,14 @@ function _os2web_esdh_provider_import_file($file_meta) {
     // Completely unprocessed file.
     $uri_old = $uri_in;
     $uri_in = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_in));
+    
+    if (strlen($uri_out)>255){
+      $pi=pathinfo($uri_out);
+      if (isset($pi['extension'])) 
+         $uri_out= $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename'])-(len($uri_out)-255)) . '.' . $pi['extension'];
+      else
+         $uri_out= $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename'])-(len($uri_out)-255));
+    }
     if ($uri_in === FALSE || FALSE === file_unmanaged_copy($uri_in, $uri_out, FILE_EXISTS_REPLACE)) {
       // Bummed out on copy.
       watchdog('acadre MM', 'File copy failed for %infile -> %outfile. Check folder permissions.', array(
@@ -472,7 +483,6 @@ function _os2web_esdh_provider_import_file($file_meta) {
       '%infile', $uri_in), WATCHDOG_WARNING);
     return FALSE;
   }
-
   if (file_uri_scheme($uri) != 'public') {
     watchdog('acadre MM', 'Invalid scheme for uri %uri, Possibly absolut path ? ' . $uri, array(
       '%uri', $uri), WATCHDOG_ERROR);
@@ -493,7 +503,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
   $file->uri = $uri;
   $file->display = 1;
-  $file->field_titel[LANGUAGE_NONE][]['value'] = $file_meta['title'];
+  $file->field_titel[LANGUAGE_NONE][]['value'] = substr($file_meta['title'], 0, 254);
   $file->filename = drupal_basename($file->uri);
   $file->filemime = file_get_mimetype($file->uri);
   $file->uid = 1;
@@ -772,6 +782,7 @@ function _os2web_esdh_provider_send_statusmail($message, $is_error = FALSE) {
   }
 }
 
+
 /**
  * Checks if a custom text format is defined for the BPA body field.
  * I fall backs to filtered html.
@@ -791,3 +802,4 @@ function _os2web_esdh_provider_bpa_body_format() {
   }
   return $cache;
 }
+

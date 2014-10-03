@@ -553,3 +553,41 @@ function o2web_esdh_provider_os2web_help($sections) {
 
   return $sections;
 }
+
+/**
+ * Implements hook_watchdog().
+ */
+function os2web_esdh_provider_watchdog(array $log_entry) {  
+    if ($log_entry['severity']==0){
+      _os2web_esdh_provider_send_fatalerrormail($log_entry['message']);
+    }
+   
+}
+
+/* send error mail to site admin */
+function _os2web_esdh_provider_send_fatalerrormail($message) {
+      // Set up the mail body.
+    $mail_body = t('MM Import') . "\n";
+   
+    $mail_body .= t('Time spend') . ": " . number_format(timer_read('mm_import') / 1000, 2) . "sec.\n";
+    $mail_body .= t('Messages') . ":\n\n !message\n";
+
+    $from = variable_get('site_mail', '');
+    $my_module = 'os2web_esdh_provider';
+    $my_mail_token = 'mm_import_status';
+    $message = array(
+      'id' => $my_module . '_' . $my_mail_token,
+      'to' => variable_get('site_mail', ''),
+      'subject' => t('MM Import error'),
+      'body' => format_string($mail_body, array('!message' => check_plain($message))),
+      'headers' => array(
+        'From' => $from,
+        'Sender' => $from,
+        'Return-Path' => $from,
+      ),
+    );
+    // Send mail.
+    
+    $mail_system = drupal_mail_system($my_module, $my_mail_token);
+    return $mail_system->mail($message);
+  }
