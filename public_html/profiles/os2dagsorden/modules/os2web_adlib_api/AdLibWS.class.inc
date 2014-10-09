@@ -7,7 +7,7 @@
 
 define('ADLIB_JOBTYPE_PDF', 0);
 define('ADLIB_JOBTYPE_HTML', 1);
-define('ADLIB_DISABLED', !variable_get('os2web_adlib_api_is_allowed', 0));
+define('ADLIB_DISABLED', !variable_get('os2web_adlib_api_allowed_ip_host', 0));
 
 
 /**
