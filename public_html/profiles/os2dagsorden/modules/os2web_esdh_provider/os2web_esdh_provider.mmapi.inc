@@ -113,26 +113,9 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         $node = node_load($nid);
         watchdog('acadre MM', 'Using %nid for import.', array('%nid' => $nid), WATCHDOG_DEBUG);
       }
-      // Republish if current meeting is of type Referat.
-      // This means that the one already exist is a Dagsorden.
-      elseif ($meeting['type'] === 'Referat') {
-        $node = node_load($nid);
-        if ($node->field_os2web_meetings_type[LANGUAGE_NONE][0]['value'] !== 'Dagsorden') {
-          err_debug('Skipping nid: ' . $nid);
-          watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
-          lock_release(__FUNCTION__ . $meeting_id['id']);
-          return;
-        }
-        err_debug('Republish nid: ' . $nid);
-        watchdog('acadre MM', 'Using %nid for import. Type mismatch.', array('%nid' => $nid), WATCHDOG_DEBUG);
-      }
-      else {
-        // Meeting already exists. Skip it.
-        err_debug('Skipping nid: ' . $nid);
-        watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
-        lock_release(__FUNCTION__ . $meeting_id['id']);
-        return;
-      }
+      $node = node_load($nid);
+      err_debug('Republish nid: ' . $nid);
+      watchdog('acadre MM', 'Using %nid for import. Type mismatch.', array('%nid' => $nid), WATCHDOG_DEBUG);
     }
     else {
       //check if there is an sofd version of this node (acadre and syddjurs systems only)
@@ -490,6 +473,11 @@ function _os2web_esdh_provider_import_file($file_meta) {
     error_log("Var: \$uri_in = " . print_r($uri_in, 1));
     error_log("Var: \$uri_out = " . print_r($uri_out, 1));
     error_log("Var: \$uri_pdf = " . print_r($uri_pdf, 1));
+  }
+
+  if (variable_get('os2web_edoc_esdh_mm_is_abs', FALSE) && module_exists('os2web_edoc_esdh')) {//is an absolute path
+    $doc_root = realpath($_SERVER['DOCUMENT_ROOT']) . '/';
+    $uri = 'public://' . str_replace(variable_get(os2web_edoc_esdh_mm_abs_path_subs), '', $uri);
   }
 
   $fid = db_select('file_managed', 'fm')
