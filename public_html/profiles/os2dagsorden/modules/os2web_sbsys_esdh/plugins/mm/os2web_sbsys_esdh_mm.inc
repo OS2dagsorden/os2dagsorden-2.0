@@ -321,7 +321,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
       
       if (((string) $bullet_xml->HasContent) === 'True'){
         $item['bullets'][] = array(
-          'title' => (string) $bullet_xml->Caption,
+          'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
           'body' => (string) $bullet_xml->Content,
           'sysid' => (string) $bullet_xml['ID'],
         );
