@@ -120,6 +120,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
           $agendainfo['agenda_uri'] = $agenda_uri;
           $imported = _os2web_acadre_esdh_import_meeting($agendainfo);
           if (is_array($imported)) {
+            
             $imported['publish'] = TRUE;
             $imported['meeting_sub_id'] = (int) array_shift($xml_item->xpath('field/@sysid'));
             $meetings[] = $imported;
@@ -239,7 +240,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
     foreach ($participants as $participant) {
 	$meeting['participants'][] = (string) array_shift($participant->xpath("fields/field[@name='name']"));
     }
-
+    
     foreach ($xml->xpath("//table[@name='agendaitemparents']") as $item_xml) {
       $item_content_xml = array_shift($item_xml->xpath("table[@name='agendaitem']"));
       if (($item = _os2web_acadre_esdh_import_item($info, $item_content_xml)) !== FALSE) {
@@ -247,12 +248,14 @@ function _os2web_acadre_esdh_import_meeting($info) {
         $meeting['items'][] = $item;
       }
     }
+    
     // Apply defaults, just in case we missed something.
     $meeting += os2web_esdh_provider_default_meeting();
    // if ($meeting['title']=='2/2014'){
-   // var_dump($meeting);
+    //var_dump($meeting);
    // die;
    // }
+
     return $meeting;
   }
   else {

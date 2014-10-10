@@ -67,6 +67,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   // Run through all meetings. Remove all unpublished.
   // Retrieve nid of already existing node.
   $number_of_meetings = count($meetings);
+  
   for ($i = 0; $i < $number_of_meetings; $i++) {
     if (!$nid) {
       // Run check to see if meeting is already imported.
@@ -80,29 +81,29 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         $nid = array_shift($result['node'])->nid;
       }
     }
-
-    if ($meetings[$i]['publish'] === FALSE) {
+    var_dump($meetings[$i]['system_id']);
+    if ($meetings[$i]['publish'] === FALSE) {        
       unset($meetings[$i]);
     }
-  }
+   }
 
   // If any already exist and no one is left to be published,
   // the existing should be unpublished.
   if ($nid && count($meetings) === 0) {
-    // Meeting needs to be unpublished.
+      // Meeting needs to be unpublished.
     err_debug('Unpublish nid: ' . $nid);
     node_delete($nid);
     watchdog('acadre MM', 'Unpublished %nid .', array('%nid' => $nid), WATCHDOG_INFO);
     lock_release(__FUNCTION__ . $meeting_id['id']);
     return;
   }
-
   // Ideally $meetings will only have one entry.
   // But can have more if manifest is wrong.
+
   foreach ($meetings as $meeting) {
     err_debug('Start import meeting ' . $meeting['system_id']);
     err_debug('Importing meeting with ' . count($meeting['items']) . ' bullet points.');
-
+      
     // Meeting already exist.
     // Either republish, delete or skip.
     if ($nid) {
