@@ -42,7 +42,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $settings_file = null;
   if (variable_get('os2dagsorden_settings_file', FALSE))
     $settings_file = file_load(variable_get('os2dagsorden_settings_file'));
-  
+
   if ($settings_file){
     $form['os2dagsorden_settings_file_fieldset'][] = array(
       '#markup' => '<p>' . t('File in use: ') . (($settings_file)? $settings_file->filename : 'none') . '</p>',
@@ -70,7 +70,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#title' => t('Meeting view settings'),
-  ); 
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show meeting committee on meeting view'),
@@ -165,7 +165,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_speaker_paper_settings'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed'=>TRUE, 
+    '#collapsed'=>TRUE,
     '#title' => t('Speaker paper settings'),
   );
   $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
@@ -174,16 +174,16 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether speaker paper can be shared'),
     '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
   );
-    
+
   //expand or not expand bilag on bullet point expand
   //Meetig view settings
   $form['os2dagsorden_meeting_view_layout'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed'=>TRUE, 
+    '#collapsed'=>TRUE,
     '#title' => t('Meeting view layout'),
-  );  
-  
+  );
+
   //meeting view settings
   $form['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_all_bullets'] = array(
     '#type' => 'checkbox',
@@ -234,7 +234,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether all Cases/Sager grouped under Cases bullet point '),
     '#default_value' => variable_get('os2dagsorden_show_case_bullet_point', FALSE),
   );
-  
+
    //show latest meetings in my committee or all committees
   $form['os2dagsorden_latest_meetings_view_settings'] = array(
     '#type' => 'fieldset',
@@ -292,12 +292,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_my_committees_block_title', 'Medlem af'),
     '#description' => t('This set a title of a block listing all committees user is a member of.'),
   );
- 
+
   //meeting search view settings
   $form['os2dagsorden_meeting_search_view_settings'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE, 
+    '#collapsed' => TRUE,
     '#title' => t('Meeting search view settings'),
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = array(
@@ -335,7 +335,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => $month_choise,
     '#default_value' => variable_get('os2dagsorden_search_enddate', 1),
   );
-  
+
   // sidemenu layout settings
   $form['os2dagsorden_sidepane_menu_layout'] = array(
       '#type' => 'fieldset',
@@ -343,7 +343,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#collapsed' => TRUE,
       '#title' => t('Sidepane menu layout'),
   );
-  
+
   $form['os2dagsorden_sidepane_menu_layout']['main_menu_links'] = array(
       '#type' => 'link',
        '#prefix' => '<p>',
@@ -383,7 +383,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_meeting_import'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,  
+    '#collapsed' => TRUE,
     '#title' => t('General meeting import settings'),
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_participants_delimeter'] = array(
@@ -469,7 +469,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     $form['os2dagsorden_file_import'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
-      '#collapsed' => TRUE,  
+      '#collapsed' => TRUE,
       '#title' => t('* > PDF converting configuration'),
     );
     $form['os2dagsorden_file_import']['os2web_copied_filetype'] = array(
@@ -487,33 +487,59 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR),
       '#element_validate' => array('_os2dagsorden_os2web_convertion_dir_validate'),
     );
-  }  
+  }
   if (module_exists('os2dagsorden_pdf2htmlex')) {
-      $form['os2dagsorden_pdf2htmlex_settings'] = array(
-         '#type' => 'fieldset',
-         '#collapsible' => TRUE,
-         '#collapsed' => TRUE,
-         '#title' => t('PDF > HTML Converter settings'),
-        );
-       $form['os2dagsorden_pdf2htmlex_settings']['os2dagsorden_pdf2htmlex_path'] = array(
-         '#type' => 'textfield',
-         '#title' => 'Path to pdf2htmlEX',
-         '#description' => 'Path to pdf2htmlEX',
-         '#default_value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
-         '#element_validate' => array('_os2dagsorden_pdf2htmlEX_validate'),
-        );
-      $form['os2dagsorden_pdf2htmlex_settings']['pdf2html_rendering_path'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Path for HTML files to be rendered'),
-        '#default_value' => variable_get('pdf2html_rendering_path', ''),
-        '#description' => t('Relative path for HTML files to be rendered by os2dagsorden_pdf2htmlEX module. If empty, the path with the original PDF files will be used.<br/><b>Important!</b> You will need to create the path yourself.'),
-        '#element_validate' => array('_os2dagsorden_pdf2html_rendering_path_validate'),
-  );
-    }
-    $form['os2dagsorden_political_organizational_settings'] = array(
+    $form['os2dagsorden_pdf2htmlex_settings'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t('PDF > HTML Converter settings'),
+    );
+    $form['os2dagsorden_pdf2htmlex_settings']['os2dagsorden_pdf2htmlex_path'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Path to pdf2htmlEX',
+      '#description' => 'Path to pdf2htmlEX',
+      '#default_value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
+      '#element_validate' => array('_os2dagsorden_pdf2htmlEX_validate'),
+    );
+    $form['os2dagsorden_pdf2htmlex_settings']['pdf2html_rendering_path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path for HTML files to be rendered'),
+      '#default_value' => variable_get('pdf2html_rendering_path', ''),
+      '#description' => t('Relative path for HTML files to be rendered by os2dagsorden_pdf2htmlEX module. If empty, the path with the original PDF files will be used.<br/><b>Important!</b> You will need to create the path yourself.'),
+      '#element_validate' => array('_os2dagsorden_pdf2html_rendering_path_validate'),
+    );
+  }
+
+  // Clear cache settings
+  $form['os2dagsorden_clear_cache_after_import'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,    
+    '#collapsed' => TRUE,
+    '#title' => t('Clear cache after import settings'),
+  );
+  $form['os2dagsorden_clear_cache_after_import']['os2dagsorden_clear_cache_active'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Active clear cahce after importing pdf files'),
+    '#default_value' => variable_get('os2dagsorden_clear_cache_active', 0),
+  );
+
+  $form['os2dagsorden_clear_cache_after_import']['os2dagsorden_clear_cache_frequency'] = array(
+    '#type' => 'select',
+    '#title' => t('Clear cache frequency after import'),
+    '#options' => array(
+      '0' => '--',
+      '10' => t('Every 10 mins'),
+      '30' => t('Every 30 mins'),
+      '60' => t('Every hour'),
+    ),
+    '#default_value' => variable_get('os2dagsorden_clear_cache_frequency', 0),
+  );
+
+  $form['os2dagsorden_political_organizational_settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
     '#title' => t('Political/organizational category settings'),
   );
   $options2 = array('true' => t('Show'), 'false' => t('Do not show'));
@@ -530,7 +556,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Select default value for user meeting category.'),
     '#options' => array('pol' => t('Political'), 'org' => t('Organisation')),
     '#default_value'=>variable_get('os2dagsorden_user_default_meeting_category', 'pol')
-  );  
+  );
    $form['os2dagsorden_political_organizational_settings']['os2dagsorden_default_meeting_cateroty'] = array(
     '#type' => 'radios',
     '#title' => t('Default meeting category'),
@@ -543,7 +569,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_cron_job_freq'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,  
+    '#collapsed' => TRUE,
     '#title' => t('Cron job frequencies settings'),
   );
 
@@ -606,7 +632,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#attributes' => array('onclick' => 'location.href="/admin/ultimate-cron/service/start/os2web_adlib_api_cron?destination=/admin/config/os2dagsorden/settings"; return false;'),
   );
   $form['#submit'][] = 'os2dagsorden_settings_cron_job_submit';
-  
+
    // SOFD Integration settings
   if (module_exists('os2dagsorden_importer')){
     $form['os2dagsorden_pws_sofd_group'] = array(
@@ -710,7 +736,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.'),
       '#title' => t('User follows help text'),
   );
-  
+
    return system_settings_form($form);
 }
 
@@ -804,7 +830,7 @@ function _os2dagsorden_os2web_convertion_dir_validate($element, &$form_state){
  */
 function os2dagsorden_settings_cron_job_submit($form, &$form_state) {
   $input = $form_state['input'];
-  
+
   //os2dagsorden_importer_cron
   $conf = _ultimate_cron_default_settings();
   if (!empty($input['os2dagsorden_importer_cron']) && $input['os2dagsorden_importer_cron'] !== variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE)) {
@@ -863,11 +889,11 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     drupal_set_message(t('No file has beed added'), 'error');
   } else {
     drupal_set_message(t('Imported settings from file'));
-  
+
     $file = file_load($form_state['values']['os2dagsorden_settings_file']);
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
-  
+
     variable_set('os2dagsorden_settings_file', $file->fid);
 
     $setting_array = parse_ini_file(drupal_realpath($file->uri),true);
