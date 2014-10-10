@@ -240,7 +240,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_indicator_bullet_poin
   $annotations = os2dagsorden_annotator_get_notes_by_bullet_point_id($nid);
   if (!empty($annotations))
     print '<div class="indicator-has-notes"></div>';
-  else if(!os2dagsorden_access_helper_bullet_point_has_speaker_paper($nid) && !$is_closed && !$is_personal)
+  else if(!os2dagsorden_access_helper_bullet_point_has_speaker_paper($nid, variable_get('os2dagsorden_shared_speaker_paper', TRUE)) && !$is_closed && !$is_personal)
     print '<div class="indicator-empty"></div>';
 }
 
@@ -514,17 +514,16 @@ function _os2dasorden_meeting_views_meeting_details_bilag_cases_with_content($el
 }
 
 function os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($meeting_id, $bp_id, $bp_title){
-  global $base_url;
   if (!os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bp_id)){
     print "<a>&nbsp;</a>";
   }
   else {
-    if (os2dagsorden_access_helper_bullet_point_has_speaker_paper($bp_id)){
-      $link = $base_url . '?q=meeting/' . $meeting_id . '/bullet-point/' . $bp_id;
+    if (os2dagsorden_access_helper_bullet_point_has_speaker_paper($bp_id, variable_get('os2dagsorden_shared_speaker_paper', TRUE))){
+      $link = '/meeting/' . $meeting_id . '/bullet-point/' . $bp_id;
       print '<a href="' . $link . '"><div class="indicator-has-speaker-paper"></div>Talepapir</a>';
     } else {
       $q = $_GET['q'];
-      $link = $base_url . '?q=node/add/os2web-meetings-spaper&edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bp_title . ' (' . $bp_id . ')' . '&destination=' . $q;
+      $link = '/node/add/os2web-meetings-spaper?edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bp_title . ' (' . $bp_id . ')' . '&destination=' . $q;
       print '<a href="' . $link . '"><div class="indicator-create-speaker-paper"></div>Nyt talepapir</a>';
     }
   }

@@ -19,11 +19,11 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   node_object_prepare($node);
 
   if (variable_get('os2dagsorden_add_type_prefix', 'true') === 'true'  && !isset($enclosure['is_bp_summary']))
-      $node->title = $enclosure['type'].': ' . $enclosure['title'];
+      $node->title = $enclosure['type'] . ': ' . (($enclosure['title']) ? $enclosure['title'] : 'Indhold');
  else
-     $node->title = $enclosure['title'];
+     $node->title = ($enclosure['title'])? $enclosure['title'] : 'Indhold';
  
-  if ($node->title > 254)
+  if (strlen($node->title) > 254)
     $node->title = substr($node->title, 0, 254);
     
   $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;

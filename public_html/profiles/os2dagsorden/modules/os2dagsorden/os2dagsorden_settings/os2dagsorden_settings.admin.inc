@@ -160,6 +160,20 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Title of the meeting additional description download button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF'),
   );
+
+  //speaker paper view
+  $form['os2dagsorden_speaker_paper_settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed'=>TRUE, 
+    '#title' => t('Speaker paper settings'),
+  );
+  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sharing speaker papers'),
+    '#description' => t('This decides whether speaker paper can be shared'),
+    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
+  );
     
   //expand or not expand bilag on bullet point expand
   //Meetig view settings
@@ -872,6 +886,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_hidden_agenda_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee']);
     variable_set('os2dagsorden_meeting_description_download_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title']);
     variable_set('os2dagsorden_meeting_description_download_title_additional', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional']);
+
+    variable_set('os2dagsorden_shared_speaker_paper', $setting_array['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper']);
 
     variable_set('os2dagsorden_expand_all_bullets',$setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_all_bullets']);
     variable_set('os2dagsorden_expand_attachment_onload', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_expand_attachment_onload']);

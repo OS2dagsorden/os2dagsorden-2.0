@@ -3050,6 +3050,10 @@ os2dagsorden_meeting_views_bullet_point_breadcrumb();
   $handler->display->display_options['header']['php_1']['php_output'] = '<?php
 os2dagsorden_meeting_views_bullet_point_print_send_to_friend();
 ?>';
+  /* Footer: Global: PHP */
+  $handler->display->display_options['footer']['php']['id'] = 'php';
+  $handler->display->display_options['footer']['php']['table'] = 'views';
+  $handler->display->display_options['footer']['php']['field'] = 'php';
   /* No results behavior: Global: Text area */
   $handler->display->display_options['empty']['area']['id'] = 'area';
   $handler->display->display_options['empty']['area']['table'] = 'views';
@@ -3067,11 +3071,10 @@ print \'<a href="\' . $base_url . \'?q=node/add/speaker-paper&edit[field_ref_bul
   $handler->display->display_options['relationships']['reverse_field_os2web_meetings_sp_bullet_node']['table'] = 'node';
   $handler->display->display_options['relationships']['reverse_field_os2web_meetings_sp_bullet_node']['field'] = 'reverse_field_os2web_meetings_sp_bullet_node';
   /* Relationship: Content: Author */
-  $handler->display->display_options['relationships']['uid_1']['id'] = 'uid_1';
-  $handler->display->display_options['relationships']['uid_1']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid_1']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid_1']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
-  $handler->display->display_options['relationships']['uid_1']['label'] = 'speaker paper creator';
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -3137,6 +3140,11 @@ print \'<a href="\' . $base_url . \'?q=node/add/speaker-paper&edit[field_ref_bul
   $handler->display->display_options['filters']['uid_current']['field'] = 'uid_current';
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'uid_1';
   $handler->display->display_options['filters']['uid_current']['value'] = '1';
+  /* Filter criterion: User: Current */
+  $handler->display->display_options['filters']['uid_current_1']['id'] = 'uid_current_1';
+  $handler->display->display_options['filters']['uid_current_1']['table'] = 'users';
+  $handler->display->display_options['filters']['uid_current_1']['field'] = 'uid_current';
+  $handler->display->display_options['filters']['uid_current_1']['relationship'] = 'uid_1';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -3185,6 +3193,7 @@ print \'<a href="\' . $base_url . \'?q=node/add/speaker-paper&edit[field_ref_bul
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
   $handler->display->display_options['defaults']['empty'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
@@ -3285,20 +3294,37 @@ os2dagsorden_meeting_views_bullet_point_fields_attachments_and_content($meeting_
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['defaults']['header'] = FALSE;
+  $handler->display->display_options['defaults']['footer'] = FALSE;
+  /* Footer: Create new speaker paper */
+  $handler->display->display_options['footer']['php']['id'] = 'php';
+  $handler->display->display_options['footer']['php']['table'] = 'views';
+  $handler->display->display_options['footer']['php']['field'] = 'php';
+  $handler->display->display_options['footer']['php']['ui_name'] = 'Create new speaker paper';
+  $handler->display->display_options['footer']['php']['empty'] = TRUE;
+  $handler->display->display_options['footer']['php']['php_output'] = '<?php
+os2dagsorden_meeting_views_bullet_point_fields_create_new_speaker_paper();
+?>
+';
   $handler->display->display_options['defaults']['empty'] = FALSE;
-  /* No results behavior: Global: Text area */
-  $handler->display->display_options['empty']['area']['id'] = 'area';
-  $handler->display->display_options['empty']['area']['table'] = 'views';
-  $handler->display->display_options['empty']['area']['field'] = 'area';
-  $handler->display->display_options['empty']['area']['empty'] = TRUE;
-  $handler->display->display_options['empty']['area']['content'] = '<?php
-global $base_url;
-$q = $_GET[\'q\'];
-print \'<a href="\' . $base_url . \'?q=node/add/os2web-meetings-spaper&edit[field_os2web_meetings_sp_bullet][und][0][target_id]=%1 (!1)&destination=\' . $q . \'">Opret et nyt talepapir</a>\';
-?>';
-  $handler->display->display_options['empty']['area']['format'] = 'php_code';
-  $handler->display->display_options['empty']['area']['tokenize'] = TRUE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
+  /* Field: User: Full name */
+  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_user_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_user_full_name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_user_full_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_user_full_name']['empty'] = '[name]';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title_1']['id'] = 'title_1';
   $handler->display->display_options['fields']['title_1']['table'] = 'node';
@@ -3306,7 +3332,7 @@ print \'<a href="\' . $base_url . \'?q=node/add/os2web-meetings-spaper&edit[fiel
   $handler->display->display_options['fields']['title_1']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
   $handler->display->display_options['fields']['title_1']['label'] = '';
   $handler->display->display_options['fields']['title_1']['alter']['alter_text'] = TRUE;
-  $handler->display->display_options['fields']['title_1']['alter']['text'] = 'talepapir - [title_1]';
+  $handler->display->display_options['fields']['title_1']['alter']['text'] = 'talepapir - [title_1]. forfatter: [field_user_full_name]';
   $handler->display->display_options['fields']['title_1']['alter']['path'] = '#';
   $handler->display->display_options['fields']['title_1']['alter']['prefix'] = 'Talepapir -';
   $handler->display->display_options['fields']['title_1']['element_type'] = 'h3';
@@ -3330,6 +3356,18 @@ os2dagsorden_meeting_views_bullet_point_fields_print_link($bp_id, $sp_id);
 ?>';
   $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
+  $handler->display->display_options['fields']['body']['label'] = '';
+  $handler->display->display_options['fields']['body']['alter']['nl2br'] = TRUE;
+  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['body']['element_wrapper_class'] = 'main-text';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'trim_length' => '600',
+  );
   /* Field: Content: Edit link */
   $handler->display->display_options['fields']['edit_node']['id'] = 'edit_node';
   $handler->display->display_options['fields']['edit_node']['table'] = 'views_entity_node';
@@ -3344,17 +3382,48 @@ os2dagsorden_meeting_views_bullet_point_fields_print_link($bp_id, $sp_id);
   $handler->display->display_options['fields']['delete_node']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
   $handler->display->display_options['fields']['delete_node']['label'] = '';
   $handler->display->display_options['fields']['delete_node']['element_label_colon'] = FALSE;
-  /* Field: Content: Body */
-  $handler->display->display_options['fields']['body']['id'] = 'body';
-  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
-  $handler->display->display_options['fields']['body']['field'] = 'body';
-  $handler->display->display_options['fields']['body']['relationship'] = 'reverse_field_os2web_meetings_sp_bullet_node';
-  $handler->display->display_options['fields']['body']['label'] = '';
-  $handler->display->display_options['fields']['body']['alter']['nl2br'] = TRUE;
-  $handler->display->display_options['fields']['body']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['body']['settings'] = array(
-    'trim_length' => '600',
+  /* Field: PHP - shared with */
+  $handler->display->display_options['fields']['php_1']['id'] = 'php_1';
+  $handler->display->display_options['fields']['php_1']['table'] = 'views';
+  $handler->display->display_options['fields']['php_1']['field'] = 'php';
+  $handler->display->display_options['fields']['php_1']['ui_name'] = 'PHP - shared with';
+  $handler->display->display_options['fields']['php_1']['label'] = '';
+  $handler->display->display_options['fields']['php_1']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php_1']['element_wrapper_class'] = 'shared-with';
+  $handler->display->display_options['fields']['php_1']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php_1']['php_output'] = '<?php
+os2dagsorden_meeting_views_bullet_point_fields_shared_with($row->body);
+?>';
+  $handler->display->display_options['fields']['php_1']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php_1']['php_click_sortable'] = '';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['filter_groups']['groups'] = array(
+    1 => 'AND',
+    2 => 'OR',
   );
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'os2web_meetings_bullet' => 'os2web_meetings_bullet',
+  );
+  $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: filtering depending on the settings state */
+  $handler->display->display_options['filters']['php']['id'] = 'php';
+  $handler->display->display_options['filters']['php']['table'] = 'views';
+  $handler->display->display_options['filters']['php']['field'] = 'php';
+  $handler->display->display_options['filters']['php']['ui_name'] = 'filtering depending on the settings state';
+  $handler->display->display_options['filters']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['filters']['php']['php_filter'] = 'return os2dagsorden_meeting_views_bullet_point_fields_filter($row->body);';
   $handler->display->display_options['displays'] = array(
     'page' => 'page',
     'default' => 0,
@@ -3376,16 +3445,12 @@ print \'<a href="\' . $base_url . \'?q=node/add/speaker-paper&edit[field_ref_bul
 ?>
 '),
     t('Content referencing Content from field_os2web_meetings_sp_bullet'),
-    t('speaker paper creator'),
+    t('author'),
     t('Alle'),
     t('Page'),
     t('Speaker paper'),
-    t('<?php
-global $base_url;
-$q = $_GET[\'q\'];
-print \'<a href="\' . $base_url . \'?q=node/add/os2web-meetings-spaper&edit[field_os2web_meetings_sp_bullet][und][0][target_id]=%1 (!1)&destination=\' . $q . \'">Opret et nyt talepapir</a>\';
-?>'),
-    t('talepapir - [title_1]'),
+    t('[name]'),
+    t('talepapir - [title_1]. forfatter: [field_user_full_name]'),
     t('Talepapir -'),
   );
   $export['speaking_paper'] = $view;

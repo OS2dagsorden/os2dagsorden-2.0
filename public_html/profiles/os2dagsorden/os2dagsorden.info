@@ -72,6 +72,8 @@ dependencies[] = lightbox2
 dependencies[] = content_taxonomy
 dependencies[] = php
 dependencies[] = delete_all
+dependencies[] = piwik
+dependencies[] = piwik_stats
 
 ; Development - Disable on prod.
 ;dependencies[] = features_tools

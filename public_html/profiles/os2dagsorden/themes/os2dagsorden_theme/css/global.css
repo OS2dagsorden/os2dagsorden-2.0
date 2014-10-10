@@ -179,18 +179,21 @@ table.views-table tr td .attachment_text_full_container a:link, table.views-tabl
   padding-left: 75px;
 }
 
-/* Speaker paper overflow */
-.view-speaking-paper {
-/*   overflow-y: auto; */
-}
-
 /* Speaker paper create bullet point name dropdown overflow */
 .field-name-field-ref-bullet-point .form-item-field-ref-bullet-point-und #edit-field-ref-bullet-point-und{
   max-width: 800px;
 }
-.node-speaker_paper-form{
+.node-os2web_meetings_spaper-form{
   overflow: hidden;
   padding-right: 20px;
+}
+
+#edit-field-os2web-meetings-sp-bullet{
+  display: none;
+}
+
+#switch_edit-body-und-0-value{
+  display: none !important;	
 }
 
 /* Improved multile select*/
@@ -1246,8 +1249,30 @@ div.speaker-paper-print{
     float: right;
     margin-right: 5px;
     position: relative;
-    top: -32px;
+    top: -47px;
 }
+
+.view-speaking-paper .shared-with{
+   padding-top: 5px;
+   border-top: 1px solid #dedede;
+   margin-top: 5px;
+   font-style: italic; 
+}
+
+.view-speaking-paper .main-text{
+   padding-bottom: 5px;
+}
+
+.view-speaking-paper .views-field-title-1{
+   margin-left: -5px;
+   margin-right: -5px;
+   padding-bottom: 10px;
+}
+
+.view-speaking-paper .views-row{
+   padding-bottom: 10px;
+}
+
 
 .form-submit.nav-button, .form-submit.nav-button:hover{
     display: inline-block;
@@ -1501,7 +1526,7 @@ a.annotator-wrapper {
 /* ---------------------------- Breadcrumbs END---------------------------- */
 
 /* ---------------------------- CKEditor override START---------------------------- */
-#speaker-paper-node-form .cke_skin_kama{
+#os2web-meetings-spaper-node-form .cke_skin_kama{
   border:0;
 }
 
