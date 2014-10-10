@@ -107,15 +107,32 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     // Either republish, delete or skip.
     if ($nid) {
 
-      if ($force) {
+    if ($force) {
         err_debug('Republish nid: ' . $nid);
 
         $node = node_load($nid);
         watchdog('acadre MM', 'Using %nid for import.', array('%nid' => $nid), WATCHDOG_DEBUG);
       }
-      $node = node_load($nid);
-      err_debug('Republish nid: ' . $nid);
-      watchdog('acadre MM', 'Using %nid for import. Type mismatch.', array('%nid' => $nid), WATCHDOG_DEBUG);
+      // Republish if current meeting is of type Referat.
+      // This means that the one already exist is a Dagsorden.
+      elseif ($meeting['type'] === 'Referat') {
+        $node = node_load($nid);
+        if ($node->field_os2web_meetings_type[LANGUAGE_NONE][0]['value'] !== 'Dagsorden') {
+          err_debug('Skipping nid: ' . $nid);
+          watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
+          lock_release(__FUNCTION__ . $meeting_id['id']);
+          return;
+        }
+        err_debug('Republish nid: ' . $nid);
+        watchdog('acadre MM', 'Using %nid for import. Type mismatch.', array('%nid' => $nid), WATCHDOG_DEBUG);
+      }
+      else {
+        // Meeting already exists. Skip it.
+        err_debug('Skipping nid: ' . $nid);
+        watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
+        lock_release(__FUNCTION__ . $meeting_id['id']);
+        return;
+      }
     }
     else {
       //check if there is an sofd version of this node (acadre and syddjurs systems only)
