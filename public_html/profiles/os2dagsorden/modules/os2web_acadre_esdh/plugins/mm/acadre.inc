@@ -288,17 +288,10 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $access = (string) array_shift($xml_access);
   $case = (string) array_shift($xml_case);
   $case_id = (string) array_shift($xml_case_id);
-  $acadre_case_url = variable_get('os2web_acadre_esdh_url');
 
   $case_text = '';
   if (isset($case) && isset($case_id)) {
-  #  if (isset($acadre_case_url)) {
-  #    $case_text = ' (<a href="' . $acadre_case_url . '/' . $case_id . '">' . $case . '</a>) ';
-  #  }
-  #  else
-  #  {
-      $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
-  #  }
+    $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
   }
 
   $item = array(
