@@ -564,7 +564,7 @@ function _os2web_adlib_api_process_fid($file) {
           cache_clear_all('*', 'cache_views', TRUE);
           variable_set('os2web_adlib_last_convert', time());
 
-          watchdog('os2web_adlib_api', 'Cleared views cache after pdf convert from Run processing.');
+          watchdog('os2web_adlib_api', 'Cleared views cache after pdf convert in queue.');
         }
       }
     }
