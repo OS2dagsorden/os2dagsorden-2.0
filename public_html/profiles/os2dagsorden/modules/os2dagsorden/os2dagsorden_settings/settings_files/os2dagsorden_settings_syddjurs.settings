@@ -15,7 +15,7 @@ os2dagsorden_meeting_description_download_title = "Hent samlet dokument i PDF"
 os2dagsorden_meeting_description_download_title_additional = "Hent tillægsdokument i PDF"
 [os2dagsorden_meeting_view_layout]
 os2dagsorden_expand_all_bullets = 
-os2dagsorden_expand_attachment_onload = 
+os2dagsorden_expand_attachment_onload = "false"
 os2dagsorden_expand_bilags = "true"
 os2dagsorden_expand_cases = "false"
 os2dagsorden_show_massive_expand_collapse_button = "true"
