@@ -497,6 +497,89 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-os2web_meetings_bullet-field_os2web_meetings_bul_piwik'.
+  $fields['node-os2web_meetings_bullet-field_os2web_meetings_bul_piwik'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_bul_piwik',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'hits' => array(
+          0 => 'nb_hits',
+          1 => 'entry_nb_actions',
+        ),
+        'rate' => array(
+          0 => 'bounce_rate',
+          1 => 'exit_rate',
+        ),
+        'visits' => array(
+          0 => 'nb_visits',
+          1 => 'entry_nb_visits',
+          2 => 'exit_nb_visits',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'piwik_stats',
+      'settings' => array(
+        'period' => 'day',
+        'show_in_statistics_page' => 1,
+      ),
+      'translatable' => '0',
+      'type' => 'piwik_stats',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_bullet',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'piwik_stats',
+          'settings' => array(
+            'visibility' => array(
+              'bounce_rate' => TRUE,
+              'entry_bounce_count' => TRUE,
+              'entry_nb_actions' => TRUE,
+              'entry_nb_visits' => TRUE,
+              'entry_sum_visit_length' => TRUE,
+              'exit_nb_visits' => TRUE,
+              'exit_rate' => TRUE,
+              'nb_hits' => TRUE,
+              'nb_visits' => TRUE,
+              'sum_time_spent' => TRUE,
+            ),
+          ),
+          'type' => 'piwik_stats_list',
+          'weight' => 6,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_os2web_meetings_bul_piwik',
+      'label' => 'Piwik',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'piwik_stats',
+        'settings' => array(),
+        'type' => 'piwik_stats_hidden',
+        'weight' => '7',
+      ),
+    ),
+  );
+
   // Exported field: 'node-os2web_meetings_bullet-field_os2web_meetings_enclosures'.
   $fields['node-os2web_meetings_bullet-field_os2web_meetings_enclosures'] = array(
     'field_config' => array(
@@ -1049,6 +1132,89 @@ function os2web_meetings_content_types_field_default_fields() {
         'settings' => array(),
         'type' => 'number',
         'weight' => '6',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-os2web_meetings_bullet_attach-field_os2web_meetings_bpa_piwik'.
+  $fields['node-os2web_meetings_bullet_attach-field_os2web_meetings_bpa_piwik'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_bpa_piwik',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'hits' => array(
+          0 => 'nb_hits',
+          1 => 'entry_nb_actions',
+        ),
+        'rate' => array(
+          0 => 'bounce_rate',
+          1 => 'exit_rate',
+        ),
+        'visits' => array(
+          0 => 'nb_visits',
+          1 => 'entry_nb_visits',
+          2 => 'exit_nb_visits',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'piwik_stats',
+      'settings' => array(
+        'period' => 'day',
+        'show_in_statistics_page' => 1,
+      ),
+      'translatable' => '0',
+      'type' => 'piwik_stats',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_bullet_attach',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'piwik_stats',
+          'settings' => array(
+            'visibility' => array(
+              'bounce_rate' => TRUE,
+              'entry_bounce_count' => TRUE,
+              'entry_nb_actions' => TRUE,
+              'entry_nb_visits' => TRUE,
+              'entry_sum_visit_length' => TRUE,
+              'exit_nb_visits' => TRUE,
+              'exit_rate' => TRUE,
+              'nb_hits' => TRUE,
+              'nb_visits' => TRUE,
+              'sum_time_spent' => TRUE,
+            ),
+          ),
+          'type' => 'piwik_stats_list',
+          'weight' => 8,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_os2web_meetings_bpa_piwik',
+      'label' => 'Piwik',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'piwik_stats',
+        'settings' => array(),
+        'type' => 'piwik_stats_hidden',
+        'weight' => '8',
       ),
     ),
   );
@@ -2561,6 +2727,89 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_piwik'.
+  $fields['node-os2web_meetings_meeting-field_os2web_meetings_piwik'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_piwik',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'hits' => array(
+          0 => 'nb_hits',
+          1 => 'entry_nb_actions',
+        ),
+        'rate' => array(
+          0 => 'bounce_rate',
+          1 => 'exit_rate',
+        ),
+        'visits' => array(
+          0 => 'nb_visits',
+          1 => 'entry_nb_visits',
+          2 => 'exit_nb_visits',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'piwik_stats',
+      'settings' => array(
+        'period' => 'day',
+        'show_in_statistics_page' => 1,
+      ),
+      'translatable' => '0',
+      'type' => 'piwik_stats',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_meeting',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'piwik_stats',
+          'settings' => array(
+            'visibility' => array(
+              'bounce_rate' => TRUE,
+              'entry_bounce_count' => TRUE,
+              'entry_nb_actions' => TRUE,
+              'entry_nb_visits' => TRUE,
+              'entry_sum_visit_length' => TRUE,
+              'exit_nb_visits' => TRUE,
+              'exit_rate' => TRUE,
+              'nb_hits' => TRUE,
+              'nb_visits' => TRUE,
+              'sum_time_spent' => TRUE,
+            ),
+          ),
+          'type' => 'piwik_stats_list',
+          'weight' => 33,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_os2web_meetings_piwik',
+      'label' => 'Piwik',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'piwik_stats',
+        'settings' => array(),
+        'type' => 'piwik_stats_hidden',
+        'weight' => '27',
+      ),
+    ),
+  );
+
   // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_searchdata'.
   $fields['node-os2web_meetings_meeting-field_os2web_meetings_searchdata'] = array(
     'field_config' => array(
@@ -2574,7 +2823,7 @@ function os2web_meetings_content_types_field_default_fields() {
       'locked' => '0',
       'module' => 'computed_field',
       'settings' => array(
-         'code' => 'if (module_exists(os2dagsorden_fields_and_content_types)){
+        'code' => 'if (module_exists(os2dagsorden_fields_and_content_types)){
         $entity_field[0][\'value\'] = os2dagsorden_fields_and_content_types_meeting_search_metadata($entity, $entity_type);
         } else if (function_exists(\'_os2web_meetings_generate_search_data\')) {
         $entity_field[0][\'value\'] = _os2web_meetings_generate_search_data($entity);
@@ -3664,6 +3913,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Participants');
   t('Participants Cancelled');
   t('Personal');
+  t('Piwik');
   t('Ref Attachment');
   t('Ref Bullet point');
   t('Ref Bullet points');
