@@ -528,12 +528,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#type' => 'select',
     '#title' => t('Clear cache frequency after pdf convert'),
     '#options' => array(
-      '0' => '--',
+      '0' => t('Never'),
       '10' => t('Every 10 mins'),
       '30' => t('Every 30 mins'),
       '60' => t('Every hour'),
     ),
-    '#default_value' => variable_get('os2dagsorden_clear_cache_frequency', 10),
+    '#default_value' => variable_get('os2dagsorden_clear_cache_frequency', 0),
   );
 
   $form['os2dagsorden_political_organizational_settings'] = array(
