@@ -70,6 +70,8 @@ function os2dagsorden_theme_preprocess_page(&$variables)
 		    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/annotator-full.min.js');	    
 		    //drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch-no-add.min.js');
 		    //drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.min.js');
+		    $your_passed_info = array('create_note' => 'test');
+		    drupal_add_js(array('your_module_name' => $your_passed_info), 'setting');
 		    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch-syddjurs.min.js');
 		    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/json2.js');
 		    drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/XPath.js');

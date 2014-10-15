@@ -124,25 +124,25 @@ function os2dagsorden_meeting_views_views_default_views() {
 os2dagsorden_meeting_views_coming_meetings_help_text();
 ?>';
   $handler->display->display_options['header']['area']['format'] = 'php_code';
-  /* Relationship: Broken/missing handler */
-  $handler->display->display_options['relationships']['field_committee_tid']['id'] = 'field_committee_tid';
-  $handler->display->display_options['relationships']['field_committee_tid']['table'] = 'field_data_field_committee';
-  $handler->display->display_options['relationships']['field_committee_tid']['field'] = 'field_committee_tid';
   /* Relationship: Taxonomy term: User using Is part of Committee */
   $handler->display->display_options['relationships']['reverse_field_user_committee_user']['id'] = 'reverse_field_user_committee_user';
   $handler->display->display_options['relationships']['reverse_field_user_committee_user']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['relationships']['reverse_field_user_committee_user']['field'] = 'reverse_field_user_committee_user';
-  $handler->display->display_options['relationships']['reverse_field_user_committee_user']['relationship'] = 'field_committee_tid';
+  $handler->display->display_options['relationships']['reverse_field_user_committee_user']['relationship'] = 'term_node_tid';
   /* Relationship: Taxonomy term: User using Follows committees */
   $handler->display->display_options['relationships']['reverse_field_follows_committee_user']['id'] = 'reverse_field_follows_committee_user';
   $handler->display->display_options['relationships']['reverse_field_follows_committee_user']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['relationships']['reverse_field_follows_committee_user']['field'] = 'reverse_field_follows_committee_user';
-  $handler->display->display_options['relationships']['reverse_field_follows_committee_user']['relationship'] = 'field_committee_tid';
+  $handler->display->display_options['relationships']['reverse_field_follows_committee_user']['relationship'] = 'term_node_tid';
   /* Relationship: Taxonomy term: User using Follows committees+ */
   $handler->display->display_options['relationships']['reverse_field_follows_committee_plus_user']['id'] = 'reverse_field_follows_committee_plus_user';
   $handler->display->display_options['relationships']['reverse_field_follows_committee_plus_user']['table'] = 'taxonomy_term_data';
   $handler->display->display_options['relationships']['reverse_field_follows_committee_plus_user']['field'] = 'reverse_field_follows_committee_plus_user';
-  $handler->display->display_options['relationships']['reverse_field_follows_committee_plus_user']['relationship'] = 'field_committee_tid';
+  $handler->display->display_options['relationships']['reverse_field_follows_committee_plus_user']['relationship'] = 'term_node_tid';
+  /* Relationship: Content: Taxonomy terms on node */
+  $handler->display->display_options['relationships']['term_node_tid']['id'] = 'term_node_tid';
+  $handler->display->display_options['relationships']['term_node_tid']['table'] = 'node';
+  $handler->display->display_options['relationships']['term_node_tid']['field'] = 'term_node_tid';
   /* Field: nid hidden */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -151,14 +151,6 @@ os2dagsorden_meeting_views_coming_meetings_help_text();
   $handler->display->display_options['fields']['nid']['label'] = '';
   $handler->display->display_options['fields']['nid']['exclude'] = TRUE;
   $handler->display->display_options['fields']['nid']['element_label_colon'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_meeting_status']['id'] = 'field_meeting_status';
-  $handler->display->display_options['fields']['field_meeting_status']['table'] = 'field_data_field_meeting_status';
-  $handler->display->display_options['fields']['field_meeting_status']['field'] = 'field_meeting_status';
-  $handler->display->display_options['fields']['field_meeting_status']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_meeting_status']['alter']['path'] = 'meeting/[nid]';
-  $handler->display->display_options['fields']['field_meeting_status']['empty'] = '&nbsp;';
-  $handler->display->display_options['fields']['field_meeting_status']['hide_alter_empty'] = FALSE;
   /* Field: indicator - has speaker paper */
   $handler->display->display_options['fields']['php_1']['id'] = 'php_1';
   $handler->display->display_options['fields']['php_1']['table'] = 'views';
@@ -200,55 +192,6 @@ os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data);
 ?>';
   $handler->display->display_options['fields']['php_2']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php_2']['php_click_sortable'] = '';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_date']['id'] = 'field_date';
-  $handler->display->display_options['fields']['field_date']['table'] = 'field_data_field_date';
-  $handler->display->display_options['fields']['field_date']['field'] = 'field_date';
-  $handler->display->display_options['fields']['field_date']['label'] = 'Dato';
-  $handler->display->display_options['fields']['field_date']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_date']['alter']['path'] = 'meeting/[nid]';
-  $handler->display->display_options['fields']['field_date']['empty'] = '&nbsp;';
-  $handler->display->display_options['fields']['field_date']['hide_alter_empty'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_location']['id'] = 'field_location';
-  $handler->display->display_options['fields']['field_location']['table'] = 'field_data_field_location';
-  $handler->display->display_options['fields']['field_location']['field'] = 'field_location';
-  $handler->display->display_options['fields']['field_location']['alter']['text'] = 'ingen';
-  $handler->display->display_options['fields']['field_location']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_location']['alter']['path'] = 'meeting/[nid]';
-  $handler->display->display_options['fields']['field_location']['alter']['max_length'] = '15';
-  $handler->display->display_options['fields']['field_location']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['field_location']['alter']['trim'] = TRUE;
-  $handler->display->display_options['fields']['field_location']['empty'] = '&nbsp;';
-  $handler->display->display_options['fields']['field_location']['hide_alter_empty'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_committee']['id'] = 'field_committee';
-  $handler->display->display_options['fields']['field_committee']['table'] = 'field_data_field_committee';
-  $handler->display->display_options['fields']['field_committee']['field'] = 'field_committee';
-  $handler->display->display_options['fields']['field_committee']['label'] = '';
-  $handler->display->display_options['fields']['field_committee']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['field_committee']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_committee']['alter']['path'] = 'meeting/[nid]';
-  $handler->display->display_options['fields']['field_committee']['alter']['max_length'] = '20';
-  $handler->display->display_options['fields']['field_committee']['alter']['word_boundary'] = FALSE;
-  $handler->display->display_options['fields']['field_committee']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_committee']['element_default_classes'] = FALSE;
-  $handler->display->display_options['fields']['field_committee']['hide_alter_empty'] = FALSE;
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_name_short']['id'] = 'field_name_short';
-  $handler->display->display_options['fields']['field_name_short']['table'] = 'field_data_field_name_short';
-  $handler->display->display_options['fields']['field_name_short']['field'] = 'field_name_short';
-  $handler->display->display_options['fields']['field_name_short']['relationship'] = 'field_committee_tid';
-  $handler->display->display_options['fields']['field_name_short']['label'] = 'Udvalg';
-  $handler->display->display_options['fields']['field_name_short']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_name_short']['alter']['path'] = 'meeting/[nid]';
-  $handler->display->display_options['fields']['field_name_short']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_name_short']['empty'] = '[field_committee]';
-  /* Sort criterion: Broken/missing handler */
-  $handler->display->display_options['sorts']['field_date_value']['id'] = 'field_date_value';
-  $handler->display->display_options['sorts']['field_date_value']['table'] = 'field_data_field_date';
-  $handler->display->display_options['sorts']['field_date_value']['field'] = 'field_date_value';
-  $handler->display->display_options['sorts']['field_date_value']['expose']['label'] = 'Start dato';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'AND',
     2 => 'OR',
@@ -328,19 +271,11 @@ os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data);
     t('<?php
 os2dagsorden_meeting_views_coming_meetings_help_text();
 ?>'),
-    t('field_committee_tid'),
     t('field_user_committee'),
     t('field_follows_committee'),
     t('field_follows_committee_plus'),
-    t('Broken handler field_data_field_meeting_status.field_meeting_status'),
-    t('&nbsp;'),
+    t('term'),
     t('Møde'),
-    t('Dato'),
-    t('Broken handler field_data_field_location.field_location'),
-    t('ingen'),
-    t('Udvalg'),
-    t('[field_committee]'),
-    t('Start dato'),
     t('Block'),
     t('coming_meetings_my_committee'),
   );
@@ -717,6 +652,7 @@ os2dagsorden_meeting_views_meeting_details_fields_indicator_meeting_has_notes($r
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
   $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = 'Møde';
   $handler->display->display_options['fields']['title']['alter']['max_length'] = '50';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
@@ -1262,12 +1198,15 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: Text area */
+  /* Header: Dagsorden header */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<h3>Dagsorden:</h3>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
+  $handler->display->display_options['header']['area']['ui_name'] = 'Dagsorden header';
+  $handler->display->display_options['header']['area']['content'] = '<?php
+os2dagsorden_meeting_views_meeting_details_fields_dagsorden_header();
+?>';
+  $handler->display->display_options['header']['area']['format'] = 'php_code';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: bullet point */
   $handler->display->display_options['relationships']['field_os2web_meetings_bullets_target_id']['id'] = 'field_os2web_meetings_bullets_target_id';
@@ -1566,12 +1505,15 @@ os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($meeting_id
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Global: Text area */
+  /* Header: Lukket dagsorden header */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
-  $handler->display->display_options['header']['area']['content'] = '<h3>Lukket Dagsorden:</h3>';
-  $handler->display->display_options['header']['area']['format'] = 'full_html';
+  $handler->display->display_options['header']['area']['ui_name'] = 'Lukket dagsorden header';
+  $handler->display->display_options['header']['area']['content'] = '<?php
+os2dagsorden_meeting_views_meeting_details_fields_lukket_dagsorden_header();
+?>';
+  $handler->display->display_options['header']['area']['format'] = 'php_code';
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   /* Relationship: bullet point */
   $handler->display->display_options['relationships']['field_os2web_meetings_bullets_target_id']['id'] = 'field_os2web_meetings_bullets_target_id';
@@ -1791,7 +1733,7 @@ os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($meeting_id
     t('Page'),
     t('Mødedetaljer'),
     t('term from field_os2web_meetings_committee'),
-    t('Title'),
+    t('Møde'),
     t('Startdato'),
     t('Slutdato'),
     t('Udvalg'),
@@ -1808,14 +1750,18 @@ os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($meeting_id
     t('Print all speaker papers'),
     t('Print alle talepapirer'),
     t('Dagsorden'),
-    t('<h3>Dagsorden:</h3>'),
+    t('<?php
+os2dagsorden_meeting_views_meeting_details_fields_dagsorden_header();
+?>'),
     t('Content entity referenced from field_os2web_meetings_bullets'),
     t('bullet point speaking paper'),
     t('bullet point attachment'),
     t('<div class="indicator-unlocked"></div>'),
     t('<div class="indicator-personal"></div>'),
     t('Lukket Dagsorden'),
-    t('<h3>Lukket Dagsorden:</h3>'),
+    t('<?php
+os2dagsorden_meeting_views_meeting_details_fields_lukket_dagsorden_header();
+?>'),
   );
   $export['meeting_details'] = $view;
 
