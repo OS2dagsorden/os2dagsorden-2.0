@@ -514,15 +514,15 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_clear_cache_after_import']['os2dagsorden_clear_cache_active'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Active clear cahce after importing pdf files'),
+    '#title' => t('Active clear cahce after importing meetings'),
     '#default_value' => variable_get('os2dagsorden_clear_cache_active', 0),
   );
 
   $form['os2dagsorden_clear_cache_after_import']['os2dagsorden_clear_cache_frequency'] = array(
     '#type' => 'select',
-    '#title' => t('Clear cache frequency after import'),
+    '#title' => t('Clear cache frequency after pdf convert'),
     '#options' => array(
-      '0' => '--',
+      '0' => t('Never'),
       '10' => t('Every 10 mins'),
       '30' => t('Every 30 mins'),
       '60' => t('Every hour'),
