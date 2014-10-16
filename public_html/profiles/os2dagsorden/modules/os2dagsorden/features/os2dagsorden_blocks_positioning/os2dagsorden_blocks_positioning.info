@@ -19,7 +19,6 @@ dependencies[] = views
 features[context][] = os2dagsorden_annotator_light
 features[ctools][] = context:context:3
 features[ctools][] = strongarm:strongarm:1
-features[fe_block_boxes][] = show_hide_menu_block
 features[fe_block_settings][] = user-login
 features[fe_block_settings][] = views--exp-meetings_search-page
 features[fe_block_settings][] = views-0293ca2a3a9d3ff12dd399cf7b0b4333
