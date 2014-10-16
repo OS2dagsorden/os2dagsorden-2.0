@@ -7,5 +7,4 @@ version = 7.x-1.0-beta1
 project = os2web_esdh_provider
 dependencies[] = ctools
 dependencies[] = features
-dependencies[] = os2web_adlib_api
 features[features_api][] = api:1
