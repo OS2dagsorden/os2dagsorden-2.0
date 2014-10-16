@@ -13,13 +13,13 @@ function os2dagsorden_rules_and_permissions_user_default_roles() {
   // Exported role: os2dagsorden.
   $roles['os2dagsorden'] = array(
     'name' => 'os2dagsorden',
-    'weight' => 2,
+    'weight' => '2',
   );
 
   // Exported role: os2dagsorden admin.
   $roles['os2dagsorden admin'] = array(
     'name' => 'os2dagsorden admin',
-    'weight' => 3,
+    'weight' => '3',
   );
 
   return $roles;
