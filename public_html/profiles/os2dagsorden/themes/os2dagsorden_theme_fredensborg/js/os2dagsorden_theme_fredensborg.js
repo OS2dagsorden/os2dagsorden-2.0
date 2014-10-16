@@ -24,7 +24,7 @@ function stick_side_menu(){
   });
 }
 
-function hide_search_block_title_fredensborg(){
+function hide_search_block_title_ringsted(){
  jQuery(document).ready(function() {   
      jQuery("#block-views-exp-meetings-search-page .help-button").hide();
      jQuery("#block-views-exp-meetings-search-page .views-exposed-form").css("padding-left","0px");
