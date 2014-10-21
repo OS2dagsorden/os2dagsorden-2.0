@@ -187,6 +187,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'committee_group_id' => $committee_group_id,
         'title' => $meeting_name,
         'uri' => strstr($file , $meeting_uri, TRUE),
+        'path' => drupal_realpath($file),
         'type' => $meeting_type,
         'meeting_date_start' => $meeting_date_when,
         'meeting_date_finish' => $meeting_date_until,

@@ -160,6 +160,7 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
 	  'committee_name' => $committee,
 	  'title' => $committee,
 	  'uri' => strstr($file , 'eDocAgendaPublishing.xml', TRUE),
+          'path' => drupal_realpath($file),
 	  'meeting_date' => $meeting_date,
 	  'meeting_date_start' => $meeting_date,
           'meeting_date_finish' => $meeting_date,
