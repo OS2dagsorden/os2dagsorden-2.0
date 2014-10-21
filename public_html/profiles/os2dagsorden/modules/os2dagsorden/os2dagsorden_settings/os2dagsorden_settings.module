@@ -162,7 +162,9 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_search'] = variable_get('os2dagsorden_title_general_search', 'Søg');
 
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_coming_meetings'] = variable_get('os2dagsorden_title_frontpage_coming_meetings', 'Kommende møder i mine udvalg');
-    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_meetings'] = variable_get('os2dagsorden_title_frontpage_last_8_meetings', 'Seneste 8 møder i mine udvalg');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_my_meetings'] = variable_get('os2dagsorden_title_frontpage_last_8_my_meetings', 'Seneste 8 møder i mine udvalg');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_all_meetings'] = variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 møder i alle udvalg');
+
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_calendar'] = variable_get('os2dagsorden_title_frontpage_calendar', 'Kalender');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_member_of'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_following'] = variable_get('os2dagsorden_title_frontpage_following', 'Jeg følger');
@@ -232,12 +234,6 @@ function os2dagsorden_settings_views_pre_render(&$view) {
     $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
   } if ($view->name == 'user_follow_committees') {
     $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_following', 'Jeg følger');
-  } if ($view->name == 'seneste_8_m_der_i_de_st_ende_politiske_udvalg_'){
-    $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_last_8_meetings', 'Seneste 8 møder i mine udvalg');
-  } if ($view->name == 'meeting_details'){
-    //print_r("<pre>");
-    //dpr($view->display_handler->options['header']);
-    //print_r("</pre>");
   }
 }
 
@@ -321,7 +317,6 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
 }
 
 function os2dagsorden_settings_block_view_alter(&$data, $block){
-//print_r($block->delta . ' ');
     switch ($block->delta) {
 	case '-exp-meetings_search-page':
 	    $data['content']['#markup'] = '<div class="help-button" title="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der søges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnævnte er konverteret til html. Søgning kan filtreres via dato, udvalg og søgeord.') . '"></div>' . $data['content']['#markup'];
@@ -339,6 +334,12 @@ function os2dagsorden_settings_block_view_alter(&$data, $block){
                         $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender');
                 }
             }
+            break;
+        case 'c8c6c91b397acf23018fcefd40a1fa29':// Seneste 8 møder i alle udvalg
+            $block->title = variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 møder i alle udvalg');
+            break;
+        case '0293ca2a3a9d3ff12dd399cf7b0b4333':// Seneste 8 møder i mine udvalg
+            $block->title = variable_get('os2dagsorden_title_frontpage_last_8_my_meetings', 'Seneste 8 møder i mine udvalg');
             break;
     }
 }
