@@ -125,6 +125,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a bullet point attachment converted from PDF to HTML is going to be shown in the application.<br/>Can be useful to disable display if users are known to used old browser versions (>IE8).'),
     '#default_value' => variable_get('os2dagsorden_show_bilag', TRUE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use abbreviation of the meeting in the meeting views'),
+    '#description' => t('This decides whether in some places a short version (abbreviation) of the meeting will be used instead of the full title'),
+    '#default_value' => variable_get('os2dagsorden_use_abbr', TRUE),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Sager group title'),
@@ -1050,6 +1056,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_comments', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments']);
     variable_set('os2dagsorden_show_closed_bullet_point_content', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_closed_bullet_point_content']);
     variable_set('os2dagsorden_show_bilag', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag']);
+    variable_set('os2dagsorden_use_abbr', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr']);
+
     variable_set('os2dagsorden_sager_group_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title']);
     variable_set('os2dagsorden_group_closed_bullet_points', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points']);
     variable_set('os2dagsorden_hidden_agenda_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee']);

@@ -33,7 +33,7 @@ function os2dagsorden_meeting_views_common_meeting_has_notes($meeting_id){
 
 function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   $title = '';
-  if (isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
+  if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
     $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;

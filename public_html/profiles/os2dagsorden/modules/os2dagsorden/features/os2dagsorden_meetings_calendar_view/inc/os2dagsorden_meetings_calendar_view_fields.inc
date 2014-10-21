@@ -17,7 +17,7 @@ function os2dagsorden_meetings_calendar_view_breadcrumb(){
 /////////////////////////////////////////common START /////////////////////////////////////////
 function os2dagsorden_meetings_calendar_view_fields_title($data){
   $title = '';
-  if (!empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
+  if (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
     $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;
