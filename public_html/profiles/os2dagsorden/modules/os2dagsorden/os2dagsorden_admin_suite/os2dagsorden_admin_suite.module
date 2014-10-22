@@ -74,6 +74,12 @@ function os2dagsorden_admin_suite_menu() {
         'access arguments' => array('administer os2web'),
 	'page arguments' => array(2,3),
     );
+
+    $items['os2dagsorden/check_dblog'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_check_dblog',
+        'access arguments' => array('administer os2web'),
+    );
     
     
     return $items;
@@ -633,4 +639,10 @@ function os2dagsorden_admin_suite_update_files_path(){
 function os2dagsorden_admin_suite_starts_with($haystack, $needle)
 {
     return !strncmp($haystack, $needle, strlen($needle));
+}
+
+function os2dagsorden_admin_suite_check_dblog(){
+    watchdog('TEST', 'Unpublished test', WATCHDOG_INFO);
+    err_debug('here');
+    return 'here';
 }

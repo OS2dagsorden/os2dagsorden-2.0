@@ -10,60 +10,51 @@
 function os2dagsorden_sidepane_menu_default_fe_block_settings() {
   $export = array();
 
-  $export['version'] = '1.0';
+  $export['version'] = '2.0';
 
-  // Theme independent visibility settings.
-  $export['visibility'] = array(
-    'block-show_hide_menu_block' => array(
-      'machine_name' => 'show_hide_menu_block',
-      'module' => 'block',
-    ),
-    'menu-menu-sidepane-menu' => array(
-      'delta' => 'menu-sidepane-menu',
-      'module' => 'menu',
-    ),
-  );
-
-  // os2dagsorden_theme
-  $theme = array();
-
-  $theme['block-show_hide_menu_block'] = array(
-    'module' => 'block',
-    'theme' => 'os2dagsorden_theme',
-    'status' => 0,
-    'weight' => '0',
-    'region' => '',
-    'custom' => '0',
-    'visibility' => '0',
-    'pages' => '',
-    'title' => '<none>',
+  $export['block-show_hide_menu_block'] = array(
     'cache' => -1,
+    'custom' => '0',
     'machine_name' => 'show_hide_menu_block',
-  );
-
-  $theme['menu-menu-sidepane-menu'] = array(
-    'module' => 'menu',
-    'delta' => 'menu-sidepane-menu',
-    'theme' => 'os2dagsorden_theme',
-    'status' => 0,
-    'weight' => '-19',
-    'region' => '',
-    'custom' => '0',
-    'visibility' => '0',
+    'module' => 'block',
+    'node_types' => array(),
     'pages' => '',
+    'roles' => array(
+      'authenticated user' => '2',
+    ),
+    'themes' => array(
+      'os2dagsorden_theme' => array(
+        'region' => 'menu',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme',
+        'weight' => '-20',
+      ),
+    ),
     'title' => '<none>',
-    'cache' => -1,
+    'visibility' => '0',
   );
 
-  $export['theme']['os2dagsorden_theme'] = $theme;
+  $export['menu-menu-sidepane-menu'] = array(
+    'cache' => -1,
+    'custom' => '0',
+    'delta' => 'menu-sidepane-menu',
+    'module' => 'menu',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(
+      'authenticated user' => '2',
+    ),
+    'themes' => array(
+      'os2dagsorden_theme' => array(
+        'region' => 'sidebar_second',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme',
+        'weight' => '-20',
+      ),
+    ),
+    'title' => '<none>',
+    'visibility' => '0',
+  );
 
- 
-  $theme_default = variable_get('theme_default', 'garland');
-  $themes = list_themes();
-  foreach ($export as $theme_key => $settings) {
-    if ($theme_key != $theme_default && empty($themes[$theme_key]->status)) {
-      unset($export['theme'][$theme_key]);
-    }
-  }
   return $export;
 }

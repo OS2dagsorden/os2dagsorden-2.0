@@ -591,7 +591,7 @@ ul li.leaf {
     padding: 5px 10px 5px 10px;
 }
 
-.views-field-nothing .user-logout-btn {
+.user-logout-block .user-logout-btn {
     /* Fallback */
     background: #c0c0c0 url('../img/icon_log_out.png') no-repeat 5px 50%;
     /* W3C */

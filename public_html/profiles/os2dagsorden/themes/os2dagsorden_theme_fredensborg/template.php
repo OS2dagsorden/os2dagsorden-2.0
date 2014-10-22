@@ -1,11 +1,11 @@
 <?php
 /**
- * os2dagsorden_theme_fredensborg
+ * os2dagsorden_theme_ringsted
  *
  * PHP version 5
  *
  * @category Themes
- * @package  Themes_os2dagsorden_theme_fredensborg
+ * @package  Themes_os2dagsorden_theme_ringsted
  * @author   Stanislav Kutasevits <stan@bellcom.dk>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @file
@@ -37,14 +37,14 @@ function os2dagsorden_theme_fredensborg_preprocess_page(&$variables) {
 	global $base_path;	
 	if ($view->name == 'meeting_details') {
 	    //adding expand/collapse behaviour to meeting details view
-	    drupal_add_js('bullet_point_add_expand_behaviour_fredensborg("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ',  ' . variable_get('os2dagsorden_expand_all_bullets', false) . ')', 'inline');
+	    drupal_add_js('bullet_point_add_expand_behaviour_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ',  ' . variable_get('os2dagsorden_expand_all_bullets', false) . ')', 'inline');
 	    if (variable_get('os2dagsorden_expand_bilag_sag_bullet', true)){
 		drupal_add_js('open_all_bilag_case_bullet_points();', 'inline');
 	    }
 	}
 	if ($view->name == 'speaking_paper') {
             //adding expand/collapse behaviour bullet point details view
-            drupal_add_js('bullet_point_details_init_fredensborg("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ')', 'inline');
+            drupal_add_js('bullet_point_details_init_ringsted("'. $base_path .'?q=", ' . variable_get('os2dagsorden_expand_attachment', true) . ')', 'inline');
 	    if (variable_get('os2dagsorden_expand_bilag_sag_bullet', true)){
 		drupal_add_js('open_all_bilag_case_bullet_points();', 'inline');
 	    }

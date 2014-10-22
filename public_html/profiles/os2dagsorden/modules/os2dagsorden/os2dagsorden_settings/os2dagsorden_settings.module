@@ -77,10 +77,12 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_closed_bullet_point_content'] = variable_get('os2dagsorden_show_closed_bullet_point_content', FALSE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag'] = variable_get('os2dagsorden_show_bilag', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = variable_get('os2dagsorden_sager_group_title', 'Sager');
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr'] = variable_get('os2dagsorden_use_abbr', TRUE);
+
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points'] = variable_get('os2dagsorden_group_closed_bullet_points', 'false');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF');
-    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent till¾gsdokument i PDF');
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillÃ¦gsdokument i PDF');
 
     $setting_array['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = variable_get('os2dagsorden_shared_speaker_paper', TRUE);
 
@@ -98,7 +100,6 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu'] = variable_get('os2dagsorden_collapse_menu', TRUE);
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = variable_get('os2dagsorden_show_search_block_title', 'true');
-    $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_my_committees_block_title'] = variable_get('os2dagsorden_my_committees_block_title', 'Medlem af');
  
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
@@ -111,7 +112,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_notification_committee'] = variable_get('os2dagsorden_send_notification_committee', FALSE);
     $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_email_subject'] = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
     $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_email_body'] = variable_get('os2dagsorden_send_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
-      'Du abonnerer pŒ !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.');
+      'Du abonnerer pÃ¥ !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.');
     $setting_array['os2dagsorden_meeting_import']['os2dagsorden_follows_committee_send_notification'] = variable_get('os2dagsorden_follows_committee_send_notification', FALSE);
     $setting_array['os2dagsorden_meeting_import']['os2dagsorden_send_timespan_of_notification'] = variable_get('os2dagsorden_send_timespan_of_notification', 10);
 
@@ -150,14 +151,41 @@ function os2dagsorden_settings_export_to_file(){
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = variable_get('os2dagsorden_pws_v_acadregroups_url');
     }
 
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text'] = variable_get('os2dagsorden_coming_meetings_help_text', 'Her vises de kommende 5 m¿der i "Mine udvalg". Det vil sige udvalg som man enten er medlem af eller f¿lger. Udvalgene kan ses i boksene "Medlem af" og "Jeg f¿lger" i h¿jremenuen. Der er ikke en dagsorden tilg¾ngelig f¿r status er angivet til Dagsorden eller Dagsorden+.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_help_text'] = variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de m¿der der indeholdt m¿der, punkter eller bilag der matchede dine s¿gekriterier. S¿geresultatet vises pŒ m¿deniveau i listen.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_block_help_text'] = variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der s¿ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstn¾vnte er konverteret til html. S¿gning kan filtreres via dato, udvalg og s¿geord.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_last_8_meetings_help_text'] = variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 m¿der i alle m¿defora. Der er ikke et referat tilg¾ngeligt f¿r status er angivet til Referat eller Referat+.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_annotator_help_text'] = variable_get('os2dagsorden_annotator_help_text', 'Hvis du ¿nsker at lave en kommentar til et ord eller et afsnit, sŒ marker blot dette hvorefter du fŒr mulighed for at indtaste kommentaren.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text'] = variable_get('os2dagsorden_calendar_help_text', 'Her findes en dags- eller mŒnedskalender med links til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere m¿derne til en fil, som sŒ kan importeres til egen kalender, eks. i Outlook.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text'] = variable_get('os2dagsorden_user_committees_help_text', 'Her kan du se de udvalg du er medlem af. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ¾ndres.');
-    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text'] = variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at f¿lge. F¿lger betyder at du kun kan se Œbne punkter og F¿lger+ betyder at du ogsŒ kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ¾ndres.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text'] = variable_get('os2dagsorden_upcoming_meetings_help_text', 'Her vises de kommende 5 mÃ¸der i "Mine udvalg". Det vil sige udvalg som man enten er medlem af eller fÃ¸lger. Udvalgene kan ses i boksene "Medlem af" og "Jeg fÃ¸lger" i hÃ¸jremenuen. Der er ikke en dagsorden tilgÃ¦ngelig fÃ¸r status er angivet til Dagsorden eller Dagsorden+.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_help_text'] = variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de mÃ¸der der indeholdt mÃ¸der, punkter eller bilag der matchede dine sÃ¸gekriterier. SÃ¸geresultatet vises pÃ¥ mÃ¸deniveau i listen.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_meetings_search_block_help_text'] = variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der sÃ¸ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnÃ¦vnte er konverteret til html. SÃ¸gning kan filtreres via dato, udvalg og sÃ¸geord.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_last_8_meetings_help_text'] = variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 mÃ¸der i alle mÃ¸defora. Der er ikke et referat tilgÃ¦ngeligt fÃ¸r status er angivet til Referat eller Referat+.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_annotator_help_text'] = variable_get('os2dagsorden_annotator_help_text', 'Hvis du Ã¸nsker at lave en kommentar til et ord eller et afsnit, sÃ¥ marker blot dette hvorefter du fÃ¥r mulighed for at indtaste kommentaren.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text'] = variable_get('os2dagsorden_calendar_help_text', 'Her findes en dags- eller mÃ¥nedskalender med links til dagsordner og referater hvis de er publicerede. Det er muligt at eksportere mÃ¸derne til en fil, som sÃ¥ kan importeres til egen kalender, eks. i Outlook.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text'] = variable_get('os2dagsorden_user_committees_help_text', 'Her kan du se de udvalg du er medlem af. Ret henvendelse til Direktionssekretariatet hvis du mener det skal Ã¦ndres.');
+    $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text'] = variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at fÃ¸lge. FÃ¸lger betyder at du kun kan se Ã¥bne punkter og FÃ¸lger+ betyder at du ogsÃ¥ kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal Ã¦ndres.');
+
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_log_off'] = variable_get('os2dagsorden_title_general_log_off', 'Log af');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_search'] = variable_get('os2dagsorden_title_general_search', 'SÃ¸g');
+
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_coming_meetings'] = variable_get('os2dagsorden_title_frontpage_coming_meetings', 'Kommende mÃ¸der i mine udvalg');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_my_meetings'] = variable_get('os2dagsorden_title_frontpage_last_8_my_meetings', 'Seneste 8 mÃ¸der i mine udvalg');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_all_meetings'] = variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 mÃ¸der i alle udvalg');
+
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_calendar'] = variable_get('os2dagsorden_title_frontpage_calendar', 'Kalender');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_member_of'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_following'] = variable_get('os2dagsorden_title_frontpage_following', 'Jeg fÃ¸lger');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_account_settings'] = variable_get('os2dagsorden_title_frontpage_account_settings', 'Konto indstillinger');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_home'] = variable_get('os2dagsorden_title_frontpage_home', 'Hjem');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_halfyear_calendar'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'HalvÃ¥rs-kalender');
+
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_status'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_meeting'] = variable_get('os2dagsorden_title_meeting_meeting', 'MÃ¸de');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_date'] = variable_get('os2dagsorden_title_meeting_date', 'Dato');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_location'] = variable_get('os2dagsorden_title_meeting_location', 'Lokation');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_comments'] = variable_get('os2dagsorden_title_meeting_comments', 'BemÃ¦rkninger');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_special_comments'] = variable_get('os2dagsorden_title_meeting_special_comments', 'SÃ¦rlige forhold');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_participants'] = variable_get('os2dagsorden_title_meeting_participants', 'Deltagere');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_cancelled_participants'] = variable_get('os2dagsorden_title_meeting_cancelled_participants', 'Afbud / FravÃ¦rende');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_agenda'] = variable_get('os2dagsorden_title_meeting_agenda', 'Dagsorden:');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_closed_agenda'] = variable_get('os2dagsorden_title_meeting_closed_agenda', 'Lukket Dagsorden:');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_committee'] = variable_get('os2dagsorden_title_meeting_committee', 'Udvalg');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_new_speaker_paper'] = variable_get('os2dagsorden_title_meeting_new_speaker_paper', 'Nyt talepapir');
 
     print os2dagsorden_settings_write_ini_file($setting_array, TRUE);
     print $content;
@@ -203,8 +231,41 @@ function os2dagsorden_settings_committee_autocomplete_callback($string = '') {
 }
 
 function os2dagsorden_settings_views_pre_render(&$view) {
+    //print_r($view->name . ' ');
   if ($view->name == 'user_committee') {
-    $view->build_info['title'] = variable_get('os2dagsorden_my_committees_block_title', 'Medlem af');
+    $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
+  } if ($view->name == 'user_follow_committees') {
+    $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_following', 'Jeg fÃ¸lger');
+  }
+}
+
+function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
+  if ($view->name == 'seneste_8_m_der_i_de_st_ende_politiske_udvalg_'){
+    $view->display_handler->options['fields']['field_os2web_meetings_type']['label'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
+    $view->display_handler->options['fields']['php_2']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'MÃ¸de');
+    $view->display_handler->options['fields']['field_os2web_meetings_date']['label'] = variable_get('os2dagsorden_title_meeting_date', 'Dato');
+    $view->display_handler->options['fields']['php_4']['label'] = variable_get('os2dagsorden_title_meeting_location', 'Lokation');
+  } elseif ($view->name == 'meetings_search'){
+    $view->display_handler->options['fields']['php_7']['label'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
+    $view->display_handler->options['fields']['php_2']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'MÃ¸de');
+    $view->display_handler->options['fields']['field_os2web_meetings_date']['label'] = variable_get('os2dagsorden_title_meeting_date', 'Dato');
+  } elseif ($view->name == 'kommende_m_der_i_mine_udvalg'){
+    $view->display_handler->options['fields']['php_2']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'MÃ¸de');
+  } elseif ($view->name == 'meeting_details'){
+    if ($view->display_handler->options['fields']['title']['id'])
+        $view->display_handler->options['fields']['title']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'MÃ¸de');
+    if ($view->display_handler->options['fields']['field_os2web_meetings_location']['id'])
+       $view->display_handler->options['fields']['field_os2web_meetings_location']['label'] = variable_get('os2dagsorden_title_meeting_location', 'Lokation');
+    if ($view->display_handler->options['fields']['php_3']['id'])
+       $view->display_handler->options['fields']['php_3']['label'] = variable_get('os2dagsorden_title_meeting_committee', 'Udvalg');
+    if ($view->display_handler->options['fields']['field_os2web_meetings_comments']['id'])
+       $view->display_handler->options['fields']['field_os2web_meetings_comments']['label'] = variable_get('os2dagsorden_title_meeting_comments', 'BemÃ¦rkninger');
+    if ($view->display_handler->options['fields']['field_os2web_meetings_conditions']['id'])
+       $view->display_handler->options['fields']['field_os2web_meetings_conditions']['label'] = variable_get('os2dagsorden_title_meeting_special_comments', 'SÃ¦rlige forhold');
+    if ($view->display_handler->options['fields']['php']['ui_name'] == 'Participants')
+       $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_participants', 'Deltagere');
+    if ($view->display_handler->options['fields']['php']['ui_name'] == 'Participants (Cancelled)')
+        $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_cancelled_participants', 'Afbud / FravÃ¦rende');
   }
 }
 
@@ -247,6 +308,7 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
     if (empty($_GET['to_date']))  {
 	$form['to_date']['value']['#default_value'] = date('Y-m-d', strtotime('+' . variable_get('os2dagsorden_search_enddate', 1) . ' months'));
     }
+    $form['submit']['#value'] = variable_get('os2dagsorden_title_general_search', 'SÃ¸g');
   }
 
   if ($form_id == 'os2web_meetings_spaper_node_form'){
@@ -259,7 +321,27 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
 function os2dagsorden_settings_block_view_alter(&$data, $block){
     switch ($block->delta) {
 	case '-exp-meetings_search-page':
-	    $data['content']['#markup'] = '<div class="help-button" title="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der s¿ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstn¾vnte er konverteret til html. S¿gning kan filtreres via dato, udvalg og s¿geord.') . '"></div>' . $data['content']['#markup'];
+	    $data['content']['#markup'] = '<div class="help-button" title="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der sÃ¸ges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnÃ¦vnte er konverteret til html. SÃ¸gning kan filtreres via dato, udvalg og sÃ¸geord.') . '"></div>' . $data['content']['#markup'];
+            $block->title = variable_get('os2dagsorden_title_general_search', 'SÃ¸g');
 	    break;
+        case 'events-block_1':
+            $block->title = variable_get('os2dagsorden_title_frontpage_calendar', 'Kalender');
+            break;
+        case 'menu-sidepane-menu':
+            foreach ($data['content'] as &$menu_item){
+                if ($menu_item['#theme'] == 'menu_link__menu_sidepane_menu'){//filtering on actual menus
+                    if ($menu_item['#title'] == 'Hjem')//Hjem
+                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_home', 'Hjem');
+                    if ($menu_item['#title'] == 'HalvÃ¥rs-kalender')//HalvÃ¥rs-kalender
+                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'HalvÃ¥rs-kalender');
+                }
+            }
+            break;
+        case 'c8c6c91b397acf23018fcefd40a1fa29':// Seneste 8 mÃ¸der i alle udvalg
+            $block->title = variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 mÃ¸der i alle udvalg');
+            break;
+        case '0293ca2a3a9d3ff12dd399cf7b0b4333':// Seneste 8 mÃ¸der i mine udvalg
+            $block->title = variable_get('os2dagsorden_title_frontpage_last_8_my_meetings', 'Seneste 8 mÃ¸der i mine udvalg');
+            break;
     }
 }

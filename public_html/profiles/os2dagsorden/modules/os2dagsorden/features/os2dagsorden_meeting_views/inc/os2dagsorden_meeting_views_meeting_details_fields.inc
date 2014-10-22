@@ -232,6 +232,14 @@ function os2dagsorden_meeting_views_meeting_details_dagsorden_access(){
   return os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_id);
 }
 
+function os2dagsorden_meeting_views_meeting_details_fields_dagsorden_header(){
+  print '<h3>' . variable_get('os2dagsorden_title_meeting_agenda', 'Dagsorden:') . '</h3>';
+}
+
+function os2dagsorden_meeting_views_meeting_details_fields_lukket_dagsorden_header(){
+  print '<h3>' . variable_get('os2dagsorden_title_meeting_closed_agenda', 'Lukket Dagsorden:') . '</h3>';
+}
+
 function os2dagsorden_meeting_views_meeting_details_fields_indicator_bullet_point_has_sp($bp_id){
   os2dagsorden_meeting_views_common_bullet_point_has_sp($bp_id);
 }
@@ -524,7 +532,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($m
     } else {
       $q = $_GET['q'];
       $link = '/node/add/os2web-meetings-spaper?edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bp_title . ' (' . $bp_id . ')' . '&destination=' . $q;
-      print '<a href="' . $link . '"><div class="indicator-create-speaker-paper"></div>Nyt talepapir</a>';
+      print '<a href="' . $link . '"><div class="indicator-create-speaker-paper"></div>' . variable_get('os2dagsorden_title_meeting_new_speaker_paper', 'Nyt talepapir') . '</a>';
     }
   }
 }

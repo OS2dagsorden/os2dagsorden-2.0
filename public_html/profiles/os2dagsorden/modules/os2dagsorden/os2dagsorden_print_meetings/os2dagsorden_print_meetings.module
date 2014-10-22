@@ -282,7 +282,7 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
 		    $title = '';
                     if (!empty($committee->field_os2web_meetings_com_abbr['und'][0]['value']))
 			 $title = $committee->field_os2web_meetings_com_abbr['und'][0]['value'];
-                    elseif (!empty($met->field_os2web_meetings_abbr['und'][0]['value']))
+                    elseif (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($met->field_os2web_meetings_abbr['und'][0]['value']))
 			 $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
                     else
 			 $title = $met->title;

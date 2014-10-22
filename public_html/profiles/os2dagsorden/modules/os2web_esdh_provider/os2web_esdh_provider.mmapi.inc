@@ -55,7 +55,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
   $nids = array();
   $nid = NULL;
-  
+
   // Do an initially check on if there are any approved meetings.
   if (count($meetings) === 0) {
     watchdog('acadre MM', 'There was no meetings to import. See if all manifests are OK? ', WATCHDOG_WARNING);
@@ -105,28 +105,22 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
      // Meeting already exist.
     // Either republish, delete or skip.
     if ($nid) {
-
-    if ($force) {
+      $node = node_load($nid);
+      if ($force) {
         err_debug('Republish nid: ' . $nid);
-        $node = node_load($nid);
         watchdog('acadre MM', 'Using %nid for import.', array('%nid' => $nid), WATCHDOG_DEBUG);
       }
       // Republish if current meeting is of type Referat.
       // This means that the one already exist is a Dagsorden.
       else {
-        $node = node_load($nid);          
-          if (!$last_import_time || filemtime($meeting['path']) < $last_import_time){
+         if (!$last_import_time || filemtime($meeting['path']) < $last_import_time){
           err_debug('Skipping nid: ' . $nid);
           watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
-        
           continue;
-          }
-       
+          }       
         err_debug('Republish nid: ' . $nid);
         watchdog('acadre MM', 'Using %nid for import. Type mismatch.', array('%nid' => $nid), WATCHDOG_DEBUG);
-        
-      }
-    
+       }
     }
     else {
       //check if there is an sofd version of this node (acadre and syddjurs systems only)
@@ -148,7 +142,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     // Set some default values.
     node_object_prepare($node);
     // Set field values:
-    if (strlen($meeting['title'])>=255) 
+    if (strlen($meeting['title'])>=255)
         $node->title= substr($meeting['title'], 0, 250) . '...';
     else
          $node->title = $meeting['title'];
@@ -207,13 +201,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       $node->field_os2web_meetings_partic[LANGUAGE_NONE][0]['value'] = implode(variable_get('os2dagsorden_participants_delimeter', ', '), $meeting['participants']);
       $node->field_os2web_meetings_partic[LANGUAGE_NONE][0]['format'] ='filtered_html';
     }
- 
+
     //Adding cancelled participants
     if (isset($meeting['participants_cancellation'])){
       $node->field_os2web_meetings_particcanl[LANGUAGE_NONE][0]['value'] = implode(variable_get('os2dagsorden_participants_delimeter', ', '), $meeting['participants_cancellation']);
       $node->field_os2web_meetings_particcanl[LANGUAGE_NONE][0]['format'] ='filtered_html';
     }
-    
+
      //Adding comments
    if (isset($meeting['description'])){
       $node->field_os2web_meetings_comments[LANGUAGE_NONE][0]['value'] = $meeting['comments'];
@@ -339,7 +333,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = null) {
       $node->title = $item['title'];
       node_object_prepare($node);
     }
-    
+
     if (module_exists('os2dagsorden_esdh_provider')){
       $node = os2dagsorden_esdh_provider_bullet_add_number($node, $item['id']);
     }
@@ -347,7 +341,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = null) {
     if ($item['access'] === 'Lukket') {
       $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][]['value'] = 1;
       if (module_exists('os2dagsorden_esdh_provider')){
-        $node = os2dagsorden_esdh_provider_process_closed_bullet($node, $item); 
+        $node = os2dagsorden_esdh_provider_process_closed_bullet($node, $item);
       }
       node_submit($node);
       node_save($node);
@@ -373,7 +367,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = null) {
             foreach ($node->field_os2web_meetings_attach['und'] as $attachment_nid) {
               $attachments_to_delete[$attachment_nid['target_id']] = $attachment_nid['target_id'];
             }
-            
+
             err_debug("TO DELETE: " . print_r($attachments_to_delete,1));
             err_debug("TO KEEP: " . print_r($bullet_nids,1));
             if (is_array($attachments_to_delete) && is_array($bullet_nids))
@@ -508,10 +502,10 @@ function _os2web_esdh_provider_import_file($file_meta) {
     // Completely unprocessed file.
     $uri_old = $uri_in;
     $uri_in = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_in));
-    
+
     if (strlen($uri_out)>255){
       $pi=pathinfo($uri_out);
-      if (isset($pi['extension'])) 
+      if (isset($pi['extension']))
          $uri_out= $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename'])-(len($uri_out)-255)) . '.' . $pi['extension'];
       else
          $uri_out= $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename'])-(len($uri_out)-255));
@@ -564,7 +558,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
   $file->uid = 1;
   $file->status = FILE_STATUS_PERMANENT;
   $file = file_save($file);
-  
+
   if (module_exists('os2web_pdf_conversion_manager'))
     _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($file->fid);
 
@@ -858,3 +852,24 @@ function _os2web_esdh_provider_bpa_body_format() {
   return $cache;
 }
 
+function os2web_esdh_provider_clear_cache($success, $results, $operations) {
+  if ($success) {
+    // Clear views cache, if the Clear cache is active in os2dagsorden setting form.
+    if (variable_get('os2dagsorden_clear_cache_active')) {
+      // Clear the views cache.
+      cache_clear_all('*', 'cache_views', TRUE);
+      watchdog('os2web_esdh_provider', 'Cleared views cache after meeting import process.');
+      variable_set('os2web_adlib_last_convert', time());
+    }
+    $message = ' Import processed.';
+    drupal_set_message($message);
+  }
+  else {
+    // An error occurred.
+    // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
+    drupal_set_message($message, 'error');
+  }
+  drupal_goto('admin/config/os2web/esdh_provider');
+}
