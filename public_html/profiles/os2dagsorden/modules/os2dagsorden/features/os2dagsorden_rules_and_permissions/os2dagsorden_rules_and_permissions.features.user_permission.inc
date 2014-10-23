@@ -145,6 +145,15 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
     'module' => 'node',
   );
 
+  // Exported permission: edit own user account.
+  $permissions['edit own user account'] = array(
+    'name' => 'edit own user account',
+    'roles' => array(
+      0 => 'os2dagsorden',
+    ),
+    'module' => 'edit_own_user_account_permission',
+  );
+
   // Exported permission: list context.
   $permissions['list context'] = array(
     'name' => 'list context',
