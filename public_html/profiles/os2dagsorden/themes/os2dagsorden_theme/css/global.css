@@ -694,6 +694,10 @@ div.attachment{
     padding-left: 25px;
 }
 
+.block-views .view-content{
+    overflow: hidden;
+}
+
 /*---------------------------- Views End ----------------------------*/
 
 /*---------------------------- Blocks START ----------------------------*/
