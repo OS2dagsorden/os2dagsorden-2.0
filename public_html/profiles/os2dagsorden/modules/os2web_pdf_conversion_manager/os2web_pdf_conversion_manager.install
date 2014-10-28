@@ -31,6 +31,24 @@ function os2web_pdf_conversion_manager_schema() {
                 'length' => 1024,
                 'serialize' => TRUE,
             ),
+	   'status' => array(
+                'description' => 'Status of the convertion',
+                'type' => 'varchar',
+                'length' => 1024,
+                'serialize' => TRUE,
+            ),
+	   'message' => array(
+                'description' => 'Error message',
+                'type' => 'text',
+                'serialize' => TRUE,
+            ), 
+	    'attempt' => array(
+                'description' => 'The number of attempts file has been tried to be convered',
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'defualt' => 0,
+            ),
 	    
         ),
         'primary key' => array('fid'),

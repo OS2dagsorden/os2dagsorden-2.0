@@ -11,7 +11,7 @@
  * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
  * @link     http://bellcom.dk
  */
-require drupal_get_path('module', 'os2dagsorden_annotator') . '/includes/os2dagsorden_annotator.common.inc';
+module_load_include('inc', 'os2dagsorden_annotator', '/includes/os2dagsorden_annotator.common');
 define('IS_IPAD', (bool) strpos($_SERVER['HTTP_USER_AGENT'],'iPad'));
 define('ANNOTATOR_PAGES_PER_VIEW', (IS_IPAD) ? 3 : 5);
 

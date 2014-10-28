@@ -23,10 +23,9 @@ function os2web_pdf_conversion_manager_menu() {
         'type' => MENU_CALLBACK,
     );
     $items['admin/config/os2web/pdf_converter'] = array(
-        'title' => 'PDF Converter',
+        'title' => 'OS2Web PDF Converter',
         'access arguments' => array('administer os2web'),
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('os2web_pdf_conversion_manager_pdf_converter_form'),
+        'page callback' => 'os2web_pdf_convertion_manager_setting_page',
         'type' => MENU_LOCAL_TASK,
         'position' => 'left',
         'weight' => -150,
@@ -40,16 +39,52 @@ function os2web_pdf_conversion_manager_file_manager() {
     os2web_pdf_conversion_manager_cron();
 }
 
+function os2web_pdf_convertion_manager_setting_page(){
+    if (isset($_GET['reset'])) {
+        if (is_numeric($_GET['reset'])) {
+          db_update('os2web_pdf_conversion_manager_files')
+            ->fields(array(
+              'attempt' => 0,
+              'status' => 'Scheduled',
+            ))
+            ->condition('fid', $_GET['reset'])
+            ->execute();
+        }
+        drupal_goto('admin/config/os2web/pdf_converter');
+    }
+
+    //table output
+    $result = db_select('os2web_pdf_conversion_manager_files', 'o')
+      ->fields('o')
+      ->execute()
+      ->fetchAllAssoc('fid');
+  
+    $headers = array('FID', 'Filename', 'Temp filename', 'Status', 'Message', 'Attempts', 'Actions');
+    $rows = array();
+  
+    foreach ($result as $row) {
+      $row->actions = l(t('reset'), 'admin/config/os2web/pdf_converter', array('query' => array('reset' => $row->fid)));
+      $rows[] = array_values((array)$row);
+    }
+
+    $content[] = array(
+      '#theme' => 'table',
+      '#header' => $headers,
+      '#rows' => $rows,
+    );
+    
+    return render(drupal_get_form('os2web_pdf_conversion_manager_pdf_converter_form')) . render($content);
+}
+
 function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
     //avoiding duplication of settings. If os2dagsorden_settings module is present and enabled - the settings will be presented there
-
     $form['os2dagsorden_file_import'] = array(
           '#type' => 'fieldset',
           '#collapsible' => TRUE,
           '#collapsed' => FALSE,  
           '#title' => t('* > PDF converting configuration'),
         );
-    if (!module_exists('os2dagsorden_setting')) {
+    if (!module_exists('os2dagsorden_settings')) {
         $form['os2dagsorden_file_import'] = array(
           '#type' => 'fieldset',
           '#collapsible' => TRUE,
@@ -71,11 +106,10 @@ function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
           '#default_value' => variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR),
         );
     } 
-
     $form['os2dagsorden_file_import'][] = array(
         '#markup' => '<div><a href="/os2web/run_file_manager">Run PDF converter</a></div>',
-    ); 
-    
+    );
+
     return system_settings_form($form);
 }
 
@@ -103,11 +137,14 @@ function os2web_pdf_conversion_manager_cron() {
        watchdog('file convertion management:', 'Folder %uri is not created', array('%uri' => variable_get('os2web_convertion_dir',OS2WEB_CONVERTION_DIR)), WATCHDOG_WARNING);
        return;
     }
-      _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path);     
-      _os2web_pdf_conversion_manager_manage_pdf($convertion_dir_path);
-      _os2web_pdf_conversion_manager_delete_msg_attachments_folder($convertion_dir_path);
+    _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path);     
+    _os2web_pdf_conversion_manager_manage_pdf($convertion_dir_path);
+    _os2web_pdf_conversion_manager_delete_msg_attachments_folder($convertion_dir_path);
+  
+    drupal_flush_all_caches();
     
-      drupal_flush_all_caches();
+    drupal_set_message('OS2Web PDF converter has been successfully run');
+    drupal_goto('admin/config/os2web/pdf_converter');
 }
 function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  $converted_files = Array();     
@@ -214,6 +251,7 @@ function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
     $file = file_load($fid);
     $filename = $file->uri;    
     $filename_parts = pathinfo($filename);
+    //tmp_file name is needed to avoid rewriting the files from different meetings, which might have the same name
     $tmp_filename = md5(md5_file(drupal_realpath($filename)) . $filename_parts['basename']) . '.' . $filename_parts['extension'];
     $type_arr = explode(',', variable_get('os2web_copied_filetype',OS2WEB_COPIED_FILETYPE));
     $pdf_path = $filename_parts['dirname'] . '/' . $filename_parts['filename'] . '.PDF';
@@ -239,7 +277,9 @@ function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
                     ->fields(array(
                         'fid' => $fid,
                         'filename' => $filename_parts['basename'],
-                        'tmp_filename' => $tmp_filename))
+                        'tmp_filename' => $tmp_filename,
+                        'status' => 'Scheduled',
+                        'attempt' => 0))
                     ->execute();
         }
     }
@@ -495,5 +535,48 @@ function _os2web_pdf_conversion_manager_set_status_published_plus($node){
 	    node_save($node);
 	}
       }
+    }
+}
+
+/**
+ * Hook to file delete.
+ * Deletes the temporary file scheduled for the conversion and deletes corresponding entry in the table.
+ *
+ */
+function os2web_pdf_conversion_manager_file_delete($file){
+    $result = db_select('os2web_pdf_conversion_manager_files', 'o')
+      ->fields('o', array('tmp_filename'))
+      ->condition('fid', $file->fid)
+      ->execute()
+      ->fetchField();
+    file_unmanaged_delete(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR) . '/' . $result);
+
+    db_delete('os2web_pdf_conversion_manager_files')
+    ->condition('fid', $file->fid)
+    ->execute();
+}
+
+/**
+ * Implements hook_watchdog().
+ */
+function os2web_pdf_conversion_manager_watchdog($log_entry) {
+    if ($log_entry['severity']==3){//TODO: set the priority
+        // Set up the mail body.
+    
+        $from = variable_get('site_mail', '');
+        $message = array(
+          'id' => 'os2web_pdf_conversion_manager',
+          'to' => variable_get('site_mail', ''),
+          'from' => $from,
+          'subject' => t('OS2Web PDF Conversion error'),
+          'body' => $log_entry['message'],
+          'headers' => array(
+            'From' => $from,
+            'Sender' => $from,
+            'Return-Path' => $from,
+          ),
+        );
+        $mail_system = drupal_mail_system($my_module, $my_mail_token);
+        return $mail_system->mail($message);
     }
 }
