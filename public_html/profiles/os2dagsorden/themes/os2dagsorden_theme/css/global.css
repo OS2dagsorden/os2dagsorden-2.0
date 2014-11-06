@@ -698,6 +698,10 @@ div.attachment{
     overflow: hidden;
 }
 
+.block-views .view-user-logout-menu .view-content{
+    overflow: visible;
+}
+
 /*---------------------------- Views End ----------------------------*/
 
 /*---------------------------- Blocks START ----------------------------*/

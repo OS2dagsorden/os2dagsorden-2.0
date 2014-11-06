@@ -316,70 +316,69 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   if ($item['access'] !== 'True') {
     //rewriting the access field to match esdh provider module
     $item['access'] = 'Lukket';
-  } else {
-    // Process attachments.
-    foreach ($xml_item_bullet->ItemField as $bullet_xml) {
-      
-      if (((string) $bullet_xml->HasContent) === 'True'){
-        $item['bullets'][] = array(
-          'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
-          'body' => (string) $bullet_xml->Content,
-          'sysid' => (string) $bullet_xml['ID'],
-        );
+  } 
+  // Process attachments.
+  foreach ($xml_item_bullet->ItemField as $bullet_xml) {
+    
+    if (((string) $bullet_xml->HasContent) === 'True'){
+      $item['bullets'][] = array(
+        'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
+        'body' => (string) $bullet_xml->Content,
+        'sysid' => (string) $bullet_xml['ID'],
+      );
+    }
+  }
+ 
+  // Process item history.
+  if (!empty($xml_item_history)) {
+    $history = array(
+      'title' => t('Beslutningshistorik'),
+      'body' => '',
+    );
+    foreach ($xml_item_history->ItemField as $item_history) {
+
+      if (((string) $item_history->HasContent) === 'True') {
+        $history['body'] .= t('@decision truffet af @comittee d. @date', array(
+          '@decision' => (string) $item_history->Caption,
+          '@comittee' => (string) $item_history->MeetingDetails->CommitteeName,
+          '@date'     => date('d-m-Y', strtotime((string) $item_history->MeetingDetails->MeetingDueDate)),
+        ));
+        $history['body'] .= '<br>' . strip_tags((string) $item_history->Content) . '<br>';
       }
     }
-   
-    // Process item history.
-    if (!empty($xml_item_history)) {
-      $history = array(
-        'title' => t('Beslutningshistorik'),
-        'body' => '',
-      );
-      foreach ($xml_item_history->ItemField as $item_history) {
-
-        if (((string) $item_history->HasContent) === 'True') {
-          $history['body'] .= t('@decision truffet af @comittee d. @date', array(
-            '@decision' => (string) $item_history->Caption,
-            '@comittee' => (string) $item_history->MeetingDetails->CommitteeName,
-            '@date'     => date('d-m-Y', strtotime((string) $item_history->MeetingDetails->MeetingDueDate)),
-          ));
-          $history['body'] .= '<br>' . strip_tags((string) $item_history->Content) . '<br>';
-        }
-      }
-      if ($history['body'] !== '') {
-        // If this is a Referat, put the history in before the beslutning element.
-        // Else just put in the buttom of the list.
-        if ($meeting['type'] === 'Referat') {
-          foreach($item['bullets'] as $key => $bullet) {
-            if ($bullet['title'] === 'Beslutning') {
-              array_splice( $item['bullets'], $key, 0, array($history) );
-              break;
-            }
+    if ($history['body'] !== '') {
+      // If this is a Referat, put the history in before the beslutning element.
+      // Else just put in the buttom of the list.
+      if ($meeting['type'] === 'Referat') {
+        foreach($item['bullets'] as $key => $bullet) {
+          if ($bullet['title'] === 'Beslutning') {
+            array_splice( $item['bullets'], $key, 0, array($history) );
+            break;
           }
         }
-        else {
-          $item['bullets'][] = $history;
-        }
+      }
+      else {
+        $item['bullets'][] = $history;
       }
     }
- 
-    // Process enclsures.
-    foreach ($xml_item_document as $enclosures) {
-      foreach ($enclosures->Enclosure as $enclosure) {
-        $enclosure_item['filename_in'] = (string) "Enclosures/".$enclosure->InstantiationFileName;
-        $enclosure_item['access'] = (string) $enclosure->PublishingType;
-        #if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] === 'SKAL PUBLICERES') {
-        if (strlen($enclosure_item['filename_in']) > 0 ) {
-          $item['enclosures'][] = array(
-            'uri' => implode('/', array(
-              trim($meeting['uri'], "/"),
-              $enclosure_item['filename_in'])),
-            'title' => trim((string) $enclosure->Name),
-            'access' => ((string)$enclosure->IsProtected) === 'True'? FALSE : TRUE, //inverting the value
-            'sysid' => (string) $enclosure['ID'],
-            'type' => 'Bilag',
-          );
-        }
+  }
+
+  // Process enclsures.
+  foreach ($xml_item_document as $enclosures) {
+    foreach ($enclosures->Enclosure as $enclosure) {
+      $enclosure_item['filename_in'] = (string) "Enclosures/".$enclosure->InstantiationFileName;
+      $enclosure_item['access'] = (string) $enclosure->PublishingType;
+      #if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] === 'SKAL PUBLICERES') {
+      if (strlen($enclosure_item['filename_in']) > 0 ) {
+        $item['enclosures'][] = array(
+          'uri' => implode('/', array(
+            trim($meeting['uri'], "/"),
+            $enclosure_item['filename_in'])),
+          'title' => trim((string) $enclosure->Name),
+          'access' => ((string)$enclosure->IsProtected) === 'True'? FALSE : TRUE, //inverting the value
+          'sysid' => (string) $enclosure['ID'],
+          'type' => 'Bilag',
+        );
       }
     }
   }
