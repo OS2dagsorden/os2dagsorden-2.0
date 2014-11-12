@@ -333,6 +333,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = null) {
       $node->uid = 1;
       $node->title = $item['title'];
       node_object_prepare($node);
+      $node->field_os2web_meetings_bul_case[LANGUAGE_NONE][0]['value'] = $item['case_nr'];
     }
 
     if (module_exists('os2dagsorden_esdh_provider')){

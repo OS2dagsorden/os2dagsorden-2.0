@@ -228,17 +228,23 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => array('true' => t('Show'), 'false' => t('Hide')),
     '#description' => t('This decides whether massive expand/collapse button will be shown on meeting views.'),
   );
-   $form['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bilag_bullet_point'] = array(
+  $form['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bilag_bullet_point'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show bilags under Bilag bullet point'),
     '#description' => t('This decides whether all bilags grouped under Bilag bullet point'),
     '#default_value' => variable_get('os2dagsorden_show_bilag_bullet_point', FALSE),
   );
-   $form['os2dagsorden_meeting_view_layout']['os2dagsorden_show_case_bullet_point'] = array(
+  $form['os2dagsorden_meeting_view_layout']['os2dagsorden_show_case_bullet_point'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show cases under Case bullet point'),
     '#description' => t('This decides whether all Cases/Sager grouped under Cases bullet point '),
     '#default_value' => variable_get('os2dagsorden_show_case_bullet_point', FALSE),
+  );
+  $form['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bullet_case_nr'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show case nr next to bullet title'),
+    '#description' => t('This decides case nr will be shown next to the bullet title'),
+    '#default_value' => variable_get('os2dagsorden_show_bullet_case_nr', FALSE),
   );
 
    //show latest meetings in my committee or all committees
@@ -1073,6 +1079,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_massive_expand_collapse_button', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_massive_expand_collapse_button']);
     variable_set('os2dagsorden_show_bilag_bullet_point', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bilag_bullet_point']);
     variable_set('os2dagsorden_show_case_bullet_point', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_case_bullet_point']);
+    variable_set('os2dagsorden_show_bullet_case_nr', $setting_array['os2dagsorden_meeting_view_layout']['os2dagsorden_show_bullet_case_nr']);
 
     variable_set('os2dagsorden_latest_meetings_view_mode', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_latest_meetings_view_mode']);
     variable_set('os2dagsorden_meetings_views_last_8_show_meeting_committee', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_committee']);

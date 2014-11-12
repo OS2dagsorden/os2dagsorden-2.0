@@ -294,12 +294,19 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   $xml_item['name'] = (string) $xml->Caption;
   $xml_item['document_type'] = (string) $xml->IsPublic;
   $xml_item_participants = $xml->Members;
+  $xml_case_id = (string) $xml->ItemCaseNumber;
+
+  $case_text = '';
+  if (isset($xml_case_id)) {
+    $case_text = ' (' . $xml_case_id . ')';
+  }
 
   $item = array(
     'id' => $xml_item['number'],
     'sysid' => (string) $xml['ID'],
     //'title' => 'Punkt ' . $xml_item['number'] . ' ' . $xml_item['name'],06.10 stan@bellcom.dk commented to support multiple agendas
     'title' => 'Punkt ' . $meeting['current_item_nr'] . ' ' . $xml_item['name'],
+    'case_nr' => $xml_case_id,
     'access' => $xml_item['document_type'],
     'bullets' => array(),
     'enclosures' => array(),
@@ -315,7 +322,8 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   if ($item['access'] !== 'True') {
     //rewriting the access field to match esdh provider module
     $item['access'] = 'Lukket';
-  } 
+  }
+
   // Process attachments.
   foreach ($xml_item_bullet->ItemField as $bullet_xml) {
     

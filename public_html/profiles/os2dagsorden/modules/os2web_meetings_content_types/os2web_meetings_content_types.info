@@ -24,6 +24,7 @@ features[features_api][] = api:1
 features[field][] = node-os2web_meeting_search_status-body
 features[field][] = node-os2web_meetings_bullet-body
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_attach
+features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_case
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_closed
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_number
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_pers

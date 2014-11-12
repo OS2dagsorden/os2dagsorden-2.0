@@ -254,7 +254,12 @@ function os2dagsorden_meeting_views_meeting_details_fields_indicator_bullet_poin
 
 function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_title($title, $meeting_id, $bp_id){
   global $base_url;
-
+  
+  if (variable_get('os2dagsorden_show_bullet_case_nr', FALSE)){
+    $bp = node_load($bp_id);
+    if ($bp->field_os2web_meetings_bul_case['und'])
+      $title .= ' (' . $bp->field_os2web_meetings_bul_case['und'][0]['value'] . ')';
+  }
   //logic for touch devices
   if (os2dagsorden_access_helper_is_touch()){
     if (mb_strlen($title) > 70)

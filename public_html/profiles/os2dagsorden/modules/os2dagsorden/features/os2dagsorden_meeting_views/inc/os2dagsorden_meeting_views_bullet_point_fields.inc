@@ -108,8 +108,14 @@ function os2dagsorden_meeting_views_bullet_point_fields_title_navigation_buttons
     print '<div class="indicator-unlocked"></div>';
   if ($bullet_point->field_os2web_meetings_bul_pers['und'][0][value] == 1)
     print '<div class="indicator-personal"></div>';
-    
-  print $bullet_point->title;
+  
+  $title = $bullet_point->title;
+  if (variable_get('os2dagsorden_show_bullet_case_nr', FALSE)){
+    $bp = node_load($bp_id);
+    if ($bp->field_os2web_meetings_bul_case['und'])
+      $title .= ' (' . $bp->field_os2web_meetings_bul_case['und'][0]['value'] . ')';
+  }  
+  print $title;
 }
 
 function os2dagsorden_meeting_views_bullet_point_fields_attachments_and_content($meeting_id, $bp_id){
