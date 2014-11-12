@@ -144,7 +144,6 @@ function os2web_pdf_conversion_manager_cron() {
     drupal_flush_all_caches();
     
     drupal_set_message('OS2Web PDF converter has been successfully run');
-    drupal_goto('admin/config/os2web/pdf_converter');
 }
 function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  $converted_files = Array();     

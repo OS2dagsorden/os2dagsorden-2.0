@@ -170,7 +170,7 @@ function os2dagsorden_pdf2htmlex_cron() {
 	  ->condition('progress', 'Converted')
 	  ->range(0,DEFAULT_PDF_HTML_TRANS_LIMIT);
     $result = $query->execute();
-    
+
     while($record = $result->fetchAssoc()) {
 	$destination = node_load($record['did']);
 	

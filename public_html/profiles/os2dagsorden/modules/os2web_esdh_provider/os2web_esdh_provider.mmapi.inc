@@ -101,6 +101,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
   // Ideally $meetings will only have one entry.
   // But can have more if manifest is wrong.
+  if (!$meetings) $meetings = array();
   foreach ($meetings as $meeting) {
      // Meeting already exist.
     // Either republish, delete or skip.

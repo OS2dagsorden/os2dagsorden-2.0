@@ -41,7 +41,6 @@ function os2web_sbsys_esdh_mm_get_import_list() {
     $pub_id = (int) str_replace('Publication', '', $xml_file->name);
     $uris[] = array('id' => $pub_id, 'uri' => $xml_file->uri);
   }
-error_log(print_r($uris, 1));
   return $uris;
 }
 
