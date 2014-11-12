@@ -209,8 +209,8 @@ body{
   .not-front.page-meetings-search.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-bullet-point.toolbar #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : -70px;
+    /*position : absolute;
+    top : -70px;*/
     width: 100%;
   }
   .page-meeting-notes.toolbar #block-views-exp-meetings-search-page,
