@@ -114,7 +114,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       // Republish if current meeting is of type Referat.
       // This means that the one already exist is a Dagsorden.
       else {
-         if (!$last_import_time || filemtime($meeting['path']) < $last_import_time){
+        if (filemtime($meeting['path']) < $node->changed){
           err_debug('Skipping nid: ' . $nid);
           watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
           continue;
