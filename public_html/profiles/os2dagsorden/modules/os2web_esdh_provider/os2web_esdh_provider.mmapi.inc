@@ -485,7 +485,17 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-  $uri_pdf = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.pdf');
+  if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+    $file_counter = 0;
+    do {
+      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+    } while(_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out)));
+  }
+   
+  $new_pinfo = pathinfo($uri_out);
+  $uri_pdf = $pinfo['dirname'] . '/' . $new_pinfo['filename'] . '.pdf';
+
+ //$uri_pdf = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.pdf');
 
   err_debug('Start import file ' . $uri_out . ' ');
 
@@ -686,6 +696,10 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
  *   Sanetized filename with same extension.
  */
 function _os2web_esdh_provider_sanetize_filename($filename) {
+ if (module_exists('transliteration')) {
+  $filename = transliteration_clean_filename($filename);
+  }
+ else {  
   // Replace whitespace.
   // $filename = str_replace(' ', '_', $filename);
   // Remove remaining unsafe characters.
@@ -695,6 +709,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   $filename = preg_replace('/(_)_+|(\.)\.+|(-)-+/', '\\1\\2\\3', $filename);
   // Force lowercase to prevent issues on case-insensitive file systems.
   // $filename = strtolower($filename);
+ }    
   $pi = pathinfo($filename);
   if (isset($pi['extension'])) {
     return substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
@@ -702,6 +717,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   else {
     return substr(trim($pi['filename']), 0, 160);
   }
+  
 }
 
 /**
