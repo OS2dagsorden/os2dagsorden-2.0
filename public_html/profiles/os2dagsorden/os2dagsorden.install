@@ -1,30 +1,122 @@
 <?php
 /**
- * Implement hook_install_tasks().
- *
+ * @file
+ * os2dagsorden.install
  */
-function os2dagsorden_install_tasks($install_state){
-	$tasks = array();
-	$tasks['revert_features'] = array(
-	  'display_name' => st('Revert all features'),
-	  'display' => TRUE,
-	  'type' => 'normal',
-	  'run' => INSTALL_TASK_RUN_IF_REACHED,
-	  'function' => 'os2dagsorden_revert_all_features',
-	);
-	return $tasks;
+
+/**
+ * Implements hook_install_tasks().
+ */
+function os2dagsorden_install_tasks($install_state) {
+
+  $os2dagsorden_configure = variable_get('os2dagsorden_configure', FALSE);
+
+  $tasks = array();
+  $tasks['revert_features'] = array(
+    'display_name' => st('Revert all features'),
+    'display' => TRUE,
+    'type' => 'normal',
+    'run' => INSTALL_TASK_RUN_IF_REACHED,
+    'function' => 'os2dagsorden_revert_all_features',
+  );
+
+  $tasks['os2dagsorden_configure_choose'] = array(
+    'display_name' => st('OS2Dagsorden'),
+    'type' => 'form',
+  );
+
+  $tasks['os2dagsorden_configure_settings'] = array(
+    'display_name' => st('Konfigurer ESDH'),
+    'type' => 'form',
+    'display' => $os2dagsorden_configure,
+    'run' => $os2dagsorden_configure ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+  );
+
+  $tasks['os2dagsorden_settings_settings'] = array(
+    'display_name' => st('Konfigurer OS2dagsorden'),
+    'type' => 'form',
+    'display' => $os2dagsorden_configure,
+    'run' => $os2dagsorden_configure ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+  );
+
+  return $tasks;
 }
 
 /**
  * Task to revert all features.
- *
  */
-function os2dagsorden_revert_all_features(){
+function os2dagsorden_revert_all_features() {
   features_revert();
 }
 
 /**
- * Implement hook_install().
+ * Form callback for configuring ESDH plugin.
+ */
+function os2dagsorden_configure_choose($form, &$form_state) {
+  $avaiable_plugins = array(
+    0 => '-',
+    'os2web_acadre_esdh' => 'Acadre',
+    'os2web_edoc_esdh' => 'eDoc',
+    'os2web_sbsys_esdh' => 'SBSYS',
+  );
+
+  $form['plugin'] = array(
+    '#type' => 'select',
+    '#title' => st('Choose ESDH plugin'),
+    '#options' => $avaiable_plugins,
+  );
+
+  $form['configure'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Configure os2dagsorden now?'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submithandler for configuring ESDH plugin.
+ */
+function os2dagsorden_configure_choose_submit(&$form, &$form_state) {
+  if ($form_state['values']['plugin']) {
+    module_enable(array($form_state['values']['plugin']));
+  }
+  variable_set('os2dagsorden_configure', (bool) $form_state['values']['configure']);
+}
+
+/**
+ * Configure settings callback.
+ */
+function os2dagsorden_configure_settings($form, &$form_state) {
+  require_once drupal_get_path('module', 'os2web_settings') . '/os2web_settings.admin.inc';
+
+  $form = drupal_retrieve_form('os2web_settings_settings_form', $form_state);
+  drupal_prepare_form('os2web_settings_settings_form', $form, $form_state);
+
+  return $form;
+}
+
+/**
+ * Configure form callback.
+ */
+function os2dagsorden_settings_settings($form, &$form_state) {
+  $dir = 'public://os2convert';
+  file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
+
+  require_once drupal_get_path('module', 'os2dagsorden_settings') . '/os2dagsorden_settings.admin.inc';
+
+  $form = drupal_retrieve_form('os2dagsorden_settings_settings_form', $form_state);
+  drupal_prepare_form('os2dagsorden_settings_settings_form', $form, $form_state);
+  return $form;
+}
+
+/**
+ * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
  */
@@ -40,76 +132,76 @@ function os2dagsorden_install() {
 
   // Add text formats.
   $filtered_html_format = array(
-      'format' => 'filtered_html',
-      'name' => 'Filtered HTML',
-      'weight' => 0,
-      'filters' => array(
-          // URL filter.
-          'filter_url' => array('weight' => 0, 'status' => 1,),
-          // HTML filter.
-          'filter_html' => array('weight' => 1, 'status' => 1,),
-          // Line break filter.
-          'filter_autop' => array('weight' => 2, 'status' => 1,),
-          // HTML corrector filter.
-          'filter_htmlcorrector' => array('weight' => 10, 'status' => 1,),
-      ),
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array('weight' => 0, 'status' => 1),
+      // HTML filter.
+      'filter_html' => array('weight' => 1, 'status' => 1),
+      // Line break filter.
+      'filter_autop' => array('weight' => 2, 'status' => 1),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array('weight' => 10, 'status' => 1),
+    ),
   );
   $filtered_html_format = (object) $filtered_html_format;
   filter_format_save($filtered_html_format);
 
   $full_html_format = array(
-      'format' => 'full_html',
-      'name' => 'Full HTML',
-      'weight' => 1,
-      'filters' => array(
-          // URL filter.
-          'filter_url' => array('weight' => 0, 'status' => 1,),
-          // Line break filter.
-          'filter_autop' => array('weight' => 1, 'status' => 1,),
-          // HTML corrector filter.
-          'filter_htmlcorrector' => array('weight' => 10, 'status' => 1,),
-      ),
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array('weight' => 0, 'status' => 1),
+      // Line break filter.
+      'filter_autop' => array('weight' => 1, 'status' => 1),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array('weight' => 10, 'status' => 1),
+    ),
   );
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
 
   theme_enable(array('os2dagsorden_theme'));
   theme_disable(array('bartik'));
-  //turn off notification error messages
+  // Turn off notification error messages.
   variable_set('error_level', ERROR_REPORTING_DISPLAY_SOME);
 
-  //Set current theme
+  // Set current theme.
   variable_set('theme_default', 'os2dagsorden_theme');
-  
-  // Set admin theme to Seven
+
+  // Set admin theme to Seven.
   variable_set('admin_theme', 'seven');
 
   // Set admin theme on node/edit and node/add
   variable_set('node_admin_theme', '0');
   module_disable(array('update'));
-  // Set default TZ
+  // Set default TZ.
   variable_set('date_default_timezone', "Europe/Berlin");
   variable_set('date_first_day', "1");
   variable_set('configurable_timezones', "0");
-  
-  $role = user_role_load_by_name('authenticated user');
-  if($role != false){
-  $roles = array(
-	'create os2web_meetings_spaper content',
-	'delete own os2web_meetings_spaper content',
-	'edit own os2web_meetings_spaper content',
-  );
-  foreach($roles as $name){
-  db_merge('role_permission')->key(array(
-	  'rid' => $role->rid,
-	  'permission' => $name,
-	))->fields(array(
-	  'module' => 'node',
-	))->execute();  
-  }
-  }
-  else{
-	drupal_set_message('"authenticated user" role was not found.', 'error');
-  }
 
+  $role = user_role_load_by_name('authenticated user');
+  if ($role != FALSE) {
+
+    $roles = array(
+      'create os2web_meetings_spaper content',
+      'delete own os2web_meetings_spaper content',
+      'edit own os2web_meetings_spaper content',
+    );
+    foreach ($roles as $name) {
+      db_merge('role_permission')->key(array(
+        'rid' => $role->rid,
+        'permission' => $name,
+      ))->fields(array(
+        'module' => 'node',
+      ))->execute();
+    }
+  }
+  else {
+    drupal_set_message('"authenticated user" role was not found.', 'error');
+  }
 }
