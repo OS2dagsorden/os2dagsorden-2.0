@@ -107,6 +107,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
       $meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
+      $meeting_name = (string) $meeting_name[0];
       $acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
       $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
       
@@ -117,12 +118,14 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $committee = (string) $committee[0][ID];
       $committee_group_id = (string) $committee_group_id[0][ID];
       $committee_name = (string) $committee_name[0];
+      $meeting_name = $committee_name;
       $sys_id = (string) $sys_id[0][ID];
       $meeting_public = (string) $meeting_public[0];
 
       switch (((string) $meeting_type[0])){
         case '0':
           $meeting_type = 'Kladde';
+          watchdog('SBsys MM', 'Ikke importeret: Møde %id %name har typen %type.', array('%id' => $sys_id, '%name' => $meeting_name, '%type' => $meeting_type), WATCHDOG_WARNING);
           return FALSE;
           break;
         case '1':
