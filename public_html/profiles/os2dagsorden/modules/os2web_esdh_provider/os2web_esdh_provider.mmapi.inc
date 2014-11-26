@@ -450,6 +450,9 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
       // If field has a format, you need to define it.
       // Here we define a default filtered_html format for a body field.
       $node->field_os2web_meetings_bpa_body[$node->language][0]['format'] = _os2web_esdh_provider_bpa_body_format();
+      foreach($bullet['images'] as $image){
+        $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) .'" /></div>';
+      }
     }
     $node = node_submit($node);
     node_save($node);

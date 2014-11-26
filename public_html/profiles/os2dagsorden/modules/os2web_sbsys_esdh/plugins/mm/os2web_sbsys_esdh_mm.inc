@@ -331,10 +331,18 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   foreach ($xml_item_bullet->ItemField as $bullet_xml) {
     
     if (((string) $bullet_xml->HasContent) === 'True'){
+      $images = array();
+      foreach ($bullet_xml->Images->Image as $image) {
+        $images[] = array(
+          'name' => (string) $image->InstantiationFileName,
+          'path' => $meeting['uri'] . 'Images/' . ((string) $image->InstantiationFileName),
+        );
+      }
       $item['bullets'][] = array(
         'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
         'body' => (string) $bullet_xml->Content,
         'sysid' => (string) $bullet_xml['ID'],
+        'images' => $images,
       );
     }
   }
