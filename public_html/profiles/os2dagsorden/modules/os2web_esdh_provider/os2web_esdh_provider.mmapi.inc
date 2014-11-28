@@ -334,6 +334,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = null) {
       $node->title = $item['title'];
       node_object_prepare($node);
       $node->field_os2web_meetings_bul_case[LANGUAGE_NONE][0]['value'] = $item['case_nr'];
+      $node->field_os2web_bullet_point_id[$node->language][0]['value'] = $item['sysid'];
     }
 
     if (module_exists('os2dagsorden_esdh_provider')){
@@ -446,6 +447,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
       // Set some default values.
       node_object_prepare($node);
       // Let's add body field.
+      $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] = $bullet['sysid'];
       $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] = $bullet['body'];
       // If field has a format, you need to define it.
       // Here we define a default filtered_html format for a body field.

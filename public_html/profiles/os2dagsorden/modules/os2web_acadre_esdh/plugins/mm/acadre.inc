@@ -290,13 +290,15 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $xml_access = $xml->xpath("fields/field[@name='accessname']");
   $xml_case = $xml->xpath("fields/field[@name='caseno']");
   $xml_case_id = $xml->xpath("table/table/fields/field[@name='sysid']");
-
+  $xml_sysid = $xml->xpath("fields/field[@name='sysid']");
+  
   $id = (int) array_shift($xml_id);
   $name = (string) array_shift($xml_name);
   $access = (string) array_shift($xml_access);
   $case = (string) array_shift($xml_case);
   $case_id = (string) array_shift($xml_case_id);
-
+  $sysid = (int) array_shift($xml_sysid);
+          
   $case_text = '';
   if (isset($case) && isset($case_id)) {
     $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
@@ -304,6 +306,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
 
   $item = array(
     'id' => $id,
+    'sysid' => $sysid,  
     'title' => 'Punkt ' . $id . $case_text . $name,
     'access' => $access,
     'bullets' => array(),
@@ -447,11 +450,13 @@ function _os2web_acadre_esdh_import_bullet($info, $bullet_xml) {
   $xml_title = $bullet_xml->xpath("fields/field[@name='bulletname']");
   $xml_body = $bullet_xml->xpath("fields/field[@name='bulletcontent']");
   $xml_sort = $bullet_xml->xpath("fields/field[@name='bulletsortorder']");
+  $xml_sysid = $bullet_xml->xpath("fields/field[@name='sysid']");
 
   $bullet = array(
     'title' => (string) array_shift($xml_title),
     'body' => (string) array_shift($xml_body),
     'sort' => (int) array_shift($xml_sort),
+    'sysid' => (int) array_shift($xml_sysid),
   );
   if ($bullet['body'] === '') {
     return FALSE;
