@@ -114,7 +114,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       // Republish if current meeting is of type Referat.
       // This means that the one already exist is a Dagsorden.
       else {
-         if (!$last_import_time || filemtime($meeting['path']) < $last_import_time){
+        if (filemtime($meeting['path']) < $node->changed){
           err_debug('Skipping nid: ' . $nid);
           watchdog('acadre MM', 'Meeting already imported in %nid. Skipṕing.', array('%nid' => $nid), WATCHDOG_DEBUG);
           continue;
@@ -450,6 +450,9 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
       // If field has a format, you need to define it.
       // Here we define a default filtered_html format for a body field.
       $node->field_os2web_meetings_bpa_body[$node->language][0]['format'] = _os2web_esdh_provider_bpa_body_format();
+      foreach($bullet['images'] as $image){
+        $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) .'" /></div>';
+      }
     }
     $node = node_submit($node);
     node_save($node);
@@ -485,7 +488,17 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-  $uri_pdf = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.pdf');
+  if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+    $file_counter = 0;
+    do {
+      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+    } while(_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out)));
+  }
+   
+  $new_pinfo = pathinfo($uri_out);
+  $uri_pdf = $pinfo['dirname'] . '/' . $new_pinfo['filename'] . '.pdf';
+
+ //$uri_pdf = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.pdf');
 
   err_debug('Start import file ' . $uri_out . ' ');
 
@@ -686,6 +699,10 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
  *   Sanetized filename with same extension.
  */
 function _os2web_esdh_provider_sanetize_filename($filename) {
+ if (module_exists('transliteration')) {
+  $filename = transliteration_clean_filename($filename);
+  }
+ else {  
   // Replace whitespace.
   // $filename = str_replace(' ', '_', $filename);
   // Remove remaining unsafe characters.
@@ -695,6 +712,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   $filename = preg_replace('/(_)_+|(\.)\.+|(-)-+/', '\\1\\2\\3', $filename);
   // Force lowercase to prevent issues on case-insensitive file systems.
   // $filename = strtolower($filename);
+ }    
   $pi = pathinfo($filename);
   if (isset($pi['extension'])) {
     return substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
@@ -702,6 +720,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   else {
     return substr(trim($pi['filename']), 0, 160);
   }
+  
 }
 
 /**

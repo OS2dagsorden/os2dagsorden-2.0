@@ -31,6 +31,18 @@ function os2dagsorden_meeting_views_common_meeting_has_notes($meeting_id){
     print '<div class="indicator-has-notes"></div>';
 }
 
+function os2dagsorden_meeting_views_common_meeting_is_closed_else_empty($meeting_id){
+  if (os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id))
+    print '<div class="indicator-unlocked"></div>';
+  else
+    print '<div class="indicator-empty"></div>';
+}
+
+function os2dagsorden_meeting_views_common_meeting_is_closed($meeting_id){
+  if (os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id))
+    print '<div class="indicator-unlocked"></div>';
+}
+
 function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   $title = '';
   if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))

@@ -1567,6 +1567,10 @@ a.annotator-wrapper {
   max-width: 425px;
 }
 
+.attachment-text img{
+    max-width: 100%;
+}
+
 .attachment_text_container .attachment_text_full_container, .attachment_text_container .attachment_text_trimmed_container{
   padding: 5px 5px 0  5px;
 }

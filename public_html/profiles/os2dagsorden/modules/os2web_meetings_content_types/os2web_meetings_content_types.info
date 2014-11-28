@@ -128,3 +128,4 @@ features[variable][] = node_submitted_os2web_meeting_search_status
 features[variable][] = node_submitted_os2web_meetings_bullet
 features[variable][] = node_submitted_os2web_meetings_bullet_attach
 features[variable][] = node_submitted_os2web_meetings_spaper
+features[variable][] = piwik_stats_cron_fill

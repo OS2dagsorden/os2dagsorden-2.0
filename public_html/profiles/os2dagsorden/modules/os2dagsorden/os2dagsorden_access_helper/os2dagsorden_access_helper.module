@@ -1035,3 +1035,26 @@ function os2dagsorden_access_helper_node_access($node, $op, $account){
     }
   }
 }
+
+/**
+ * This checks whether a certain meeting has closed bullets poitns. If at least one bullet point is closed, TRUE is returned.
+ *
+ * @param $meeting_nid  int  meeting node id
+ *
+ * @return boolean
+ */
+function os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id){
+  $meeting = node_load($meeting_id);
+  if (isset($meeting->field_os2web_meetings_bullets['und'])) {
+    foreach ($meeting->field_os2web_meetings_bullets['und'] as $bullet_point) {
+      $bp_node = node_load($bullet_point);
+      $is_closed = $bp_node->field_os2web_meetings_bul_closed['und'][0]['value'];
+      $is_personal = $bp_node->field_os2web_meetings_bul_pers['und'][0]['value'];
+
+      if (intval($is_closed) == 1 || intval($is_personal) == 1) { //is closed or personal
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
