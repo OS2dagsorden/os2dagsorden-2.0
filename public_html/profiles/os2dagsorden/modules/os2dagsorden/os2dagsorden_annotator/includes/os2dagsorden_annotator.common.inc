@@ -98,28 +98,32 @@ function os2dagsorden_annotator_get_notes_by_bullet_point_id($bullet_point_id) {
 function os2dagsorden_annotator_get_notes_by_meeting_id($meeting_id) {
     global $user;
     
-    $result = db_select('os2dagsorden_annotator_notes', 'notes')
-	->fields('notes')
-	->condition('uid', $user->uid,'=')
-	->condition('meeting_id', $meeting_id,'=')
-	->execute();
-
-
-    //looping through notes, adding them to array
     $notes = array();
-    while($record = $result->fetchAssoc()) {
-      $note_arr = json_decode($record['note_info']);
+    $possible_meetings = os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_id);
 
-      //adding missing fields
-      $note_arr->id = $record['id'];
-      $note_arr->bilag_id = $record['bilag_id'];
-      $note_arr->bullet_point_id = $record['bullet_point_id'];
-      $note_arr->meeting_id = $record['meeting_id'];
-
-      $note_arr->user = $user->name;
-      $note_arr->permissions = array();
-
-      $notes[] = $note_arr;
+    foreach($possible_meetings as $nid){
+	$result = db_select('os2dagsorden_annotator_notes', 'notes')
+	    ->fields('notes')
+	    ->condition('uid', $user->uid,'=')
+	    ->condition('meeting_id', $nid,'=')
+	    ->execute();
+    
+    
+	//looping through notes, adding them to array
+	while($record = $result->fetchAssoc()) {
+	  $note_arr = json_decode($record['note_info']);
+    
+	  //adding missing fields
+	  $note_arr->id = $record['id'];
+	  $note_arr->bilag_id = $record['bilag_id'];
+	  $note_arr->bullet_point_id = $record['bullet_point_id'];
+	  $note_arr->meeting_id = $meeting_id;//$record['meeting_id'];
+    
+	  $note_arr->user = $user->name;
+	  $note_arr->permissions = array();
+    
+	  $notes[] = $note_arr;
+	}
     }
 
     return $notes;
