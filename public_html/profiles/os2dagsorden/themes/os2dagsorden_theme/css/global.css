@@ -80,11 +80,6 @@ body{
     min-height: 40px;
 }
 
-#region-footer-first{
-    background: url('../img/footer_logo.png') no-repeat center 5px;
-    border-top: 1px solid #e5e5e5;
-}
-
 .zone-branding-wrapper{
     padding: 15px 0 15px 0;
 }
@@ -1731,12 +1726,12 @@ a.annotator-wrapper {
   margin-top: 0;
 }
 /* ---------------------------- Search block END---------------------------- */
+
 /* -- autocomplete input -- */
 #autocomplete {
   background-color: #fff;
   z-index: 900;
 }
-#
 #autocomplete ul{
   padding-left: 0;
   margin-left: 0;
