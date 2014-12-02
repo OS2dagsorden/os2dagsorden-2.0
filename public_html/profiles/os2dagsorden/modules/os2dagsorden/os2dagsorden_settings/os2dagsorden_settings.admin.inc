@@ -371,11 +371,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
          '#sufix' => '</p>',
   );
   $form['os2dagsorden_sidepane_menu_layout']['sipepane_blocks_order'] = array(
-      '#type' => 'link',
-      '#prefix' => '<p>',
-      '#href' => 'admin/structure/context/list/os2dagsorden_sidepane/edit',
-      '#title' => t('Change order of sidepane blocks'),
-       '#sufix' => '</p>',
+    '#type' => 'link',
+    '#prefix' => '<p>',
+    '#href' => 'admin/structure/block',
+    '#title' => t('Change order of sidepane blocks (Sidebar Second)'),
+    '#sufix' => '</p>',
   );
   $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
