@@ -99,7 +99,7 @@ function add_show_hide_menu_behaviour(menu_collapse){
           if(menu_collapse)
                    hide_side_menu();
        jQuery("#show_hide_menu_button").click(function(){
-          if (jQuery("#show_hide_menu_button").val() == "⇐")
+          if (jQuery("#show_hide_menu_button").val() == "⇒")
               hide_side_menu();
           else
               show_side_menu();
@@ -134,7 +134,7 @@ function resize_listener(){
 function hide_side_menu(){
   jQuery(document).ready(function() {
 	jQuery(".region-sidebar-second-inner").hide();
-	jQuery("#show_hide_menu_button").val("⇒");
+	jQuery("#show_hide_menu_button").val("⇐");
 	jQuery("#region-content").removeClass("grid-18");
 	jQuery("#region-content").addClass("grid-24");
   });
@@ -145,7 +145,7 @@ function hide_side_menu(){
  */
 function show_side_menu(){
 	jQuery(".region-sidebar-second-inner").show();
-	jQuery("#show_hide_menu_button").val("⇐");
+	jQuery("#show_hide_menu_button").val("⇒");
 	jQuery("#region-content").removeClass("grid-24");
 	jQuery("#region-content").addClass("grid-18");
 }
