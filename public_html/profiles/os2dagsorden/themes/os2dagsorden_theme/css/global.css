@@ -1619,6 +1619,7 @@ a.annotator-wrapper {
 .bullet-point-attachments #arrow-controls {
     left: 0;
 }
+.view-meetings-search .view-table,
 .bullet-point-attachments .views-table{
   table-layout: fixed;
 }

@@ -9,3 +9,12 @@ div.date-heading h3 a, div.date-heading h3 {
 }
 
 /*---------------------------- Date override END ----------------------------*/
+.view-meetings-search .view-table, th.views-field views-field-php-7 {
+  width: 75px;
+}
+.view-meetings-search .view-table, th.views-field views-field-field-os2web-meetings-date {
+  width: 100px;
+}
+.view-meetings-search .view-table, th.views-field views-field-php-3 {
+  width: 45%;
+}
