@@ -1619,7 +1619,13 @@ a.annotator-wrapper {
 .bullet-point-attachments #arrow-controls {
     left: 0;
 }
+.bullet-point-attachments .views-table{
+  table-layout: fixed;
+}
 
+.bullet-point-attachments .views-table .print-bullet-point-link{
+  width: 1%;
+}
 /* ---------------------------- Pagescroller styles END---------------------------- */
 
 
@@ -1724,3 +1730,13 @@ a.annotator-wrapper {
   margin-top: 0;
 }
 /* ---------------------------- Search block END---------------------------- */
+/* -- autocomplete input -- */
+#autocomplete {
+  background-color: #fff;
+  z-index: 900;
+}
+#
+#autocomplete ul{
+  padding-left: 0;
+  margin-left: 0;
+}
