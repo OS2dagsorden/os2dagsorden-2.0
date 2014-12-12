@@ -80,7 +80,12 @@ function os2dagsorden_admin_suite_menu() {
         'page callback' => 'os2dagsorden_admin_suite_check_dblog',
         'access arguments' => array('administer os2web'),
     );
-    
+    $items['os2dagsorden/admin_suite/add_meeting_files'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_add_meeting_files',
+        'access arguments' => array('administer os2web'),
+        
+    );
     
     return $items;
 }
@@ -645,4 +650,48 @@ function os2dagsorden_admin_suite_check_dblog(){
     watchdog('TEST', 'Unpublished test', WATCHDOG_INFO);
     err_debug('here');
     return 'here';
+}
+
+function os2dagsorden_admin_suite_add_meeting_files(){
+   drupal_load('module', 'os2web_esdh_provider');
+     module_load_include('inc', 'os2web_esdh_provider', 'os2web_esdh_provider.mmapi');
+   foreach (file_scan_directory(variable_get('os2web_sbsys_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
+    $agenda['pub_id'] = (int) str_replace('Publication', '', $xml_file->name);
+    $agenda['uri'] = $xml_file->uri;
+    $agenda['pdf_uri'] = dirname($agenda['uri']) .  "/Publication" . $agenda['pub_id'] . ".pdf";
+   
+    
+   if (is_file(drupal_realpath($agenda['uri']))&& file_exists(drupal_realpath($agenda['pdf_uri']))) {
+       $manifest = simplexml_load_string(file_get_contents(drupal_realpath($agenda['uri'])), 'SimpleXMLElement', LIBXML_NOCDATA); 
+       if (is_object($manifest)) {
+           $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
+           $committee_name = $manifest->xpath("Agendas/Agenda/Committee/Name");
+           $agenda['sys_id'] = (string) $sys_id[0][ID];
+           $agenda['committee'] = (string) $committee_name[0];
+           // Run check to see if meeting is already imported.
+      // System ID is the same on all meetings.
+       
+          $query = new EntityFieldQuery();
+          $result = $query->entityCondition('entity_type', 'node')
+        ->propertyCondition('type', 'os2web_meetings_meeting')
+        ->fieldCondition('field_os2web_meetings_system_id', 'value', $agenda['sys_id'], '=')
+        ->execute();
+          
+      if (isset($result['node'])) {
+        $nid = array_shift($result['node'])->nid;
+        $meeting = node_load($nid);
+        if (empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
+           
+           if (FALSE !== ($file = _os2web_esdh_provider_import_file(array('uri' => $agenda['pdf_uri'], 'title' => $agenda['committee'])))) {
+                
+               $meeting->field_os2web_meetings_full_doc[LANGUAGE_NONE][0] = (array) $file;
+                $meeting = node_submit($meeting);
+                 node_save($meeting);
+            }
+        }  
+      }
+    }
+  }
+      
+ }
 }

@@ -119,8 +119,8 @@ function os2dagsorden_meeting_views_meeting_description_download(){
      $meeting = node_load($meeting_id);
     
   //opened version - if not empty
-  if (!empty($meeting->field_meeting_description['und'][0]['uri'])){
-      echo '<a target="_blank" href="' . file_create_url($meeting->field_meeting_description['und'][0]['uri']) . 
+  if (!empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
+      echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) . 
       '" ><span class="print-meeting-link">Samlet dokument</span> </a>';
   }
 	else 

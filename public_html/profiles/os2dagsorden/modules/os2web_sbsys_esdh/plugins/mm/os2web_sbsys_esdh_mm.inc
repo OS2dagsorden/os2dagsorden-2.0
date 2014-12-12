@@ -145,6 +145,9 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $acadre_version = (string) $acadre_version[0][ID];
 
       $directory_name = dirname(drupal_realpath($file));
+      $dir_parts = explode('/',$directory_name);     
+      $pdf = array_pop($dir_parts).".pdf";
+     
       // Check if the committee is allowed to publish.
       $publish_committee = array_map('trim', explode(',', variable_get('os2web_sbsys_esdh_approved_committees', MM_DEFAULT_APPROVED)));
       if ($committee == '' || !in_array($committee, $publish_committee)) {
@@ -190,6 +193,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'title' => $meeting_name,
         'uri' => strstr($file , $meeting_uri, TRUE),
         'path' => drupal_realpath($file),
+        'pdf' => $pdf,  
         'type' => $meeting_type,
         'meeting_date_start' => $meeting_date_when,
         'meeting_date_finish' => $meeting_date_until,
@@ -198,7 +202,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'participants' => $participants,
         'participants_cancellation' => $participants_cancellation,
       );
-
+     // var_dump($meeting);
       /*stan@bellcom.dk 06.10 - importing multiple agendas*/
       $meeting_agendas = array();
       foreach($manifest->xpath("/Publication/Agendas/Agenda") as $agenda_instance){
@@ -215,7 +219,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       }
       
       $meeting_pdf = $manifest->xpath('/Meeting/MeetingAgendaTypes/MeetingAgendaType/PDFDocument');
-      $meeting['pdf'] = (string) $meeting_pdf[0];
+      if(!empty($meeting_pdf))
+         $meeting['pdf'] = (string) $meeting_pdf[0];
       $meeting['state'] = (string) $meeting_state[0];
       if (empty($meeting_agendas)) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
@@ -233,7 +238,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
-  return $meetings;
+  
+ return $meetings;
 }
 
 /**
@@ -252,12 +258,13 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $meeting['items'] = array();
   $agenda = $meeting;
   // Only add the agenda if its PDF exists.
+
   if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
 // There were no SBSYS meeting with meeting description, therefore disabled.  
-//     $agenda['full_doc'] = array(
-//       'uri' => $meeting['uri'] . $meeting['pdf'],
-//       'title' => $meeting['committee'],
-//     );
+    $agenda['full_doc'] = array(
+     'uri' => $meeting['uri'] . $meeting['pdf'],
+     'title' => $meeting['committee'],
+    );
     // Import all agenda items.
     $agenda_bullet = $agenda_xml;
     $meeting['current_item_nr'] = 1;
@@ -338,9 +345,10 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
           'path' => $meeting['uri'] . 'Images/' . ((string) $image->InstantiationFileName),
         );
       }
+      $body = _os2web_sbsys_esdh_mm_improve_html((string) $bullet_xml->Content, $meeting['uri'] . 'Images/');
       $item['bullets'][] = array(
         'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
-        'body' => (string) $bullet_xml->Content,
+        'body' => $body ,//(string) $bullet_xml->Content,
         'sysid' => (string) $bullet_xml['ID'],
         'images' => $images,
       );
@@ -562,4 +570,23 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
   }
   $debug && error_log('MM Import - End of addendums - ' . timer_read('_os2web_sbsys_esdh_mm_order_addenums') . 'ms - ' . memory_get_usage());
   lock_release(__FUNCTION__);
+}
+
+function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
+  
+    preg_match_all('/src="([^"]+)"/',$html, $matches);
+    
+    foreach($matches[1] as $path) {
+        $image_path = array_pop(glob(drupal_realpath($image_folder_uri . basename($path) . ".*"))) ;
+        $image_uri = file_create_url( $image_folder_uri . basename($image_path ));
+        if (!empty($image_path)){
+           $html = str_replace( $path, file_create_url($image_uri), $html);        
+        }
+       else {
+         $html = str_replace( $path, "", $html);   
+        }
+        
+    }
+  $html = preg_replace('/<img([^>]+)src=""([^>]*)>/', "", $html);
+  return $html;
 }
