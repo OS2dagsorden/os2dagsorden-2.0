@@ -98,6 +98,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_latest_meetings_view_mode'] = variable_get('os2dagsorden_latest_meetings_view_mode', 'all');
     $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_committee'] = variable_get('os2dagsorden_meetings_views_last_8_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_location'] = variable_get('os2dagsorden_meetings_views_last_8_show_meeting_location', TRUE);
+    $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_is_closed'] = variable_get('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', FALSE);
 
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu'] = variable_get('os2dagsorden_collapse_menu', TRUE);
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = variable_get('os2dagsorden_show_search_block_title', 'true');
@@ -106,6 +107,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate'] = variable_get('os2dagsorden_search_startdate', 1);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate'] = variable_get('os2dagsorden_search_enddate', 1);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_meeting_is_closed'] = variable_get('os2dagsorden_search_meeting_is_closed', FALSE);
   
     $setting_array['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee'] = variable_get('os2dagsorden_budget_committee', FALSE);
 

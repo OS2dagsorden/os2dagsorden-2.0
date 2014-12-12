@@ -1307,7 +1307,8 @@ div.speaker-paper-all-print{
     top: 5px;
 }
 
-.view-display-id-attachment_print_all_speaker_papers{
+.view-display-id-attachment_print_all_speaker_papers,
+.view-display-id-attachment_print_all_speaker_papers_tillaeg {
     position: absolute;
     right: 5px;
 }

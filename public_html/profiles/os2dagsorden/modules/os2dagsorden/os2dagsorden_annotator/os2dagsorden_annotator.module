@@ -220,13 +220,22 @@ function _os2dagsorden_annotator_delete($id) {
  */
 function _os2dagsorden_annotator_search() {
     global $user;
-    
+
+    $possible_meetings = os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($_GET['meeting_id']);
+    $main_meeting = os2dagsorden_access_helper_get_main_meeting($_GET['meeting_id']);
+    if ($main_meeting) $possible_meetings[] = $main_meeting;
+
+    $meeting_nid_or = db_or();
+    foreach($possible_meetings as $meeting_id){
+	$meeting_nid_or->condition('meeting_id', $meeting_id,'=');
+    }
     $result = db_select('os2dagsorden_annotator_notes', 'notes')
 	->fields('notes')
 	->condition('uid', $user->uid,'=')
 	->condition('bilag_id', $_GET['bilag_id'],'=')
 	->condition('bullet_point_id', $_GET['bullet_point_id'],'=')
-	->condition('meeting_id', $_GET['meeting_id'],'=')
+	//->condition('meeting_id', $meeting_id,'=')
+	->condition($meeting_nid_or)
 	->execute();
 
     //start of json
@@ -581,58 +590,64 @@ function _os2dagsorden_annotator_meeting_all_notes_view($meeting_id){
 	      
     $html .= '<div id="content" class="view-content">';
     
-    $meeting = node_load($meeting_id);
-    if (isset($meeting->field_os2web_meetings_bullets['und'])) {	
-	//eliminating duplicates in bullet points
-	foreach($meeting->field_os2web_meetings_bullets['und'] as $bullet_point){
-	  $hash = $bullet_point['target_id'];
-	  $bullet_points[$hash] = $bullet_point;
-	}
+    $potential_meetings = os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_id);
     
-        foreach ($bullet_points as $bullet_point) {
-	    $bullet_point = node_load($bullet_point['target_id']);
-            if (isset($bullet_point->field_os2web_meetings_attach['und'])){
-	      //eliminating duplicates in bullet points attachments
-	      $attachments = array();
-	      foreach ($bullet_point->field_os2web_meetings_attach['und'] as $attachment_id){
-		$hash = $attachment_id['target_id'];
-		$attachments[$hash] = $attachment_id;
-	      }
-	
-	      foreach ($attachments as $attachment_id){
-		  $bilag = node_load($attachment_id['target_id']);
-		  
-		  //getting annotations from storage
-		  $annotations = os2dagsorden_annotator_get_notes_by_attachment_id($bilag->nid);
-
-		  //initiating variabes
-		  $annotation_list = '';//in a nice print format
-		  $note_nr = 1;//used for enumerating
-		  
-		 
-		  while (!empty($annotations)) {
-		      //flushing array indexing
-		      $annotations = array_values($annotations);
-
-		      $first_note_ind = 0;
-		      for ($i = 1; $i < count($annotations); $i++) {
-			  if ($annotations[$i]->ranges[0]->startOffset < $annotations[$first_note_ind]->ranges[0]->startOffset)
-			      $first_note_ind = $i;
-		      }
-		      $annotation_list .= _os2dagsorden_annotator_append_note($annotations[$first_note_ind], $note_nr, true, 
-					  '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point->nid . '/bullet-point-attachment/' . $bilag->nid);
-		      $note_nr++;
-
-		      unset($annotations[$first_note_ind]);
-		  }
-		  
-		  if (!empty($annotation_list)){
-		    $html .= '<h3>' . $bilag->title . ': [' . $bullet_point->title . ']</h3>';
-		    $html .= $annotation_list . "<br/>";
-		  }
-	      }
+    foreach($potential_meetings as $meeting_id){
+	$meeting = node_load($meeting_id);
+	$bullet_points = array();
+	if (isset($meeting->field_os2web_meetings_bullets['und'])) {	
+	    //eliminating duplicates in bullet points
+	    foreach($meeting->field_os2web_meetings_bullets['und'] as $bullet_point){
+	      $hash = $bullet_point['target_id'];
+	      $bullet_points[$hash] = $bullet_point;
 	    }
-        }
+	
+	    foreach ($bullet_points as $bullet_point) {
+		$bullet_point = node_load($bullet_point['target_id']);
+		if (isset($bullet_point->field_os2web_meetings_attach['und'])){
+		  //eliminating duplicates in bullet points attachments
+		  $attachments = array();
+		  foreach ($bullet_point->field_os2web_meetings_attach['und'] as $attachment_id){
+		    $hash = $attachment_id['target_id'];
+		    $attachments[$hash] = $attachment_id;
+		  }
+	    
+		  foreach ($attachments as $attachment_id){
+		      $bilag = node_load($attachment_id['target_id']);
+		      
+		      //getting annotations from storage
+		      $annotations = os2dagsorden_annotator_get_notes_by_attachment_id($bilag->nid);
+    
+		      //initiating variabes
+		      $annotation_list = '';//in a nice print format
+		      $note_nr = 1;//used for enumerating
+		      
+		     
+		      while (!empty($annotations)) {
+			  //flushing array indexing
+			  $annotations = array_values($annotations);
+    
+			  $first_note_ind = 0;
+			  for ($i = 1; $i < count($annotations); $i++) {
+			      if ($annotations[$i]->ranges[0]->startOffset < $annotations[$first_note_ind]->ranges[0]->startOffset)
+				  $first_note_ind = $i;
+			  }
+			  $annotation_list .= _os2dagsorden_annotator_append_note($annotations[$first_note_ind], $note_nr, true, 
+					      '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point->nid . '/bullet-point-attachment/' . $bilag->nid);
+			  $note_nr++;
+    
+			  unset($annotations[$first_note_ind]);
+		      }
+
+		      if (!empty($annotation_list)){
+			$html .= '<h3>' . $bilag->title . ': [' . $bullet_point->title . ']</h3>';
+			$html .= $annotation_list . "<br/>";
+		      }
+		  }
+		}
+	    }
+
+	}
     }
     
     

@@ -1,0 +1,210 @@
+<?php
+
+/**
+ * os2dagsorden_annotator_notes_migrate
+ *
+ * PHP version 5
+ * 	
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Annotator Note Migrate
+ * @author   Juulia Devadze <juulia@bellcom.ee>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+function os2dagsorden_annotator_notes_migrate_menu() {
+    $items = array();
+    $items['os2dagsorden/notes/export'] = array(
+        'page callback' => 'os2dagsorden_annotator_notes_migrate_export',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
+    $items['os2dagsorden/notes/import'] = array(
+        'page callback' => 'os2dagsorden_annotator_notes_migrate_import',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
+    $items['admin/config/os2web/notes_migrate'] = array(
+        'title' => 'Annotation notes migration',
+        'access arguments' => array('administer os2web'),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('os2dagsorden_annotator_notes_migrate_form'),
+        'type' => MENU_LOCAL_TASK,
+        'position' => 'left',
+        'weight' => -150,
+    );
+    return $items;
+}
+
+function os2dagsorden_annotator_notes_migrate_form($form, $form_state) {
+    $form['os2dagsorden_notes_migrate'] ['export'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+        '#title' => t('Os2dagsorden  annotation notes export'),
+    );
+    $form['os2dagsorden_notes_migrate']['export'] [] = array(
+        '#markup' => '<div><a href="/os2dagsorden/notes/export">Export annotation notes</a></div>',
+    );
+    $form['os2dagsorden_notes_migrate'] ['import'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+        '#title' => t('Os2dagsorden  annotation notes import'),
+    );
+    $form['os2dagsorden_notes_migrate']['import']['os2dagsorden_notes_migrate_notes_file'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Path to XML file'),
+        '#default_value' => variable_get('os2dagsorden_notes_migrate_notes_file', 'public://os2dagsorden_notes/notes.xml'),
+        '#description' => t('Relative path for XML file'),
+    );
+
+    $form['os2dagsorden_notes_migrate']['import']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Import settings from file'),
+        '#submit' => array('os2dagsorden_annotator_notes_migrate_import'),
+    );
+
+    return system_settings_form($form);
+}
+
+function os2dagsorden_annotator_notes_migrate_export() {
+
+    $result = db_select('os2dagsorden_annotator_notes', 'notes')
+            ->fields('notes')
+            ->execute();
+
+
+    $notes = array();
+    while ($record = $result->fetchAssoc()) {
+        $meeting = node_load($record["meeting_id"]);
+        $bulletPoint = node_load($record["bullet_point_id"]);
+        $bpa = node_load($record["bilag_id"]);
+        $meeting_id = $meeting->field_os2web_meetings_id["und"][0]["value"];
+        $user = user_load($record["uid"]);
+
+        $notes[$meeting_id]["bullets"]
+                [$bulletPoint->nid]["sysid"] = $bulletPoint->field_os2web_bullet_point_id["und"][0]["value"];
+        $notes[$meeting_id]["bullets"]
+                [$bulletPoint->nid]["attachments"][$bpa->nid]["sysid"] = $bpa->field_os2web_meetings_bpa_id["und"][0]["value"];
+        $notes[$meeting_id]["bullets"]
+                [$bulletPoint->nid]["attachments"][$bpa->nid]["notes"][] = array("note_info" => $record["note_info"], "user" => $user->name);
+    }
+
+
+    $xml = os2dagsorden_annotator_notes_migrate_create_xml($notes);
+    header("Content-Type: application/force-download; name=\"notes.xml");
+    header("Content-type: text/xml");
+    header("Content-Transfer-Encoding: binary");
+    header("Content-Disposition: attachment; filename=\"notes.xml");
+    header("Expires: 0");
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Pragma: no-cache");
+    echo $xml->asXML();
+}
+
+function os2dagsorden_annotator_notes_migrate_import($form, &$form_state) {
+
+
+    $data = simplexml_load_file(drupal_realpath(variable_get('os2dagsorden_notes_file', 'public://os2dagsorden_notes/notes.xml')));
+    if (is_object($data)) {
+        $items_xml = $data->xpath("meeting");
+    } else {
+        drupal_set_message(t('Wrong XML file format'), 'error');
+    }
+
+    foreach ($items_xml as $meeting) {
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node')
+                ->entityCondition('bundle', 'os2web_meetings_meeting')
+                ->fieldCondition('field_os2web_meetings_id', 'value', (string) $meeting->sysid[0], '=');
+        $result = $query->execute();
+
+        if ($result['node']) {
+            $meeting_id = array_keys($result['node']);
+
+            $nodes = node_load_multiple($meeting_id);
+
+            $bullet_points_nids = array();
+            foreach ($nodes as $nid => $node) {
+                foreach ($node->field_os2web_meetings_bullets['und'] as $value)
+                    $bullet_points_nids[$node->nid][] = (int) $value['target_id'];
+            }
+
+            foreach ($meeting->bullet as $bullet_point) {
+                $query = new EntityFieldQuery();
+
+                $query->entityCondition('entity_type', 'node')
+                        ->entityCondition('bundle', 'os2web_meetings_bullet')
+                        ->fieldCondition('field_os2web_bullet_point_id', 'value', (int) $bullet_point->sysid[0], '=');
+
+                $result = $query->execute();
+
+                if ($result['node']) {
+                    $bullet_id = array_shift(array_keys($result['node']));
+
+                    foreach ($bullet_points_nids as $id => $values) {
+                        if (in_array($bullet_id, $values)) {
+                            $current_meeting_id = $id;
+                        }
+                    }
+
+                    $bp_node = node_load($bullet_id);
+
+                    foreach ($bullet_point->bullet_point_attachment as $bpa) {
+                        $query = new EntityFieldQuery();
+                        $query->entityCondition('entity_type', 'node')
+                                ->entityCondition('bundle', 'os2web_meetings_bullet_attach')
+                                ->fieldCondition('field_os2web_meetings_bpa_id', 'value', (int) $bpa->sysid[0], '=');
+                        $result = $query->execute();
+                        if ($result['node']) {
+                            $bpa_id = array_shift(array_keys($result['node']));
+                            // var_dump($bpa);
+                            foreach ($bpa->note as $note) {
+                                $note_info = (string) $note->note_info[0];
+                                $user = user_load_by_name((string) $note->user[0]);
+
+                                $last_ins_id = db_insert('os2dagsorden_annotator_notes')
+                                        ->fields(array(
+                                            'bilag_id' => $bpa_id,
+                                            'bullet_point_id' => $bullet_id,
+                                            'meeting_id' => $current_meeting_id,
+                                            'uid' => $user->uid,
+                                            'note_info' => $note_info,
+                                        ))
+                                        ->execute();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    drupal_set_message(t('Notes imported succesefully'), 'status');
+}
+
+function os2dagsorden_annotator_notes_migrate_create_xml($data, $rootNodeName = 'data', $xml = null) {
+    if ($xml == null) {
+        $xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$rootNodeName />");
+    }
+    foreach ($data as $meeting_id => $meeting) {
+        $agenda = $xml->addChild("meeting");
+        $agenda->addChild('sysid', $meeting_id);
+        foreach ($meeting["bullets"] as $key => $bullet) {
+            $bp = $agenda->addChild("bullet");
+            $bp->addChild('sysid', $bullet['sysid']);
+            foreach ($bullet["attachments"] as $bpa_id => $bullet_point_attachmnet) {
+                $bpa = $bp->addChild("bullet_point_attachment");
+                $bpa->addChild('sysid', $bullet_point_attachmnet['sysid']);
+                foreach ($bullet_point_attachmnet['notes'] as $values) {
+                    $note = $bpa->addChild("note");
+                    $note->addChild('note_info', $values['note_info']);
+                    $note->addChild('user', $values['user']);
+                }
+            }
+        }
+    }
+    return $xml;
+}
+
+?>

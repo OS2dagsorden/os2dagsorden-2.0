@@ -23,6 +23,7 @@ features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
 features[field][] = node-os2web_meeting_search_status-body
 features[field][] = node-os2web_meetings_bullet-body
+features[field][] = node-os2web_meetings_bullet-field_os2web_bullet_point_id
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_attach
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_case
 features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_closed

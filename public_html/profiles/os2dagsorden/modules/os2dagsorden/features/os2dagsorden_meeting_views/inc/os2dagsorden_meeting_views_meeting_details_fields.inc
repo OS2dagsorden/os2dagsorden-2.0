@@ -588,3 +588,9 @@ function os2dagsorden_meeting_views_meeting_details_lukket_dagsorden_access(){
   }
 }
 /////////////////////////////////////////LUKKET DAGSORDEN fields END /////////////////////////////////////////
+
+/////////////////////////////////////////TILLAEGS DAGSORDEN fields START /////////////////////////////////////////
+function os2dagsorden_meeting_views_meeting_details_fields_tilleags_dagsorden_header(){
+  print '<h3>' . 'Tillægs ' . variable_get('os2dagsorden_title_meeting_agenda', 'Dagsorden:') . '</h3>';
+}
+/////////////////////////////////////////TILLAEGS DAGSORDEN fields START /////////////////////////////////////////

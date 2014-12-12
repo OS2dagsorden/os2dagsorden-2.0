@@ -149,6 +149,7 @@ function ldap_servers_test_form_submit($form, &$form_state) {
 
   // connect to ldap
   // $ldap_server = NULL;
+  drupal_set_message($bindpw);
   list($has_errors, $more_results) = ldap_servers_test_binding_credentials($ldap_server, $bindpw);
   $results = array_merge($results, $more_results);
   if ($ldap_server->bind_method ==  LDAP_SERVERS_BIND_METHOD_ANON_USER) {

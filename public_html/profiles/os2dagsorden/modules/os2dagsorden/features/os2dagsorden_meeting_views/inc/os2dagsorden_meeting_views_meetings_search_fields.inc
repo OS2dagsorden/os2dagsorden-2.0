@@ -96,6 +96,11 @@ function os2dagsorden_meeting_views_meetings_search_fields_meeting_has_notes($me
     print '<div class="indicator-empty"></div>';
 }
 
+function os2dagsorden_meeting_views_meetings_search_fields_meeting_is_closed($meeting_id){
+  if (variable_get('os2dagsorden_search_meeting_is_closed', FALSE))
+    os2dagsorden_meeting_views_common_meeting_is_closed_else_empty($meeting_id);
+}
+
 function os2dagsorden_meeting_views_meetings_search_fields_meeting_title($data){
   os2dagsorden_meeting_views_common_meeting_title_listed($data);
 }

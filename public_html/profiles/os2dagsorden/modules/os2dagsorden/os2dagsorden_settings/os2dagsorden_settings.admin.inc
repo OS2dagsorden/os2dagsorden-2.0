@@ -276,6 +276,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a meeting location is visible on latest 8 meetings/upcoming meetings view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_show_meeting_location', TRUE),
   );
+  $form['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_is_closed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show closed indicator on latest 8 meetings/upcoming meetings view'),
+    '#description' => t('This decides whether a closed indicator will be shown next to meeting if meeting has at least one bullet that is closed'),
+    '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', FALSE),
+  );
+  
   // frontpage layout settings
   $form['os2dagsorden_frontpage_layout'] = array(
     '#type' => 'fieldset',
@@ -340,6 +347,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This sets the default search end date for meeting search'),
     '#options' => $month_choise,
     '#default_value' => variable_get('os2dagsorden_search_enddate', 1),
+  );
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_meeting_is_closed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show closed indicator on meetings search view'),
+    '#description' => t('This decides whether a closed indicator will be shown next to meeting if meeting has at least one bullet that is closed'),
+    '#default_value' => variable_get('os2dagsorden_search_meeting_is_closed', FALSE),
   );
 
   // sidemenu layout settings
@@ -1084,6 +1097,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_latest_meetings_view_mode', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_latest_meetings_view_mode']);
     variable_set('os2dagsorden_meetings_views_last_8_show_meeting_committee', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_views_last_8_show_meeting_location', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_location']);
+    variable_set('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_is_closed']);
 
     variable_set('os2dagsorden_collapse_menu', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu']);
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
@@ -1092,6 +1106,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
     variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
     variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
+    variable_set('os2dagsorden_search_meeting_is_closed', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_meeting_is_closed']);
 
     variable_set('os2dagsorden_budget_committee', $setting_array['os2dagsorden_sidepane_menu_layout']['os2dagsorden_budget_committee']);
 

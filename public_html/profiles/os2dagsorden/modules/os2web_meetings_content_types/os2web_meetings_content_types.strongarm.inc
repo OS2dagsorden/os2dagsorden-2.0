@@ -194,7 +194,7 @@ function os2web_meetings_content_types_strongarm() {
     'extra_fields' => array(
       'form' => array(
         'title' => array(
-          'weight' => '3',
+          'weight' => '4',
         ),
         'path' => array(
           'weight' => '7',
@@ -469,6 +469,6 @@ function os2web_meetings_content_types_strongarm() {
   $strongarm->name = 'piwik_stats_cron_fill';
   $strongarm->value = '0';
   $export['piwik_stats_cron_fill'] = $strongarm;
-
+  
   return $export;
 }
