@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * This file includes all hooks to proper set up profile during install
