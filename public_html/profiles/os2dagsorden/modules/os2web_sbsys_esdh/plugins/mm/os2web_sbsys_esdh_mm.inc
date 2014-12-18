@@ -257,14 +257,15 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
 function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $meeting['items'] = array();
   $agenda = $meeting;
-  // Only add the agenda if its PDF exists.
-
-  if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
+ 
+  if (file_exists(drupal_realpath($meeting['uri']))) {
 // There were no SBSYS meeting with meeting description, therefore disabled.  
+   if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {   
     $agenda['full_doc'] = array(
      'uri' => $meeting['uri'] . $meeting['pdf'],
      'title' => $meeting['committee'],
     );
+   } 
     // Import all agenda items.
     $agenda_bullet = $agenda_xml;
     $meeting['current_item_nr'] = 1;
