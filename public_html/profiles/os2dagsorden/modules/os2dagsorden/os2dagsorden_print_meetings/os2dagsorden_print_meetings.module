@@ -265,6 +265,7 @@ function os2dagsorden_print_meetings_generate_month_headers($from_month, $to_mon
  */
 function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $meetings) {
     global $base_url;
+print_r('her');
     $html = "<tr>";
     for ($month = $from_month; $month <= $to_month; $month++) {
         $html .= "<td width='16.6%' class='no-pad valign_top'>";
@@ -286,8 +287,8 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
 			 $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
                     else
 			 $title = $met->title;
-                    
-                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
+
+                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, ';    
                 }
             }
             //end of content

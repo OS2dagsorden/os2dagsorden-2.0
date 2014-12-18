@@ -2404,86 +2404,6 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
-  // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_hex'.
-  $fields['node-os2web_meetings_meeting-field_os2web_meetings_hex'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_hex',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '6',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_meeting',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '9',
-        ),
-        'os2web_meetings_meeting_detail_view' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '10',
-        ),
-        'related_block' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_os2web_meetings_hex',
-      'label' => 'HEXColor',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'size' => '60',
-        ),
-        'type' => 'text_textfield',
-        'weight' => '10',
-      ),
-    ),
-  );
-
   // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_id'.
   $fields['node-os2web_meetings_meeting-field_os2web_meetings_id'] = array(
     'field_config' => array(
@@ -3611,7 +3531,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -3674,7 +3594,61 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '6',
+        'weight' => '7',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_color'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_color'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_color',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(),
+      'locked' => '0',
+      'module' => 'jquery_colorpicker',
+      'settings' => array(),
+      'translatable' => '0',
+      'type' => 'jquery_colorpicker',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => array(
+        0 => array(
+          'jquery_colorpicker' => '000000',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'jquery_colorpicker',
+          'settings' => array(),
+          'type' => 'jquery_colorpicker_color_display',
+          'weight' => 8,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_color',
+      'label' => 'Color',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'jquery_colorpicker',
+        'settings' => array(),
+        'type' => 'jquery_colorpicker',
+        'weight' => '4',
       ),
     ),
   );
@@ -3737,7 +3711,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -3793,7 +3767,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '2',
+        'weight' => '3',
       ),
     ),
   );
@@ -3849,7 +3823,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '1',
+        'weight' => '2',
       ),
     ),
   );
@@ -3927,7 +3901,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'year_range' => '-3:+3',
         ),
         'type' => 'date_select',
-        'weight' => '7',
+        'weight' => '8',
       ),
     ),
   );
@@ -4008,7 +3982,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => '8',
+        'weight' => '9',
       ),
     ),
   );
@@ -4024,6 +3998,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Case nr');
   t('Category');
   t('Closed');
+  t('Color');
   t('Comments');
   t('Committee');
   t('Committee Sub ID');
@@ -4035,7 +4010,6 @@ function os2web_meetings_content_types_field_default_fields() {
   t('File HTML');
   t('Full doc');
   t('Full doc closed');
-  t('HEXColor');
   t('HTML File Page Amount');
   t('Hvis den taksonomi der bruges findes i en drop down list kan der angives en ekstern url som åbnes i stedet.');
   t('ID');
