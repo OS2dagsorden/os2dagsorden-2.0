@@ -140,6 +140,8 @@ function os2dagsorden_settings_export_to_file(){
 
     $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
     $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+    $conf = ultimate_cron_get_settings("os2dagsorden_acadre_service_importer_cron");
+    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_acadre_service_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
     $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
     $setting_array['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
     $conf = ultimate_cron_get_settings("os2dagsorden_pdf2htmlex_cron");
@@ -152,6 +154,11 @@ function os2dagsorden_settings_export_to_file(){
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetings_url'] = variable_get('os2dagsorden_pws_v_meetings_url');
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url'] = variable_get('os2dagsorden_pws_v_meetinggroups_url');
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = variable_get('os2dagsorden_pws_v_acadregroups_url');
+    }
+
+    if (module_exists('os2dagsorden_acadre_service_importer')){
+        $setting_array['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_meetings_url'] = variable_get('os2dagsorden_acadre_service_meetings_url');
+        $setting_array['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_committees_url'] = variable_get('os2dagsorden_acadre_service_committees_url');
     }
 
     $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text'] = variable_get('os2dagsorden_upcoming_meetings_help_text', 'Her vises de kommende 5 møder i "Mine udvalg". Det vil sige udvalg som man enten er medlem af eller følger. Udvalgene kan ses i boksene "Medlem af" og "Jeg følger" i højremenuen. Der er ikke en dagsorden tilgængelig før status er angivet til Dagsorden eller Dagsorden+.');

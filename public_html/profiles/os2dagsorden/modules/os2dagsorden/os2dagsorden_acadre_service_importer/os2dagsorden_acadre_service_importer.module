@@ -1,0 +1,72 @@
+<?php
+/**
+ * os2dagsorden_importer
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_acadre_service_importer
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+//define('DEFAULT_ACADRE_VIEWS_IMPORT_DIR', 'public://acadre_views');
+module_load_include('inc', 'os2dagsorden_acadre_service_importer', '/includes/os2dagsorden_acadre_service_importer_committees');
+module_load_include('inc', 'os2dagsorden_acadre_service_importer', '/includes/os2dagsorden_acadre_service_importer_meetings');
+
+/**
+ * Implementation of hook_menu().
+ *
+ * @return array of links.
+ */
+function os2dagsorden_acadre_service_importer_menu() {
+    $items = array();
+
+    $items['os2dagsorden/sync'] = array(
+        'page callback' => 'os2dagsorden_acadre_service_importer_sync',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
+   
+    return $items;
+}
+
+function os2dagsorden_acadre_service_importer_sync(){
+    os2dagsorden_acadre_service_importer_import_committees();
+    os2dagsorden_acadre_service_importer_import_meetings();
+}
+
+function os2dagsorden_acadre_service_importer_cron(){
+    os2dagsorden_acadre_service_importer_import_committees();
+    os2dagsorden_acadre_service_importer_import_meetings();
+}
+
+/**
+ * Call back function to start processing committees import.
+ *
+ * @return none
+ */
+function os2dagsorden_acadre_service_importer_import_committees(){
+    $url = curl_init(variable_get('os2dagsorden_acadre_service_committees_url'));
+
+    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+    $committees_raw = curl_exec($url);
+    $committees = new SimpleXMLElement($committees_raw);
+
+    _os2dagsorden_acadre_service_importer_process_committees($committees);
+}
+
+/**
+ * Imports the meetings from the remotely located xml view.
+ *
+ * @return none
+ */
+function os2dagsorden_acadre_service_importer_import_meetings() {
+    $url = curl_init(variable_get('os2dagsorden_acadre_service_meetings_url'));
+
+    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+    $meetings_raw = curl_exec($url);
+    $meetings = new SimpleXMLElement($meetings_raw);
+
+    _os2dagsorden_acadre_service_importer_process_meetings($meetings);
+}

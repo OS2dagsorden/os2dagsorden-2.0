@@ -59,7 +59,6 @@ features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_partic
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_particcanl
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_piwik
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_searchdata
-features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_sofd_id
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_status
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_sub_id
 features[field][] = node-os2web_meetings_meeting-field_os2web_meetings_system_id

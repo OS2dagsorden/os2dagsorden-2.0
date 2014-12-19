@@ -2954,68 +2954,6 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
-  // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_sofd_id'.
-  $fields['node-os2web_meetings_meeting-field_os2web_meetings_sofd_id'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_sofd_id',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'locked' => '0',
-      'module' => 'number',
-      'settings' => array(),
-      'translatable' => '0',
-      'type' => 'number_integer',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_meeting',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'number',
-          'settings' => array(
-            'decimal_separator' => '.',
-            'prefix_suffix' => TRUE,
-            'scale' => 0,
-            'thousand_separator' => ' ',
-          ),
-          'type' => 'number_integer',
-          'weight' => 28,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_os2web_meetings_sofd_id',
-      'label' => 'Meeting SOFD ID',
-      'required' => 0,
-      'settings' => array(
-        'max' => '',
-        'min' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'number',
-        'settings' => array(),
-        'type' => 'number',
-        'weight' => '3',
-      ),
-    ),
-  );
-
   // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_status'.
   $fields['node-os2web_meetings_meeting-field_os2web_meetings_status'] = array(
     'field_config' => array(
@@ -3780,6 +3718,9 @@ function os2web_meetings_content_types_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_os2web_meetings_commiteeid',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
       'foreign keys' => array(),
       'indexes' => array(),
       'locked' => '0',
@@ -3810,7 +3751,7 @@ function os2web_meetings_content_types_field_default_fields() {
       'entity_type' => 'taxonomy_term',
       'field_name' => 'field_os2web_meetings_commiteeid',
       'label' => 'ID',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'max' => '',
         'min' => '',
@@ -4015,7 +3956,6 @@ function os2web_meetings_content_types_field_default_fields() {
   t('ID');
   t('Lokation');
   t('Meeting ID');
-  t('Meeting SOFD ID');
   t('Meeting sub ID');
   t('Name short');
   t('Number');
