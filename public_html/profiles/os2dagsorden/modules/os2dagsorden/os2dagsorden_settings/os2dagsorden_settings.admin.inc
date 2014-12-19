@@ -371,11 +371,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
          '#sufix' => '</p>',
   );
   $form['os2dagsorden_sidepane_menu_layout']['sipepane_blocks_order'] = array(
-      '#type' => 'link',
-      '#prefix' => '<p>',
-      '#href' => 'admin/structure/context/list/os2dagsorden_sidepane/edit',
-      '#title' => t('Change order of sidepane blocks'),
-       '#sufix' => '</p>',
+    '#type' => 'link',
+    '#prefix' => '<p>',
+    '#href' => 'admin/structure/block',
+    '#title' => t('Change order of sidepane blocks (Sidebar Second)'),
+    '#sufix' => '</p>',
   );
   $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
@@ -839,8 +839,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_all_meetings'] = array(
       '#type' => 'textfield',
-      '#default_value' => variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 møder i alle udvalg'),
-      '#title' => t('View: Seneste 8 møder i alle udvalg'),
+      '#default_value' => variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste møder i alle udvalg'),
+      '#title' => t('View: Seneste møder i alle udvalg'),
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_calendar'] = array(
       '#type' => 'textfield',
