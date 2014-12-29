@@ -277,7 +277,7 @@ function os2dagsorden_theme_menu_local_task($variables) {
   $href = explode('/', $link['href']);
   $node = node_load($href[1]);
   
-  if ($link['path'] === 'node/%/edit' && $node->type !== 'page')//disabling edit tab, if only node type is not page
+  if ($link['path'] === 'node/%/edit' && $node->type !== 'os2web_page')//disabling edit tab, if only node type is not page
     return '';
   else if ($link['path'] === 'node/%/view')//disabling view tab
     return '';
