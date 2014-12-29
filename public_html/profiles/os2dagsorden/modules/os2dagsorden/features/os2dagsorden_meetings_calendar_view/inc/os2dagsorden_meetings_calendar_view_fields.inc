@@ -72,7 +72,7 @@ function os2dagsorden_meetings_calendar_view_fields_day_date_contextual_filter()
 /////////////////////////////////////////block START/////////////////////////////////////////
 function os2dagsorden_meetings_calendar_view_fields_block_date_contextual_filter(){
   $q = $_GET['q'];
-
+  
   if (strrpos($q, 'calendar-field-date/day/') > -1 && strlen($q) > strlen('calendar-field-date/day/'))
     return substr($q, strrpos($q,'day/')+4, 7);
   else 
