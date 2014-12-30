@@ -86,7 +86,12 @@ function os2dagsorden_admin_suite_menu() {
         'access arguments' => array('administer os2web'),
         
     );
-    
+     $items['os2dagsorden/admin_suite/update_meetings_type'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_update_meetings_type',
+        'access arguments' => array('administer os2web'),
+        
+    );
     return $items;
 }
 
@@ -694,4 +699,19 @@ function os2dagsorden_admin_suite_add_meeting_files(){
   }
       
  }
+}
+function os2dagsorden_admin_suite_update_meetings_type(){
+  $nodes = entity_load('node', FALSE, array('type' => 'os2web_meetings_meeting'));
+    foreach ($nodes as $node){
+        if (os2dagsorden_access_helper_meeting_fully_converted($node)){
+	    if (strcmp($node->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0){
+                  $node->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
+            }    
+	    else if (strcmp($node->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0){
+                  $node->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
+            }
+	    node_submit($node);
+	    node_save($node);
+	}
+    }
 }
