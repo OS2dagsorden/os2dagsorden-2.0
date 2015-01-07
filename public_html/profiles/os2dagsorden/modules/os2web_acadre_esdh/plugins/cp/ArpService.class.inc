@@ -66,11 +66,17 @@ class TraenPublishingDestinationSystemService {
 
   // *********** PUBLIC API ***************//
 
+  /**
+   * Todo, add docblock.
+   */
   public function RecievedEntityLayout($data) {
     error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $data = ' . print_r($data, 1));
     return FALSE;
   }
 
+  /**
+   * Todo, add docblock.
+   */
   public function RecievedItemUnPublished($data) {
     $success = FALSE;
     if (isset($data->entityItem->Key->Field->Value)) {
@@ -82,6 +88,9 @@ class TraenPublishingDestinationSystemService {
     return array('RecievedItemUnPublishedResult' => (bool) $success);
   }
 
+  /**
+   * Todo, add docblock.
+   */
   public function RecievedConfiguration($data) {
     // Function used to handle the configuration.
     $function = 'os2web_cp_service_alter_configuration';
@@ -95,6 +104,9 @@ class TraenPublishingDestinationSystemService {
     return array('RecievedConfigurationResult' => TRUE);
   }
 
+  /**
+   * Todo, add docblock.
+   */
   public function RecievedItemPublished($data) {
     switch (strtolower($data->entityItem->EntityName)) {
       case 'sag':
@@ -153,6 +165,9 @@ class TraenPublishingDestinationSystemService {
     }
   }
 
+  /**
+   * Todo, add docblock.
+   */
   public function __call($name, $arguments) {
     watchdog('os2web_acadre_esdh', 'Unsupported request recieved: %req', array('%req' => $name), WATCHDOG_NOTICE);
     error_log(basename(__FILE__) . ':' . __LINE__ . " Unsupported request recieved: $name");

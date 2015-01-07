@@ -30,9 +30,7 @@ function os2web_acadre_esdh_cp_handle_request() {
     return os2web_acadre_esdh_cp_handle_request();
   }
 
-  global $HTTP_RAW_POST_DATA;
-  $data = $HTTP_RAW_POST_DATA;
-  file_unmanaged_save_data($data, 'public://soap/request-' . time() . '-' . uniqid() . '.xml', FILE_EXISTS_REPLACE);
+  file_unmanaged_save_data('php://public', 'public://soap/request-' . time() . '-' . uniqid() . '.xml', FILE_EXISTS_REPLACE);
 
   ini_set("soap.wsdl_cache_enabled", "1");
   $server = new SoapServer('http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . '/' . request_path() . '/?wsdl', array());
