@@ -242,46 +242,46 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  }
 }
 function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
-    $convertion_dir_path = drupal_realpath(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR));
-    if (file_exists($convertion_dir_path)===FALSE) {
-       watchdog('os2web pdf conversion manager:', 'Folder %uri is not created', array('%uri' => variable_get('os2web_convertion_dir',OS2WEB_CONVERTION_DIR)), WATCHDOG_WARNING);
-       return;
-    }
-    $file = file_load($fid);
-    $filename = $file->uri;    
-    $filename_parts = pathinfo($filename);
-    //tmp_file name is needed to avoid rewriting the files from different meetings, which might have the same name
-    $tmp_filename = md5(md5_file(drupal_realpath($filename)) . $filename_parts['basename']) . '.' . $filename_parts['extension'];
-    $type_arr = explode(',', variable_get('os2web_copied_filetype',OS2WEB_COPIED_FILETYPE));
-    $pdf_path = $filename_parts['dirname'] . '/' . $filename_parts['filename'] . '.PDF';
+  $convertion_dir_path = drupal_realpath(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR));
+  if (file_exists($convertion_dir_path)===FALSE) {
+    watchdog('os2web pdf conversion manager:', 'Folder %uri is not created', array('%uri' => variable_get('os2web_convertion_dir',OS2WEB_CONVERTION_DIR)), WATCHDOG_WARNING);
+    return;
+  }
+  $file = file_load($fid);
+  $filename = $file->uri;    
+  $filename_parts = pathinfo($filename);
+  // Tmp_file name is needed to avoid rewriting the files from different meetings, which might have the same name.
+  $tmp_filename = md5(md5_file(drupal_realpath($filename)) . $filename_parts['basename']) . '.' . $filename_parts['extension'];
+  $type_arr = explode(',', variable_get('os2web_copied_filetype',OS2WEB_COPIED_FILETYPE));
+  $pdf_path = $filename_parts['dirname'] . '/' . $filename_parts['filename'] . '.PDF';
 
-    if (_os2web_pdf_conversion_manager_similar_file_exists(drupal_realpath($pdf_path)))
-        return;
+  if (_os2web_pdf_conversion_manager_similar_file_exists(drupal_realpath($pdf_path)))
+    return;
 
-    if (in_array(strtolower($filename_parts['extension']), array_map('strtolower', $type_arr))) {
-        copy(drupal_realpath($filename), $convertion_dir_path . '/' . $tmp_filename);
-        $file_exists = db_query('SELECT f.fid
-             FROM {os2web_pdf_conversion_manager_files} f
-             WHERE f.fid = :fid', array(':fid' => $fid))
-                ->fetchField();
-        if ($file_exists) {
-            db_update('os2web_pdf_conversion_manager_files')
-                    ->fields(array(
-                        'filename' => $filename_parts['basename'],
-                        'tmp_filename' => $tmp_filename))
-                    ->condition('fid', $fid)
-                    ->execute();
-        } else {
-            db_insert('os2web_pdf_conversion_manager_files')
-                    ->fields(array(
-                        'fid' => $fid,
-                        'filename' => $filename_parts['basename'],
-                        'tmp_filename' => $tmp_filename,
-                        'status' => 'Scheduled',
-                        'attempt' => 0))
-                    ->execute();
-        }
+  if (in_array(strtolower($filename_parts['extension']), array_map('strtolower', $type_arr))) {
+    copy(drupal_realpath($filename), $convertion_dir_path . '/' . $tmp_filename);
+    $file_exists = db_query('SELECT f.fid
+      FROM {os2web_pdf_conversion_manager_files} f
+      WHERE f.fid = :fid', array(':fid' => $fid))
+      ->fetchField();
+    if ($file_exists) {
+      db_update('os2web_pdf_conversion_manager_files')
+        ->fields(array(
+          'filename' => $filename_parts['basename'],
+          'tmp_filename' => $tmp_filename))
+        ->condition('fid', $fid)
+        ->execute();
+    } else {
+        db_insert('os2web_pdf_conversion_manager_files')
+          ->fields(array(
+            'fid' => $fid,
+            'filename' => $filename_parts['basename'],
+            'tmp_filename' => $tmp_filename,
+            'status' => 'Scheduled',
+            'attempt' => 0))
+          ->execute();
     }
+  }
 }
 
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Implements pluginable interface for accessing ESDH systems.
@@ -49,6 +48,7 @@ function os2web_esdh_provider_menu() {
     'access callback' => TRUE,
     'file' => 'os2web_esdh_provider.cpapi.inc',
   );
+
   return $items;
 }
 
@@ -57,12 +57,48 @@ function os2web_esdh_provider_menu() {
  */
 function os2web_esdh_provider_form_os2web_settings_settings_form_alter(&$form, &$form_state) {
   // MM configuration.
-  $form['meetings']['os2web_meetings_import_service_ip'] = array(
+  $form['os2web_mm']['os2web_meetings_import_service_ip'] = array(
     '#type' => 'textfield',
-    '#title' => 'IP addresser der kan udløse import',
-    '#description' => 'Komma separeret liste af ip-addresser der kan tilgå <em>admin/os2web/import/<ID></em>.',
+    '#title' => t('IP addresses which is able to trigger import'),
+    '#description' => t('Comma separated list of IP addresses that can access <em>admin/os2web/import/<ID></em>.'),
     '#default_value' => variable_get('os2web_meetings_import_service_ip', ip_address()),
   );
+
+  // Enable external queue import.
+  $form['os2web_mm']['os2web_esdh_provider_queue_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable external queue import'),
+    '#default_value' => variable_get('os2web_esdh_provider_queue_enabled', FALSE),
+  );
+
+  // Enable unpublishing meetings without manifests.
+  $form['os2web_mm']['os2web_meetings_unpublish_without_manifest'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Unpublish meeting nodes, that have no manifest.'),
+    '#description' => t('This is currently only tested on meetings imported with the acadre plugin'),
+    '#default_value' => variable_get('os2web_meetings_unpublish_without_manifest', FALSE),
+  );
+
+  $form['os2web_mm_clear_queue'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Clear MM Import Systemtable'),
+    '#description' => t('This will delete info about manifest and timestamp. Next cron will create all entries again and create meetings, if they not exists. Use this option, if you need to reimport all meetings again or similar. <strong>This will not force create already existing meetings</strong>'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['os2web_mm_clear_queue']['clear'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clear MM Import Systemtable'),
+    '#submit' => array('os2web_esdh_provider_clear_mm_import_table_submit'),
+  );
+}
+
+/**
+ * Form submission handler for clear_mm_import_table().
+ */
+function os2web_esdh_provider_clear_mm_import_table_submit() {
+  db_truncate('os2web_esdh_provider_import')->execute();
+  drupal_set_message(t('MM Import Systemtable cleared.'));
 }
 
 /**
@@ -144,7 +180,7 @@ function os2web_esdh_provider_node_delete($node) {
         node_delete($add_node->nid);
       }
     }
-    //Delete bullets from meeting.
+    // Delete bullets from meeting.
     $items = array_shift($node->field_os2web_meetings_bullets);
     if (is_array($items)) {
       foreach ($items as $nids) {
@@ -169,21 +205,64 @@ function os2web_esdh_provider_node_delete($node) {
  * Will run import on every cron.
  */
 function os2web_esdh_provider_cron() {
+  if (variable_get('os2web_esdh_provider_queue_enabled', FALSE)) {
+    return;
+  }
+
+  os2web_esdh_provider_queue_meetings();
+}
+
+/**
+ * Worker function that queues meetings for external import.
+ */
+function os2web_esdh_provider_queue_meetings() {
   if (os2web_esdh_provider_has_api('mm')) {
-    $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
     $queue = DrupalQueue::get('acadre_mm_import');
     if ($queue->numberOfItems() == 0) {
-
+      $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
       $current_timestamp = time();
-      $last_mm_import_time = variable_get('os2web_esdh_provider_last_mm_import', FALSE);
 
+      // New Import QUEUE.
+      $imported_meetings = array();
+      $query = db_select('os2web_esdh_provider_import', 'i')->fields('i');
+      $results = $query->execute();
+      if ($results) {
+        while ($result = $results->fetchAssoc()) {
+          $imported_meetings[$result['filename']] = $result['changed'];
+        }
+      }
+
+      // Do the magic in a queue.
       foreach ($meetings as $meeting) {
-        // Only import files newer than last cron job.
-        if (!$last_mm_import_time || filemtime($meeting['uri']) > $last_mm_import_time) {
+        $filename = basename($meeting['uri']);
+        $changed = filemtime($meeting['uri']);
+        $import = FALSE;
+        if (isset($imported_meetings[$filename])) {
+          if ($imported_meetings[$filename] != $changed) {
+            $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
+            db_update('os2web_esdh_provider_import')
+              ->fields(array(
+                'changed' => filemtime($meeting['uri']),
+              ))
+              ->condition('filename', basename($meeting['uri']), '=')
+              ->execute();
+          }
+        }
+        else {
           $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
+          db_insert('os2web_esdh_provider_import')
+            ->fields(array(
+              'filename' => basename($meeting['uri']),
+              'changed' => filemtime($meeting['uri']),
+            ))
+            ->execute();
         }
       }
       $queue->createItem(array('post_import_process' => TRUE));
+
+      if (variable_get('os2web_meetings_unpublish_without_manifest', FALSE)) {
+        $queue->createItem(array('unpublish_without_manifest' => TRUE, 'meetings' => $meetings));
+      }
       variable_set('os2web_esdh_provider_last_mm_import', $current_timestamp);
     }
   }
@@ -193,6 +272,12 @@ function os2web_esdh_provider_cron() {
  * Implements hook_cron_queue_info().
  */
 function os2web_esdh_provider_cron_queue_info() {
+  // If the external queue handler is enabled, don't let
+  // drupals cron import the meetings.
+  if (variable_get('os2web_esdh_provider_queue_enabled', FALSE)) {
+    return array();
+  }
+
   $queues['acadre_mm_import'] = array(
     'worker callback' => '_os2web_esdh_provider_cron_queue_worker',
     'time' => 30,
@@ -215,6 +300,10 @@ function _os2web_esdh_provider_cron_queue_worker($args) {
           $args['post_import_process'] === TRUE &&
           os2web_esdh_provider_supports('mm', 'post_import_process')) {
     os2web_esdh_provider_invoke('mm', 'post_import_process');
+  }
+  elseif (isset($args['unpublish_without_manifest'])
+    && $args['unpublish_without_manifest'] === TRUE) {
+    os2web_esdh_provider_unpublish_process($args['meetings']);
   }
 }
 
@@ -242,7 +331,7 @@ function os2web_esdh_provider_has_api($api) {
     if (isset($info['required methods'])) {
       foreach ($info['required methods'] as $method) {
         if (!os2web_esdh_provider_supports($api, $method)) {
-          watchdog('esdh provider', 'Incomplete API found during check: %api', array('%api' => $api), WATCHDOG_ERROR);
+          watchdog('esdh provider', 'Incomplete API found during check: %api - method: %method', array('%api' => $api, '%method' => $method), WATCHDOG_ERROR);
           return FALSE;
         }
       }
@@ -311,6 +400,58 @@ function os2web_esdh_provider_invoke() {
       '%method' => $method,
       '%api' => $api,
         ), WATCHDOG_ERROR);
+  }
+}
+
+/**
+ * Unpublish meetings without a manifest.
+ */
+function os2web_esdh_provider_unpublish_process($meetings) {
+  $meeting_ids = array();
+
+  foreach ($meetings as $meeting) {
+    $meeting_ids[] = $meeting['id'];
+  }
+
+  // Due to the fact that the systemid is not always the number of the meeting,
+  // This is only tested and working on acadre meetings.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'os2web_meetings_meeting')
+        ->propertyCondition('status', 1);
+  if (!empty($meeting_ids)) {
+    $query->fieldCondition('field_os2web_meetings_system_id', 'value', $meeting_ids, 'NOT IN');
+  }
+  // If the meeting_ids array is empty, there are no manifests at all, in this
+  // case unpublish all meetings with a system_id (these should be the ones
+  // imported).
+  else {
+    $query->fieldCondition('field_os2web_meetings_system_id', 'value', 'NULL', '!=');
+  }
+  $result = $query->execute();
+
+  if (isset($result['node'])) {
+    foreach ($result['node'] as $meeting_info) {
+      os2web_esdh_provider_unpublish_meeting($meeting_info->nid);
+    }
+  }
+}
+
+/**
+ * Unpublish meeting by nid.
+ */
+function os2web_esdh_provider_unpublish_meeting($nid) {
+  // Load, unpublish and save meeting node.
+  try {
+    $meeting = node_load($nid);
+    node_unpublish_action($meeting);
+    node_save($meeting);
+  }
+  catch (Exception $e) {
+    watchdog('esdh_provider', 'Could not unpublish meeting %nid, %err', array(
+        '%nid' => $nid,
+        '%err' => $e->getMessage(),
+      ), WATCHDOG_ERROR);
   }
 }
 
@@ -420,6 +561,9 @@ function os2web_esdh_provider_default_bullet() {
   );
 }
 
+/**
+ * Todo, add docblock here.
+ */
 function os2web_esdh_provider_prod_check_alter(&$checks) {
   $checks['os2web'] = array(
     'title' => 'OS2Web',
@@ -432,6 +576,9 @@ function os2web_esdh_provider_prod_check_alter(&$checks) {
   );
 }
 
+/**
+ * Todo, add docblock here.
+ */
 function _os2web_esdh_provider_import_check($caller = 'internal') {
   $last_import = variable_get('os2web_esdh_provider_last_import', 0);
   $last_import_hr = format_date($last_import);
@@ -462,6 +609,9 @@ function _os2web_esdh_provider_import_check($caller = 'internal') {
   return prod_check_execute_check($check, $caller);
 }
 
+/**
+ * Todo, add docblock here.
+ */
 function _os2web_esdh_provider_pws_check($caller = 'internal') {
   $status = os2web_esdh_provider_has_api('cm');
   if ($status) {
@@ -484,6 +634,9 @@ function _os2web_esdh_provider_pws_check($caller = 'internal') {
   return prod_check_execute_check($check, $caller);
 }
 
+/**
+ * Todo, add docblock here.
+ */
 function _os2web_esdh_provider_adlib_check($caller = 'internal') {
   $status = FALSE;
   $severity = ($caller == 'nagios') ? NAGIOS_STATUS_CRITICAL : PROD_CHECK_REQUIREMENT_ERROR;
@@ -518,8 +671,8 @@ function _os2web_esdh_provider_adlib_check($caller = 'internal') {
     '#severity' => $severity,
     '#value_ok' => t('Connected'),
     '#value_nok' => t('Disconnected'),
-    '#description_ok' => t($msg, array('%jobs' => $jobs)),
-    '#description_nok' => t($msg),
+    '#description_ok' => format_string($msg, array('%jobs' => $jobs)),
+    '#description_nok' => format_string($msg),
     '#nagios_key' => 'OS2',
     '#nagios_type' => 'state',
   );
@@ -541,7 +694,6 @@ function o2web_esdh_provider_help($path, $arg) {
  * Implements hook_os2web_help().
  */
 function o2web_esdh_provider_os2web_help($sections) {
-
   // Module specific.
   $sections['list_of_content'] .= t('<a href="#os2web_esdh_provider">OS2web ESDH Provider</a><br />');
   $sections['o2web_esdh_provider'] = t('<h2 id="os2web_esdh_provider">The ESDH Provider:</h2>');
@@ -557,37 +709,36 @@ function o2web_esdh_provider_os2web_help($sections) {
 /**
  * Implements hook_watchdog().
  */
-function os2web_esdh_provider_watchdog(array $log_entry) {  
-    if ($log_entry['severity']==0){
-      _os2web_esdh_provider_send_fatalerrormail($log_entry['message']);
-    }
-   
+function os2web_esdh_provider_watchdog(array $log_entry) {
+  if ($log_entry['severity'] == 0) {
+    _os2web_esdh_provider_send_fatalerrormail($log_entry['message']);
+  }
 }
 
-/* send error mail to site admin */
+/**
+ * Send error mail to site admin.
+ */
 function _os2web_esdh_provider_send_fatalerrormail($message) {
-      // Set up the mail body.
-    $mail_body = t('MM Import') . "\n";
-   
-    $mail_body .= t('Time spend') . ": " . number_format(timer_read('mm_import') / 1000, 2) . "sec.\n";
-    $mail_body .= t('Messages') . ":\n\n !message\n";
+  // Set up the mail body.
+  $mail_body = t('MM Import') . "\n";
+  $mail_body .= t('Time spend') . ": " . number_format(timer_read('mm_import') / 1000, 2) . "sec.\n";
+  $mail_body .= t('Messages') . ":\n\n !message\n";
 
-    $from = variable_get('site_mail', '');
-    $my_module = 'os2web_esdh_provider';
-    $my_mail_token = 'mm_import_status';
-    $message = array(
-      'id' => $my_module . '_' . $my_mail_token,
-      'to' => variable_get('site_mail', ''),
-      'subject' => t('MM Import error'),
-      'body' => format_string($mail_body, array('!message' => check_plain($message))),
-      'headers' => array(
-        'From' => $from,
-        'Sender' => $from,
-        'Return-Path' => $from,
-      ),
-    );
-    // Send mail.
-    
-    $mail_system = drupal_mail_system($my_module, $my_mail_token);
-    return $mail_system->mail($message);
-  }
+  $from = variable_get('site_mail', '');
+  $my_module = 'os2web_esdh_provider';
+  $my_mail_token = 'mm_import_status';
+  $message = array(
+    'id' => $my_module . '_' . $my_mail_token,
+    'to' => variable_get('site_mail', ''),
+    'subject' => t('MM Import error'),
+    'body' => format_string($mail_body, array('!message' => check_plain($message))),
+    'headers' => array(
+      'From' => $from,
+      'Sender' => $from,
+      'Return-Path' => $from,
+    ),
+  );
+  // Send mail.
+  $mail_system = drupal_mail_system($my_module, $my_mail_token);
+  return $mail_system->mail($message);
+}

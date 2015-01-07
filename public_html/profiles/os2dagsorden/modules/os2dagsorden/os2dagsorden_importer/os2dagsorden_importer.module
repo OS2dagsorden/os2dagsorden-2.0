@@ -111,27 +111,34 @@ function os2dagsorden_importer_import_user_committees_improved(){
  * @return none
  */
 function os2dagsorden_importer_import_user_committees() {
-   $userCommittees=  os2dagsorden_importer_load_user_committees_from_xml(); 
-   _os2dagsorden_importer_process_user_committees($userCommittees);
+  $userCommittees = os2dagsorden_importer_load_user_committees_from_xml(); 
+  _os2dagsorden_importer_process_user_committees($userCommittees);
 }
 
 function os2dagsorden_importer_load_user_committees_from_xml(){
-    if (!variable_get('os2dagsorden_pws_use_local_copy')){
-      $url = curl_init(variable_get('os2dagsorden_pws_v_meetinggroups_url'));
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+    $url = curl_init(variable_get('os2dagsorden_pws_v_meetinggroups_url'));
 
-      if (variable_get('os2web_pws_proxy')) {
-	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
-	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
-	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-      }
-
-      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
-      $userCommittees_raw = curl_exec($url);
-      $userCommittees = new SimpleXMLElement($userCommittees_raw);
-    } else {
-      $userCommittees = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_MeetingGroups.xml');
+    if (variable_get('os2web_pws_proxy')) {
+	    curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	    curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	    curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
     }
-    return $userCommittees;
+
+    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+    $userCommittees_raw = curl_exec($url);
+    if ($userCommittees_raw) {
+      $userCommittees = new SimpleXMLElement($userCommittees_raw);
+    }
+    else {
+      error_log("No XML returned - os2dagsorden_importer_load_user_committees_from_xml");
+      return false;
+    }
+  }
+  else {
+    $userCommittees = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_MeetingGroups.xml');
+  }
+  return $userCommittees;
 }
 
 /**
@@ -140,22 +147,28 @@ function os2dagsorden_importer_load_user_committees_from_xml(){
  * @return none
  */
 function os2dagsorden_importer_import_committees() {
-    if (!variable_get('os2dagsorden_pws_use_local_copy')){
-      $url = curl_init(variable_get('os2dagsorden_pws_v_acadregroups_url'));
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+    $url = curl_init(variable_get('os2dagsorden_pws_v_acadregroups_url'));
 
-      if (variable_get('os2web_pws_proxy')) {
-	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
-	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
-	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-      }
-
-      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
-      $acadreGroups_raw = curl_exec($url);
-      $acadreGroups = new SimpleXMLElement($acadreGroups_raw);
-    } else {
-      $acadreGroups = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_AcadreGroups.xml');
+    if (variable_get('os2web_pws_proxy')) {
+      curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	    curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	    curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
     }
-      _os2dagsorden_importer_process_committees($acadreGroups);
+
+    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+    $acadreGroups_raw = curl_exec($url);
+    if ($acadreGroups_raw) {
+      $acadreGroups = new SimpleXMLElement($acadreGroups_raw);
+    }else{
+      error_log("No XML returned - os2dagsorden_importer_import_committees");
+      return false;
+    }
+  }
+  else {
+    $acadreGroups = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_AcadreGroups.xml');
+  }
+  _os2dagsorden_importer_process_committees($acadreGroups);
 }
 
 /**
@@ -164,30 +177,41 @@ function os2dagsorden_importer_import_committees() {
  * @return none
  */
 function os2dagsorden_importer_import_meetings() {
-    if (!variable_get('os2dagsorden_pws_use_local_copy')){
-      $url = curl_init(variable_get('os2dagsorden_pws_v_meetings_url'));
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+    $url = curl_init(variable_get('os2dagsorden_pws_v_meetings_url'));
 
-      if (variable_get('os2web_pws_proxy')) {
-	  curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
-	  curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
-	  curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
-      }
-      curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
-      $meetings_raw = curl_exec($url);
-      $meetings = new SimpleXMLElement($meetings_raw);
-    } else {
-      $meetings = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_Meetings.xml');
+    if (variable_get('os2web_pws_proxy')) {
+	    curl_setopt($url, CURLOPT_PROXY, variable_get('os2web_pws_proxy_host'));
+	    curl_setopt($url, CURLOPT_PROXYPORT, variable_get('os2web_pws_proxy_port'));
+	    curl_setopt($url, CURLOPT_HTTPPROXYTUNNEL, TRUE);
     }
-    _os2dagsorden_importer_process_meetings($meetings);
+    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+    $meetings_raw = curl_exec($url);
+    if ($meetings_raw) {
+      $meetings = new SimpleXMLElement($meetings_raw);
+    }
+    else {
+      error_log("No XML returned - os2dagsorden_importer_import_meetings");
+      return false;
+    }
+  }
+  else {
+    $meetings = simplexml_load_file(DEFAULT_ACADRE_VIEWS_IMPORT_DIR . '/V_web_Meetings.xml');
+  }
+  _os2dagsorden_importer_process_meetings($meetings);
 }
 
 function _os2dagsorden_importer_process_user_committees($xml_file){
-  _os2dagsorden_importer_process_user_committees_update($xml_file);  
+  if ($xml_file) {
+    _os2dagsorden_importer_process_user_committees_update($xml_file);  
+  }
 }
 
 function _os2dagsorden_importer_process_user_committees_improved($xml_file){
-  _os2dagsorden_importer_process_user_committees_update($xml_file);  
-  _os2dagsorden_importer_process_user_committees_delete($xml_file);
+  if ($xml_file) {
+    _os2dagsorden_importer_process_user_committees_update($xml_file);  
+    _os2dagsorden_importer_process_user_committees_delete($xml_file);
+  }
 }
 
 /**
