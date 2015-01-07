@@ -8,8 +8,8 @@ publishing service. Uses Adlib service to convert files to pdf.
 
 Dependencies
 -----------
-- os2web_adlib_api
 - ctools
+- features
 
 Configuration
 -----------
