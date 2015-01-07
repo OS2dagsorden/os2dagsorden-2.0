@@ -371,11 +371,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
          '#sufix' => '</p>',
   );
   $form['os2dagsorden_sidepane_menu_layout']['sipepane_blocks_order'] = array(
-      '#type' => 'link',
-      '#prefix' => '<p>',
-      '#href' => 'admin/structure/context/list/os2dagsorden_sidepane/edit',
-      '#title' => t('Change order of sidepane blocks'),
-       '#sufix' => '</p>',
+    '#type' => 'link',
+    '#prefix' => '<p>',
+    '#href' => 'admin/structure/block',
+    '#title' => t('Change order of sidepane blocks (Sidebar Second)'),
+    '#sufix' => '</p>',
   );
   $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
@@ -602,18 +602,35 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '0 */5 * * *' => 'Every 5 hours',
     '0 */10 * * *' => 'Every 10 hours',
   );
-  $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
-  $form['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = array(
-    '#type' => 'select',
-    '#options' => $options,
-    '#default_value' => isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE),
-    '#title' => t('Frequency of SOFD import cron job'),
-  );
-  $form['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron_button'] = array(
-    '#type' => 'button',
-    '#value' => t('Run now'),
-    '#attributes' => array('onclick' => 'location.href="/admin/ultimate-cron/service/start/os2dagsorden_importer_cron?destination=/admin/config/os2dagsorden/settings"; return false;'),
-  );
+  if (module_exists('os2dagsorden_importer')){
+    $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
+    $form['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = array(
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE),
+      '#title' => t('Frequency of SOFD import cron job'),
+    );
+    $form['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron_button'] = array(
+      '#type' => 'button',
+      '#value' => t('Run now'),
+      '#attributes' => array('onclick' => 'location.href="/admin/ultimate-cron/service/start/os2dagsorden_importer_cron?destination=/admin/config/os2dagsorden/settings"; return false;'),
+    );
+  }
+  if (module_exists('os2dagsorden_acadre_service_importer')){
+    $conf = ultimate_cron_get_settings('os2dagsorden_acadre_service_importer_cron');
+    $form['os2dagsorden_cron_job_freq']['os2dagsorden_acadre_service_importer_cron'] = array(
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE),
+      '#title' => t('Frequency of Acadre Service import cron job'),
+    );
+    $form['os2dagsorden_cron_job_freq']['os2dagsorden_acadre_service_importer_cron_button'] = array(
+      '#type' => 'button',
+      '#value' => t('Run now'),
+      '#attributes' => array('onclick' => 'location.href="/admin/ultimate-cron/service/start/os2dagsorden_acadre_service_importer_cron?destination=/admin/config/os2dagsorden/settings"; return false;'),
+    );
+  }
+  
   $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
   $form['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron'] = array(
     '#type' => 'select',
@@ -690,6 +707,30 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#maxlength' => 256,
       '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
       '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    );
+  }
+
+  // Acadre service importer
+  if (module_exists('os2dagsorden_acadre_service_importer')){
+    $form['os2dagsorden_acadre_service_importer_placeholder'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => t('Acadre Service importer Integration settings'),
+    );
+    $form['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_meetings_url'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_acadre_service_meetings_url'),
+      '#title' => t('Meeting (planned meetings) view url:'),
+      '#maxlength' => 256,
+      //'#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    );
+    $form['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_committees_url'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_acadre_service_committees_url'),
+      '#title' => t('Committees url:'),
+      '#maxlength' => 256,
+      //'#element_validate' => array('_os2dagsorden_url_responce_validate'),
     );
   }
 
@@ -798,8 +839,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_last_8_all_meetings'] = array(
       '#type' => 'textfield',
-      '#default_value' => variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste 8 møder i alle udvalg'),
-      '#title' => t('View: Seneste 8 møder i alle udvalg'),
+      '#default_value' => variable_get('os2dagsorden_title_frontpage_last_8_all_meetings', 'Seneste møder i alle udvalg'),
+      '#title' => t('View: Seneste møder i alle udvalg'),
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_calendar'] = array(
       '#type' => 'textfield',
@@ -931,7 +972,7 @@ function _os2dagsorden_url_responce_validate($element, &$form_state){
     $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     if ($retcode != 200) {
-      form_error($element, "Specified url does not respond.");
+      form_error($element, "Specified url " . $url . " does not respond. Error code: " . $retcode);
     }
     curl_close($ch);
   }
@@ -1009,6 +1050,17 @@ function os2dagsorden_settings_cron_job_submit($form, &$form_state) {
   }
   $conf['service_group'] = "";
   ultimate_cron_set_settings('os2dagsorden_importer_cron', $conf);
+
+  //os2dagsorden_acadre_service_importer
+  $conf = _ultimate_cron_default_settings();
+  if (!empty($input['os2dagsorden_acadre_service_importer_cron']) && $input['os2dagsorden_acadre_service_importer_cron'] !== variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE)) {
+    $conf['rules'][0] = $input['os2dagsorden_acadre_service_importer_cron'];
+  }
+  else {
+    unset($conf['rules']);
+  }
+  $conf['service_group'] = "";
+  ultimate_cron_set_settings('os2dagsorden_acadre_service_importer_cron', $conf);
 
   //os2web_esdh_provider_cron
   $conf = _ultimate_cron_default_settings();
@@ -1137,6 +1189,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 
 
     variable_set('ultimate_cron_rule', $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron']);
+    variable_set('ultimate_cron_rule', $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_acadre_service_importer_cron']);
     variable_set('ultimate_cron_rule',  $setting_array['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron']);
     variable_set('ultimate_cron_rule', $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_pdf2htmlex_cron']);
     variable_set('ultimate_cron_rule', $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_adlib_api_cron']);
@@ -1146,6 +1199,11 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 	variable_set('os2dagsorden_pws_v_meetings_url', $setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetings_url']);
 	variable_set('os2dagsorden_pws_v_meetinggroups_url', $setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url']);
 	variable_set('os2dagsorden_pws_v_acadregroups_url', $setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url']);
+    }
+
+    if (module_exists('os2dagsorden_acadre_service_importer')){
+      variable_set('os2dagsorden_acadre_service_meetings_url', $setting_array['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_meetings_url']);
+      variable_set('os2dagsorden_acadre_service_committees_url', $setting_array['os2dagsorden_acadre_service_importer_placeholder']['os2dagsorden_acadre_service_committees_url']);
     }
 
     variable_set('os2dagsorden_upcoming_meetings_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_upcoming_meetings_help_text']);

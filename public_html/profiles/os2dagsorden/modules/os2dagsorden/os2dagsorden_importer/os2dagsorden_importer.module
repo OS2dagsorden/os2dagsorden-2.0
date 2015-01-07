@@ -928,7 +928,6 @@ function _os2dagsorden_importer_process_meetings($xml_file) {
             'meeting_start_date' => (string) array_shift($row->xpath('MeetingDate')),
             'meeting_start_time' => (string) array_shift($row->xpath('MeetingStartTime')),
             'meeting_end_time' => (string) array_shift($row->xpath('MeetingEndTime')),
-            'hex_color' => (string) array_shift($row->xpath('HEXColorCode')),
             'deactivated' => (int) array_shift($row->xpath('Deactivated')),
             'cancelled' => (int) array_shift($row->xpath('Cancelled')),
             'changed' => (int) array_shift($row->xpath('Changed')),
@@ -1016,11 +1015,6 @@ function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
 	  $node->field_os2web_meetings_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
 	}
 	
-	//updating the color
-	if (strcmp($node->field_os2web_meetings_hex[$node->language][0]['value'], strtolower($xml_data['hex_color'])) != 0){
-	  $node->field_os2web_meetings_hex[$node->language][0]['value'] = strtolower($xml_data['hex_color']);
-	}
-	
 	//if meeting is to be cancelled, but is not cancelled yet, then cancell it.
 	if ($xml_data['cancelled'] == 1 && strcmp($node->field_os2web_meetings_type[$node->language][0]['value'],'Aflyst') != 0){
 	    $node->field_os2web_meetings_type['und'][0]['value'] = "Aflyst";	  
@@ -1058,7 +1052,6 @@ function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
     }
     
     $node->field_os2web_meetings_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
-    $node->field_os2web_meetings_hex[$node->language][0]['value'] = strtolower($xml_data['hex_color']);
 
     $node->field_os2web_meetings_committee[$node->language][0]['tid'] = $tid;
     
