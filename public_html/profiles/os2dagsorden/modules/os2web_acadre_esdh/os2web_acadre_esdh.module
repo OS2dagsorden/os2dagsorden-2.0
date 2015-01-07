@@ -49,7 +49,21 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#title' => t('Add committee name to meeting title'), 
     '#description' =>'This decides whether a committee name will be added to meeting title'
  );
+ /*$form['meetings']['os2web_acadre_rewrite_committee_abbr'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('os2web_acadre_rewrite_committee_abbr', true),
+    '#title' => t('Rewrite abbreviation of the meeting during import'), 
+    '#description' =>'This decides whether a meeting abbreviation willbe rewrited  during acadre import'
+ );*/
 
+  $form['meetings']['os2web_acadre_location_field'] = array(
+    '#type' => 'radios',
+    '#title' => t('Get the address for the meeting from'),
+    '#default_value' => variable_get('s2web_acadre_location_field', 'true'),
+    '#options' => $options2 = array('true' => t('the location field'), 'false' => t('the address field')),
+    '#description' => t('This decides from which field meeting address gets'),
+  );
+  
   $form['meetings']['os2web_meetings_approved_committee'] = array(
     '#type' => 'textfield',
     '#title' => 'Godkendte Udvalg',

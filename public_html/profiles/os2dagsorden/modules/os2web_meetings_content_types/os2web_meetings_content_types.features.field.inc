@@ -1420,92 +1420,6 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
-  // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_abbr'.
-  $fields['node-os2web_meetings_meeting-field_os2web_meetings_abbr'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_abbr',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '50',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_meeting',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '12',
-        ),
-        'ical' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '4',
-        ),
-        'os2web_meetings_meeting_detail_view' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => '7',
-        ),
-        'related_block' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_os2web_meetings_abbr',
-      'label' => 'Abbreviation',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'text',
-        'settings' => array(
-          'size' => '60',
-        ),
-        'type' => 'text_textfield',
-        'weight' => '8',
-      ),
-    ),
-  );
-
   // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_add_doc'.
   $fields['node-os2web_meetings_meeting-field_os2web_meetings_add_doc'] = array(
     'field_config' => array(
@@ -1845,73 +1759,6 @@ function os2web_meetings_content_types_field_default_fields() {
         ),
         'type' => 'entityreference_autocomplete',
         'weight' => '19',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-os2web_meetings_meeting-field_os2web_meetings_category'.
-  $fields['node-os2web_meetings_meeting-field_os2web_meetings_category'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_category',
-      'foreign keys' => array(),
-      'indexes' => array(
-        'value' => array(
-          0 => 'value',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'list',
-      'settings' => array(
-        'allowed_values' => array(
-          'pol' => 'Political',
-          'org' => 'Organizational',
-        ),
-        'allowed_values_function' => '',
-      ),
-      'translatable' => '0',
-      'type' => 'list_text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_meeting',
-      'default_value' => array(
-        0 => array(
-          'value' => 'pol',
-        ),
-      ),
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'list',
-          'settings' => array(),
-          'type' => 'list_default',
-          'weight' => 27,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_os2web_meetings_category',
-      'label' => 'Category',
-      'required' => 0,
-      'settings' => array(
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'options',
-        'settings' => array(),
-        'type' => 'options_buttons',
-        'weight' => '7',
       ),
     ),
   );
@@ -2872,6 +2719,9 @@ function os2web_meetings_content_types_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_os2web_meetings_searchdata',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
       'foreign keys' => array(),
       'indexes' => array(),
       'locked' => '0',
@@ -3537,6 +3387,70 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_cat'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_cat'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_cat',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          'pol' => 'Political',
+          'org' => 'Organizational',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => array(
+        0 => array(
+          'value' => 'pol',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 9,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_cat',
+      'label' => 'Category',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '8',
+      ),
+    ),
+  );
+
   // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_color'.
   $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_color'] = array(
     'field_config' => array(
@@ -3842,7 +3756,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'year_range' => '-3:+3',
         ),
         'type' => 'date_select',
-        'weight' => '8',
+        'weight' => '9',
       ),
     ),
   );
@@ -3923,7 +3837,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'link',
         'settings' => array(),
         'type' => 'link_field',
-        'weight' => '9',
+        'weight' => '10',
       ),
     ),
   );

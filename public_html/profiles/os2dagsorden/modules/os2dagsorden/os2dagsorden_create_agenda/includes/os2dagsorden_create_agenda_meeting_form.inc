@@ -155,10 +155,10 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form){
 function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node){
     $form['title']['#default_value'] = $node->title;
     
-    if (field_get_items('node', $node, 'field_os2web_meetings_abbr')){
+   /*if (field_get_items('node', $node, 'field_os2web_meetings_abbr')){
       $short_title_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_abbr'));
       $form['short_title']['#default_value'] = $short_title_field['safe_value'];
-    }
+    }*/
     
     $status_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_type'));
     $form['status']['#default_value'] = $status_field['value'];
@@ -168,10 +168,10 @@ function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $nod
       $form['hex_color']['#default_value'] = $hex_field['safe_value'];
     }
     
-    if (field_get_items('node', $node, 'field_os2web_meetings_category')){
+    /*if (field_get_items('node', $node, 'field_os2web_meetings_category')){
       $category_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_category'));
       $form['meeting_category']['#default_value'] = $category_field['value'];
-    }
+    }*/
     
     $date_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_date'));
     $form['start_date']['#default_value'] = $date_field['value'];
@@ -246,7 +246,7 @@ function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state)
   $node->field_os2web_meetings_date['und'][0]['value'] = $start_datetime->format('Y-m-d H:i:s');
   $node->field_os2web_meetings_committee['und'][0]['tid'] = $com_tid;
   
-  $node->field_os2web_meetings_category['und'][0]['value'] = $meeting_category;
+  //$node->field_os2web_meetings_category['und'][0]['value'] = $meeting_category;
   $node->field_os2web_meetings_hex['und'][0]['value'] = $hex_color;
 
   if (!empty($end_date)){

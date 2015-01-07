@@ -252,7 +252,7 @@ function ultimate_cron_cron_run($return = FALSE) {
   drupal_set_message(t('%jobs jobs scheduled for launch', array('%jobs' => count($schedule))));
 
   // Start the jobs. Keep launching jobs until X seconds into the request.
-  set_time_limit(120);
+  set_time_limit(1200);
   $time = time();
   $expire = $time + variable_get('ultimate_cron_launch_window', ULTIMATE_CRON_LAUNCH_WINDOW);
   $running = array();

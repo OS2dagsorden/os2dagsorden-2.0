@@ -192,11 +192,11 @@ function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $to_month . '-31 23:59:59', '<=')//selecting meetings up to the to_month
       ->fieldOrderBy('field_os2web_meetings_date', 'value', 'ASC');
     
-    if (!empty($user->field_user_meetings_category['und'])){
+   /* if (!empty($user->field_user_meetings_category['und'])){
       if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
 	$query->fieldCondition('field_os2web_meetings_category', 'value', $user->field_user_meetings_category['und'][0]['value'], '=');
       }
-    }
+    }*/
     $result = $query->execute();
     
     $meetings = array();
@@ -265,7 +265,10 @@ function os2dagsorden_print_meetings_generate_month_headers($from_month, $to_mon
  */
 function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $meetings) {
     global $base_url;
-print_r('her');
+    global $user;
+    $user = user_load($user->uid);
+    
+    if (strcasecmp($user_category['value'], $meeting_category) == 0)
     $html = "<tr>";
     for ($month = $from_month; $month <= $to_month; $month++) {
         $html .= "<td width='16.6%' class='no-pad valign_top'>";
@@ -276,19 +279,25 @@ print_r('her');
             $html .= "<td class='inside content" . _os2dagsorden_print_meetings_mark_weekend_gray($month, $i) . "'" . _os2dagsorden_print_meetings_add_col_span($month, $i) . ">";
             //filling with the content
             foreach ($meetings as $met) {
+                
+               $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
+                if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
+	         if (strcasecmp($user->field_user_meetings_category['und'][0]['value'], $committee->field_os2web_meetings_com_cat['und'][0]['value']) != 0)
+                     continue;
+               }
                 if (substr($met->field_os2web_meetings_date['und'][0]['value'], 0, 10) === date('Y-m-d', mktime(0, 0, 0, $month, $i, date("Y")))) {
                     $link = $base_url . '/meeting/' . $met->nid;
 
-                    $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
+                   
 		    $title = '';
                     if (!empty($committee->field_os2web_meetings_com_abbr['und'][0]['value']))
 			 $title = $committee->field_os2web_meetings_com_abbr['und'][0]['value'];
-                    elseif (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($met->field_os2web_meetings_abbr['und'][0]['value']))
-			 $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
+                   // elseif (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($met->field_os2web_meetings_abbr['und'][0]['value']))
+			// $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
                     else
 			 $title = $met->title;
-
-                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, ';    
+                    
+                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
                 }
             }
             //end of content

@@ -67,10 +67,10 @@ function _os2dagsorden_importer_form_submit(&$form_state, $form) {
  * @return none
  */
 function os2dagsorden_importer_sync() {
-   os2dagsorden_importer_import_user_committees_improved();
+  // os2dagsorden_importer_import_user_committees_improved();
     //os2dagsorden_importer_import_user_committees();
-    //os2dagsorden_importer_import_committees();
-    //os2dagsorden_importer_import_meetings();
+    os2dagsorden_importer_import_committees();
+    os2dagsorden_importer_import_meetings();
 }
 
 /**
@@ -89,9 +89,10 @@ function os2dagsorden_importer_cronapi($op, $job = NULL) {
  * @return none
  */
 function os2dagsorden_importer_cron() {
-    os2dagsorden_importer_import_user_committees();
+
     os2dagsorden_importer_import_committees();   
     os2dagsorden_importer_import_meetings();    
+    os2dagsorden_importer_import_user_committees();
 }
 /**
  * Imports the user committees (user roles: member of, follows, follows+) from the remotely located xml view.

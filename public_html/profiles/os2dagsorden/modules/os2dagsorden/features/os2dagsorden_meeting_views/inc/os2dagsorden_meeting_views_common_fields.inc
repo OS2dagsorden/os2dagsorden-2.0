@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * @file
  * Code for the OS2Web Meeting Views - common/shared field
@@ -45,8 +45,10 @@ function os2dagsorden_meeting_views_common_meeting_is_closed($meeting_id){
 
 function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   $title = '';
-  if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
-    $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
+  $committee= taxonomy_term_load($data->_field_data['nid']['entity']->field_os2web_meetings_committee['und'][0]['tid']);
+  //if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
+  if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($committee->field_os2web_meetings_com_shname['und']) && !empty($committee->field_os2web_meetings_com_shname['und'][0]['value']))
+   $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'] ;//$data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;
 
@@ -67,11 +69,16 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
 function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_committee');
-    print taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    $short_name=taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+    if (!empty($short_name))
+       print taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+    else
+        print taxonomy_term_load($meeting_committee[0]["tid"])->name;  
 }
 function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_location');
+      
     print taxonomy_term_load($meeting_committee[0]["tid"])->name;
 }
 /////////////////////////////////////////meeting END/////////////////////////////////////////

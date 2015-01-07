@@ -25,7 +25,7 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
  
   if (strlen($node->title) > 254)
     $node->title = substr($node->title, 0, 254);
-    
+  $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] =  $enclosure['sysid'];
   $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;
   if (!$enclosure['access'])//TODO: Look here
     $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 1;

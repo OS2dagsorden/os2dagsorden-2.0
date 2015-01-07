@@ -17,13 +17,14 @@ function os2dagsorden_meetings_calendar_view_breadcrumb(){
 /////////////////////////////////////////common START /////////////////////////////////////////
 function os2dagsorden_meetings_calendar_view_fields_title($data){
   $title = '';
-  if (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
-    $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
-  else 
+ // if (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
+ //   $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
+ // else 
     $title = $data->_field_data['nid']['entity']->title;
 
-  $meeting_category = substr(strtoupper($data->_field_data['nid']['entity']->field_os2web_meetings_category['und'][0]['value']), 0, 1);
-
+ // $meeting_category = substr(strtoupper($data->_field_data['nid']['entity']->field_os2web_meetings_category['und'][0]['value']), 0, 1);
+  $meeting_category = substr(strtoupper($data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity']->field_os2web_meetings_com_cat['und'][0]['value']), 0, 1);
+  
   if (variable_get('os2dagsorden_show_meeting_category', 'true')  === 'true')
     echo '<font style="color:#' . $data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity']->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . '['. $meeting_category . '] ' . $title . '</font>';
   else
@@ -34,7 +35,9 @@ function os2dagsorden_meetings_calendar_view_fields_filter_by_meeting_category($
   $user_loaded = os2dagsorden_access_helper_get_user();
 
   $meeting = node_load($meeting_id);
-  $meeting_category = $meeting->field_os2web_meetings_category['und'][0]['value'];
+  $committee = taxonomy_term_load($meeting->field_os2web_meetings_committee['und'][0]['tid']);
+  //$meeting_category = $meeting->field_os2web_meetings_category['und'][0]['value'];
+  $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
   if (isset($user_loaded->field_user_meetings_category['und'])) {
     foreach ($user_loaded->field_user_meetings_category['und'] as $user_category){
       if (strcasecmp($user_category['value'], $meeting_category) == 0){

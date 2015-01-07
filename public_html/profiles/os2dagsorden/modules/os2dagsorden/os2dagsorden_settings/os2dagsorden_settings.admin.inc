@@ -576,13 +576,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => array('pol' => t('Political'), 'org' => t('Organisation')),
     '#default_value'=>variable_get('os2dagsorden_user_default_meeting_category', 'pol')
   );
-   $form['os2dagsorden_political_organizational_settings']['os2dagsorden_default_meeting_cateroty'] = array(
+ /*  $form['os2dagsorden_political_organizational_settings']['os2dagsorden_default_meeting_cateroty'] = array(
     '#type' => 'radios',
     '#title' => t('Default meeting category'),
     '#default_value' => variable_get('os2dagsorden_default_meeting_cateroty','pol'),
     '#options' =>  array('pol' => t('Political'), 'org' => t('Organisation')),
     '#description' => t('This decides whether a default meeting category'),
-  );
+  );*/
 
     //cron frequencies
   $form['os2dagsorden_cron_job_freq'] = array(
@@ -690,7 +690,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#title' => t('Meeting (planned meetings) view url:'),
       '#maxlength' => 256,
       '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+     // '#element_validate' => array('_os2dagsorden_url_responce_validate'),
     );
     $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_meetinggroups_url'] = array(
       '#type' => 'textfield',
@@ -698,7 +698,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#title' => t('Meeting groups (is member of/follows/follows+) view url:'),
       '#maxlength' => 256,
       '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+    //  '#element_validate' => array('_os2dagsorden_url_responce_validate'),
     );
     $form['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_v_acadregroups_url'] = array(
       '#type' => 'textfield',
@@ -706,7 +706,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#title' => t('Acadre groups (committees) url:'),
       '#maxlength' => 256,
       '#disabled' => variable_get('os2dagsorden_pws_use_local_copy'),
-      '#element_validate' => array('_os2dagsorden_url_responce_validate'),
+      //'#element_validate' => array('_os2dagsorden_url_responce_validate'),
     );
   }
 
@@ -965,12 +965,12 @@ function _os2dagsorden_url_responce_validate($element, &$form_state){
 
   if ($value != "") {
     $url = (strpos($value, "http://") !== 0) ? 'http://' . $value : $value;
-
+     
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_exec($ch);
     $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
+ 
     if ($retcode != 200) {
       form_error($element, "Specified url " . $url . " does not respond. Error code: " . $retcode);
     }

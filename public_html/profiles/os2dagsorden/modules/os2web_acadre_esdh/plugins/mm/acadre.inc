@@ -183,7 +183,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'meeting_date_finish' => (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field[@name='finish']")),
       'committee' => (string) array_shift($xml->xpath("//table[@name='committee']/fields/field[@name='name']")),
       'committee_id' => (string) array_shift($xml->xpath("//table[@name='committee']/fields/field[@name='sysid']")),
-      'location' => (string) array_shift($xml->xpath("//table[@name='location']/fields/field[@name='name']")),
+     // 'location' => (string) array_shift($xml->xpath("//table[@name='location']/fields/field[@name='name']")),
       'agenda_name' => (string) array_shift($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
       'special_conditions'=> (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field[@name='description']")),
       'items' => array(),
@@ -195,6 +195,12 @@ function _os2web_acadre_esdh_import_meeting($info) {
       watchdog('acadre MM', 'Ignored agenda from %committee .', array('%committee' => $meeting['committee']));
       return FALSE;
     }
+    
+    if (variable_get('s2web_acadre_location_field', 'true') === 'true') 
+      $meeting['location'] = (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field[@name='location']"));
+    else 
+      $meeting['location']  = (string) array_shift($xml->xpath("//table[@name='location']/fields/field[@name='name']"));
+          
 
     // Fix dates:
     $date_obj = date_create($meeting['meeting_date_start']);
@@ -212,11 +218,25 @@ function _os2web_acadre_esdh_import_meeting($info) {
       $meeting['location'] = (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field[@name='location']"));
 
     // Full Doc:
-    $meeting['full_doc'] = array(
-      'uri' => implode('/', array(
+    $doc_uri = implode('/', array(
         variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
         $info['filesfolder'],
-        $info['docfilename'])),
+        $info['docfilename']));
+    $pdf_uri = implode('/', array(
+        variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+        $info['filesfolder'],
+        pathinfo($info['docfilename'], PATHINFO_FILENAME).'.pdf'));
+    
+    if (file_exists(drupal_realpath($pdf_uri))) 
+        $uri =  $pdf_uri;
+    else
+        $uri = $doc_uri;
+    $meeting['full_doc'] = array(
+      /*'uri' => implode('/', array(
+        variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+        $info['filesfolder'],
+        $info['docfilename'])),*/
+      'uri' => $uri,  
       'title' => $meeting['title'],
     );
 
@@ -388,6 +408,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
           foreach($files as $file) {
             if (strpos(basename($file),'eml.part1') === false){//avoiding part1 file import - don't need it
               $item['enclosures'][] = array(
+                'sysid'  => (int) array_shift($enclosure->xpath("fields/field[@name='sysid']")),
                 'uri' => $folder_path . '/' . basename($file),
                 'title' => 'Email:' . trim((string) array_shift($enclosure->xpath("fields/field[@name='name']"))),
                 'filetype' => '.PDF',
@@ -402,6 +423,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
              $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
 
           $item['enclosures'][] = array(
+            'sysid'  => (int) array_shift($enclosure->xpath("fields/field[@name='sysid']")),  
             'uri' => $uri,
             'title' => 'Email:' . trim((string) array_shift($enclosure->xpath("fields/field[@name='name']"))),
             'filetype' => (string) array_shift($enclosure->xpath("fields/field[@name='EnclosureFileType']")),
@@ -415,6 +437,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
           $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
 
           $item['enclosures'][] = array(
+            'sysid'  => (int) array_shift($enclosure->xpath("fields/field[@name='sysid']")),  
             'uri' => $uri,
             'title' => trim((string) array_shift($enclosure->xpath("fields/field[@name='name']"))),
             'filetype' => (string) array_shift($enclosure->xpath("fields/field[@name='EnclosureFileType']")),
