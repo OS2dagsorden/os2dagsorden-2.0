@@ -734,6 +734,25 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     );
   }
 
+  //Allowed committees
+  $form['os2dagsorden_committees_list_placeholder'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Committees positive list'),
+  );
+  $committees = taxonomy_get_tree($vid);
+  $options_committee = array();
+  foreach ($committees as $committee){
+    $options_committee[$committee->tid] = $committee->name;
+  }
+  $form['os2dagsorden_committees_list_placeholder']['os2dagsorden_committees_positive_list'] = array(
+    '#type' => 'checkboxes',
+    '#options' => $options_committee,
+    '#title' => t('Select committees to be in positive list'),
+    '#default_value' => variable_get('os2dagsorden_committees_positive_list'), 
+  );
+
   $form['os2dagsorden_help_text_placeholder'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,

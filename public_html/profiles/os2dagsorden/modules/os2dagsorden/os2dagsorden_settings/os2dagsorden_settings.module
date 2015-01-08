@@ -310,6 +310,15 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
 	$form['to_date']['value']['#default_value'] = date('Y-m-d', strtotime('+' . variable_get('os2dagsorden_search_enddate', 1) . ' months'));
     }
     $form['submit']['#value'] = variable_get('os2dagsorden_title_general_search', 'Søg');
+    
+    //limiting to only positive committee list
+    $com_pos_list = array();
+    foreach(variable_get('os2dagsorden_committees_positive_list') as $com_id){
+        if ($com_id)
+            $com_pos_list[$com_id] = $form['field_os2web_meetings_committee_tid']['#options'][$com_id];
+    }
+    if (!empty($com_pos_list))
+        $form['field_os2web_meetings_committee_tid']['#options'] = $com_pos_list;
   }
 
   if ($form_id == 'os2web_meetings_spaper_node_form'){

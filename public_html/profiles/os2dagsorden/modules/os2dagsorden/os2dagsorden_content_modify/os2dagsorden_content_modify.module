@@ -167,7 +167,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#description' => t('Which types of meetings should user see in the calendar'),
   );
 
-  $user_pos = taxonomy_vocabulary_machine_name_load('user_position');
+  /*$user_pos = taxonomy_vocabulary_machine_name_load('user_position');
   $user_pos_terms = taxonomy_get_tree($user_pos->vid);
   $user_pos_select = array();
   foreach ($user_pos_terms as $user_pos_term) {
@@ -194,7 +194,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
       '#description' => t('You can choose only from the user positions, created manually. For multiple selection hold <b>CTRL</b>.<br/>
       The number in <b>[X]</b> shows the role\'s priority.
       Role with the highest priority is shown next to user\'s full name in the top right conter.'),
-  );
+  );*/
 
   $com = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
   $com_terms = taxonomy_get_tree($com->vid);
@@ -202,6 +202,15 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   foreach ($com_terms as $com_term) {
     $com_select[$com_term->tid] = $com_term->name;
   }
+  //limiting to only positive committee list
+  $com_pos_list = array();
+  foreach(variable_get('os2dagsorden_committees_positive_list') as $com_id){
+      if ($com_id)
+	  $com_pos_list[$com_id] = $com_select[$com_id];
+  }
+  if (!empty($com_pos_list))
+      $com_select = $com_pos_list;
+
   $form['member_of'] = array(
       '#access' => user_access('administer os2web', $full_user),
       '#type' => 'select',
