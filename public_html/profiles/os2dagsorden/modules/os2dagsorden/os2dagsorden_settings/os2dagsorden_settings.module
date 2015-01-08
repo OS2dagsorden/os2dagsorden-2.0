@@ -161,6 +161,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text'] = variable_get('os2dagsorden_user_committees_help_text', 'Her kan du se de udvalg du er medlem af. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.');
     $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text'] = variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.');
 
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_mine_idstillinger'] = variable_get('os2dagsorden_title_general_mine_idstillinger', 'Mine indstillinger');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_log_off'] = variable_get('os2dagsorden_title_general_log_off', 'Log af');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_search'] = variable_get('os2dagsorden_title_general_search', 'Søg');
 

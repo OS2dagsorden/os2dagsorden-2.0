@@ -586,6 +586,26 @@ ul li.leaf {
     padding: 5px 10px 5px 10px;
 }
 
+.user-logout-block .settings-btn {
+    /* Fallback */
+    background: #c0c0c0 url('../img/icon_settings.png') no-repeat 5px 50%;
+    /* W3C */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, linear-gradient(top, #fcfcfc 0%,#c0c0c0 100%);
+    /* Safari 4-5, Chrome 1-9 */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e7e7e7), to(#c0c0c0));
+    /* Safari 5.1, Chrome 10+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -webkit-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* Firefox 3.6+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -moz-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* IE 10 */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -ms-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* Opera 11.10+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);
+    
+    padding: 5px 10px 5px 25px;
+    white-space:nowrap;
+}
+
 .user-logout-block .user-logout-btn {
     /* Fallback */
     background: #c0c0c0 url('../img/icon_log_out.png') no-repeat 5px 50%;
