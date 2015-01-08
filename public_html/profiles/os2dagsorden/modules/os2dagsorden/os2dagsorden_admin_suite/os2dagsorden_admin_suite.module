@@ -92,9 +92,24 @@ function os2dagsorden_admin_suite_menu() {
         'access arguments' => array('administer os2web'),
         
     );
+     
+    $items['os2dagsorden/admin_suite/user_remove_org_meetings_category'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_user_remove_org_meetings_category',
+        'access arguments' => array('administer os2web'),
+        
+    );
     return $items;
 }
-
+ function os2dagsorden_admin_suite_user_remove_org_meetings_category(){
+    $query = new EntityFieldQuery();
+      $result = $query->entityCondition('entity_type', 'user')
+	 ->execute(); 
+      $users = user_load_multiple(array_keys($result['user']));
+      var_dump($users);
+      
+ }
+ 
 function os2dagsorden_admin_suite_update_meetings_sysid(){
   $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
   foreach ($meetings as $meeting_id){
