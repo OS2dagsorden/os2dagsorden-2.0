@@ -157,7 +157,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   );
 
   $form['calendar_pref'] = array(
-    '#access' => user_access('administer os2web', $full_user),
+    //'#access' => user_access('administer os2web', $full_user),
     '#type' => 'checkboxes',
     '#options' => array(
       'pol' => t('Political'),
@@ -364,13 +364,13 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
     }
   }
 
-  if (user_access('administer os2web')){//only for the full form submit
-    //unsetting calendar preferences
-    $user->field_user_meetings_category['und'] = array();
-    foreach ($calendar_pref as $cal_pref){
-      $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
-    }
+  //unsetting calendar preferences
+  $user->field_user_meetings_category['und'] = array();
+  foreach ($calendar_pref as $cal_pref){
+    $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+  }
 
+  if (user_access('administer os2web')){//only for the full form submit
     //unsetting positions
     $user->field_user_positions['und'] = array();
     if ($user_pos){
