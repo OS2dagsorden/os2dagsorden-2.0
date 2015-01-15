@@ -109,6 +109,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
           'xmlfilename' => (string) array_shift($xml_item->xpath('field/@xmlfilename')),
           'docfilename' => (string) array_shift($xml_item->xpath('field/@docfilename')),
           'type' => (int) array_shift($xml_item->xpath('field/@type')),
+          'docID' => (int) array_shift($xml_item->xpath('field/@docID')),
         );
 
         if ($agendainfo['publish'] === 1 &&
@@ -180,6 +181,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'meeting_id' => (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field[@name='sysid']")),
       'system_id' => $info['sysid'],
       'path' => $real_path,
+      'agenda_access' => $info['access'],
       'publication_id' => (string) array_shift($xml->xpath("//table[@name='agenda']/fields/field[@name='sysid']")),
       'creation_date' => strtotime((string) array_shift($xml->xpath("//table[@name='agenda']/fields/field[@name='producedate']"))),
       'description' => (string) array_shift($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
@@ -348,16 +350,11 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $case_id = (string) array_shift($xml_case_id);
   $sysid = (int) array_shift($xml_sysid);
 
-#  $case_text = '';
- # if (isset($case)) {
-    // - changed by skifter - $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
-  #  $case_text = ' (' . $case . ') ';
- # }
-
   $item = array(
     'id' => $id,
     'sysid' => $sysid,
     'title' => 'Punkt ' . $id . ' ' . $name,
+    'case_nr' => $case,
     'access' => $access,
     'bullets' => array(),
     'enclosures' => array(),
