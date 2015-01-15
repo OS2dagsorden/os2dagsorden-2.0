@@ -350,13 +350,14 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
 
   $case_text = '';
   if (isset($case) && isset($case_id)) {
-    $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
+    // - changed by skifter - $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
+    $case_text = ' (' . $case . ') ';
   }
 
   $item = array(
     'id' => $id,
     'sysid' => $sysid,
-    'title' => 'Punkt ' . $id . $case_text . $name,
+    'title' => 'Punkt ' . $id . .$name . $case_text,
     'access' => $access,
     'bullets' => array(),
     'enclosures' => array(),
