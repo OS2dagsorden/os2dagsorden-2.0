@@ -349,7 +349,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $sysid = (int) array_shift($xml_sysid);
 
   $case_text = '';
-  if (isset($case) && isset($case_id)) {
+  if (isset($case)) {
     // - changed by skifter - $case_text = ' (' . $case . ' id: ' . $case_id . ') ';
     $case_text = ' (' . $case . ') ';
   }
