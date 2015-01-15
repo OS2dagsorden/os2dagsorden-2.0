@@ -242,17 +242,19 @@ function _os2dagsorden_meeting_views_bullet_point_bilag_cases( $elements, $meeti
 
            
 	  //attachment text - if any
-	  /*if (!empty($attachment->field_os2web_meetings_bpa_html['und'][0])){	  
-	    print '<div class="attachment_text_container">';
-
-	    print '<div class="attachment_text_trimmed_container ajax-progress bpa-' . $meeting_id . '-' . $bp_id . '-' . $attachment->nid . '">';
-
-	    print 'Vent venligst...<div class="throbber"></div>';
-	    print '</div>';
-	    print('<a class="first-child last-child" href="' . $link . '" target="_blank">Læs mere...</a>');
-
-	    print '</div>';
-	  }*/
+	  if (variable_get('os2dagsorden_show_bilag', TRUE)){
+	    if (!empty($attachment->field_os2web_meetings_bpa_html['und'][0])){	  
+	      print '<div class="attachment_text_container">';
+  
+	      print '<div class="attachment_text_trimmed_container ajax-progress bpa-' . $meeting_id . '-' . $bp_id . '-' . $attachment->nid . '">';
+  
+	      print 'Vent venligst...<div class="throbber"></div>';
+	      print '</div>';
+	      print('<a class="first-child last-child" href="' . $link . '" target="_blank">Læs mere...</a>');
+  
+	      print '</div>';
+	    }
+	  }
 	} else {
 	  print '<a class="first-child last-child">' . $title . '</a>';
 	}

@@ -117,7 +117,7 @@ function os2dagsorden_meeting_views_meeting_description_download(){
   $q = explode('/',$_GET['q']);
   $meeting_id = $q[1];
      $meeting = node_load($meeting_id);
-    
+   $user_can_see_closed_agendas = os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting->nid); 
   //opened version - if not empty
   if (!empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) . 
@@ -125,7 +125,16 @@ function os2dagsorden_meeting_views_meeting_description_download(){
   }
 	else 
       echo '<a target="_blank" href="/printpdf/meeting/'.$meeting_id.'/print" ><span class="print-meeting-link">Samlet dokument</span> </a>';
-}
+
+       if ($user_can_see_closed_agendas){
+    if (!empty($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri'])){
+      echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri']) . 
+      '" class="form-submit">Hent samlet dokument i PDF (lukket)</a>';
+    }
+  }
+        
+        
+  }
 /////////////////////////////////////////header END /////////////////////////////////////////
 
 /////////////////////////////////////////PAGE fields start /////////////////////////////////////////
@@ -410,17 +419,19 @@ function _os2dagsorden_meeting_views_meeting_details_bilag_cases( $elements, $me
 
            
 	  //attachment text - if any
-	  /*if (!empty($attachment->field_os2web_meetings_bpa_html['und'][0])){	  
-	    print '<div class="attachment_text_container">';
-
-	    print '<div class="attachment_text_trimmed_container ajax-progress bpa-' . $meeting_id . '-' . $bp_id . '-' . $attachment->nid . '">';
-
-	    print 'Vent venligst...<div class="throbber"></div>';
-	    print '</div>';
-	    print('<a class="first-child last-child" href="' . $link . '" target="_blank">Læs mere...</a>');
-
-	    print '</div>';
-	  }*/
+	  if (variable_get('os2dagsorden_show_bilag', TRUE)){
+	    if (!empty($attachment->field_os2web_meetings_bpa_html['und'][0])){	  
+	      print '<div class="attachment_text_container">';
+  
+	      print '<div class="attachment_text_trimmed_container ajax-progress bpa-' . $meeting_id . '-' . $bp_id . '-' . $attachment->nid . '">';
+  
+	      print 'Vent venligst...<div class="throbber"></div>';
+	      print '</div>';
+	      print('<a class="first-child last-child" href="' . $link . '" target="_blank">Læs mere...</a>');
+  
+	      print '</div>';
+	    }
+	  }
 	} else {
 	  print '<a class="first-child last-child">' . $title . '</a>';
 	}
