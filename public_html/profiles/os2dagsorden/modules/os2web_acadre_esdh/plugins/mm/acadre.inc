@@ -357,7 +357,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $item = array(
     'id' => $id,
     'sysid' => $sysid,
-    'title' => 'Punkt ' . $id . .$name . $case_text,
+    'title' => 'Punkt ' . $id . $name . $case_text,
     'access' => $access,
     'bullets' => array(),
     'enclosures' => array(),
