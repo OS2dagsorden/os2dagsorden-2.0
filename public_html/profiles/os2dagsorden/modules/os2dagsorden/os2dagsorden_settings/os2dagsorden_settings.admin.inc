@@ -741,10 +741,22 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsed' => TRUE,
     '#title' => t('Committees positive list'),
   );
+  $form['os2dagsorden_committees_list_placeholder']['os2dagsorden_committees_positive_list_as_import_list'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use this list during import'),
+    '#default_value' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
+    '#description' => t('If checkbox is clicked, this is the list that will be used during meetings import'),
+  );
   $committees = taxonomy_get_tree($vid);
   $options_committee = array();
   foreach ($committees as $committee){
-    $options_committee[$committee->tid] = $committee->name;
+    $committee_full = taxonomy_term_load($committee->tid);
+    $ids = '';
+    foreach($committee_full->field_os2web_meetings_com_subid['und'] as $id){
+      $ids .= ' ' . $id['value'] . ',';
+    }
+    if (!empty($ids)) $ids = substr($ids, 0, -1);
+    $options_committee[$committee->tid] = $committee->name . ' [ID:' . $ids . ']';
   }
   $form['os2dagsorden_committees_list_placeholder']['os2dagsorden_committees_positive_list'] = array(
     '#type' => 'checkboxes',

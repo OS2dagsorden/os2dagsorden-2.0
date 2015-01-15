@@ -195,8 +195,31 @@ function _os2web_acadre_esdh_import_meeting($info) {
     if (variable_get('os2web_acadre_add_committee_to_title', FALSE)) {
       $meeting['title'] = $meeting['committee'] . " " . $meeting['title'];
     }
-    $publish_committee = array_map('trim', explode(',', variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED)));
-    if ($meeting['committee'] == '' || !in_array($meeting['committee_id'], $publish_committee)) {
+    
+    //Checking if meeting is in approved committees list
+    $is_meeting_approved = TRUE;
+    if (variable_get('os2dagsorden_committees_positive_list_as_import_list', FALSE)){
+      //committee empty
+      if ($meeting['committee'] == ''){
+        $is_meeting_approved = FALSE;
+      } else {
+        $term = _os2dagsorden_acadre_service_importer_get_committee_by_subid($meeting['committee_id']);
+        //term not found
+        if (!$term){
+          $is_meeting_approved = FALSE;  
+        } else {
+          $com_pos_list = variable_get('os2dagsorden_committees_positive_list', array());
+          //this committee is not approved
+          if (!$com_pos_list[$term->tid])
+            $is_meeting_approved = FALSE;  
+        }
+      }
+    } else {
+      $publish_committee = array_map('trim', explode(',', variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED)));
+      if ($meeting['committee'] == '' || !in_array($meeting['committee_id'], $publish_committee))
+        $is_meeting_approved = FALSE;
+    }
+    if (!$is_meeting_approved){
       watchdog('acadre MM', 'Ignored agenda from %committee (%committee_id).', array('%committee' => $meeting['committee'], '%committee_id' => $meeting['committee_id']));
       return FALSE;
     }
