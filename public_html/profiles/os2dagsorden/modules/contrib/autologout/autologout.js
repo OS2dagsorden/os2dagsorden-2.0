@@ -103,13 +103,13 @@
 
       function dialog() {
         var buttons = {};
-        buttons[Drupal.t('Yes')] = function() {
+        buttons[Drupal.t('Fortsæt')] = function() {
           $(this).dialog("destroy");
           clearTimeout(paddingTimer);
           refresh();
         };
 
-        buttons[Drupal.t('No')] = function() {
+        buttons[Drupal.t('Log af')] = function() {
           $(this).dialog("destroy");
           logout();
         };
