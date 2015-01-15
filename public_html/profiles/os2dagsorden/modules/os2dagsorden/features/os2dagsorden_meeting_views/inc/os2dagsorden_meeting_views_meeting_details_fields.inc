@@ -266,7 +266,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_title($t
   
   if (variable_get('os2dagsorden_show_bullet_case_nr', FALSE)){
     $bp = node_load($bp_id);
-    if ($bp->field_os2web_meetings_bul_case['und'])
+    if (!empty($bp->field_os2web_meetings_bul_case['und']))
       $title .= ' (' . $bp->field_os2web_meetings_bul_case['und'][0]['value'] . ')';
   }
   //logic for touch devices
