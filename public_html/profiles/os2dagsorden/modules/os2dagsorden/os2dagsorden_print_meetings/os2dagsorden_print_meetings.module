@@ -297,7 +297,7 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
                     else
 			 $title = $met->title;
                     
-                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
+                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, '; 
                 }
             }
             //end of content
