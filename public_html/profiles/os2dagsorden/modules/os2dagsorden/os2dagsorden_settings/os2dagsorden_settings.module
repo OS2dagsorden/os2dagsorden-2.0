@@ -302,7 +302,7 @@ function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
     return $content;
 }
 
-function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
+function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
   if($form['#id'] == 'views-exposed-form-meetings-search-page') {
     if (empty($_GET['from_date']))  {
 	$form['from_date']['value']['#default_value'] = date('Y-m-d', strtotime('-' . variable_get('os2dagsorden_search_startdate', 1) . ' months'));
@@ -318,8 +318,10 @@ function os2dagsorden_settings_form_alter(&$form, $form_state, $form_id) {
         if ($com_id)
             $com_pos_list[$com_id] = $form['field_os2web_meetings_committee_tid']['#options'][$com_id];
     }
-    if (!empty($com_pos_list))
-        $form['field_os2web_meetings_committee_tid']['#options'] = array_merge(array('All' => '- Alle -'), $com_pos_list);
+    if (!empty($com_pos_list)){
+        $form['field_os2web_meetings_committee_tid']['#empty_option'] = array('All' => 'Alle');
+        $form['field_os2web_meetings_committee_tid']['#options'] = $com_pos_list;
+    }
   }
 
   if ($form_id == 'os2web_meetings_spaper_node_form'){
