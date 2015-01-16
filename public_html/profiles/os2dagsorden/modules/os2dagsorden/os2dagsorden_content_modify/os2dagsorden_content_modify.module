@@ -369,7 +369,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
       foreach ($user_follows_field as $follows){
 	if (isset($com_select[$follows['tid']])){
           $content .= "<li id='{$follows['tid']}' class='ui-state-default'>{$com_select[$follows['tid']]}</li>";
-          $selection[] = $member_of['tid'];
+          $selection[] = $follows['tid'];
           $all_user_committee[] = $follows['tid'];          
        } 
       }
