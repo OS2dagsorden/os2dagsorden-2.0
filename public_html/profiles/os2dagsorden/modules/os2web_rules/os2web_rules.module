@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * This module implements OS2web related rules
+ */
+function os2web_rules_rules_action_info() {
+  $account = array(
+    'os2web_rules_rules_action_drupal_message' => array(
+      'label' => t('Set taxonomy from user roles'),
+      'group' => t('OS2web'),
+      'parameter'=> array(
+        'account'=> array(
+        'type'=>'user',
+        'label'=>t('Going to get user list'),
+        'save' => TRUE,           
+        ),   
+      ),
+    ),
+  );
+  return $account;
+}
+
+/**
+ * Action Implementation: Show a configureable message
+ * @ingroup rules
+ */
+function os2web_rules_rules_action_drupal_message($account) {
+  # Loading user object for correct saving of user info 
+  $user = user_load($account->uid);
+
+  # We only need parts of the account data set inherited from the condition.
+  $data = $account->data['ldap_authorizations']['drupal_role'];
+  
+  # Looping over the drupal roles and assigning taxonomies of the same name. Case insensitive. 
+  foreach ($data as $key => $val) {
+    drupal_set_message(print_r($key, true));  
+    $committeetaxid = taxonomy_get_term_by_name($key, "committee");      
+    $tid = key($committeetaxid); 
+
+    # Only handle tids with data. 
+    if($tid) {
+      $user_is_part_of_committee = FALSE;
+      if (isset($user->field_user_committee['und'])) {
+          foreach ($user->field_user_committee['und'] as $committee_id) {
+              if ($tid == $committee_id['tid']) {
+                  $user_is_part_of_committee = TRUE;
+              }
+          }
+      }
+      
+      if (!$user_is_part_of_committee){
+        $user->field_user_committee['und'][]['tid'] = $tid;
+        watchdog('OS2web LDAP Roles', 'User: %user assigned role: %role.', array('%role' => $key, '%user'  => $user));
+      }
+      else {
+        watchdog('OS2web LDAP Roles', 'User: %user NOT assigned role: %role. Role already added.', array('%role' => $key, '%user'  => $user));
+      }
+    } else {
+      # Sending logging information to wachdog for the customer to monitor. 
+      watchdog('OS2web LDAP Roles', 'User: %user NOT assigned role: %role.', array('%role' => $key, '%user'  => $user));
+    }
+  } 
+
+  # Saving the user session with changes.
+  user_save($user);
+}
