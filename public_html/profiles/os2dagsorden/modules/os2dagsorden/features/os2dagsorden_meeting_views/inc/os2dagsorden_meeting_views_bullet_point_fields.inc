@@ -115,7 +115,7 @@ function os2dagsorden_meeting_views_bullet_point_fields_title_navigation_buttons
   $title = $bullet_point->title;
   if (variable_get('os2dagsorden_show_bullet_case_nr', FALSE)){
     $bp = node_load($bp_id);
-    if (!empty($bp->field_os2web_meetings_bul_case['und']))
+    if ($bp->field_os2web_meetings_bul_case['und'] && !empty($bp->field_os2web_meetings_bul_case['und'][0]['value']))
       $title .= ' (' . $bp->field_os2web_meetings_bul_case['und'][0]['value'] . ')';
   }  
   print $title;
