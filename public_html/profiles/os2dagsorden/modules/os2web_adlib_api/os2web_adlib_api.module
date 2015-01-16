@@ -305,11 +305,11 @@ function os2web_adlib_api_status() {
  */
 function os2web_adlib_api_page() {
   error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
-  $fid = 236605;
+  $fid = 32303;
   $nid = 840980;
   // os2web_adlib_api_file_delete($fid);
   // db_delete('os2web_adlib_api_doc_files')->condition('fid', $fid)->execute();
-  // os2web_adlib_api_convert_to_pdf($fid);
+  os2web_adlib_api_convert_to_pdf($fid);
   // os2web_adlib_api_convert_to_html($fid, $nid);
   // _os2web_adlib_api_process_pdf();
   // sleep(5);
@@ -322,16 +322,6 @@ function os2web_adlib_api_page() {
   // $call = $adlib->getJobStatus($file->job_id);
   // $call= file_load(ADLIB_TEST_FID);
   // $call = node_load($nid,NULL,TRUE);
-  $files = db_select('file_managed', 'fm')->fields('fm')->execute();
-  $rows = array();
-  foreach ($files as $file) {
-    if (file_exists(drupal_realpath($file->uri))) {
-      $rows[] = array(l($file->fid, 'admin/config/os2web/adlibstatus', array(
-        'query' => array('reset' => $file->fid))),
-        $file->filename);
-    }
-  }
-  return theme('table', array('rows' => $rows));
 }
 
 function os2web_adlib_api_cronapi($op, $job = NULL) {
@@ -450,12 +440,13 @@ function os2web_adlib_api_convert_to_pdf($fid, $docref = NULL) {
       return TRUE;
     }
     else {
-      // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File already in queue, aborting.");
+      watchdog('adlib_api', 'File is already scheduled %file (fid: %fid).', array('%fid' => $fid, '%file' => $file->filename), WATCHDOG_WARNING);
       return FALSE;
     }
   }
   else {
     // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File already PDF.");
+    watchdog('adlib_api', 'Filetype not approved %file (fid: %fid).', array('%fid' => $fid, '%file' => $file->filename), WATCHDOG_WARNING);
     $record = array(
       'fid' => $fid,
       'did' => $docref,
