@@ -406,7 +406,7 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_node_link_visibility';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['print_pdf_node_link_visibility'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -448,7 +448,7 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_sys_link_visibility';
-  $strongarm->value = '0';
+  $strongarm->value = '1';
   $export['print_pdf_sys_link_visibility'] = $strongarm;
 
   $strongarm = new stdClass();
