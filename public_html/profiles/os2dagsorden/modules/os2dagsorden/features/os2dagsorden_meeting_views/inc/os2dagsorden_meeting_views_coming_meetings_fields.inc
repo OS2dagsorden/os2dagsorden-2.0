@@ -31,3 +31,9 @@ function os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data){
  os2dagsorden_meeting_views_common_meeting_title_listed($data);
 }
 /////////////////////////////////////////PAGE END /////////////////////////////////////////
+
+/////////////////////////////////////////FILTER START /////////////////////////////////////////
+function os2dagsorden_meeting_views_coming_meetings_filter_in_my_list($tid){
+  return os2dagsorden_meeting_views_common_filter_in_my_list($tid);
+}
+/////////////////////////////////////////FILTER END /////////////////////////////////////////

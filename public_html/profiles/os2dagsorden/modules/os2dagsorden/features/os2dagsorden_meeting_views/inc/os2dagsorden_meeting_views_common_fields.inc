@@ -95,3 +95,48 @@ function os2dagsorden_meeting_views_common_bullet_point_has_sp($bp_id){
     print '<div class="indicator-has-speaker-paper"></div>';
 }
 /////////////////////////////////////////bullet point END/////////////////////////////////////////
+
+
+/////////////////////////////////////////FILTER START /////////////////////////////////////////
+
+/**
+ * Checks if the current committee is in the user's list
+ * Returns INVERTED VALUE
+ */
+function os2dagsorden_meeting_views_common_filter_in_my_list($tid){
+  $user = os2dagsorden_access_helper_get_user();
+  if (!empty($user->field_user_committee)) { //is part of the committee
+    foreach ($user->field_user_committee['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+  
+  if (!empty($user->field_follows_committee)) { //follows committee
+    foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  if (!empty($user->field_follows_committee_plus)) { //follows committee PLUS
+    foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  if (!empty($user->field_follows_committee_pp)) { //follow committee PLUS PLUS
+    foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  return TRUE;
+}
+/////////////////////////////////////////FILTER END /////////////////////////////////////////
