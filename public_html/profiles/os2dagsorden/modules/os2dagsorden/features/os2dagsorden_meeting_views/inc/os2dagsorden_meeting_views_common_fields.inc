@@ -114,7 +114,7 @@ function os2dagsorden_meeting_views_common_filter_in_my_list($tid){
   }
   
   if (!empty($user->field_follows_committee)) { //follows committee
-    foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
+    foreach ($user->field_follows_committee['und'] as $user_committee_id) {
       if ($tid == $user_committee_id['tid']) {
 	return FALSE;
       }
