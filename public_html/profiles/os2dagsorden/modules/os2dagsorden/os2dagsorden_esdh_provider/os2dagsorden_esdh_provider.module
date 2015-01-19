@@ -114,8 +114,7 @@ function os2dagsorden_esdh_provider_find_sofd_meeting($committee, $meeting_start
  * @return Object     $node updated bullet node
  */
 function os2dagsorden_esdh_provider_process_closed_bullet($node, $item){
-  $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][]['value'] = 0;
-
+  
   // Gather the bullets for the item.
   if (isset($item['bullets']) && is_array($item['bullets'])) {
     $bullet_nids = _os2web_esdh_provider_import_bullets($item['bullets']);
@@ -263,10 +262,26 @@ function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity
     $attachment = node_load($attachment_nid['target_id']);
     err_debug('=======Comparing ' . $attachment->title . '[' . $attachment->nid . '] vs ' . $bullet_entity['title'] . ' result: ');
     if (strcasecmp($bullet_entity['title'], $attachment->title) == 0
-      && strcasecmp($bullet['body'], $attachment->field_os2web_meetings_bpa_body[$node->language][0]['value']) == 0){
+      && strcasecmp($bullet_entity['body'], $attachment->field_os2web_meetings_bpa_body[$attachment->language][0]['value']) == 0){
       err_debug('Match');
       return $attachment;
     }
   }
   return NULL;
+}
+
+/**
+ * This function will either returns the existing committee or create a new one
+ *
+ * @param @sub_id
+ * @param @name
+ * @return $committee term
+ */
+function osdagsorden_esdh_provider_import_or_return_committee($sub_id, $name){
+  if ($term != _os2dagsorden_acadre_service_importer_get_committee_by_subid($sub_id)){
+    $term = _acadre_esdh_import_term($name, 'os2web_meetings_tax_committee');
+    os2dagsorden_esdh_provider_committee_add_subid($term, $sub_id);
+  }
+  
+  return $term;
 }

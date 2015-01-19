@@ -40,34 +40,28 @@ class AdLibWS {
    * Initializes connector.
    */
   public function __construct() {
-    if (ADLIB_DISABLED) {
-      // error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' - AdLib presently disabled.');
+    if (ADLIB_DISABLED)
       return;
-    }
     if (!isset($this->client)) {
       $options = array(
-        'soapversion' => SOAP_1_2,
-        'trace' => TRUE,
+          'soapversion' => SOAP_1_2,
+          'trace' => TRUE,
       );
       if (variable_get('os2web_pws_proxy', FALSE)) {
         $options['proxy_host'] = variable_get('os2web_pws_proxy_host');
         $options['proxy_port'] = variable_get('os2web_pws_proxy_port');
       }
-      $url = variable_get('os2web_adlib_url', FALSE);
-      if ($this->checkUrl($url)) {
-        if (function_exists('xdebug_disable')) {
-          xdebug_disable();
-        }
-        try {
-          if (FALSE !== $url) {
-            $this->client = new SoapClient($url, $options);
-          }
-        } catch (Exception $exc) {
-          watchdog('adlib_api', 'Error creating AdLib client, message: %var', array('%var' => $exc->getMessage()), WATCHDOG_ERROR);
-        }
-        if (function_exists('xdebug_enable')) {
-          xdebug_enable();
-        }
+      $url = variable_get('os2web_adlib_url', 'http://706CAR01/ExponentWSA/ExponentWSA.asmx?wsdl');
+      $url = preg_replace('/([fhtps]{3,5}):\/\/(.+?)\//', self::$baseUrl, $url);
+      preg_match('%http://.+?/%', $url, $matches);
+      self::$baseUrl = array_shift($matches);
+      if (function_exists('xdebug_disable'))
+        xdebug_disable();
+      try {
+        $this->client = new SoapClient($url, $options);
+        //error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Created SOAP client.");
+      } catch (Exception $exc) {
+        watchdog('adlib_api', 'Error creating AdLib client, message: %var', array('%var' => $exc->getMessage()), WATCHDOG_ERROR);
       }
     }
   }
@@ -280,9 +274,11 @@ class AdLibWS {
    */
   public function uploadData($filename, $data, $type = ADLIB_JOBTYPE_PDF, $folder = NULL) {
     if (ADLIB_DISABLED) {
+      watchdog('adlib_api', 'Adlib disabled', array(), WATCHDOG_ERROR);
       return FALSE;
     }
     if (!isset($this->client)) {
+      watchdog('adlib_api', 'Client is not set', array(), WATCHDOG_ERROR);
       return FALSE;
     }
     switch ($type) {
@@ -300,6 +296,7 @@ class AdLibWS {
       $folder = $this->addJobFolder();
     }
     if (!$folder) {
+      watchdog('adlib_api', 'Adding folder failed for file %file', array('%file' => $filename), WATCHDOG_ERROR);
       error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '() - Adding folder failed.');
       return FALSE;
     }

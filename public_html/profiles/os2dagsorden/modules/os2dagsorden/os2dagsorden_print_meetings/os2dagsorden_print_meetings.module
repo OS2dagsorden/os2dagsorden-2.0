@@ -279,6 +279,10 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
             $html .= "<td class='inside content" . _os2dagsorden_print_meetings_mark_weekend_gray($month, $i) . "'" . _os2dagsorden_print_meetings_add_col_span($month, $i) . ">";
             //filling with the content
             foreach ($meetings as $met) {
+		//filtering out tillaegs agenda
+		if (isset($met->field_os2web_meetings_addendum['und'])){
+		    continue;
+		}
                 
                $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
                 if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
@@ -297,7 +301,7 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
                     else
 			 $title = $met->title;
                     
-                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
+                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, '; 
                 }
             }
             //end of content

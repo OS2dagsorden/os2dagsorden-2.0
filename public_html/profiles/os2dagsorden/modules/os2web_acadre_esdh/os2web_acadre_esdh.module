@@ -40,15 +40,34 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => t('This is the path where Acadre publish .XML files to.'),
     '#default_value' => variable_get('os2web_meetings_path', OS2WEB_ACADRE_ESDH_ACADRE_MM_IMPORT_DIR),
   );
-  $form['meetings']['os2web_acadre_add_committee_to_title'] = array(
+  if (variable_get('os2dagsorden_committees_positive_list_as_import_list', FALSE)){
+    $form['os2web_mm'][] = array(
+      '#markup' => t('This approved committes list is overruled by another list, in order to use the list below please disabled the Positive committees list defined in ') . l(t('settings'), 'admin/config/os2dagsorden/settings'),
+    );
+  }
+  $form['os2web_mm']['os2web_meetings_approved_committee'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Approved committees'),
+    '#maxlength' => 200,
+    '#disabled' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
+    '#description' => t('Comma separated list of committees ID approved for publishing.'),
+    '#default_value' => variable_get('os2web_meetings_approved_committee', OS2WEB_ACADRE_ESDH_ACADRE_MM_DEFAULT_APPROVED),
+  );
+
+  $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
     '#type' => 'checkbox',
     '#default_value' => variable_get('os2web_acadre_add_committee_to_title', false),
     '#title' => t('Add committee name to meeting title'), 
     '#description' =>'This decides whether a committee name will be added to meeting title'
- );
+  );
+  $form['os2web_mm']['os2web_meetings_import_closed_agenda'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Import closed agenda'),
+    '#description' => t('This decides if closed agenda is or is not to be imported'),
+    '#default_value' => variable_get('os2web_meetings_import_closed_agenda', FALSE),
+  );
 
-
-  $form['meetings']['os2web_acadre_location_field'] = array(
+  $form['os2web_mm']['os2web_acadre_location_field'] = array(
     '#type' => 'radios',
     '#title' => t('Get the address for the meeting from'),
     '#default_value' => variable_get('s2web_acadre_location_field', 'true'),
@@ -56,24 +75,11 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => t('This decides from which field meeting address gets'),
   );
   
-  $form['meetings']['os2web_meetings_approved_committee'] = array(
-
+  $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
+    '#type' => 'checkbox',
     '#default_value' => variable_get('os2web_acadre_add_committee_to_title', FALSE),
     '#title' => t('Add committee name to meeting title'),
     '#description' => 'This decides whether a committee name will be added to meeting title',
-  );
-  $form['os2web_mm']['os2web_meetings_approved_committee'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Approved committees'),
-    '#maxlength' => 200,
-    '#description' => t('Comma separated list of committees ID approved for publishing.'),
-    '#default_value' => variable_get('os2web_meetings_approved_committee', OS2WEB_ACADRE_ESDH_ACADRE_MM_DEFAULT_APPROVED),
-  );
-  $form['meetings']['os2web_meetings_import_closed_agenda'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Import closed agenda'),
-    '#description' => t('This decides if closed agenda is or is not to be imported'),
-    '#default_value' => variable_get('os2web_meetings_import_closed_agenda', FALSE),
   );
 
   $form['os2web_acadre_plugins'] = array(

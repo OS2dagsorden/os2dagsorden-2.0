@@ -43,6 +43,29 @@ function hide_print_buttons(){
   });
 }
 jQuery(document).ready(function() {
+  jQuery("ul.droptrue").sortable({
+    connectWith: 'ul',
+   });
+ jQuery("ul.droptrue").bind("sortreceive", function(event, ui) {
+    var arr_receiver = [];
+    var arr_sender = [];
+    jQuery(jQuery(this).children('li')).each(function(){
+    arr_receiver.push(jQuery(this).attr('id'));
+  });
+     jQuery(jQuery(ui.sender[0]).children('li')).each(function(){
+    arr_sender.push(jQuery(this).attr('id'));
+  })
+  jQuery('#' + jQuery(this).attr('id') + '_hidden').val(arr_receiver.join(','));
+  jQuery('#' + jQuery(ui.sender[0]).attr('id') + '_hidden').val(arr_sender.join(','));
+  });
+    
+    
+ jQuery(".available_committee").css('height',jQuery(".select-committee").height()+"px");
+  //updatePostOrder();
+});
+ 
+
+jQuery(document).ready(function() {
     jQuery('.form-item-from-date-value-date input.form-text').change(function(){
           jQuery(this).val(prepareDate(jQuery(this).val()));
     })

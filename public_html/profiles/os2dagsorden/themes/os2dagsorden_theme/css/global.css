@@ -1756,3 +1756,29 @@ a.annotator-wrapper {
   padding-left: 0;
   margin-left: 0;
 }
+
+/* -- user_simple_edit drug&drop -- */
+
+.select-committee {
+    float: left;
+}
+.available_committee {
+    float: right;
+    overflow-y: scroll;
+}
+
+ul.droptrue{
+    list-style: none;
+    padding: 0;
+    background: #fff;
+    border: 1px solid rgb(169, 169, 169);
+    min-height: 45px;
+}
+
+ul.droptrue li {
+    margin: 0;
+    cursor: move; 
+    margin: 5px; 
+    padding: 5px; 
+    background: none; background-color: white;
+}
