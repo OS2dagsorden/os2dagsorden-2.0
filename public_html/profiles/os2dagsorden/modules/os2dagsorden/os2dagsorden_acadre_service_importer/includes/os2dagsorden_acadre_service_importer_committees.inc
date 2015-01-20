@@ -58,31 +58,3 @@ function os2dagsorden_acadre_service_importer_create_committee($xml_data){
     taxonomy_term_save($term);
     return $term->tid;
 }
-
-/**
- * Helper function. Returns the committee based on its sub id.
- *
- * @param int $com_subid committee sub id
- *
- * @return the committee term, if found.
- */
-function _os2dagsorden_acadre_service_importer_get_committee_by_subid($com_subid){
-    $vid = db_select('taxonomy_vocabulary', 'tv')
-            ->fields('tv', array('vid'))
-            ->condition('machine_name', 'os2web_meetings_tax_committee')
-            ->execute()
-            ->fetchField();
-	    
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term')
-            ->propertyCondition('vid', $vid)
-            ->fieldCondition('field_os2web_meetings_com_subid', 'value', intval($com_subid), '=');
-	    
-    $result = $query->execute();
-    if (isset($result['taxonomy_term'])) {   
-        $tids = array_keys($result['taxonomy_term']);
-        $tid = reset($tids);
-        $term = taxonomy_term_load($tid);
-        return $term;
-    }    
-}
