@@ -27,7 +27,7 @@ function _os2dagsorden_acadre_service_importer_process_committees($xml_file){
  */
 function os2dagsorden_acadre_service_importer_create_committee($xml_data){
     //getting committee by sub ID
-    $term = _os2dagsorden_acadre_service_importer_get_committee_by_subid($xml_data['sub_id']);
+    $term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($xml_data['sub_id']);
     
     //no success, getting committee by name and setting sub id
     if (!isset($term)){
