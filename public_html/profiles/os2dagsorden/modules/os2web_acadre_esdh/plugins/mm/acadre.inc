@@ -205,7 +205,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       if ($meeting['committee'] == ''){
         $is_meeting_approved = FALSE;
       } else {
-        $term = _os2dagsorden_acadre_service_importer_get_committee_by_subid($meeting['committee_id']);
+        $term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($meeting['committee_id']);
         //term not found
         if (!$term){
           $is_meeting_approved = FALSE;  

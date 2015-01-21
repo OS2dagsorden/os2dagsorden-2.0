@@ -21,7 +21,7 @@ function _os2dagsorden_acadre_service_importer_process_meetings($xml_file){
         );
 
         if ($xml_data['active'] == 'true') {
-	    $term = _os2dagsorden_acadre_service_importer_get_committee_by_subid($xml_data['committee_id']);
+	    $term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($xml_data['committee_id']);
             if (isset($term))
 	      _os2dagsorden_acadre_service_importer_create_meeting($xml_data, $term->tid);
         }
