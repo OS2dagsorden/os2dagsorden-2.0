@@ -32,8 +32,9 @@ function os2dagsorden_acadre_service_importer_menu() {
 }
 
 function os2dagsorden_acadre_service_importer_sync(){
-    os2dagsorden_acadre_service_importer_import_committees();
+    //os2dagsorden_acadre_service_importer_import_committees();
     os2dagsorden_acadre_service_importer_import_meetings();
+    print_r("done");
 }
 
 function os2dagsorden_acadre_service_importer_cron(){
