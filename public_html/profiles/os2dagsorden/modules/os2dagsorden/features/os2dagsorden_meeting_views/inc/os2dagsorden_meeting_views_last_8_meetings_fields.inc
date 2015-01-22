@@ -120,4 +120,8 @@ function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_location($mee
 function os2dagsorden_meeting_views_last_8_meetings_filter_in_my_list($tid){
   return os2dagsorden_meeting_views_common_filter_in_my_list($tid);
 }
+
+function os2dagsorden_meeting_views_last_8_meetings_all_meetings_filter_in_my_list($tid){
+  return !os2dagsorden_access_helper_check_user_can_see_meeting(null, $tid);
+}
 /////////////////////////////////////////FILTER END /////////////////////////////////////////

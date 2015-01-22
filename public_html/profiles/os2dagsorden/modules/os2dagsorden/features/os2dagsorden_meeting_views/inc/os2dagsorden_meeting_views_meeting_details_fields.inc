@@ -67,12 +67,30 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
 	$additional_descriptions[$file['description']]['closed'] = $file;
     }
   }
+  
   if (!empty($meeting->field_os2web_meetings_add_doc['und'])){
     foreach ($meeting->field_os2web_meetings_add_doc['und'] as $file){
 	$additional_descriptions[$file['description']]['opened'] = $file;
     }
   }
-
+  
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_os2web_meetings_addendum', 'nid', $meeting_id, '=');
+   $result = $query->execute();
+  if (isset($result['node'])) {
+    $additional_meetings = array_keys($result['node']);
+  
+  foreach ($additional_meetings  as $additional_meeting_id){
+      $additional_meeting=node_load($additional_meeting_id);
+      if (!empty($additional_meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
+          $additional_descriptions[]['opened'] = $additional_meeting->field_os2web_meetings_full_doc['und'][0];
+     }
+     if (!empty($additional_meeting->field_os2web_meetings_full_doc_c['und'][0]['uri'])){
+          $additional_descriptions[]['closed'] = $additional_meeting->field_os2web_meetings_full_doc_c['und'][0];
+     }
+    }
+  }
   ksort($additional_descriptions);
 
   foreach ($additional_descriptions as $add_desc){
@@ -171,7 +189,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_enddate($meeting_id){
    if (variable_get('os2dagsorden_show_samlet_dokument_link', true)) 
        os2dagsorden_meeting_views_meeting_description_download();
  }
-//////////////////////////////////////////PAGE fields end //////////////////////////////////////////// 
+//////////////////////////////////////////PAGE fields end ////////////////////////////////////////////
 
  /////////////////////////////////////////COMMENTS fields START /////////////////////////////////////////
 function os2dagsorden_meeting_views_meeting_details_comments_access(){
@@ -567,7 +585,8 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_print_li
 function os2dagsorden_meeting_views_meeting_details_fields_filter_bullet_point($nid, $filter_opened){
    if (variable_get('os2dagsorden_group_closed_bullet_points', 'false') === 'false'){//put inline
     //accept every type
-    return FALSE;
+      
+        return  !$filter_opened; //FALSE;
   } else {//put separately
     $bullet_point = node_load($nid);
     

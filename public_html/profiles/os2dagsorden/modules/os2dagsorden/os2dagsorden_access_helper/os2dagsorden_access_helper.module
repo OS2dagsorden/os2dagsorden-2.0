@@ -340,6 +340,49 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
 
 /**
  * Checks is given meeting can bee seen by the user.
+ * The function checks user role, if user has role 'os2dagsorden limited' then only his own committees would be visible for him
+ *
+ * @param int $meeting_id the ID of the meeting
+ *
+ * @return true of false
+ */
+function os2dagsorden_access_helper_check_user_can_see_meeting($meeting_id, $committee_tid = null){
+  $user = os2dagsorden_access_helper_get_user();
+  if (!$user->uid) {
+    return FALSE;
+  }
+
+  if (!$committee_tid){
+    $meeting = node_load($meeting_id);
+    $committee_tid = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
+  }
+
+  //has os2dagsorden limited role
+  if (in_array('os2dagsorden limited', $user->roles)) {
+    if (!empty($user->field_user_committee)) { //is part of the committee
+      foreach ($user->field_user_committee['und'] as $user_committee_id) {
+        if ($committee_tid == $user_committee_id['tid']) {
+          return TRUE;
+        }
+      }
+    }
+  
+    if (!empty($user->field_follows_committee_plus)) { //follows committee PLUS
+      foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
+        if ($committee_tid == $user_committee_id['tid']) {
+          return TRUE;
+        }
+      }
+    }
+    //none of the above
+    return FALSE;
+  } else {//does not have os2dagsorden limited role, therefore can see meeting basic information
+    return TRUE;
+  }
+}
+
+/**
+ * Checks is given meeting agenda can bee seen by the user.
  *
  * @param int $meeting_id the ID of the meeting
  *
@@ -405,6 +448,10 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
   global $user;
 
   if (!$user_ent->uid) {
+    return FALSE;
+  }
+
+  if (!os2dagsorden_access_helper_check_user_can_see_meeting($meeting_id)) {
     return FALSE;
   }
 
@@ -585,7 +632,34 @@ function os2dagsorden_access_helper_get_main_meeting($meeting_id){
  * @return meeting
  */
 function os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point_id) {
-  $bullet_point = node_load($bullet_point_id);
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_os2web_meetings_bullets', 'target_id',  $bullet_point_id, '=');
+  $result = $query->execute(); 
+  if (isset($result['node'])){
+    $nids = array_keys($result['node']);
+    $meeting_id = reset($nids);
+    return node_load($meeting_id);
+  } 
+}
+
+/**
+ * Returns a bullet point associated with this bullet point attachment
+ *
+ * @param int $bpa_id ID of the bullet point attachment
+ *
+ * @return bullet point
+ */
+function os2dagsorden_access_helper_get_bullet_point_by_bpa($bpa_id) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_os2web_meetings_attach', 'target_id',  $bpa_id, '=');
+  $result = $query->execute(); 
+  if (isset($result['node'])){
+    $nids = array_keys($result['node']);
+    $bullet_id = reset($nids);
+    return node_load($bullet_id);
+  } 
 }
 
 /**
@@ -1075,6 +1149,21 @@ function os2dagsorden_access_helper_node_access($node, $op, $account){
         return NODE_ACCESS_ALLOW;
       else return NODE_ACCESS_DENY;
     }
+  } else if ($node->type == 'os2web_meetings_meeting') {
+    if (os2dagsorden_access_helper_check_user_can_see_meeting($node->nid))
+      return NODE_ACCESS_ALLOW;
+    else return NODE_ACCESS_DENY;
+  } else if ($node->type == 'os2web_meetings_bullet') {
+    $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($node->nid);
+    if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting->nid ,$node->nid))
+      return NODE_ACCESS_ALLOW;
+    else return NODE_ACCESS_DENY;
+  } else if ($node->type == 'os2web_meetings_bullet_attach') {
+    $bullet_point = os2dagsorden_access_helper_get_bullet_point_by_bpa($node->nid);
+    $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point->nid);
+    if (os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($meeting->nid, $bullet_point->nid, $node->nid))
+      return NODE_ACCESS_ALLOW;
+    else return NODE_ACCESS_DENY;
   }
 }
 
