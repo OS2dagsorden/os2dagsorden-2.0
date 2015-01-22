@@ -217,7 +217,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   
   if (!os2dagsorden_access_helper_is_touch()){
     $form[] = array(
-      '#markup' => '<div class="form-item">' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</div>',
+      '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
     );
 
     $form[] = array(
