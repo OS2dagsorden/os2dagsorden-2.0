@@ -99,15 +99,90 @@ function os2dagsorden_admin_suite_menu() {
         'access arguments' => array('administer os2web'),
         
     );
+    
+    $items['os2dagsorden/admin_suite/reschedule_adlib'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dasorden_admin_suite_reschedule_file_adlib',
+        'access arguments' => array('administer os2web'),
+    );
+   $items['os2dagsorden/admin_suite/just_code'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dasorden_admin_suite_just_code',
+        'access arguments' => array('administer os2web'),
+    );
+	
     return $items;
 }
  function os2dagsorden_admin_suite_user_remove_org_meetings_category(){
     $query = new EntityFieldQuery();
-      $result = $query->entityCondition('entity_type', 'user')
-	 ->execute(); 
-      $users = user_load_multiple(array_keys($result['user']));
-      var_dump($users);
-      
+    $result = $query->entityCondition('entity_type', 'user')
+       ->execute(); 
+    $users = user_load_multiple(array_keys($result['user']));
+    $new_com_id = 521;
+    $old_com_ids = array(543);
+
+    foreach($users as $user){
+	print("<br/><br/>");
+	$changed = FALSE;
+	if (isset($user->field_user_committee['und'])){
+	    print("MEMBER: ");
+	    print_r($user->field_user_committee['und']);
+	    for ($i = 0; $i <= sizeof($user->field_user_committee['und']); $i++) {
+		if (in_array($user->field_user_committee['und'][$i]['tid'], $old_com_ids)){
+		    $user->field_user_committee['und'][$i]['tid'] = $new_com_id;
+		    $changed = TRUE;
+		}
+	    }
+	    print("<br/>NEW MEMBER: ");
+	    print_r($user->field_user_committee['und']);
+	}
+	if (isset($user->field_follows_committee['und'])){
+	    print("<br/>");
+	    print("<br/>");
+	    print("FOLLOWS: ");
+	    print_r($user->field_follows_committee['und']);
+	    for ($i = 0; $i <= sizeof($user->field_follows_committee['und']); $i++) {
+		if (in_array($user->field_follows_committee['und'][$i]['tid'], $old_com_ids)){
+		    $user->field_follows_committee['und'][$i]['tid'] = $new_com_id;
+		    $changed = TRUE;
+		}
+	    }
+	    print("<br/>NEW FOLLOWS: ");
+	    print_r($user->field_follows_committee['und']);
+	}
+	if (isset($user->field_follows_committee_plus['und'])){
+	    print("<br/>");
+	    print("FOLLOWS PLUS: ");
+	    print_r($user->field_follows_committee_plus['und']);
+	    for ($i = 0; $i <= sizeof($user->field_follows_committee_plus['und']); $i++) {
+		if (in_array($user->field_follows_committee_plus['und'][$i]['tid'], $old_com_ids)){
+		    $user->field_follows_committee_plus['und'][$i]['tid'] = $new_com_id;
+		    $changed = TRUE;
+		}
+	    }
+	    print("<br/>NEW FOLLOWS PLUS: ");
+	    print_r($user->field_follows_committee_plus['und']);
+	}
+	if (isset($user->field_follows_committee_pp['und'])){
+	    print("<br/>");
+	    print("FOLLOWS PLUS PLUS: ");
+	    print_r($user->field_follows_committee_pp['und']);
+	    for ($i = 0; $i <= sizeof($user->field_follows_committee_pp['und']); $i++) {
+		if (in_array($user->field_follows_committee_pp['und'][$i]['tid'], $old_com_ids)){
+		    $user->field_follows_committee_pp['und'][$i]['tid'] = $new_com_id;
+		    $changed = TRUE;
+		}
+	    }
+	    print("<br/>NEW FOLLOWS PLUS PLUS: ");
+	    print_r($user->field_follows_committee_pp['und']);
+	}
+	if ($changed){
+	    print("CHANGED");
+	    //user_save($user);
+	} else {
+	    print("NOT CHANGED");
+	}
+    }
  }
  
 function os2dagsorden_admin_suite_update_meetings_sysid(){
@@ -199,15 +274,27 @@ function os2dagsorden_admin_suite_update_meetings_sysid(){
  * That will update the meetings meta data field (user for the search)
  */
 function os2dagsorden_admin_suite_resaved_all_meetings(){
+    $new_com_id = 521;
+    $old_com_ids = array(543);
+
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-      ->propertyCondition('type', array('os2web_meetings_meeting'));
+    ->propertyCondition('type', array('os2web_meetings_meeting'))
+    ->fieldCondition('field_os2web_meetings_committee', 'tid', $old_com_ids, 'IN');
   
   $result = $query->execute();
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     foreach ($nids as $nid){
-      node_save(node_load($nid));
+	$meeting = node_load($nid);
+	print('<br/><br/>');
+	print($nid);
+	print('<br/>OLD COM ID: ');
+	print($meeting->field_os2web_meetings_committee['und'][0]['tid']);
+	$meeting->field_os2web_meetings_committee['und'][0]['tid'] = $new_com_id;
+	print('<br/>NEW COM ID: ');
+	print($meeting->field_os2web_meetings_committee['und'][0]['tid']);
+	//node_save($meeting);
     }
   }
       
@@ -380,7 +467,7 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	foreach ($files as $file){
 	  if ($file === '.' || $file === '..') continue;
 	  
-	  if (!preg_match("/\.xml$/i",$file) && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
+	  if (!preg_match("/\.xml$/i",$file)){// && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
 	    $not_pdf_files[] = $file;
 	  }
 	}
@@ -388,10 +475,11 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	//going through not pdf files, to decide which to delete
 	$files_to_delete = array();
 	foreach ($not_pdf_files as $not_pdf_file){
-	  $result = db_query("SELECT COUNT(*) FROM file_managed WHERE filename ='" . $not_pdf_file . "'")->fetchField();
-	  if ($result == 0)
+	  $result = db_query("SELECT COUNT(*) FROM file_managed WHERE filename ='" . mysql_real_escape_string($not_pdf_file) . "'")->fetchField();
+	  if ($result == 0 && !is_numeric(substr(basename($not_pdf_file),0,1))) {
 	    $files_to_delete[] = $not_pdf_file;
 	  }
+	}
 	
 	//deleting file
 	foreach ($files_to_delete as $file){
@@ -540,8 +628,10 @@ function os2dagsorden_admin_suite_update_meeting_status(){
 function os2dagsorden_admin_suite_set_bullet_point_number(){
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
-		->propertyCondition('type', array('os2web_meetings_bullet'));
-		//->fieldCondition('field_os2web_meetings_bul_number', 'value', 'NULL', '!=');
+		->propertyCondition('type', array('os2web_meetings_bullet'))
+		->fieldCondition('field_os2web_meetings_bul_case', 'value', '')
+		->range(0,500);
+		
     $result = $query->execute();
     
     
@@ -549,25 +639,26 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
       $nids = array_keys($result['node']);
       foreach ($nids as $nid){
 	$bullet_point = node_load($nid);
-	if (field_get_items('node', $bullet_point, 'field_os2web_meetings_bul_number') == NULL) {
-	  print_r("Doing: " . $nid);
-	  $title = $bullet_point->title;
-	  $title_arr = explode(" ", $title);
-	  if (strcmp($title_arr[1], "Punkt") != 0){
-	    $number = $title_arr[1];
-	  } 
-	  else {
-	    $number = $title_arr[2];
-	  }
-	  
-	  $bullet_point->field_os2web_meetings_bul_number['und'][0]['value'] = $number;
-	  node_save($bullet_point);
-	  print_r(" Done");
-	  print_r("<br/><br/>");
-	} else {
-	  print_r("Skipped: " . $nid);
-	  print_r("<br/><br/>");
-	}
+	$title = $bullet_point->title;
+	print("<br/><br/>");
+	print($title);
+	$pos_of_1_brac = mb_strpos($title,'(');
+	$pos_of_space_after_1_brac = mb_strpos($title,' ', $pos_of_1_brac);
+	$pos_of_2_brac = mb_strpos($title,')');
+	print("<br/>");
+	$cut = mb_substr($title,$pos_of_1_brac+1, $pos_of_2_brac-$pos_of_1_brac-1);
+	print(' CUT: ' . $cut);
+	print("<br/>");
+	$case_nr = mb_substr($cut,0);//, mb_strpos($cut,' '));
+	print('CASE NR: ' . $case_nr);
+	print("<br/>");
+	$new_title = mb_substr($title, 0, $pos_of_1_brac-1) . mb_substr($title, $pos_of_2_brac+1);
+	print('NEW TITLE: ' . $new_title); 
+	
+	$bullet_point->title = $new_title;
+	$bullet_point->field_os2web_meetings_bul_case['und'][0]['value'] = $case_nr;
+	//if (isset($case_nr) && !empty($case_nr))
+	//    node_save($bullet_point);
       }
     }
 	
@@ -729,4 +820,46 @@ function os2dagsorden_admin_suite_update_meetings_type(){
 	    node_save($node);
 	}
     }
+}
+
+function os2dasorden_admin_suite_reschedule_file_adlib(){
+    //getting all bullet_point_attachments
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+		->propertyCondition('type', array('os2web_meetings_bullet_attach'))
+		->fieldCondition('field_os2web_meetings_bpa_file', 'fid', '', '!=');
+		//->fieldCondition('field_os2web_meetings_bpa_html', 'fid', NULL)
+		//->range(0,2000);
+    $result = $query->execute();
+
+    if (isset($result['node'])) {
+	$nids = array_keys($result['node']);
+	foreach($nids as $nid){
+	    $bullet = node_load($nid);
+	    if (!$bullet->field_os2web_meetings_bpa_html['und']){
+		$file = file_load($bullet->field_os2web_meetings_bpa_file['und'][0]['fid']);
+		if ($file->filemime !== 'application/pdf'){
+		    print("<br/>");
+		    print($file->fid . ' ' . $bullet->nid);
+		    os2web_adlib_api_convert_to_pdf($file->fid);
+		}
+	    }
+	}
+    }
+}
+
+function os2dasorden_admin_suite_just_code () {
+  
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+            ->fieldCondition('field_os2web_meetings_addendum', 'nid', 271674, '=');
+   $result = $query->execute();
+  if (isset($result['node'])) {
+    $possible_meetings = array_keys($result['node']);
+  
+  foreach ($possible_meetings  as $tillaeg){
+      $tillaegmeeting=node_load($tillaeg);
+      var_dump($tillaegmeeting);
+  }
+  }
 }
