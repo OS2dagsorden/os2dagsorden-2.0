@@ -217,8 +217,14 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   
   if (!os2dagsorden_access_helper_is_touch()){
     $form[] = array(
+      '#markup' => '<div class="form-item">' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</div>',
+    );
+
+    $form[] = array(
       '#markup' => '<div class="select-committee">',
     );
+   
+
     $form['member_of_div'] = array(
       '#access' => user_access('administer os2web', $full_user),  
       '#type' => 'item' ,
@@ -384,7 +390,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     $com_list .= "</ul>";
     $form['available_committee'] = array(
       '#type' => 'item' ,
-      '#prefix' => "<div class='available_committee'><label>" . t('Available committee:') . "</label>",       
+      '#prefix' => "<div class='available_committee'><label>" . t('Available committee') . ":</label>",       
       '#markup' => $com_list,
       '#suffix' => '</div>'
     ); 
