@@ -268,6 +268,9 @@ function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
        $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_participants', 'Deltagere');
     if ($view->display_handler->options['fields']['php']['ui_name'] == 'Participants (Cancelled)')
         $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_cancelled_participants', 'Afbud / Fraværende');
+  } else if ($view->name == 'events'){
+    //print_r($view);
+    //print($view->name);
   }
 }
 
@@ -346,7 +349,7 @@ function os2dagsorden_settings_block_view_alter(&$data, $block){
                     if ($menu_item['#title'] == 'Hjem')//Hjem
                         $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_home', 'Hjem');
                     if ($menu_item['#title'] == 'Halvårs-kalender')//Halvårs-kalender
-                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender');
+                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . ' ' . date('Y');
                 }
             }
             break;
