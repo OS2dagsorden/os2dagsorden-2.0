@@ -13,7 +13,7 @@
  */
 define('DEFAULT_PDF_HTML_ZOOM', 1.25); // default zoom for convertion
 define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/')); // default zoom for convertion
-define('DEFAULT_PDF_HTML_TRANS_LIMIT', 50);//number of files to handle at once
+define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);//number of files to handle at once
 
 // to delete
 function os2dagsorden_pdf2htmlex_menu() {
@@ -55,11 +55,18 @@ function os2dagsorden_pdf2htmlex_report(){
       ))
       ->condition('fid', $fid, '=')
       ->execute();
+
+    drupal_goto('admin/reports/pdf2htmlex');
   }
 
   //table output
+    $or = db_or();
+    $or->condition('progress', 'Completed','!=');
+    $or->condition('progress', NULL);
+
   $result = db_select('os2dagsorden_pdf2htmlex_files', 'o')
     ->fields('o')
+    ->condition($or)
     ->execute()
     ->fetchAllAssoc('fid');
 
@@ -301,6 +308,17 @@ function _os2dagsorden_pdf2htmlex_improve_html($data){
  * @return none
  */
 function os2dagsorden_pdf2htmlex_convert($fid, $did) {
+  // deleting entry if the did is not pointing anywhere
+  if (!node_load($did)){
+    db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('fid', $fid)
+      ->condition('did', $did)
+      ->execute();
+
+    return;
+  }
+
+
   $file = file_load($fid);
   
   $file_path_real = drupal_realpath($file->uri);//with file name
@@ -320,10 +338,13 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
 
     //check if already convered
     if(!file_exists($path)){
-      $shell_file_path_real = "'" . str_replace("'", "\'", $file_path_real) . "'";
-      $shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
+	setlocale(LC_CTYPE, "en_DK.UTF-8");//TODO: one has to know the exact locale of the system, otherwise uncomment the lines
+	$shell_file_path_real = escapeshellarg($file_path_real);
+	$shell_dest_dir_real = escapeshellarg($dest_dir_real);
+      //$shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";
+      //$shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
 
-	  shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
+	shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
 
         //successful conversion?
 	if (file_exists($path)) {
