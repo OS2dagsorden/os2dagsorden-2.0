@@ -291,7 +291,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 	    }
 	  }
 	}
-     
+
     $bullet_points = array();
     if ($node->field_os2web_meetings_bullets['und']) {
       $bullet_points = $node->field_os2web_meetings_bullets['und'];
