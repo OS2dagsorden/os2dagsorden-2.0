@@ -128,7 +128,7 @@ function os2dagsorden_theme_date_nav_title($params)
             $date_arg = $date_info->year;
             break;
         case 'month':
-            $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F Y' : 'F');
+            $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F Y' : 'F Y');
             $title = date_format_date($date_info->min_date, 'custom', $format);
             $date_arg = $date_info->year . '-' . date_pad($date_info->month);
             break;

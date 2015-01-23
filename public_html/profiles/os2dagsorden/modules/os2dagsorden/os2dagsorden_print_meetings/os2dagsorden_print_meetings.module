@@ -20,7 +20,7 @@ function os2dagsorden_print_meetings_menu() {
     $items = array();
 
     $items['meetings/print'] = array(
-        'title' => 'MØDEKALENDER ' . date('Y'),
+        'title' => variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . ' ' . date('Y'),
         'type' => MENU_CALLBACK,
         'page callback' => '_os2dagsorden_print_meetings_callback',
         'access arguments' => array('access content')
@@ -37,7 +37,7 @@ function os2dagsorden_print_meetings_menu() {
 function _os2dagsorden_print_meetings_callback() {
     global $base_url;
     $breadcrumb[] = l('Hjem', $base_url);
-    $breadcrumb[] .= '<span class="breadcrumb-active">Halvårs-kalender</span>';
+    $breadcrumb[] .= '<span class="breadcrumb-active">' . variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . ' ' . date('Y') . '</span>';
     drupal_set_breadcrumb($breadcrumb);
 
     drupal_add_css(drupal_get_path('module', 'os2dagsorden_print_meetings') . '/css/os2dagsorden_print_meetings.css');
