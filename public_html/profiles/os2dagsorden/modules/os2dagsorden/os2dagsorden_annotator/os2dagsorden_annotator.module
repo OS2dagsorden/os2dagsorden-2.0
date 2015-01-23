@@ -196,6 +196,8 @@ function _os2dagsorden_annotator_update($id) {
       ))
       ->condition('id', $id, '=')
       ->execute();
+    
+    print(json_encode(array()));
 }
 
 /**
@@ -210,6 +212,8 @@ function _os2dagsorden_annotator_delete($id) {
     db_delete('os2dagsorden_annotator_notes')
       ->condition('id', $id)
       ->execute();
+    
+    print(json_encode(array()));
 }
 
 /**
@@ -275,6 +279,7 @@ function _os2dagsorden_annotator_search() {
  *
  */
 function _os2dagsorden_annotator_dummy(){
+    print(json_encode(array()));
 }
 
 /**
