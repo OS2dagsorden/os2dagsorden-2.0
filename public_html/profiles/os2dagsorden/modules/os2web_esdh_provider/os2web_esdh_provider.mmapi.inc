@@ -282,50 +282,16 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     }
    //adding description
       if (!empty($meeting['full_doc'])){	
-	if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {
-	       
-	  if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0){
-	    if (isset($meeting['agenda_name']) && stripos($meeting['agenda_name'], 'tillæg') !== FALSE){//is additional agenda
-	        $imported = FALSE;
-	      if (isset($node->field_os2web_meetings_add_doc_c)){
-		foreach($node->field_os2web_meetings_add_doc_c as $index => $description_field){    
-		  if ($description_field['description'] === $meeting_id['id']){//same acadre id, replace the description
-		      $node->field_os2web_meetings_add_doc_c[LANGUAGE_NONE][$index] = (array) $file;
-		      $imported = TRUE;
-		      break;
-		  }
-		}
-	      }
-	      if (!$imported)
-                  $node->field_os2web_meetings_add_doc_c[LANGUAGE_NONE][] = (array) $file;	
-	        
-	    } else {//not additional agenda
+	if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {      
+	  if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0){	    
 	       $node->field_os2web_meetings_full_doc_c[LANGUAGE_NONE][0] = (array) $file;
 	    }
-	  } else {
-	    if (isset($meeting['agenda_name']) && stripos($meeting['agenda_name'], 'tillæg') !== FALSE){//not additional agenda
-	        $imported = FALSE;
-	      if (isset($node->field_os2web_meetings_add_doc)){
-		foreach($node->field_os2web_meetings_add_doc as $index => $description_field){    
-		  if ($description_field['description'] === $meeting_id['id']){//same acadre id, replace the description
-		      $node->field_os2web_meetings_add_doc[LANGUAGE_NONE][$index] = (array) $file;
-		      $imported = TRUE;
-		      break;
-		  }
-		}
-	      }
-	      if (!$imported)
-		$node->field_os2web_meetings_add_doc[LANGUAGE_NONE][] = (array) $file;  
-		
-	      
-	    } else {//is additional agenda
-	      $node->field_os2web_meetings_full_doc[LANGUAGE_NONE][0] = (array) $file;
+	  else {
+	       $node->field_os2web_meetings_full_doc[LANGUAGE_NONE][0] = (array) $file;
 	    }
 	  }
 	}
-      }
-
-
+     
     $bullet_points = array();
     if ($node->field_os2web_meetings_bullets['und']) {
       $bullet_points = $node->field_os2web_meetings_bullets['und'];
