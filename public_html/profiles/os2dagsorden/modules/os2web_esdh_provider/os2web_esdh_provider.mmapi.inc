@@ -123,7 +123,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
       // Republish if meeting_sub_id changed.
       if (defined('MM_REPUBLISH_SUBVERSION') && MM_REPUBLISH_SUBVERSION) {
-        if ($node->field_os2web_meetings_sub_id[LANGUAGE_NONE][0]['value'] != $meeting['meeting_sub_id']) {
+        if ($node->field_os2web_meetings_sub_id[LANGUAGE_NONE][0]['value'] < $meeting['meeting_sub_id']) {
           $republish = TRUE;
           $reason = 'MM_REPUBLISH_SUBVERSION';
         }
