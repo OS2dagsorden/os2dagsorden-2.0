@@ -3319,7 +3319,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -3382,7 +3382,73 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '7',
+        'weight' => '8',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_active'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_active'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_active',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => 'Inactive',
+          1 => 'Active',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => array(
+        0 => array(
+          'value' => 1,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 10,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_active',
+      'label' => 'Active',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 0,
+        ),
+        'type' => 'options_onoff',
+        'weight' => '2',
       ),
     ),
   );
@@ -3446,7 +3512,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '8',
+        'weight' => '9',
       ),
     ),
   );
@@ -3500,7 +3566,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'jquery_colorpicker',
         'settings' => array(),
         'type' => 'jquery_colorpicker',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -3563,7 +3629,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'text_textfield',
-        'weight' => '6',
+        'weight' => '7',
       ),
     ),
   );
@@ -3619,7 +3685,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '3',
+        'weight' => '4',
       ),
     ),
   );
@@ -3678,166 +3744,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '2',
-      ),
-    ),
-  );
-
-  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_date_valid'.
-  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_date_valid'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_date_valid',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'locked' => '0',
-      'module' => 'date',
-      'settings' => array(
-        'cache_count' => '4',
-        'cache_enabled' => 0,
-        'granularity' => array(
-          'day' => 'day',
-          'hour' => 0,
-          'minute' => 0,
-          'month' => 'month',
-          'second' => 0,
-          'year' => 'year',
-        ),
-        'timezone_db' => '',
-        'todate' => 'optional',
-        'tz_handling' => 'none',
-      ),
-      'translatable' => '0',
-      'type' => 'datetime',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_tax_committee',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'date',
-          'settings' => array(
-            'format_type' => 'long',
-            'fromto' => 'both',
-            'multiple_from' => '',
-            'multiple_number' => '',
-            'multiple_to' => '',
-          ),
-          'type' => 'date_default',
-          'weight' => 2,
-        ),
-      ),
-      'entity_type' => 'taxonomy_term',
-      'field_name' => 'field_os2web_meetings_date_valid',
-      'label' => 'Date valid',
-      'required' => 0,
-      'settings' => array(
-        'default_value' => 'now',
-        'default_value2' => 'same',
-        'default_value_code' => '',
-        'default_value_code2' => '',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'date',
-        'settings' => array(
-          'increment' => '15',
-          'input_format' => 'd/m/Y - H:i:s',
-          'input_format_custom' => '',
-          'label_position' => 'above',
-          'text_parts' => array(),
-          'year_range' => '-3:+3',
-        ),
-        'type' => 'date_select',
-        'weight' => '9',
-      ),
-    ),
-  );
-
-  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_ext_url'.
-  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_ext_url'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_os2web_meetings_ext_url',
-      'foreign keys' => array(),
-      'indexes' => array(),
-      'locked' => '0',
-      'module' => 'link',
-      'settings' => array(
-        'attributes' => array(
-          'class' => '',
-          'rel' => '',
-          'target' => 'default',
-        ),
-        'display' => array(
-          'url_cutoff' => 80,
-        ),
-        'enable_tokens' => 1,
-        'title' => 'optional',
-        'title_maxlength' => 128,
-        'title_value' => '',
-        'url' => 0,
-      ),
-      'translatable' => '0',
-      'type' => 'link_field',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_meetings_tax_committee',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => 'Hvis den taksonomi der bruges findes i en drop down list kan der angives en ekstern url som åbnes i stedet.',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'link',
-          'settings' => array(),
-          'type' => 'link_default',
-          'weight' => 3,
-        ),
-      ),
-      'entity_type' => 'taxonomy_term',
-      'field_name' => 'field_os2web_meetings_ext_url',
-      'label' => 'Ekstern URL',
-      'required' => 0,
-      'settings' => array(
-        'attributes' => array(
-          'class' => '',
-          'configurable_title' => 0,
-          'rel' => '',
-          'target' => 'default',
-          'title' => '',
-        ),
-        'display' => array(
-          'url_cutoff' => '80',
-        ),
-        'enable_tokens' => 1,
-        'linkit' => array(
-          'enable' => 0,
-          'insert_plugin' => '',
-        ),
-        'title' => 'optional',
-        'title_maxlength' => '255',
-        'title_value' => '',
-        'url' => 0,
-        'user_register_form' => FALSE,
-        'validate_url' => 1,
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'link',
-        'settings' => array(),
-        'type' => 'link_field',
-        'weight' => '10',
+        'weight' => '3',
       ),
     ),
   );
@@ -3847,6 +3754,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t(' Særlige Forhold');
   t('Abbreviation');
   t('Acadre name');
+  t('Active');
   t('Additional doc');
   t('Additional doc closed');
   t('Body');
@@ -3858,15 +3766,12 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Committee');
   t('Committee Sub ID');
   t('Date');
-  t('Date valid');
-  t('Ekstern URL');
   t('Enclosures');
   t('File');
   t('File HTML');
   t('Full doc');
   t('Full doc closed');
   t('HTML File Page Amount');
-  t('Hvis den taksonomi der bruges findes i en drop down list kan der angives en ekstern url som åbnes i stedet.');
   t('ID');
   t('Lokation');
   t('Meeting ID');

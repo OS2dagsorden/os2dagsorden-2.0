@@ -197,24 +197,13 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
       Role with the highest priority is shown next to user\'s full name in the top right conter.'),
   );*/
 
-  $com = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
-  $com_terms = taxonomy_get_tree($com->vid);
+  $com_terms = os2dagsorden_settings_get_active_committees();
   $com_select = array();
   
   foreach ($com_terms as $com_term) {
     $com_select[$com_term->tid] = $com_term->name;
-   
   }
 
-  //limiting to only positive committee list
-  $com_pos_list = array();
-  foreach(variable_get('os2dagsorden_committees_positive_list') as $com_id){
-      if ($com_id)
-	  $com_pos_list[$com_id] = $com_select[$com_id];
-  }
-  if (!empty($com_pos_list))
-      $com_select = $com_pos_list;
-  
   if (!os2dagsorden_access_helper_is_touch()){
     $form[] = array(
       '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
