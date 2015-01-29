@@ -20,7 +20,7 @@ function os2dagsorden_print_meetings_menu() {
     $items = array();
 
     $items['meetings/print'] = array(
-        'title' => variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . ' ' . date('Y'),
+        'title' => variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender'),
         'type' => MENU_CALLBACK,
         'page callback' => '_os2dagsorden_print_meetings_callback',
         'access arguments' => array('access content')
@@ -37,7 +37,7 @@ function os2dagsorden_print_meetings_menu() {
 function _os2dagsorden_print_meetings_callback() {
     global $base_url;
     $breadcrumb[] = l('Hjem', $base_url);
-    $breadcrumb[] .= '<span class="breadcrumb-active">' . variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . ' ' . date('Y') . '</span>';
+    $breadcrumb[] .= '<span class="breadcrumb-active">' . variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . '</span>';
     drupal_set_breadcrumb($breadcrumb);
 
     drupal_add_css(drupal_get_path('module', 'os2dagsorden_print_meetings') . '/css/os2dagsorden_print_meetings.css');
@@ -95,7 +95,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $form['submit_1_half'] = array(
             '#type' => 'submit',
             '#submit' => array('_os2dagsorden_print_meetings_form_submit_1_half'),
-            '#value' => t('Hent tabellen for det første halvår'),
+            '#value' => t('FØRSTE HALVÅR') . ' ' . date('Y'),
 	    '#attributes' => ($from_month == 1 ? array('class' => array('button-active')) : ''),
         );
 
@@ -106,7 +106,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $form['submit_2_half'] = array(
             '#type' => 'submit',
             '#submit' => array('_os2dagsorden_print_meetings_form_submit_2_half'),
-            '#value' => t('Hent tabellen for det sidste halvår'),
+            '#value' => t('ANDET HALVÅR') . ' ' . date('Y'),
 	    '#attributes' => ($from_month == 7 ? array('class' => array('button-active')) : ''),
         );
 
