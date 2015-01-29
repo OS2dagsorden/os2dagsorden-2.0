@@ -11,6 +11,7 @@ define('ACADRE_MM_PUB_FOCUS', FALSE);
 define('ACADRE_MM_ACCESS_OPEN', 1);
 define('ACADRE_MM_ACCESS_LUKKET', 2);
 define('ACADRE_MM_ACCESS_PERSON', 3);
+define('MM_REPUBLISH_SUBVERSION', TRUE);
 
 /**
  * Plugin definition with callbacks
