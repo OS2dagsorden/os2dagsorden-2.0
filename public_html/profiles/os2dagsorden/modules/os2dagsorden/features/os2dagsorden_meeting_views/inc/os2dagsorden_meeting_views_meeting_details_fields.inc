@@ -91,6 +91,8 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
      }
     }
   }
+  
+  
   ksort($additional_descriptions);
 
   foreach ($additional_descriptions as $add_desc){
