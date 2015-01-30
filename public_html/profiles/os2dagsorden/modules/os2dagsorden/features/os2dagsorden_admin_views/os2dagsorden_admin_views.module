@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Dagsorden admin views feature.
+ */
+
+include_once 'os2dagsorden_admin_views.features.inc';

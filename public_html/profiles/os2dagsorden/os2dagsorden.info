@@ -65,6 +65,7 @@ dependencies[] = php
 dependencies[] = delete_all
 dependencies[] = piwik
 dependencies[] = piwik_stats
+dependencies[] = admin_views
 
 ; OS2Dagsorden modules
 dependencies[] = os2dagsorden_access_helper

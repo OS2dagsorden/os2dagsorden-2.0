@@ -1,0 +1,11 @@
+name = OS2Dagsorden admin views
+description = contains information about the modified administer views
+core = 7.x
+package = OS2Dagsorden
+version = 7.x-1.0
+project = os2dagsorden_admin_views
+dependencies[] = admin_views
+dependencies[] = ctools
+dependencies[] = views
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:1
