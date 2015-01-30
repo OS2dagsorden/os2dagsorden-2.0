@@ -105,7 +105,15 @@ function os2dagsorden_admin_suite_menu() {
         'page callback' => 'os2dasorden_admin_suite_reschedule_file_adlib',
         'access arguments' => array('administer os2web'),
     );
-   $items['os2dagsorden/admin_suite/just_code'] = array(
+
+    $items['os2dagsorden/admin_suite/add_committee_to_users'] = array(
+	'type' => MENU_CALLBACK,
+        'page callback' => 'os2dasorden_admin_suite_add_committee_to_users',
+        'access arguments' => array('administer os2web'),
+    );
+
+
+    $items['os2dagsorden/admin_suite/just_code'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dasorden_admin_suite_just_code',
         'access arguments' => array('administer os2web'),
@@ -113,6 +121,43 @@ function os2dagsorden_admin_suite_menu() {
 	
     return $items;
 }
+
+function os2dasorden_admin_suite_add_committee_to_users(){
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'user')
+       ->execute(); 
+    $users = user_load_multiple(array_keys($result['user']));
+
+    //$add_to_user = array("cksi", "jmhr", "ldkl", "anmc", "pst",	"joth");
+    $add_to_user = array("crb","casc","clst","gepe","hlbc","hdl","idva","lsej","lec","lkda","loal","lost","mb","mkbd","nnbs",
+"pib","siro","ski","sole","susp","trsj","vrt","ahrjc","capo","giso","havh","jrst","jp","llv","mico","rjen","aj","anlt","birth",
+"doaje","jda","jvh","juel","kbau","lrl","liwh","lispb","ld","msv","npth","nmp","pisk","sibr","stsa","trmd","toh","anej","bci",
+"bd","bab","bsl","biwn","cfj","iso","kbn","krb","krvj","lehen","malth","nidj","kal","kbay");
+
+    //$committees_to_add = array(558, 560, 559);
+    $committee_to_add = 558;
+
+    foreach($users as $user){
+	if (in_array($user->name, $add_to_user)){
+	    $contains = FALSE;
+	    if (isset($user->field_follows_committee_pp['und'])){
+		foreach($user->field_follows_committee_pp['und'] as $com){
+		    if ($committee_to_add == $com['tid']){
+			$contains = TRUE;
+		    }
+		}
+	    }
+	    if (!$contains) {
+		$user->field_follows_committee_pp['und'][]['tid'] = $committee_to_add;
+	    }
+	    print_r($user->name . ' ');
+	    print_r($user->field_follows_committee_pp);
+	    user_save($user);
+	    print_r("<br/><br/>");
+	}
+    }
+}
+
  function os2dagsorden_admin_suite_user_remove_org_meetings_category(){
     $query = new EntityFieldQuery();
     $result = $query->entityCondition('entity_type', 'user')
