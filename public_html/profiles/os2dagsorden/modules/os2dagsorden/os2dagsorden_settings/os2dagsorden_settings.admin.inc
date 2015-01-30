@@ -735,7 +735,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   }
 
   //Allowed committees
-  $form['os2dagsorden_committees_list_placeholder'] = array(
+  /*$form['os2dagsorden_committees_list_placeholder'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -747,7 +747,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
     '#description' => t('If checkbox is clicked, this is the list that will be used during meetings import'),
   );
-  /*$committees = taxonomy_get_tree($vid);
+  $committees = taxonomy_get_tree($vid);
   $options_committee = array();
   foreach ($committees as $committee){
     $committee_full = taxonomy_term_load($committee->tid);

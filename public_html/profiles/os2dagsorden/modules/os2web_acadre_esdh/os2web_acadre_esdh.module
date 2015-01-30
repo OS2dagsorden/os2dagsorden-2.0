@@ -40,11 +40,13 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => t('This is the path where Acadre publish .XML files to.'),
     '#default_value' => variable_get('os2web_meetings_path', OS2WEB_ACADRE_ESDH_ACADRE_MM_IMPORT_DIR),
   );
-  if (variable_get('os2dagsorden_committees_positive_list_as_import_list', FALSE)){
-    $form['os2web_mm'][] = array(
-      '#markup' => t('This approved committes list is overruled by another list, in order to use the list below please disabled the Positive committees list defined in ') . l(t('settings'), 'admin/config/os2dagsorden/settings'),
-    );
-  }
+  $form['os2web_mm']['os2dagsorden_committees_positive_list_as_import_list'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use list of active committees during import'),
+    '#default_value' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
+    '#description' => t('If checkbox is clicked, the list of positive committees (defined in <a href="@link">here</a>) will be used', array('@link' => '/admin/structure/taxonomy/os2web_meetings_tax_committee')),
+  );
+
   $form['os2web_mm']['os2web_meetings_approved_committee'] = array(
     '#type' => 'textfield',
     '#title' => t('Approved committees'),
