@@ -27,17 +27,10 @@ function _os2dagsorden_acadre_service_importer_process_committees($xml_file){
  */
 function os2dagsorden_acadre_service_importer_create_committee($xml_data){
     //getting committee by sub ID
-    $term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($xml_data['sub_id']);
-    
-    //no success, getting committee by name and setting sub id
-    if (!isset($term)){
-	$term = array_pop(taxonomy_get_term_by_name($xml_data['committee_name'], 'os2web_meetings_tax_committee'));
-	if (isset($term))
-	    $term->field_os2web_meetings_com_subid['und'][]['value'] = $xml_data['sub_id'];	
-    }
-	
+    $term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($xml_data['sub_id'], $xml_data['committee_name']);
+
     //no success, creating new committee and setting sub id
-    if (!isset($term)){
+    if (!$term){
 	$vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
             ->condition('machine_name', 'os2web_meetings_tax_committee') 
@@ -45,7 +38,7 @@ function os2dagsorden_acadre_service_importer_create_committee($xml_data){
             ->fetchField();
         $term = new stdClass();
         $term->vid = $vid;
-	$term->field_os2web_meetings_com_subid['und'][]['value'] = $xml_data['sub_id'];	
+	$term->field_os2web_meetings_com_subid['und'][]['value'] = $xml_data['sub_id'];
     }
 
     $term->name = $xml_data['committee_name'];
@@ -54,7 +47,7 @@ function os2dagsorden_acadre_service_importer_create_committee($xml_data){
     if (!isset($term->field_os2web_meetings_com_abbr['und']) || empty($term->field_os2web_meetings_com_abbr['und'][0]['value']))
        $term->field_os2web_meetings_com_abbr['und'][0]['value'] =  $xml_data['committee_name'];
     if (!isset($term->field_os2web_meetings_com_cat['und']) || empty($term->field_os2web_meetings_com_cat['und'][0]['value']))
-       $term->field_os2web_meetings_com_cat['und'][0]['value'] =  'pol';     
+       $term->field_os2web_meetings_com_cat['und'][0]['value'] =  'pol';
     taxonomy_term_save($term);
     return $term->tid;
 }
