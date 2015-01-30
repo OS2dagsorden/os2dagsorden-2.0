@@ -64,6 +64,15 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
     'module' => 'toolbar',
   );
 
+  // Exported permission: access user profiles.
+  $permissions['access user profiles'] = array(
+    'name' => 'access user profiles',
+    'roles' => array(
+      0 => 'os2dagsorden admin',
+    ),
+    'module' => 'user',
+  );
+
   // Exported permission: administer menu.
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
@@ -80,6 +89,13 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
       0 => 'os2dagsorden admin',
     ),
     'module' => 'os2web_settings',
+  );
+
+  // Exported permission: administer permissions.
+  $permissions['administer permissions'] = array(
+    'name' => 'administer permissions',
+    'roles' => array(),
+    'module' => 'user',
   );
 
   // Exported permission: administer taxonomy.
