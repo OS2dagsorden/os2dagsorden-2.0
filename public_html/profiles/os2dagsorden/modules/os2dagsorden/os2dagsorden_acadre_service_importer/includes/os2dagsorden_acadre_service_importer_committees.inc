@@ -39,9 +39,9 @@ function os2dagsorden_acadre_service_importer_create_committee($xml_data){
         $term = new stdClass();
         $term->vid = $vid;
 	$term->field_os2web_meetings_com_subid['und'][]['value'] = $xml_data['sub_id'];
+	$term->name = $xml_data['committee_name'];
     }
 
-    $term->name = $xml_data['committee_name'];
     if (!isset($term->field_os2web_meetings_com_shname['und']) || empty( $term->field_os2web_meetings_com_shname['und'][0]['value']))
         $term->field_os2web_meetings_com_shname['und'][0]['value'] = $xml_data['committee_name'];
     if (!isset($term->field_os2web_meetings_com_abbr['und']) || empty($term->field_os2web_meetings_com_abbr['und'][0]['value']))
