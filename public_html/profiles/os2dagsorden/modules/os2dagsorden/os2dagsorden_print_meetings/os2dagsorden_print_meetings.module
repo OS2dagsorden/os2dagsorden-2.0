@@ -180,9 +180,8 @@ function _os2dagsorden_print_meetings_form_submit_2_half($form, &$form_state) {
  * @return generated table
  */
 function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
-    global $user;
-    $user = user_load($user->uid);
-    
+    $user = os2dagsorden_access_helper_get_user();
+
     //selecting the node of type meetings
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -191,6 +190,13 @@ function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $from_month . '-01 00:00:00', '>=')//selecting meetings from the from_month
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $to_month . '-31 23:59:59', '<=')//selecting meetings up to the to_month
       ->fieldOrderBy('field_os2web_meetings_date', 'value', 'ASC');
+
+    if (in_array('os2dagsorden limited', $user->roles)) {
+	// gathering member of, follows+, follows++
+	$allowed_tids = array_merge(os2dagsorden_access_helper_get_user_member_of_committees(),
+				    os2dagsorden_access_helper_get_user_follow_pp_committees());
+	$query->fieldCondition('field_os2web_meetings_committee', 'tid', $allowed_tids, 'IN');
+    }
     
    /* if (!empty($user->field_user_meetings_category['und'])){
       if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
