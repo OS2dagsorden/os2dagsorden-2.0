@@ -144,6 +144,13 @@ os2dagsorden_meetings_calendar_view_fields_title($data);
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['table'] = 'field_data_field_os2web_meetings_addendum';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['field'] = 'field_os2web_meetings_addendum_nid';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['operator'] = 'empty';
+  /* Filter criterion: filter for limited user */
+  $handler->display->display_options['filters']['php_1']['id'] = 'php_1';
+  $handler->display->display_options['filters']['php_1']['table'] = 'views';
+  $handler->display->display_options['filters']['php_1']['field'] = 'php';
+  $handler->display->display_options['filters']['php_1']['ui_name'] = 'filter for limited user';
+  $handler->display->display_options['filters']['php_1']['use_php_setup'] = 0;
+  $handler->display->display_options['filters']['php_1']['php_filter'] = 'return os2dagsorden_meetings_calendar_view_fields_filter_for_os2dagsorden_limited($row->nid);';
 
   /* Display: Måned */
   $handler = $view->new_display('page', 'Måned', 'page_1');
@@ -235,6 +242,13 @@ $date = date(\'Y-m\');
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['table'] = 'field_data_field_os2web_meetings_addendum';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['field'] = 'field_os2web_meetings_addendum_nid';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['operator'] = 'empty';
+  /* Filter criterion: filter for limited user */
+  $handler->display->display_options['filters']['php_1']['id'] = 'php_1';
+  $handler->display->display_options['filters']['php_1']['table'] = 'views';
+  $handler->display->display_options['filters']['php_1']['field'] = 'php';
+  $handler->display->display_options['filters']['php_1']['ui_name'] = 'filter for limited user';
+  $handler->display->display_options['filters']['php_1']['use_php_setup'] = 0;
+  $handler->display->display_options['filters']['php_1']['php_filter'] = 'return os2dagsorden_meetings_calendar_view_fields_filter_for_os2dagsorden_limited($row->nid);';
   $handler->display->display_options['path'] = 'calendar-field-date/month';
   $handler->display->display_options['menu']['title'] = 'Month';
   $handler->display->display_options['menu']['weight'] = '0';

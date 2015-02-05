@@ -47,6 +47,11 @@ function os2dagsorden_meetings_calendar_view_fields_filter_by_meeting_category($
   }
   return TRUE;
 }
+
+function os2dagsorden_meetings_calendar_view_fields_filter_for_os2dagsorden_limited($meeting_id){
+  return !os2dagsorden_access_helper_check_user_can_see_meeting($meeting_id);
+}
+
 /////////////////////////////////////////common END /////////////////////////////////////////
 
 /////////////////////////////////////////month START /////////////////////////////////////////

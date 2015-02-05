@@ -152,6 +152,11 @@ function os2dagsorden_meeting_views_meetings_search_fields_committee($meeting_id
       os2dagsorden_meeting_views_common_meeting_committee($meeting_id); 
 }
 
+function os2dagsorden_meeting_views_meetings_search_fields_location($meeting_id){
+   if (variable_get('os2dagsorden_meetings_search_show_meeting_location', false)) 
+      os2dagsorden_meeting_views_common_meeting_location($meeting_id); 
+}
+
 function os2dagsorden_meeting_views_meetings_search_fields_status($meeting_id){
     if (variable_get('os2dagsorden_meetings_search_show_meeting_status', false)) {
         $meeting = $meeting = node_load($meeting_id);
