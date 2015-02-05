@@ -1254,7 +1254,7 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
         return $term;
     }
     elseif ($name){
-        $term = taxonomy_get_term_by_name($name, 'os2web_meetings_tax_committee');
+        $term = taxonomy_get_term_by_name($name, 'os2web_meetings_tax_committee');        
         if (!empty($term)){
           $term->field_os2web_meetings_com_subid['und'][]['value'] = $com_subid;
           return $term;
