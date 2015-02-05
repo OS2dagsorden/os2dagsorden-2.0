@@ -315,9 +315,15 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show meeting committee on meeting serach view'),
+    '#title' => t('Show meeting committee on meeting search view'),
     '#description' => t('This decides whether a meeting committee is visible on meeting search view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE),
+  );
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show meeting location on meeting search view'),
+    '#description' => t('This decides whether a meeting location is visible on meeting search view.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE),
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = array(
     '#type' => 'checkbox',
@@ -1191,6 +1197,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
 
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
+    variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
     variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
     variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
