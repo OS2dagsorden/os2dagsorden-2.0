@@ -167,7 +167,18 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#title' =>"<b>" . t('Calendar preferences:') . "</b>",
     '#description' => t('Which types of meetings should user see in the calendar'),
   );
-
+  
+  $form['user_can_send_closed_bp'] = array(
+    '#type' => 'radios',
+    '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
+    '#default_value' => false,
+    '#options' => array(
+      true => t('Yes'),
+      false => t('No')
+    ),
+    
+  );
+ 
   /*$user_pos = taxonomy_vocabulary_machine_name_load('user_position');
   $user_pos_terms = taxonomy_get_tree($user_pos->vid);
   $user_pos_select = array();
@@ -199,7 +210,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
 
   $com_terms = os2dagsorden_settings_get_active_committees();
   $com_select = array();
-  
+  $full_user = user_load($uid);
   foreach ($com_terms as $com_term) {
     $com_select[$com_term->tid] = $com_term->name;
   }
@@ -212,7 +223,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     $form[] = array(
       '#markup' => '<div class="select-committee">',
     );
-   
+  
 
     $form['member_of_div'] = array(
       '#access' => user_access('administer os2web', $full_user),  
@@ -281,6 +292,10 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
       if (field_get_items('user', $user, 'field_user_full_name') ){
 	$full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
 	$form['full_name']['#default_value'] = $full_name_field['value'];
+      }
+      if (field_get_items('user', $user, 'field_user_can_send_closed_bp')){
+        $user_can_send_closed_bp = array_pop(field_get_items('user', $user, 'field_user_can_send_closed_bp'));
+	$form['user_can_send_closed_bp']['#default_value'] = $user_can_send_closed_bp['value'];
       }
       
       if (field_get_items('user', $user, 'field_user_meetings_category')) {
@@ -444,7 +459,12 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
 	$full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
 	$form['full_name']['#default_value'] = $full_name_field['value'];
       }
-  
+      
+       if (field_get_items('user', $user, 'field_user_can_send_closed_bp')){
+          $user_can_send_closed_bp = array_pop(field_get_items('user', $user, 'field_user_can_send_closed_bp'));
+	$form['user_can_send_closed_bp']['#default_value'] = $user_can_send_closed_bp['value'];
+      }
+      
       if (field_get_items('user', $user, 'field_user_meetings_category')){
 	$calendar_prefs_field = field_get_items('user', $user, 'field_user_meetings_category');
 	$selection = array();
@@ -541,7 +561,8 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 
   $user = user_load($form_state['values']['uid']);
   $user->field_user_full_name['und'][0]['value'] = $full_name;
-
+  $user->field_user_can_send_closed_bp['und'][0]['value'] = $user_can_send_closed_bp;
+         
   //unsetting follows committees
   $user->field_follows_committee['und'] = array();
   if ($follows){
