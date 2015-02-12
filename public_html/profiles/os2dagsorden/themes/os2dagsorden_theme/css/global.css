@@ -1355,7 +1355,17 @@ table .hide_show_all_attachments_text{
     background: url('../img/icon_print_bullet_point.png') no-repeat 50% top;;
     height: 16px;
     width: 16px;
+     display:block;
     float: right;
+}
+.bullet-point-send-link {
+    background: url('../img/icon-send-to-friend-bullet-point.png') no-repeat 50% top;;
+    height: 20px;
+    width: 20px;
+    display:block;  
+    float: right;
+    margin-right: 8px;
+   
 }
 
 /*meeting details table end*/
@@ -1639,7 +1649,8 @@ a.annotator-wrapper {
   table-layout: fixed;
 }
 
-.bullet-point-attachments .views-table .print-bullet-point-link{
+.bullet-point-attachments .views-table .print-bullet-point-link,
+.bullet-point-attachments .views-table .send-bullet-point-link{
   width: 1%;
 }
 /* ---------------------------- Pagescroller styles END---------------------------- */

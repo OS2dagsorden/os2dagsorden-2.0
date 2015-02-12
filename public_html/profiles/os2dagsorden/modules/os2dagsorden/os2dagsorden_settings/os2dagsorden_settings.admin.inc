@@ -107,6 +107,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a print button is visible on each bullet point on meeting view.'),
     '#default_value' => variable_get('os2dagsorden_show_print_icon', FALSE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_send_to_friend_icon'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show send to friend icon on bullets in agenda'),
+    '#description' => t('This decides whether a send to friend button is visible on each bullet point on meeting view.'),
+    '#default_value' => variable_get('os2dagsorden_show_send_to_friend_icon', FALSE),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = array(
    '#type' => 'checkbox',
    '#title' => t('Show comments on meeting view'),
