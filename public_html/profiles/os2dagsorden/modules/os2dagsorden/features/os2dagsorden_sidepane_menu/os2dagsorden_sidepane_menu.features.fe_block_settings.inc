@@ -20,7 +20,7 @@ function os2dagsorden_sidepane_menu_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
@@ -42,7 +42,7 @@ function os2dagsorden_sidepane_menu_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
