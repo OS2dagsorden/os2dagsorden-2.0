@@ -27,7 +27,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_settings_file_fieldset'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
     '#title' => t('Settings file'),
   );
 
@@ -68,7 +68,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_meeting_view_settings'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
     '#title' => t('Meeting view settings'),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee'] = array(
@@ -993,7 +993,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_title_meeting_make_note', 'Lav note'),
       '#title' => t('Lav note'),
   );*/
-
+  ksort($form);
   return system_settings_form($form);
 }
 
