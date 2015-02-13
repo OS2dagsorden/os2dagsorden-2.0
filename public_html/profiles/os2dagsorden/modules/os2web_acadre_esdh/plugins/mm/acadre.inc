@@ -205,7 +205,6 @@ function _os2web_acadre_esdh_import_meeting($info) {
       if ($meeting['committee'] == '' || !in_array($meeting['committee_id'], os2dagsorden_settings_get_active_committees_sub_id()))
         $is_meeting_approved = FALSE;
     } else {
-      drupal_set_message('not using list');
       $publish_committee = array_map('trim', explode(',', variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED)));
       if ($meeting['committee'] == '' || !in_array($meeting['committee_id'], $publish_committee))
         $is_meeting_approved = FALSE;
