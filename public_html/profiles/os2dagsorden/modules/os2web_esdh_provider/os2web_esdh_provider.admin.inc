@@ -57,7 +57,8 @@ function _os2web_esdh_provider_status() {
     }
   }
 
-  $queue_markup .= drupal_render(drupal_get_form('os2web_esdh_provider_queue_form'));
+  $os2web_esdh_provider_queue_form = drupal_get_form('os2web_esdh_provider_queue_form');
+  $queue_markup .= drupal_render($os2web_esdh_provider_queue_form);
   $queue_markup .= '<h3>In queue</h3>';
 
   $queue_header = array(t('Publication id:'), t('uri'), t('Force'));
