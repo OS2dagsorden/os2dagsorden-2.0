@@ -7,6 +7,8 @@
  * Look to acadre_esdh for example.
  */
 
+module_load_include('inc', 'os2web_esdh_provider', 'includes/os2web_esdh_provider.queue');
+
 /**
  * Implements hook_menu().
  */
@@ -69,6 +71,13 @@ function os2web_esdh_provider_form_os2web_settings_settings_form_alter(&$form, &
     '#type' => 'checkbox',
     '#title' => t('Enable external queue import'),
     '#default_value' => variable_get('os2web_esdh_provider_queue_enabled', FALSE),
+  );
+
+  // Enable database indexing import.
+  $form['os2web_mm']['os2web_esdh_provider_db_indexing_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable database indexing import'),
+    '#default_value' => variable_get('os2web_esdh_provider_db_indexing_enabled', FALSE),
   );
 
   // Enable unpublishing meetings without manifests.

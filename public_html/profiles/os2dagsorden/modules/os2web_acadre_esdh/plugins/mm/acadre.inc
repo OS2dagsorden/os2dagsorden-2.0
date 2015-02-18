@@ -101,7 +101,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
       }
       foreach ($items_xml as $xml_item) {
         $debug && error_log('MM Import - Found meeting ' . $meeting['uri'] . ' - ' . timer_read('mm_import') . 'ms');
-        
+
         $agendainfo = array(
           'sysid' => $agenda_id,
           'publish' => _get_value_from_xml($xml_item->xpath('field/@publish') ,'int'),
@@ -130,7 +130,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
           }
         }
         else {
-          $message = 'Meeting !id, agenda !sub_id, wasnt allowed to be published from xml !file. [publish]=!publish, [access]=!access, [filesfolder]=!filesfolder';
+          $message = '[XML_ID: !id] Agenda !sub_id, was now allowed to be published from xml !file. [publish]=!publish, [access]=!access, [filesfolder]=!filesfolder';
           
           $entries = array(
             '!id' => $agenda_id,
@@ -140,14 +140,15 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
             '!filesfolder' => $agendainfo['filesfolder'],
             '!file' => $file,
           );
-          watchdog('acadre MM', $message, $entries, WATCHDOG_WARNING);
+          watchdog('acadre MM', $message, $entries, WATCHDOG_INFO);
           if (function_exists('_os2web_esdh_provider_send_statusmail')) {
             _os2web_esdh_provider_send_statusmail(format_string($message, $entries), TRUE);
           }
 
           // Publication not published or public.
           $meetings[] = array(
-            'system_id' => $agendainfo['sysid'],
+            'meeting_sub_id' => _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int'),
+            'agenda_access' => $agendainfo['access'],
             'publish' => FALSE,
           ) + os2web_esdh_provider_default_meeting();
         }

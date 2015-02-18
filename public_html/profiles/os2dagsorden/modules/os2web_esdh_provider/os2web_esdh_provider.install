@@ -60,21 +60,104 @@ function os2web_esdh_provider_schema() {
   $schema['os2web_esdh_provider_import'] = array(
     'description' => 'ESDH Provider Import Queue.',
     'fields' => array(
-      'filename' => array(
-        'description' => 'Manifest filename.',
+      'nid' => array(
+        'description' => 'Node id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'import_status' => array(
+        'description' => 'Status of the import',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'default' => '',
       ),
-      'changed' => array(
-        'description' => 'Timestamp of manifest file as a Unix timestamp.',
+      'meeting_xml' => array(
+        'description' => 'Manifest filename',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'meeting_xmlid' => array(
+        'description' => 'ID of meeting XML',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_name' => array(
+        'description' => 'Name of meeting',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'meeting_sysid' => array(
+        'description' => 'SYSID of meeting',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_xml_changed' => array(
+        'description' => 'Timestamp of when meeting XML was last changed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'agenda_sysid' => array(
+        'description' => 'SYSID of agenda',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'agenda_xml' => array(
+        'description' => 'Agenda filename',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'agenda_xmlid' => array(
+        'description' => 'ID of agenda XML',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'agenda_access' => array(
+        'description' => 'Access to agenda',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'agenda_publish' => array(
+        'description' => 'Publish status of agenda',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'agenda_type' => array(
+        'description' => 'Type of agenda',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'agenda_xml_changed' => array(
+        'description' => 'Timestamp of when agenda XML was last changed',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'committeed_id' => array(
+        'description' => 'ID of the committee',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'committeed_tid' => array(
+        'description' => 'TID of the committee term',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
     ),
-    'primary key' => array('filename'),
+    'primary key' => array('agenda_sysid'),
   );
   return $schema;
 }

@@ -6,6 +6,8 @@
  * the provider module.
  */
 
+module_load_include('inc', 'os2web_esdh_provider', 'includes/os2web_esdh_provider.queue');
+
 /**
  * Page callback. Displays status page.
  */
@@ -235,7 +237,6 @@ function _os2web_esdh_provider_status_confirm_submit($form, &$form_state) {
   );
 
   $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
-
   if (variable_get('os2web_esdh_provider_queue_enabled', FALSE)) {
     $queue = DrupalQueue::get('acadre_mm_import');
 
@@ -247,6 +248,12 @@ function _os2web_esdh_provider_status_confirm_submit($form, &$form_state) {
     $queue->createItem(array('post_import_process' => TRUE));
 
     drupal_goto('admin/config/os2web/esdh_provider');
+  } elseif (variable_get('os2web_esdh_provider_db_indexing_enabled', FALSE)){
+    foreach ($meetings as $meeting) {
+      os2web_esdh_provider_index_meeting($meeting);
+    }
+    //add post import
+    os2web_esdh_provider_index_meeting($meeting);
   }
   // Use normal batch processing if external queue is disabled.
   else {
