@@ -147,9 +147,8 @@ function os2dagsorden_access_helper_meeting_has_speaker_paper($meeting_id) {
  * @return -1 in case or refusal and file headers in case of success.
  */
 function os2dagsorden_access_helper_file_download($uri) {
-  $path = explode('/', $uri);
-  $filename = array_pop($path);
-  $result = db_query("SELECT f.* FROM {file_managed} f WHERE filename = :filename", array('filename' => $filename));
+  $uri1 = str_replace('private://', 'private:///', $uri);
+  $result = db_query("SELECT f.* FROM {file_managed} f WHERE uri = :uri or uri = :uri1", array('uri' => $uri, 'uri1' => $uri1));
   foreach ($result as $file) {
     //find meeting by file->fid
     //closed agenda?
@@ -248,7 +247,7 @@ function os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id
     return FALSE;
   }
   $meetings = entity_load('node', array($meeting_id), array('type' => 'os2web_meetings_meeting'));
-  $meeting_committee_id = $meetings[$meeting_id]->field_os2web_meetings_committee['und'][0]['tid'];
+  $meeting_committee_id = $meetings[$meeting_id]->field_os2web_meetings_committee['und'][0]['tid']; 
   if (!empty($user_ent->field_user_committee)) { //is part of the committee
     foreach ($user_ent->field_user_committee['und'] as $user_committee_id) {
       if (intval($meeting_committee_id) == $user_committee_id['tid']) {
@@ -506,11 +505,11 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
   if (!$user_ent->uid) {
     return FALSE;
   }
-
+  
   if (!os2dagsorden_access_helper_check_user_can_see_meeting($meeting_id)) {
     return FALSE;
   }
-
+  
   if (!os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_id)) {
     return FALSE;
   }
@@ -544,7 +543,7 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
       }
     //is closed and not personal
     if(intval($is_closed) == 1 && intval($is_personal) == 0){ 
-      if (!empty($user_ent->field_follows_committee_plus)) { //follows committee PLUS PLUS
+      if (!empty($user_ent->field_follows_committee_plus)) { //follows committee PLUS PLUS          
         foreach ($user_ent->field_follows_committee_plus['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
