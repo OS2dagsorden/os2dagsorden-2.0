@@ -207,10 +207,10 @@ function os2dagsorden_pdf2htmlex_cron() {
             $purl= drupal_realpath(variable_get('pdf2html_rendering_path'));
             $uri = str_replace($purl, variable_get('pdf2html_rendering_path'), $path);      
        } else {
-          if (strpos($path,drupal_realpath('private://'))===FALSE)
-            $uri=str_replace(drupal_realpath('public://'), 'public://',  $path);
+          if (strpos($path,drupal_realpath('private://') . '/')===FALSE)
+            $uri=str_replace(drupal_realpath('public://') . '/', 'public://',  $path);
          else
-           $uri=str_replace(drupal_realpath('private://'),  'private://',$path);
+           $uri=str_replace(drupal_realpath('private://') . '/',  'private://',$path);
        }
 	$fid = db_select('file_managed', 'fm')
                         ->fields('fm', array('fid'))
