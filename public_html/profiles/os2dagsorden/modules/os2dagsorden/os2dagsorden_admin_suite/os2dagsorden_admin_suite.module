@@ -674,8 +674,8 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
 		->propertyCondition('type', array('os2web_meetings_bullet'))
-		->fieldCondition('field_os2web_meetings_bul_case', 'value', '')
-		->range(0,500);
+		//->fieldCondition('field_os2web_meetings_bul_case', 'value', '')
+		->range(0,1000);
 		
     $result = $query->execute();
     
@@ -690,20 +690,22 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
 	$pos_of_1_brac = mb_strpos($title,'(');
 	$pos_of_space_after_1_brac = mb_strpos($title,' ', $pos_of_1_brac);
 	$pos_of_2_brac = mb_strpos($title,')');
-	print("<br/>");
-	$cut = mb_substr($title,$pos_of_1_brac+1, $pos_of_2_brac-$pos_of_1_brac-1);
-	print(' CUT: ' . $cut);
-	print("<br/>");
-	$case_nr = mb_substr($cut,0);//, mb_strpos($cut,' '));
-	print('CASE NR: ' . $case_nr);
-	print("<br/>");
-	$new_title = mb_substr($title, 0, $pos_of_1_brac-1) . mb_substr($title, $pos_of_2_brac+1);
-	print('NEW TITLE: ' . $new_title); 
-	
-	$bullet_point->title = $new_title;
-	$bullet_point->field_os2web_meetings_bul_case['und'][0]['value'] = $case_nr;
-	//if (isset($case_nr) && !empty($case_nr))
-	//    node_save($bullet_point);
+	if ($pos_of_1_brac && $pos_of_2_brac){
+	    print("<br/>");
+	    $cut = mb_substr($title,$pos_of_1_brac+1, $pos_of_2_brac-$pos_of_1_brac-1);
+	    print(' CUT: ' . $cut);
+	    print("<br/>");
+	    $case_nr = mb_substr($cut,0);//, mb_strpos($cut,' '));
+	    print('CASE NR: ' . $case_nr);
+	    print("<br/>");
+	    $new_title = mb_substr($title, 0, $pos_of_1_brac-1) . mb_substr($title, $pos_of_2_brac+1);
+	    print('NEW TITLE: ' . $new_title); 
+	    
+	    $bullet_point->title = $new_title;
+	    $bullet_point->field_os2web_meetings_bul_case['und'][0]['value'] = $case_nr;
+	    //if (isset($case_nr) && !empty($case_nr))
+	    //    node_save($bullet_point);
+	}
       }
     }
 	

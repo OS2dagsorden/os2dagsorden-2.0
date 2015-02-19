@@ -341,19 +341,42 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
  * Checks is given meeting can bee seen by the user.
  * The function checks user role, if user has role 'os2dagsorden limited' then only his own committees would be visible for him
  *
- * @param int $meeting_id the ID of the meeting
+ * @param int $meeting the ID of the meeting or meeting object
  *
  * @return true of false
  */
-function os2dagsorden_access_helper_check_user_can_see_meeting($meeting_id, $committee_tid = null){
+function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $committee_tid = null) {
   $user = os2dagsorden_access_helper_get_user();
   if (!$user->uid) {
     return FALSE;
   }
 
+  if (!is_object($meeting)){
+    $meeting = node_load($meeting);
+  }
+
   if (!$committee_tid){
-    $meeting = node_load($meeting_id);
     $committee_tid = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
+  }
+
+  //checking category
+  $committee = taxonomy_term_load($committee_tid);
+  $access_granted = FALSE;
+
+  if (isset($committee->field_os2web_meetings_com_cat['und'])){
+    $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
+    if (isset($user->field_user_meetings_category['und'])){
+      foreach ($user->field_user_meetings_category['und'] as $user_cat){
+        if ($user_cat['value'] == $meeting_category){
+          $access_granted = TRUE;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!$access_granted) {
+    return FALSE;
   }
 
   //has os2dagsorden limited role
@@ -1185,7 +1208,7 @@ function os2dagsorden_access_helper_node_access($node, $op, $account){
       else return NODE_ACCESS_DENY;
     }
   } else if ($node->type == 'os2web_meetings_meeting') {
-    if (os2dagsorden_access_helper_check_user_can_see_meeting($node->nid))
+    if (os2dagsorden_access_helper_check_user_can_see_meeting($node))
       return NODE_ACCESS_ALLOW;
     else return NODE_ACCESS_DENY;
   } else if ($node->type == 'os2web_meetings_bullet') {

@@ -28,6 +28,7 @@ function os2web_rules_rules_action_info() {
 function os2web_rules_rules_action_drupal_message($account) {
   # Loading user object for correct saving of user info 
   $user = user_load($account->uid);
+  watchdog('OS2web LDAP Roles', 'rule triggered');
 
   # We only need parts of the account data set inherited from the condition.
   $data = $account->data['ldap_authorizations']['drupal_role'];
