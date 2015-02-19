@@ -54,7 +54,10 @@ function os2dagsorden_acadre_service_importer_import_committees(){
     $committees_raw = curl_exec($url);
     $committees = new SimpleXMLElement($committees_raw);
     
-    _os2dagsorden_acadre_service_importer_process_committees($committees);
+    if($committees_raw !== False){
+        $committees = new SimpleXMLElement($committees_raw);
+        _os2dagsorden_acadre_service_importer_process_committees($committees);
+    }
 }
 
 /**
@@ -67,7 +70,8 @@ function os2dagsorden_acadre_service_importer_import_meetings() {
 
     curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
     $meetings_raw = curl_exec($url);
-    $meetings = new SimpleXMLElement($meetings_raw);
-
-    _os2dagsorden_acadre_service_importer_process_meetings($meetings);
+    if($meetings_raw !== False){
+        $meetings = new SimpleXMLElement($meetings_raw);
+        _os2dagsorden_acadre_service_importer_process_meetings($meetings);
+    }
 }
