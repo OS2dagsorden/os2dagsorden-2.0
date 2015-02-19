@@ -118,8 +118,8 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
               ($agendainfo['access'] === 'Lukket' &&
               variable_get('os2web_meetings_import_closed_agenda', FALSE))) &&
             $agendainfo['filesfolder'] != '') {
-          $agenda_uri = implode('/', array(
-            variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+          $agenda_uri =  variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
+            implode('/', array(
             $agendainfo['filesfolder'],
             $agendainfo['xmlfilename'])
           );
@@ -238,12 +238,12 @@ function _os2web_acadre_esdh_import_meeting($info) {
     }
 
     // Full Doc:
-    $doc_uri = implode('/', array(
-        variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+    $doc_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR).
+        implode('/', array(       
         $info['filesfolder'],
         $info['docfilename']));
-    $pdf_uri = implode('/', array(
-        variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+    $pdf_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR).
+        implode('/', array(
         $info['filesfolder'],
         pathinfo($info['docfilename'], PATHINFO_FILENAME).'.pdf'));
     
@@ -369,10 +369,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
         $filename_in = (string) array_shift($case_file->xpath("fields/field[@name='FileName']"));
         if (strlen($filename_in) > 0) {
           $filetype = (string) array_shift($case_file->xpath("fields/field[@name='DocumentExtension']"));
-          $folder_path = implode('/', array(
-            variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
-            $info['filesfolder'],
-          ));
+          $folder_path =  variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) . $info['filesfolder'];
           if (strcasecmp($filetype, 'MSG') == 0) {
             // E.g. [...]/1709477.MSG_attachments.
             $attachments_folder_path = $folder_path . '/' . $filename_in . '_attachments';
@@ -422,10 +419,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
       $filename_in = (string) array_shift($enclosure->xpath("fields/field[@name='filename']"));
       if (strlen($filename_in) > 0) {
         $filetype = (string) array_shift($enclosure->xpath("fields/field[@name='EnclosureFileType']"));
-        $folder_path = implode('/', array(
-          variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
-          $info['filesfolder'],
-        ));
+        $folder_path = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) . $info['filesfolder'];
 
         if (strcasecmp($filetype, '.msg') == 0) {
           // E.g. [...]/1709477.MSG_attachments.
@@ -696,8 +690,8 @@ function _acadre_esdh_mm_improve_body_html($data) {
       $uri_parts = explode('\\', $file);
       $filename = trim(array_pop($uri_parts));
       $folder_name = array_pop($uri_parts);
-      $file_realpath = drupal_realpath(implode('/', array(
-        variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+      $file_realpath = drupal_realpath(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
+        implode('/', array(
         'images',
         $folder_name,
         $filename,

@@ -25,7 +25,10 @@ function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {
  *
  * Add configuration to the settings form.
  */
-function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state) {
+function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == "os2web_settings_settings_form") {
+   array_unshift($form['#submit'], 'os2web_acadre_esdh_form_os2web_settings_settings_form_submit');
+  }
   // MM configuration.
   $form['os2web_mm'] = array(
     '#type' => 'fieldset',
@@ -165,7 +168,14 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => t('URL to the webservice endpoint that runs the Adlib service.'),
   );
 }
-
+/**
+ * Implements hook_form_submit().
+ */
+function os2web_acadre_esdh_form_os2web_settings_settings_form_submit(&$form, &$form_state) {      
+  if (substr(trim($form_state['values']['os2web_meetings_path']), -1) !='/')
+     $form_state['values']['os2web_meetings_path']=$form_state['values']['os2web_meetings_path'].'/';
+        
+}
 /**
  * Implements hook_os2web_help().
  */
