@@ -289,7 +289,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) 
   $xml_item['document_type'] = (string) $xml->attributes()->Åbent;
 
   $item = array(
-    'id' => $xml_item['id'],
+    'id' => $xml_item['number'],
     'number' => $xml_item['number'],
     'sysid' => (int) $xml_item['id'],
     'access' => $xml_item['document_type'],

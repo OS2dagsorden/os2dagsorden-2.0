@@ -27,7 +27,7 @@ function os2dagsorden_acadre_service_importer_menu() {
         'access arguments' => array('administer os2web'),
         'type' => MENU_CALLBACK,
     );
-   
+    
     return $items;
 }
 

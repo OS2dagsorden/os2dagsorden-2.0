@@ -12,6 +12,44 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
 
   $export['version'] = '2.0';
 
+  $export['block-os2dagsorden_version_number'] = array(
+    'cache' => -1,
+    'custom' => '0',
+    'machine_name' => 'os2dagsorden_version_number',
+    'module' => 'block',
+    'node_types' => array(),
+    'pages' => '',
+    'roles' => array(),
+    'themes' => array(
+      'os2dagsorden_theme' => array(
+        'region' => 'footer_first',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme',
+        'weight' => '-22',
+      ),
+      'os2dagsorden_theme_ballerup' => array(
+        'region' => 'footer_first',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme_ballerup',
+        'weight' => '-22',
+      ),
+      'os2dagsorden_theme_fredensborg' => array(
+        'region' => 'footer_first',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme_fredensborg',
+        'weight' => '-22',
+      ),
+      'os2dagsorden_theme_ringsted' => array(
+        'region' => 'footer_first',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme_ringsted',
+        'weight' => '-22',
+      ),
+    ),
+    'title' => '',
+    'visibility' => '0',
+  );
+
   $export['user-login'] = array(
     'cache' => -1,
     'custom' => '0',
@@ -20,32 +58,32 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'anonymous user' => '1',
+      'anonym bruger' => '1',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '0',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '0',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '0',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '0',
+        'weight' => '-19',
       ),
     ),
     'title' => '',
@@ -58,34 +96,34 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'delta' => '-exp-meetings_search-page',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => 'user/simple_edit',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '-16',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_ballerup' => array(
-        'region' => 'content',
+        'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '-16',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '-16',
+        'weight' => '-19',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '-16',
+        'weight' => '-19',
       ),
     ),
     'title' => 'Søg',
@@ -100,32 +138,32 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '<front>',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '0',
+        'weight' => '-15',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '0',
+        'weight' => '-15',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '0',
+        'weight' => '-15',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '0',
+        'weight' => '-15',
       ),
     ),
     'title' => '',
@@ -140,32 +178,32 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '<front>',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '0',
+        'weight' => '-17',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '0',
+        'weight' => '-17',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '0',
+        'weight' => '-17',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '0',
+        'weight' => '-17',
       ),
     ),
     'title' => '',
@@ -180,32 +218,32 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '<front>',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '0',
+        'weight' => '-16',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '0',
+        'weight' => '-16',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '0',
+        'weight' => '-16',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '0',
+        'weight' => '-16',
       ),
     ),
     'title' => '',
@@ -218,34 +256,34 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'delta' => 'events-block_1',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => 'user/simple_edit',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '-19',
+        'weight' => '-21',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '-19',
+        'weight' => '-21',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '-19',
+        'weight' => '-21',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '-19',
+        'weight' => '-21',
       ),
     ),
     'title' => '',
@@ -260,32 +298,32 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '<front>',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme',
-        'weight' => '0',
+        'weight' => '-18',
       ),
       'os2dagsorden_theme_ballerup' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
-        'weight' => '0',
+        'weight' => '-18',
       ),
       'os2dagsorden_theme_fredensborg' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_fredensborg',
-        'weight' => '0',
+        'weight' => '-18',
       ),
       'os2dagsorden_theme_ringsted' => array(
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
-        'weight' => '0',
+        'weight' => '-18',
       ),
     ),
     'title' => '',
@@ -298,9 +336,9 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'delta' => 'user_committee-block_1',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => 'user/simple_edit',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
@@ -338,9 +376,9 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'delta' => 'user_follow_committees-block_1',
     'module' => 'views',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => 'user/simple_edit',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
@@ -380,7 +418,7 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'authenticated user' => '2',
+      'godkendt bruger' => '2',
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(

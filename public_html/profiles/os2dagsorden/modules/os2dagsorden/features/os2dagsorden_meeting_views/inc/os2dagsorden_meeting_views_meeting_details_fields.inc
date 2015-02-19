@@ -574,12 +574,24 @@ function os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($m
 }
 function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_print_link($meeting_id, $bp_id){
   global $base_url;
-
-  if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bp_id) && variable_get('os2dagsorden_show_print_icon', false)){
-    print '<a href="' . $base_url . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/print"><span class="bullet-point-print-link"></span>&nbsp;</a>';
+  if (variable_get('os2dagsorden_show_print_icon', false)){
+    if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bp_id)){
+      print '<a href="' . $base_url . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/print"><span class="bullet-point-print-link"></span>&nbsp;</a>';
+    } else {
+      print '<a href="' . $base_url . '/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '">&nbsp;</a>';
+    }
+  } 
+}
+function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_send_link($meeting_id, $bp_id){
+  global $base_url;
+ if (module_exists('os2web_print_send_to_friend') && variable_get('os2dagsorden_show_send_to_friend_icon', false)){
+  if (os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bp_id)){
+    print '<a href="' . $base_url . '/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/send_to_friend_form" rel="lightframe"><span class="bullet-point-send-link"></span>&nbsp;</a>';
   } else {
     print '<a href="' . $base_url . '/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '">&nbsp;</a>';
-  }
+  }  
+}
+
 }
 /////////////////////////////////////////DAGSORDEN fields END /////////////////////////////////////////
 

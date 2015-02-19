@@ -5,3 +5,10 @@
  */
 
 include_once 'os2dagsorden_blocks_positioning.features.inc';
+
+
+function os2dagsorden_blocks_positioning_show_git_version(){
+    $version_number = exec('git rev-parse HEAD');
+    $repo_url= exec('git config --get remote.origin.url');
+    print 'version ' . $version_number . '<br/><a href="' . $repo_url .'" target="_blank">' . $repo_url . '</a>';
+}

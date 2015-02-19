@@ -167,7 +167,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -241,7 +241,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -314,7 +314,71 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '6',
+        'weight' => '9',
+      ),
+    ),
+  );
+
+  // Exported field: 'user-user-field_user_can_send_closed_bp'.
+  $fields['user-user-field_user_can_send_closed_bp'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_user_can_send_closed_bp',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => 'No',
+          1 => 'Yes',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => array(
+        0 => array(
+          'value' => '0',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 14,
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_user_can_send_closed_bp',
+      'label' => 'User can send to friend closed bullet points',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => 1,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '2',
       ),
     ),
   );
@@ -530,7 +594,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '9',
+        'weight' => '10',
       ),
     ),
   );
@@ -594,7 +658,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '6',
+        'weight' => '8',
       ),
     ),
   );
@@ -609,6 +673,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   t('Is part of Committee');
   t('Meeting category');
   t('Shared with');
+  t('User can send to friend closed bullet points');
   t('represents the committees the user is a part of');
 
   return $fields;

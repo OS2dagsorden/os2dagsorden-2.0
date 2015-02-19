@@ -27,7 +27,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_settings_file_fieldset'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
     '#title' => t('Settings file'),
   );
 
@@ -68,7 +68,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_meeting_view_settings'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
     '#title' => t('Meeting view settings'),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee'] = array(
@@ -106,6 +106,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#title' => t('Show print icon on bullets in agenda'),
     '#description' => t('This decides whether a print button is visible on each bullet point on meeting view.'),
     '#default_value' => variable_get('os2dagsorden_show_print_icon', FALSE),
+  );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_send_to_friend_icon'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show send to friend icon on bullets in agenda'),
+    '#description' => t('This decides whether a send to friend button is visible on each bullet point on meeting view.'),
+    '#default_value' => variable_get('os2dagsorden_show_send_to_friend_icon', FALSE),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = array(
    '#type' => 'checkbox',
@@ -315,9 +321,15 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show meeting committee on meeting serach view'),
+    '#title' => t('Show meeting committee on meeting search view'),
     '#description' => t('This decides whether a meeting committee is visible on meeting search view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE),
+  );
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show meeting location on meeting search view'),
+    '#description' => t('This decides whether a meeting location is visible on meeting search view.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE),
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = array(
     '#type' => 'checkbox',
@@ -981,7 +993,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_title_meeting_make_note', 'Lav note'),
       '#title' => t('Lav note'),
   );*/
-
+  ksort($form);
   return system_settings_form($form);
 }
 
@@ -1191,6 +1203,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
 
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
+    variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
     variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
     variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
