@@ -947,6 +947,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_title_meeting_location', 'Lokation'),
       '#title' => t('Lokation'),
   );
+  $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_freetext_placing'] = array(
+      '#type' => 'textfield',
+      '#default_value' => variable_get('os2dagsorden_title_meeting_freetext_placing', 'Placering'),
+      '#title' => t('Placering'),
+  );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_comments'] = array(
       '#type' => 'textfield',
       '#default_value' => variable_get('os2dagsorden_title_meeting_comments', 'Bemærkninger'),
@@ -1281,7 +1286,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_title_meeting_status', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_status']);
     variable_set('os2dagsorden_title_meeting_meeting', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_meeting']);
     variable_set('os2dagsorden_title_meeting_date', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_date']);
-    variable_set('os2dagsorden_title_meeting_location', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_location']);
+    variable_set('os2dagsorden_title_meeting_location', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_freetext_placing']);
+    variable_set('os2dagsorden_title_meeting_freetext_placing', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_location']);
     variable_set('os2dagsorden_title_meeting_comments', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_comments']);
     variable_set('os2dagsorden_title_meeting_special_comments', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_special_comments']);
     variable_set('os2dagsorden_title_meeting_participants', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_participants']);

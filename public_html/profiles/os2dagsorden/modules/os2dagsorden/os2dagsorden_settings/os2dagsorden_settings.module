@@ -181,6 +181,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_meeting'] = variable_get('os2dagsorden_title_meeting_meeting', 'Møde');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_date'] = variable_get('os2dagsorden_title_meeting_date', 'Dato');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_location'] = variable_get('os2dagsorden_title_meeting_location', 'Lokation');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_freetext_placing'] = variable_get('os2dagsorden_title_meeting_freetext_placing', 'Placering');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_comments'] = variable_get('os2dagsorden_title_meeting_comments', 'Bemærkninger');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_special_comments'] = variable_get('os2dagsorden_title_meeting_special_comments', 'Særlige forhold');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_participants'] = variable_get('os2dagsorden_title_meeting_participants', 'Deltagere');
@@ -251,6 +252,7 @@ function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
   } elseif ($view->name == 'meetings_search'){
     $view->display_handler->options['fields']['php_7']['label'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
     $view->display_handler->options['fields']['php_2']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'Møde');
+    $view->display_handler->options['fields']['php_3']['label'] = variable_get('os2dagsorden_title_meeting_freetext_placing', 'Placering');
     $view->display_handler->options['fields']['field_os2web_meetings_date']['label'] = variable_get('os2dagsorden_title_meeting_date', 'Dato');
   } elseif ($view->name == 'kommende_m_der_i_mine_udvalg'){
     $view->display_handler->options['fields']['php_2']['label'] = variable_get('os2dagsorden_title_meeting_meeting', 'Møde');
