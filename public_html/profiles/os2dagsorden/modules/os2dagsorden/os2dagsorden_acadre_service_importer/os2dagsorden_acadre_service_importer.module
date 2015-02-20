@@ -52,7 +52,6 @@ function os2dagsorden_acadre_service_importer_import_committees(){
 
     curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
     $committees_raw = curl_exec($url);
-    $committees = new SimpleXMLElement($committees_raw);
     
     if($committees_raw !== False){
         $committees = new SimpleXMLElement($committees_raw);
