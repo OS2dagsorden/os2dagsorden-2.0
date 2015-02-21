@@ -8,7 +8,12 @@ include_once 'os2dagsorden_blocks_positioning.features.inc';
 
 
 function os2dagsorden_blocks_positioning_show_git_version(){
-    $version_number = exec('git rev-parse HEAD');
-    $repo_url= exec('git config --get remote.origin.url');
-    print 'version ' . $version_number . '<br/><a href="' . $repo_url .'" target="_blank">' . $repo_url . '</a>';
+    $gittag = exec('git rev-parse HEAD');
+    $repo_url= exec('git config --get remote.origin.url');    
+    $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
+    $info = drupal_parse_info_file($info_path);
+    $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
+    print 'Version: ' . $version . '<br/>' ;
+    print 'Gittag: ' . $gittag  . '<br/>' ;
+    print 'Github: <a href="' . $repo_url .'" target="_blank">' . $repo_url . '</a>';
 }
