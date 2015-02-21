@@ -500,13 +500,14 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
 
   foreach ($bullets as $idx => $bullet) {
     err_debug('Start import bullet ' . $idx . ' ');
-    $node = NULL;
+    $node = NULL; 
+    $bullet['body']=os2web_esdh_provider_filter_html_tags($bullet['body']);
     if (module_exists('os2dagsorden_esdh_provider')) {
       if (!empty($existing_attachments)) {
         $node = os2dagsorden_esdh_provider_find_corresponding_attachment($bullet, $existing_attachments);
       }
     }
-
+   
     if (!$node) {
       $node = new stdClass();
       $node->type = "os2web_meetings_bullet_attach";
@@ -1010,4 +1011,19 @@ function os2web_esdh_provider_clear_cache($success, $results, $operations) {
     drupal_set_message($message, 'error');
   }
   drupal_goto('admin/config/os2web/esdh_provider');
+}
+/*
+ * Removed inline styles from html tags
+ */
+
+function os2web_esdh_provider_filter_html_tags($data) {    
+    $tags = explode(',', variable_get('os2dagsorden_filtered_tags', ''));
+    foreach ($tags as $tag) {
+        preg_match_all('#<' . $tag . '(.*?)>(.*?)</' . $tag . '>#is', $data, $matches);
+        foreach ($matches[0] as $match) {
+            $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
+            $data = str_replace($match, $filtred_data, $data);
+        }
+    }
+    return $data;
 }
