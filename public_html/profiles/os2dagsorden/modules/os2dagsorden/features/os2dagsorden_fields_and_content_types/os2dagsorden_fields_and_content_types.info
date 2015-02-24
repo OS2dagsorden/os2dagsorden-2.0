@@ -13,6 +13,7 @@ dependencies[] = options
 dependencies[] = os2web_meetings_content_types
 features[ctools][] = strongarm:strongarm:1
 features[features_api][] = api:1
+features[field][] = node-os2web_meetings_bullet-field_os2web_meetings_bul_com_n
 features[field][] = node-os2web_meetings_spaper-field_os2web_meetings_sp_shared
 features[field][] = user-user-field_follows_committee
 features[field][] = user-user-field_follows_committee_plus

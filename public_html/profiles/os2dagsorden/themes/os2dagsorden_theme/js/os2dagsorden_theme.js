@@ -257,8 +257,8 @@ function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bi
  */
 function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url, massive_bilag_expand){
   var pathname = window.location.pathname;
-  jQuery(bulletPoint).prepend("<input type='button' class='button hide_show_all_attachments_text' id='btn_hide_show_all_attachments_text_"+bulletPointIndex+"' value='⇊'></a>");
-
+  jQuery(bulletPoint).children("li").first().before("<input type='button' class='button hide_show_all_attachments_text' id='btn_hide_show_all_attachments_text_"+bulletPointIndex+"' value='⇊'></a>");
+console.log(jQuery(bulletPoint).children().first());
   jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
     if (jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
 	jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){

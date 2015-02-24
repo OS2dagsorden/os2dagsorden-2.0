@@ -184,7 +184,9 @@ function os2dagsorden_meeting_views_meeting_details_fields_enddate($meeting_id){
    if (variable_get('os2dagsorden_show_meeting_type', true)){ 
       $meeting = node_load($meeting_id);
       $meeting_type=field_get_items('node', $meeting, 'field_os2web_meetings_type');
-      print $meeting_type[0]['value'];
+      $options = field_info_field(field_os2web_meetings_type);
+
+      print $options['settings']['allowed_values'][$meeting_type[0]['value']];
  }
 }
  function os2dagsorden_meeting_views_meeting_details_samlet_dokument_link(){
@@ -312,6 +314,9 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_attachme
   if (isset($bullet_point->field_os2web_meetings_attach['und'])){
     print '<div class="item-list">';
     print '<ul class="ul-item-list-dagsordenspunkt">';
+    if (variable_get('os2dagsorden_show_bp_comname', FALSE) && isset($bullet_point->field_os2web_meetings_bul_com_n['und'])){
+      print '<div>Sagen afgøres i: ' . $bullet_point->field_os2web_meetings_bul_com_n['und'][0]['value'] . '</div>';
+    }
     if ($bullet_point->field_os2web_meetings_bul_closed['und'][0]['value'] == 1 && !os2dagsorden_meeting_views_meeting_details_show_closed_bullet_point_content($meeting_id, $bp_id)){
       print "<i>Dagsordenpunktets indhold er skjult fordi dagsordenspunktet er lukket. 
       Klik på dagsordenspunktets overskrift for at få indeholdet frem.</i>";
