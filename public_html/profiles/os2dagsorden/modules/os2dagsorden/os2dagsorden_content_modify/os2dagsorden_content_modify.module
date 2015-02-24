@@ -168,6 +168,17 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#description' => t('Which types of meetings should user see in the calendar'),
   );
   
+  $form['forbidden_cat'] = array(
+    '#access' => user_access('administer os2web'),
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'pol' => t('Political'),
+      'org' => t('Organizational')
+    ),
+    '#title' =>"<b>" . t('Forbidden categories:') . "</b>",
+    '#description' => t('Which categories the user is FORBIDDEN to have access to'),
+  );
+  
   $form['user_can_send_closed_bp'] = array(
     '#type' => 'radios',
     '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
@@ -487,13 +498,29 @@ function _os2dagsorden_conten_modify_load_user_fields(&$form, $uid){
       $form['user_can_send_closed_bp']['#default_value'] = $user_can_send_closed_bp['value'];
     }
     
+   if (field_get_items('user', $user, 'field_user_forrbidden_categories')) {
+      $forrbidden_cats_field = field_get_items('user', $user, 'field_user_forrbidden_categories');
+      $selection = array();
+      
+      foreach ($forrbidden_cats_field as $forrbidden_cat) {
+	$selection[] = $forrbidden_cat['value'];
+      };
+      $form['forbidden_cat']['#default_value'] = $selection;
+      $options = $form['calendar_pref']['#options'];
+      foreach ($selection as $forbidden_cat){
+          unset($options[$forbidden_cat]);
+      }
+      $form['calendar_pref']['#options'] = $options;
+    }
+  
     if (field_get_items('user', $user, 'field_user_meetings_category')) {
       $calendar_prefs_field = field_get_items('user', $user, 'field_user_meetings_category');
       $selection = array();
       foreach ($calendar_prefs_field as $cal_pref) {
-	$selection[] = $cal_pref[value];
-      }
-      $form['calendar_pref']['#default_value'] = $selection;
+         $selection[]=$cal_pref['value'];
+    }
+   
+    $form['calendar_pref']['#default_value'] = $selection;
     }
 
     $form['user_roles']['#default_value'] = $user->roles;
@@ -534,9 +561,16 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 
   //unsetting calendar preferences
   $user->field_user_meetings_category['und'] = array();
+  if (isset($calendar_pref)){
   foreach ($calendar_pref as $cal_pref){
+    if (isset($forbidden_cat)){
+      if (!in_array($cal_pref, $forbidden_cat)) 
+        $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+      }
+    else  
     $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
   }
+  } 
 
   if (user_access('administer os2web')){//only for the full form submit
     //unsetting positions
@@ -546,7 +580,12 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 	$user->field_user_positions['und'][]['tid'] = $tid;
       }
     }
-
+    
+    //unsetting calendar preferences
+  $user->field_user_forrbidden_categories['und'] = array();
+  foreach ($forbidden_cat as $f_cat){
+    $user->field_user_forrbidden_categories['und'][]['value'] = $f_cat;
+  }
     //unsetting committees
     $user->field_user_committee['und'] = array();
     if ($member_of){
