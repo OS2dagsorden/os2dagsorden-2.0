@@ -10,6 +10,78 @@
 function os2dagsorden_fields_and_content_types_field_default_fields() {
   $fields = array();
 
+  // Exported field: 'node-os2web_meetings_bullet-field_os2web_meetings_bul_com_n'.
+  $fields['node-os2web_meetings_bullet-field_os2web_meetings_bul_com_n'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_bul_com_n',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'translatable' => '0',
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_bullet',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 9,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_os2web_meetings_bul_com_n',
+      'label' => 'Comname',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '9',
+      ),
+    ),
+  );
+
   // Exported field: 'node-os2web_meetings_spaper-field_os2web_meetings_sp_shared'.
   $fields['node-os2web_meetings_spaper-field_os2web_meetings_sp_shared'] = array(
     'field_config' => array(
@@ -665,6 +737,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Comname');
   t('Follows committees');
   t('Follows committees+');
   t('Follows committees++');

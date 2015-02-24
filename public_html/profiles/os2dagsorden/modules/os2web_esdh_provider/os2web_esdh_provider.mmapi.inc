@@ -163,10 +163,11 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
         $node = os2dagsorden_esdh_provider_find_sofd_meeting($committee_term, $meeting['meeting_date_start'], $meeting['meeting_date_finish']);
       }
-      else {
-        // We create a new node object.
-        $node = new stdClass();
-      }
+    }
+
+    if (!$node){
+      // We create a new node object.
+      $node = new stdClass();
     }
 
     // Or any other content type you want.
@@ -281,8 +282,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       }
     }
    //adding description
-      if (!empty($meeting['full_doc'])){	
-	if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {      
+      if (!empty($meeting['full_doc'])){
+	if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {
 	  if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0){	    
 	       $node->field_os2web_meetings_full_doc_c[LANGUAGE_NONE][0] = (array) $file;
 	    }
@@ -400,7 +401,10 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
     if (module_exists('os2dagsorden_esdh_provider')) {
       $node = os2dagsorden_esdh_provider_bullet_add_number($node, $item['id']);
     }
-  
+
+    if (isset($item['comname'])) {
+      $node->field_os2web_meetings_bul_com_n[$node->language][0]['value'] = $item['comname'];
+    }
     
     if ($item['access'] === 'Lukket' || $item['access'] === 'Person') {
      if ($item['access'] === 'Lukket')
