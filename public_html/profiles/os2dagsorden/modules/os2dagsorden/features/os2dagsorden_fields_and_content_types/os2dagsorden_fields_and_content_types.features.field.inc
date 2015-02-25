@@ -529,6 +529,66 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'user-user-field_user_forrbidden_categories'.
+  $fields['user-user-field_user_forrbidden_categories'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '2',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_user_forrbidden_categories',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          'pol' => 'Political',
+          'org' => 'Organizational',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 15,
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_user_forrbidden_categories',
+      'label' => 'Forrbidden categories',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => 0,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '12',
+      ),
+    ),
+  );
+
   // Exported field: 'user-user-field_user_full_name'.
   $fields['user-user-field_user_full_name'] = array(
     'field_config' => array(
@@ -741,6 +801,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   t('Follows committees');
   t('Follows committees+');
   t('Follows committees++');
+  t('Forrbidden categories');
   t('Full name');
   t('ID');
   t('Is part of Committee');
