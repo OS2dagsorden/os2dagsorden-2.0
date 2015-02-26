@@ -7,8 +7,6 @@
  * Look to acadre_esdh for example.
  */
 
-module_load_include('inc', 'os2web_esdh_provider', 'includes/os2web_esdh_provider.queue');
-
 /**
  * Implements hook_menu().
  */
@@ -71,13 +69,6 @@ function os2web_esdh_provider_form_os2web_settings_settings_form_alter(&$form, &
     '#type' => 'checkbox',
     '#title' => t('Enable external queue import'),
     '#default_value' => variable_get('os2web_esdh_provider_queue_enabled', FALSE),
-  );
-
-  // Enable database indexing import.
-  $form['os2web_mm']['os2web_esdh_provider_db_indexing_enabled'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable database indexing import'),
-    '#default_value' => variable_get('os2web_esdh_provider_db_indexing_enabled', FALSE),
   );
 
   // Enable unpublishing meetings without manifests.
@@ -175,6 +166,8 @@ function _os2web_esdh_provider_import_access() {
  * Implements hook_node_delete().
  */
 function os2web_esdh_provider_node_delete($node) {
+  module_load_include('inc', 'os2web_esdh_provider', 'includes/os2web_esdh_provider.queue');
+
   if ($node->type === 'os2web_meetings_meeting') {
     // Remove any addenums relating to this node.
     $query = new EntityFieldQuery();
@@ -196,6 +189,12 @@ function os2web_esdh_provider_node_delete($node) {
         node_delete($nids['target_id']);
       }
     }
+
+    $meeting_xmlid = $node->field_os2web_meetings_system_id['und'][0]['value'];
+    $agenda_sysid = $node->field_os2web_meetings_sub_id['und'][0]['value'];
+
+    os2web_esdh_provider_index_meeting_update_status($meeting_xmlid , $agenda_sysid , IMPORT_STATUS_DELETED);
+    os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, $agenda_sysid, 0);
   }
   if ($node->type === 'os2web_meetings_bullet') {
     // Delete bullet attachments from meeting.

@@ -11,6 +11,8 @@
  * @return int  $nid        node id of the created attachment
  */
 function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
+  global $PROCESSING_MEETING_ID, $PROCESSING_BP;
+
   //creating attachment content
   $node = new stdClass();
   $node->type = "os2web_meetings_bullet_attach";
@@ -19,9 +21,12 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   node_object_prepare($node);
 
   if (variable_get('os2dagsorden_add_type_prefix', 'true') === 'true'  && !isset($enclosure['is_bp_summary']))
-      $node->title = $enclosure['type'] . ': ' . (($enclosure['title']) ? $enclosure['title'] : 'Indhold');
- else
+     $node->title = $enclosure['type'] . ': ' . (($enclosure['title']) ? $enclosure['title'] : 'Indhold');
+  else
      $node->title = ($enclosure['title'])? $enclosure['title'] : 'Indhold';
+
+  watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Initialized BPA import: !title',
+    array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $enclosure['sysid'], '!title' => $node->title), WATCHDOG_INFO);
  
   if (strlen($node->title) > 254)
     $node->title = substr($node->title, 0, 254);
@@ -36,6 +41,8 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   
   node_submit($node);
   node_save($node);
+  watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Finished BPA import, nid: !nid',
+    array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $enclosure['sysid'], '!nid' => $node->nid), WATCHDOG_INFO);
 
   //PDF conversion
   if (module_exists(os2dagsorden_pdf2htmlex)){
