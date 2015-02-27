@@ -47,7 +47,7 @@ function os2web_esdh_provider_requirements($phase) {
 /**
  * Implements hook_update_N().
  */
-function os2web_esdh_provider_update_7001() {
+function os2web_esdh_provider_update_7002() {
   $schema = os2web_esdh_provider_schema();
   $table = $schema['os2web_esdh_provider_import'];
   db_create_table('os2web_esdh_provider_import', $table);
