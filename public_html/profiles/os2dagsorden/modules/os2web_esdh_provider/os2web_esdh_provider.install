@@ -45,11 +45,21 @@ function os2web_esdh_provider_requirements($phase) {
 }
 
 /**
- * Implements hook_update_N().
+ * Creates the db table
+ */
+function os2web_esdh_provider_update_7001() {
+  $schema = os2web_esdh_provider_schema();
+  $table = $schema['os2web_esdh_provider_import'];
+  db_create_table('os2web_esdh_provider_import', $table);
+}
+
+/**
+ * Drops the existing db table and creates a new one (table has been completely remade
  */
 function os2web_esdh_provider_update_7002() {
   $schema = os2web_esdh_provider_schema();
   $table = $schema['os2web_esdh_provider_import'];
+  db_drop_table('os2web_esdh_provider_import');
   db_create_table('os2web_esdh_provider_import', $table);
 }
 
