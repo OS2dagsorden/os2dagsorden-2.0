@@ -1,6 +1,6 @@
 name = OS2Dagsorden
 description = Basic install
-version = 1.0-alpha
+version = 2.1
 core = 7.x
 
 ; core modules
