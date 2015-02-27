@@ -679,6 +679,9 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_user_meetings_category',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
       'foreign keys' => array(),
       'indexes' => array(
         'value' => array(
@@ -699,7 +702,14 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'user',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'value' => 'pol',
+        ),
+        1 => array(
+          'value' => 'org',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
