@@ -90,26 +90,30 @@ function os2dagsorden_ad_integration_do_user_sync() {
         // Get first server.
         $ldap_server = current($ldap_servers);
         // Run a search.
-        
+      
         $filters = variable_get('os2dagsorden_ad_integration_user_sync_filter', '');
         $attr = explode(',', variable_get('os2dagsorden_ad_integration_user_sync_attr', ''));
         $dn_str_values =  preg_split('/\r\n|[\r\n]/',variable_get('os2dagsorden_ad_integration_user_sync_dn_str', ''));
        foreach ($dn_str_values as $dn_str){
         $results = $ldap_server->search($dn_str, $filters, $attr, 0, 10000);
-       
+   
         for ($i = 0; $i < $results["count"]; $i++) {
           $name = $results[$i]['mailnickname'][0];
           $mail = $results[$i]['mail'][0];
           $full_name = $results[$i]['name'][0];
+          $company = $results[$i]['company'][0];
+       
             if (!empty($mail) && !empty($name) && $name != "admin") {
                 $u = user_load_by_name($name); 
                 $m = user_load_by_mail($mail);
                 if (!$u && !$m) { // user does not exist in drupal    
-                    
+                   
                     $user = new stdClass();
                     $user->name = $name;
                     $user->mail = $mail;                    
                     $user->status = 1;
+                    
+                    $user->field_user_organization['und'][0]['value']=  $company;
                     $user->field_user_full_name['und'][0]['value']=$full_name;
                     $user->field_user_can_send_closed_bp['und'][0]['value']=true;
                     $user->roles = array(DRUPAL_AUTHENTICATED_RID => 'godkendt bruger', 3 => 'os2dagsorden');
@@ -118,7 +122,9 @@ function os2dagsorden_ad_integration_do_user_sync() {
                 }
             }
         }
-      } 
+     
+      }
+      
     } else {
         watchdog('LDAP_user_sync', 'LDAP connection error. ', WATCHDOG_ERROR);
     }

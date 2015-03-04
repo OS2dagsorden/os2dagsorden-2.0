@@ -248,11 +248,19 @@ function os2dagsorden_admin_views_views_default_views() {
   $handler->display->display_options['fields']['mail']['label'] = '';
   $handler->display->display_options['fields']['mail']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['mail']['link_to_user'] = '0';
+  /* Felt: Bruger: Full name */
+  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
   /* Felt: Bruger: Aktiv */
   $handler->display->display_options['fields']['status']['id'] = 'status';
   $handler->display->display_options['fields']['status']['table'] = 'users';
   $handler->display->display_options['fields']['status']['field'] = 'status';
   $handler->display->display_options['fields']['status']['not'] = 0;
+  /* Felt: Bruger: Organization */
+  $handler->display->display_options['fields']['field_user_organization']['id'] = 'field_user_organization';
+  $handler->display->display_options['fields']['field_user_organization']['table'] = 'field_data_field_user_organization';
+  $handler->display->display_options['fields']['field_user_organization']['field'] = 'field_user_organization';
   /* Felt: Bruger: Roller */
   $handler->display->display_options['fields']['rid']['id'] = 'rid';
   $handler->display->display_options['fields']['rid']['table'] = 'users_roles';
@@ -418,7 +426,9 @@ function os2dagsorden_admin_views_views_default_views() {
     t('Change user roles'),
     t('Send e-mail'),
     t('Navn'),
+    t('Full name'),
     t('Aktiv'),
+    t('Organization'),
     t('Roller'),
     t('Medlem i'),
     t('Seneste tilgang'),
