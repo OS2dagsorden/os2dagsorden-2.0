@@ -23,7 +23,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'os2dagsorden admin',
     ),
     'module' => 'system',
   );
@@ -59,7 +60,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access toolbar'] = array(
     'name' => 'access toolbar',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'os2dagsorden admin',
     ),
     'module' => 'toolbar',
   );
@@ -102,7 +104,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'os2dagsorden admin',
     ),
     'module' => 'taxonomy',
   );
@@ -120,7 +123,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'os2dagsorden admin',
     ),
     'module' => 'user',
   );
@@ -200,7 +204,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'os2dagsorden admin',
     ),
     'module' => 'system',
   );
