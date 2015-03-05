@@ -423,13 +423,15 @@ function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
 	$nids = array_keys($result['node']);
 	$meeting = reset(entity_load('node', $nids));
 	
-	if (os2dagsorden_access_helper_meeting_fully_converted($meeting)){
-	    if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0)
-	        $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
-	    else
-		$meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
-	    node_submit($meeting);
-	    node_save($meeting);
+	if ($meeting){
+	    if (os2dagsorden_access_helper_meeting_fully_converted($meeting)){
+		if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0)
+		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
+		else
+		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
+		node_submit($meeting);
+		node_save($meeting);
+	    }
 	}
       }
     }

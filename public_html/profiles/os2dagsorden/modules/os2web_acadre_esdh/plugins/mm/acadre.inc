@@ -85,7 +85,7 @@ function os2web_acadre_esdh_mm_get_import_list() {
 function os2web_acadre_esdh_mm_import_meeting($meeting) {
   // Debug bit set in os2web_esdh_provider settings.
   $debug = variable_get('os2web_esdh_provider_debug_info');
-
+    
   $file = $meeting['uri'];
   if ($file === FALSE) {
     os2web_meetings_order_addendums();
@@ -331,6 +331,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $xml_case = $xml->xpath("fields/field[@name='caseno']");
   $xml_case_id = $xml->xpath("table/table/fields/field[@name='sysid']");
   $xml_sysid = $xml->xpath("fields/field[@name='sysid']");
+  $xml_comname = $xml->xpath("fields/field[@name='comname']");
 
   $id = (int) array_shift($xml_id);
   $name = (string) array_shift($xml_name);
@@ -338,6 +339,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $case = (string) array_shift($xml_case);
   $case_id = (string) array_shift($xml_case_id);
   $sysid = (int) array_shift($xml_sysid);
+  $comname = (string) array_shift($xml_comname);;
 
   $item = array(
     'id' => $id,
@@ -345,6 +347,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
     'title' => 'Punkt ' . $id . ' ' . $name,
     'case_nr' => $case,
     'access' => $access,
+    'comname' => $comname,
     'bullets' => array(),
     'enclosures' => array(),
   );
