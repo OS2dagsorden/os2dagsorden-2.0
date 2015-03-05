@@ -156,6 +156,14 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#maxlength' => 128,
     '#description' => t('Is displayed in the top right corner.'),
   );
+  
+    $form['organization'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Organization:'),
+    '#size' => 60,
+    '#maxlength' => 128,
+    
+  );
 
   $form['calendar_pref'] = array(
     //'#access' => user_access('administer os2web', $full_user),
@@ -190,11 +198,12 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   );
 
   $form['user_roles'] = array(
-    '#access' => user_access('administer os2web', $full_user),
+    '#access' => (user_access('administer users', $full_user) || user_access('administer os2web', $full_user)),
     '#type' => 'checkboxes',
     '#options' => array(
       'os2dagsorden limited' => t('OS2Dagsorden limited'),
       'os2dagsorden admin' => t('OS2Dagsorden admin'),
+      'administrator++' => t('Administrator++'),
     ),
     '#title' => '<b>' . t('Brugerroller') . '</b>',
     '#description' => t('Hvilke roller tilsættes til brugeren'),
@@ -492,6 +501,11 @@ function _os2dagsorden_conten_modify_load_user_fields(&$form, $uid){
       $full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
       $form['full_name']['#default_value'] = $full_name_field['value'];
     }
+    if (field_get_items('user', $user, 'field_user_organization') ){
+      $organization_field = array_pop(field_get_items('user', $user, 'field_user_organization'));
+      $form['organization']['#default_value'] = $organization_field['value'];
+    }
+
 
     if (field_get_items('user', $user, 'field_user_can_send_closed_bp')){
       $user_can_send_closed_bp = array_pop(field_get_items('user', $user, 'field_user_can_send_closed_bp'));
@@ -548,6 +562,7 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 
   $user = user_load($form_state['values']['uid']);
   $user->field_user_full_name['und'][0]['value'] = $full_name;
+  $user->field_user_organization['und'][0]['value'] = $organization;
   $user->field_user_can_send_closed_bp['und'][0]['value'] = $user_can_send_closed_bp;
          
   //unsetting follows committees
@@ -616,7 +631,7 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 
     //os2dagsorden limited role
     $user_roles_saved = $user->roles;
-
+      
     //os2dagsorden admin role
     if (!$user_roles['os2dagsorden admin']){
       if (($key = array_search('os2dagsorden admin', $user_roles_saved)) !== false) {
@@ -637,6 +652,17 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
       if ((array_search('os2dagsorden limited', $user_roles_saved)) === false) {
 	  $rid = user_role_load_by_name('os2dagsorden limited')->rid;
 	  $user_roles_saved[$rid] = 'os2dagsorden limited';
+      }
+    }
+    
+    if (!$user_roles['administrator++']){
+      if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
+	  unset($user_roles_saved[$key]);
+      }
+    } else {
+      if ((array_search('administrator++', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('administrator++')->rid;
+	  $user_roles_saved[$rid] = 'administrator++';
       }
     }
     $user->roles = $user_roles_saved;
