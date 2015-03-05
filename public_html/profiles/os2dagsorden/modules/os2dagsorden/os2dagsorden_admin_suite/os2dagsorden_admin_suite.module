@@ -501,8 +501,10 @@ function os2dagsorden_admin_suite_delete_extra_files(){
   * @return none
   */
 function os2dagsorden_admin_suite_delete_unused_files(){
-    $acadre_dir =  drupal_realpath("private://");
-    $dirs = scandir($acadre_dir);
+    //$acadre_dir =  drupal_realpath("private://");
+    $acadre_dir =  drupal_realpath(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR));
+    $count = 0;
+   $dirs = scandir($acadre_dir);
     foreach ($dirs as $dir){
       if (preg_match("/^Files/i",$dir)){
 	print_r($dir . "<br/>");
@@ -516,7 +518,6 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	    $not_pdf_files[] = $file;
 	  }
 	}
-	
 	//going through not pdf files, to decide which to delete
 	$files_to_delete = array();
 	foreach ($not_pdf_files as $not_pdf_file){
@@ -525,11 +526,16 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	    $files_to_delete[] = $not_pdf_file;
 	  }
 	}
-	
+     
 	//deleting file
+        if (isset($files_to_delete) && !empty($files_to_delete)){
+           $count++;
 	foreach ($files_to_delete as $file){
-	  //unlink($acadre_dir . '/' . $dir . '/' . $file);
+	  unlink($acadre_dir . '/' . $dir . '/' . $file);
 	}
+        }
+        /*
+        
 	print_r('not pdf files: ');
 	print_r($not_pdf_files);
 	print_r("<br/>");
@@ -541,7 +547,9 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	print_r("<br/>");
 	print_r("<br/>");
 	print_r("<br/>");
+       */
       }
+      //if ($count>=100) return;
     }
 }
 
@@ -896,7 +904,7 @@ function os2dasorden_admin_suite_reschedule_file_adlib(){
 }
 
 function os2dasorden_admin_suite_just_code () {
-  
+ /* 
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
             ->fieldCondition('field_os2web_meetings_addendum', 'nid', 271674, '=');
@@ -908,5 +916,6 @@ function os2dasorden_admin_suite_just_code () {
       $tillaegmeeting=node_load($tillaeg);
       var_dump($tillaegmeeting);
   }
-  }
+  }*/
+   var_dump(!shell_exec('which mapitool') || !shell_exec('which munpack')) ;
 }

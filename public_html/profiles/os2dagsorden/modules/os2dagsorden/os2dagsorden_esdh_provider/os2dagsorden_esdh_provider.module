@@ -25,7 +25,8 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
  
   if (strlen($node->title) > 254)
     $node->title = substr($node->title, 0, 254);
-  $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] =  $enclosure['sysid'];
+  if (isset($enclosure['sysid']))
+    $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] =  $enclosure['sysid'];
   $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;
   if (!$enclosure['access'])//TODO: Look here
     $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 1;
@@ -38,7 +39,7 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   node_save($node);
 
   //PDF conversion
-  if (module_exists(os2dagsorden_pdf2htmlex)){
+  if (module_exists("os2dagsorden_pdf2htmlex")){
     if (file_get_mimetype($file->uri) === 'application/pdf')//if is PDF, schedule for HTML conversion
       os2dagsorden_pdf2htmlex_schedule($file->fid, $node->nid);
   }
@@ -279,9 +280,10 @@ function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity
  */
 function osdagsorden_esdh_provider_import_or_return_committee($sub_id, $name){
  $term=_os2dagsorden_access_helper_get_committee_by_subid_and_name($sub_id, $name);   
-  if (!$term ){     
+ if (!$term ){
     $term = _acadre_esdh_import_term($name, 'os2web_meetings_tax_committee');
     os2dagsorden_esdh_provider_committee_add_subid($term, $sub_id);
   }
+  
   return $term;
 }

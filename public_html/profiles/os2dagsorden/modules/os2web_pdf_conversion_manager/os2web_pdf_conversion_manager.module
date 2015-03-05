@@ -223,7 +223,7 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
        ->execute();
     while ($d_file = $result->fetchAssoc()) {
      $original_path_parts = pathinfo($d_file['uri']);
-     $dest = drupal_realpath($original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf');
+    // $dest = drupal_realpath($original_path_parts['dirname'] ). '/' . $original_path_parts['filename'] . '.pdf';
      $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf';
      if (_os2web_pdf_conversion_manager_update_managed_file($d_file['fid'], $d_file['uri'], $convertion_dir_path . "/" . $file_arr['pdf'])){     
        if (module_exists('os2dagsorden_pdf2htmlex')) 
@@ -302,7 +302,7 @@ function _os2web_pdf_conversion_manager_similar_file_exists($filename) {
 function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $html_file){
     if (!file_exists($html_file)) return FALSE;   
     $original_path_parts = pathinfo($original_file);
-    $dest = drupal_realpath($original_path_parts['dirname'] . '/' .  $original_path_parts['filename'] . '.html');
+    $dest = drupal_realpath($original_path_parts['dirname'] ) . '/' .  $original_path_parts['filename'] . '.html';
     $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.html';
 
     if ($file_path=file_unmanaged_copy($html_file, $dest, FILE_EXISTS_RENAME)){
@@ -351,7 +351,7 @@ function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $ht
 }
 function _os2web_pdf_conversion_manager_update_managed_file($fid, $original_file, $pdf_file) {
     $original_path_parts = pathinfo($original_file);
-    $dest = drupal_realpath($original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf');
+    $dest = drupal_realpath($original_path_parts['dirname']) . '/' . $original_path_parts['filename'] . '.pdf';
     $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf';
     if ($file_path=file_unmanaged_copy($pdf_file, $dest, FILE_EXISTS_RENAME)) { //copy PDF file
      if ($file_path!=$dest)
