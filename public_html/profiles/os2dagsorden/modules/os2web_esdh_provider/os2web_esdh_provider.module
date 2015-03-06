@@ -248,22 +248,22 @@ function os2web_esdh_provider_queue_meetings() {
         if (isset($imported_meetings[$filename])) {
           if ($imported_meetings[$filename] != $changed) {
             $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-            db_update('os2web_esdh_provider_import')
-              ->fields(array(
-                'changed' => filemtime($meeting['uri']),
-              ))
-              ->condition('filename', basename($meeting['uri']), '=')
-              ->execute();
+            //db_update('os2web_esdh_provider_import')
+            //  ->fields(array(
+            //    'changed' => filemtime($meeting['uri']),
+            //  ))
+            //  ->condition('filename', basename($meeting['uri']), '=')
+            //  ->execute();
           }
         }
         else {
           $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-          db_insert('os2web_esdh_provider_import')
-            ->fields(array(
-              'filename' => basename($meeting['uri']),
-              'changed' => filemtime($meeting['uri']),
-            ))
-            ->execute();
+          //db_insert('os2web_esdh_provider_import')
+          //  ->fields(array(
+          //    'filename' => basename($meeting['uri']),
+          //    'changed' => filemtime($meeting['uri']),
+          //  ))
+          //  ->execute();
         }
       }
       $queue->createItem(array('post_import_process' => TRUE));
