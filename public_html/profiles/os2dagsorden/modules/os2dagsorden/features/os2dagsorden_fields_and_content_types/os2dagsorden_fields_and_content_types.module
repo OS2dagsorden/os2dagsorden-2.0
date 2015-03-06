@@ -14,14 +14,14 @@ function os2dagsorden_fields_and_content_types_meeting_search_metadata($entity, 
   }*/
 
   $location = '';
-  if (is_array(field_get_items($entity_type, $entity, 'field_os2web_meetings_location'))) {
-    $location_id = array_pop(array_pop(field_get_items($entity_type, $entity, 'field_os2web_meetings_location')));
+  if (isset($entity->field_os2web_meetings_location['und'])){
+    $location_id = $entity->field_os2web_meetings_location['und'][0]['tid'];
     $location = ' ' . taxonomy_term_load($location_id)->name;
   }
 
   $committee = '';
-  if (is_array(field_get_items($entity_type, $entity, 'field_os2web_meetings_committee'))) {
-    $committee_id = array_pop(array_pop(field_get_items($entity_type, $entity, 'field_os2web_meetings_committee')));
+  if (isset($entity->field_os2web_meetings_committee['und'])){
+    $committee_id = $entity->field_os2web_meetings_committee['und'][0]['tid'];
     $committee = ' ' . taxonomy_term_load($committee_id)->name;
   }
 
