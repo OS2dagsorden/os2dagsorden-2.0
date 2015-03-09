@@ -23,8 +23,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );
@@ -60,8 +60,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access toolbar'] = array(
     'name' => 'access toolbar',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'toolbar',
   );
@@ -70,7 +70,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'user',
   );
@@ -79,7 +79,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'menu',
   );
@@ -88,7 +88,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer os2web'] = array(
     'name' => 'administer os2web',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'os2web_settings',
   );
@@ -104,8 +104,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'taxonomy',
   );
@@ -114,7 +114,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer ultimate cron'] = array(
     'name' => 'administer ultimate cron',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'ultimate_cron',
   );
@@ -123,8 +123,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'user',
   );
@@ -151,7 +151,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['edit context'] = array(
     'name' => 'edit context',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
@@ -178,7 +178,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['list context'] = array(
     'name' => 'list context',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
@@ -187,8 +187,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
     'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'authenticated user',
     ),
     'module' => 'filter',
   );
@@ -204,8 +204,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );
