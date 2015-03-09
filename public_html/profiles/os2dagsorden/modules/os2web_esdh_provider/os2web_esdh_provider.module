@@ -231,32 +231,32 @@ function os2web_esdh_provider_queue_meetings() {
       $current_timestamp = time();
 
       // New Import QUEUE.
-      /*$imported_meetings = array();
-      $query = db_select('os2web_esdh_provider_import', 'i')->fields('i');
-      $results = $query->execute();
-      if ($results) {
-        while ($result = $results->fetchAssoc()) {
-          $imported_meetings[$result['filename']] = $result['changed'];
-        }
-      }*/
+      //$imported_meetings = array();
+      //$query = db_select('os2web_esdh_provider_import', 'i')->fields('i');
+      //$results = $query->execute();
+      //if ($results) {
+      //  while ($result = $results->fetchAssoc()) {
+      //   $imported_meetings[$result['filename']] = $result['changed'];
+      // }
+      //}
 
       // Do the magic in a queue.
       foreach ($meetings as $meeting) {
-   /*     $filename = basename($meeting['uri']);
-        $changed = filemtime($meeting['uri']);
-        $import = FALSE;
-        if (isset($imported_meetings[$filename])) {
-          if ($imported_meetings[$filename] != $changed) {
-            $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
+       //$filename = basename($meeting['uri']);
+        //$changed = filemtime($meeting['uri']);
+        //$import = FALSE;
+        //if (isset($imported_meetings[$filename])) {
+         // if ($imported_meetings[$filename] != $changed) {
+          //  $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
             //db_update('os2web_esdh_provider_import')
             //  ->fields(array(
             //    'changed' => filemtime($meeting['uri']),
             //  ))
             //  ->condition('filename', basename($meeting['uri']), '=')
             //  ->execute();
-          }
-        }
-        else {*/
+          //}
+        //}
+        //else {
           $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
           //db_insert('os2web_esdh_provider_import')
           //  ->fields(array(
