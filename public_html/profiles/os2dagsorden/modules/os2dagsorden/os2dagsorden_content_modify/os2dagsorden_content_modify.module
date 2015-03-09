@@ -202,8 +202,8 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#type' => 'checkboxes',
     '#options' => array(
       'os2dagsorden limited' => t('OS2Dagsorden limited'),
-      'os2dagsorden admin' => t('OS2Dagsorden admin'),
-      'administrator++' => t('Administrator++'),
+      'administrator+' => t('Administrator+'),  
+      'administrator++' => t('Administrator++'),      
     ),
     '#title' => '<b>' . t('Brugerroller') . '</b>',
     '#description' => t('Hvilke roller tilsættes til brugeren'),
@@ -633,14 +633,14 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
     $user_roles_saved = $user->roles;
       
     //os2dagsorden admin role
-    if (!$user_roles['os2dagsorden admin']){
-      if (($key = array_search('os2dagsorden admin', $user_roles_saved)) !== false) {
+    if (!$user_roles['Administrator++']){
+      if (($key = array_search('Administrator++', $user_roles_saved)) !== false) {
 	  unset($user_roles_saved[$key]);
       }
     } else {
-      if ((array_search('os2dagsorden admin', $user_roles_saved)) === false) {
-	  $rid = user_role_load_by_name('os2dagsorden admin')->rid;
-	  $user_roles_saved[$rid] = 'os2dagsorden admin';
+      if ((array_search('Administrator++', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('Administrator++')->rid;
+	  $user_roles_saved[$rid] = 'Administrator++';
       }
     }
 
@@ -655,14 +655,14 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
       }
     }
     
-    if (!$user_roles['administrator++']){
-      if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
+    if (!$user_roles['administrator+']){
+      if (($key = array_search('administrator+', $user_roles_saved)) !== false) {
 	  unset($user_roles_saved[$key]);
       }
     } else {
-      if ((array_search('administrator++', $user_roles_saved)) === false) {
-	  $rid = user_role_load_by_name('administrator++')->rid;
-	  $user_roles_saved[$rid] = 'administrator++';
+      if ((array_search('administrator+', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('administrator+')->rid;
+	  $user_roles_saved[$rid] = 'administrator+';
       }
     }
     $user->roles = $user_roles_saved;
