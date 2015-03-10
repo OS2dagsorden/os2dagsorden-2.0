@@ -188,7 +188,8 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   );
   
   $form['user_can_send_closed_bp'] = array(
-    '#type' => 'radios',
+    '#access' => user_access('administer os2web'), 
+    '#type' => 'radios',    
     '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
     '#default_value' => false,
     '#options' => array(
@@ -201,9 +202,9 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#access' => (user_access('administer users', $full_user) || user_access('administer os2web', $full_user)),
     '#type' => 'checkboxes',
     '#options' => array(
-      'os2dagsorden limited' => t('OS2Dagsorden limited'),
-      'administrator+' => t('Administrator+'),  
-      'administrator++' => t('Administrator++'),      
+      'os2dagsorden limited' => t('OS2Dagsorden limited') .'<i>' . t(' (Kan kun tilgå udvalg man er medlem af)') .'</i>',
+      'administrator+' => t('Administrator+')  . '<i>' . t(' (adgang til redigering af udvalg og brugere)').'</i>',  
+      'administrator++' => t('Administrator++') . '<i>' . t(' (rettigheder til al konfiguration og alle settings)').'</i>',      
     ),
     '#title' => '<b>' . t('Brugerroller') . '</b>',
     '#description' => t('Hvilke roller tilsættes til brugeren'),
