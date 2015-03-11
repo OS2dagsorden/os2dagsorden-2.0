@@ -100,6 +100,14 @@ function os2dagsorden_admin_suite_menu() {
         
     );
     
+     $items['os2dagsorden/admin_suite/user_can_send_closed_bp/%'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dagsorden_admin_suite_user_forbid_send_closed_bp',
+        'access arguments' => array('administer os2web'),
+         'page arguments' => array(3)
+        
+    );
+    
     $items['os2dagsorden/admin_suite/reschedule_adlib'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dasorden_admin_suite_reschedule_file_adlib',
@@ -904,7 +912,7 @@ function os2dasorden_admin_suite_reschedule_file_adlib(){
 }
 
 function os2dasorden_admin_suite_just_code () {
- /* 
+  
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
             ->fieldCondition('field_os2web_meetings_addendum', 'nid', 271674, '=');
@@ -916,6 +924,30 @@ function os2dasorden_admin_suite_just_code () {
       $tillaegmeeting=node_load($tillaeg);
       var_dump($tillaegmeeting);
   }
-  }*/
-   var_dump(!shell_exec('which mapitool') || !shell_exec('which munpack')) ;
+  }
+  
+}
+
+function os2dagsorden_admin_suite_user_forbid_send_closed_bp($val) {
+    if (!isset($val))
+        $val=0;
+    $query = new EntityFieldQuery();
+    $result = $query->entityCondition('entity_type', 'user')
+                    ->propertyCondition('status', 1)
+                    ->fieldCondition('field_user_can_send_closed_bp', 'value', $val, '!=')
+                    ->range(0,500)
+                    ->execute(); 
+    $users = user_load_multiple(array_keys($result['user']));
+    
+    foreach($users as $user){
+        if (empty($user->name))
+            continue;        
+        if ($user->field_user_can_send_closed_bp['und'][0]['value']!=$val) {
+            $user->field_user_can_send_closed_bp['und'][0]['value']=$val;       
+        user_save($user);
+        print_r($user->name);
+        print_r ('<br/>');
+        }   
+    }
+    print_r ('done');
 }
