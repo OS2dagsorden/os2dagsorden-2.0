@@ -634,14 +634,14 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
     $user_roles_saved = $user->roles;
       
     //os2dagsorden admin role
-    if (!$user_roles['Administrator++']){
-      if (($key = array_search('Administrator++', $user_roles_saved)) !== false) {
+    if (!$user_roles['administrator++']){
+      if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
 	  unset($user_roles_saved[$key]);
       }
     } else {
-      if ((array_search('Administrator++', $user_roles_saved)) === false) {
-	  $rid = user_role_load_by_name('Administrator++')->rid;
-	  $user_roles_saved[$rid] = 'Administrator++';
+      if ((array_search('administrator++', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('administrator++')->rid;
+	  $user_roles_saved[$rid] = 'administrator++';
       }
     }
 
