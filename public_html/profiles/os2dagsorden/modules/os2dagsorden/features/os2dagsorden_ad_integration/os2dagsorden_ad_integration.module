@@ -13,14 +13,14 @@ function os2dagsorden_ad_integration_menu() {
  $items = array();
  $items['admin/config/people/ldap/users_sync'] = array(
    'title' => 'User sync settings',
-   'access arguments' => array('administer os2web'),  
+   'access arguments' => array('administer os2web'),
    'page callback' => 'drupal_get_form',
    'page arguments' => array('os2dagsorden_ad_integration_user_sync_settings_form'),
    'type' => MENU_LOCAL_TASK,
    'position' => 'right',
    'weight' => 150,
  );
- 
+
  $items['os2dagsorden/run_user_sync'] = array(
 	'page callback' => 'os2dagsorden_ad_integration_do_user_sync',
 	'access arguments' => array('administer os2web'),
@@ -58,7 +58,7 @@ function os2dagsorden_ad_integration_user_sync_settings_form($form, $form_state)
     '#required' => TRUE,
   );
   return system_settings_form($form);
-} 
+}
 
 /**
  * Implementation of hook_cronapi().
@@ -79,9 +79,8 @@ function os2dagsorden_ad_integration_cron() {
  os2dagsorden_ad_integration_do_user_sync();
 }
 
-function os2dagsorden_ad_integration_do_user_sync() {  
-    if (variable_get('os2dagsorden_ad_integration_user_sync_attr', '') == '' || variable_get('os2dagsorden_ad_integration_user_sync_filter', '') == '' || variable_get('os2dagsorden_ad_integration_user_sync_dn_str', '') == ''
-    ) {
+function os2dagsorden_ad_integration_do_user_sync() {
+    if (variable_get('os2dagsorden_ad_integration_user_sync_attr', '') == '' || variable_get('os2dagsorden_ad_integration_user_sync_filter', '') == '' || variable_get('os2dagsorden_ad_integration_user_sync_dn_str', '') == '') {
         watchdog('LDAP_user_sync', 'LDAP user sync query options missing. ', WATCHDOG_ERROR);
 
         return;
@@ -93,48 +92,40 @@ function os2dagsorden_ad_integration_do_user_sync() {
 
         $filters = variable_get('os2dagsorden_ad_integration_user_sync_filter', '');
         $attr = explode(',', variable_get('os2dagsorden_ad_integration_user_sync_attr', ''));
-        $dn_str_values =  preg_split('/\r\n|[\r\n]/',variable_get('os2dagsorden_ad_integration_user_sync_dn_str', ''));
-        foreach ($dn_str_values as $dn_str){
-          $results = $ldap_server->search($dn_str, $filters, $attr);
-          for ($i = 0; $i < $results["count"]; $i++) {
-            $name = $results[$i]['mailnickname'][0];
-            $mail = $results[$i]['mail'][0];         
+        $dn_str_values = preg_split('/\r\n|[\r\n]/', variable_get('os2dagsorden_ad_integration_user_sync_dn_str', ''));
+        foreach ($dn_str_values as $dn_str) {
+            $results = $ldap_server->search($dn_str, $filters, $attr);
+            for ($i = 0; $i < $results["count"]; $i++) {
+                $name = $results[$i]['mailnickname'][0];
+                $mail = $results[$i]['mail'][0];
 
-            if (!empty($results[$i]['displayname'][0]))
-                $full_name = $results[$i]['displayname'][0];
-            else
-                $full_name = $results[$i]['name'][0];        
-            $company = $results[$i]['physicaldeliveryofficename'][0];
+                if (!empty($results[$i]['displayname'][0]))
+                    $full_name = $results[$i]['displayname'][0];
+                else
+                    $full_name = $results[$i]['name'][0];
+                $company = $results[$i]['physicaldeliveryofficename'][0];
 
-              if (!empty($mail) && !empty($name) && $name != "admin") {
-                if ($u = user_load_by_name($name)){
-                      $user = $u; 
-                      echo $name.'<br/>';
-                  }
-                   else if ( $m = user_load_by_mail($mail)) {
-                       $user=$m;                   
-                   }   
-                   else {
-                      $user = new stdClass();
-                      $user->name = $name;
-                      $user->mail = $mail;                    
-                      $user->status = 1;
-                      $user->field_user_can_send_closed_bp['und'][0]['value']=0;
-                      $user->roles = array(DRUPAL_AUTHENTICATED_RID => 'godkendt bruger', 3 => 'os2dagsorden');
+                if (!empty($mail) && !empty($name) && $name != "admin") {
+                    if ($u = user_load_by_name($name)) {
+                        $user = $u;
+                    } else if ($m = user_load_by_mail($mail)) {
+                        $user = $m;
+                    } else {
+                        $user = new stdClass();
+                        $user->name = $name;
+                        $user->mail = $mail;
+                        $user->status = 1;
+                        $user->field_user_can_send_closed_bp['und'][0]['value'] = 0;
+                        $user->roles = array(DRUPAL_AUTHENTICATED_RID => 'godkendt bruger', 3 => 'os2dagsorden');
+                    }
+                    $user->field_user_organization['und'][0]['value'] = $company;
+                    $user->field_user_full_name['und'][0]['value'] = $full_name;
 
-                   }  
-                      $user->field_user_organization['und'][0]['value']=  $company;
-                      $user->field_user_full_name['und'][0]['value']=$full_name;
-
-                      user_save($user);
-                      watchdog('LDAP_user_sync', 'User %user imported',  array( '%user'  => $name), WATCHDOG_INFO);
-                  }
+                    user_save($user);
+                    watchdog('LDAP_user_sync', 'User %user imported', array('%user' => $name), WATCHDOG_INFO);
+                }
             }
-     
         }
-     
-    //  }
-      
     } else {
         watchdog('LDAP_user_sync', 'LDAP connection error. ', WATCHDOG_ERROR);
     }
