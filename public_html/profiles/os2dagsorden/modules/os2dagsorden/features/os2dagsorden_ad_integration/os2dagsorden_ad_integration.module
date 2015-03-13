@@ -92,6 +92,7 @@ function os2dagsorden_ad_integration_do_user_sync() {
 
         $filters = variable_get('os2dagsorden_ad_integration_user_sync_filter', '');
         $attr = explode(',', variable_get('os2dagsorden_ad_integration_user_sync_attr', ''));
+
         $dn_str_values = preg_split('/\r\n|[\r\n]/', variable_get('os2dagsorden_ad_integration_user_sync_dn_str', ''));
         foreach ($dn_str_values as $dn_str) {
             $results = $ldap_server->search($dn_str, $filters, $attr);
