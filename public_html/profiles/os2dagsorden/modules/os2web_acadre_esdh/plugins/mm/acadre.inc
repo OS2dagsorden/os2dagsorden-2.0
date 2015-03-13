@@ -188,7 +188,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
     //Checking if meeting is in approved committees list
     $is_meeting_approved = TRUE;
     if (variable_get('os2dagsorden_committees_positive_list_as_import_list', FALSE) && module_exists('os2dagsorden_settings')){
-      if ($committee == '' || !in_array($committee_id, os2dagsorden_settings_get_active_committees_sub_id()))
+      if ($committee == '' || !in_array($committee_id, os2dagsorden_settings_get_import_committees_sub_id()))
         $is_meeting_approved = FALSE;
     } else {
       $publish_committee = array_map('trim', explode(',', variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED)));

@@ -387,7 +387,7 @@ function os2dagsorden_settings_get_active_committees(){
     return $active_committees;
 }
 
-function os2dagsorden_settings_get_active_committees_sub_id(){
+function os2dagsorden_settings_get_import_committees_sub_id(){
     $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
             ->condition('machine_name', 'os2web_meetings_tax_committee')
@@ -399,7 +399,7 @@ function os2dagsorden_settings_get_active_committees_sub_id(){
     $ids = array();
     foreach ($committees as $committee){
         $committee_full = taxonomy_term_load($committee->tid);
-        if (isset($committee_full->field_os2web_meetings_com_active['und']) && $committee_full->field_os2web_meetings_com_active['und'][0]['value'] ){
+        if (isset($committee_full->field_os2web_meetings_com_import['und']) && $committee_full->field_os2web_meetings_com_import['und'][0]['value'] ){
             if (isset($committee_full->field_os2web_meetings_com_subid['und'])){
                 foreach ($committee_full->field_os2web_meetings_com_subid['und'] as $id){
                     $ids[] = $id['value'];

@@ -286,11 +286,19 @@ function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity
  * @return $committee term
  */
 function osdagsorden_esdh_provider_import_or_return_committee($sub_id, $name){
- $term=_os2dagsorden_access_helper_get_committee_by_subid_and_name($sub_id, $name);   
+ $term =_os2dagsorden_access_helper_get_committee_by_subid_and_name($sub_id, $name);   
  if (!$term ){
     $term = _acadre_esdh_import_term($name, 'os2web_meetings_tax_committee');
     os2dagsorden_esdh_provider_committee_add_subid($term, $sub_id);
   }
-  
+  else {
+      // check if has parent term
+      $parent_tids = taxonomy_get_parents($term->tid);
+      if(!empty($parent_tids)){
+      $tid = reset($parent_tids);
+   
+      $term = taxonomy_term_load($tid->tid);
+  }
+  }
   return $term;
 }

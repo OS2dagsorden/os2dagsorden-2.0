@@ -3571,6 +3571,72 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_import'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_import'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_import',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => 'Don\'t import',
+          1 => 'Import',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => array(
+        0 => array(
+          'value' => 1,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 11,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_import',
+      'label' => 'Import',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 0,
+        ),
+        'type' => 'options_onoff',
+        'weight' => '3',
+      ),
+    ),
+  );
+
   // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_shname'.
   $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_shname'] = array(
     'field_config' => array(
@@ -3773,6 +3839,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Full doc closed');
   t('HTML File Page Amount');
   t('ID');
+  t('Import');
   t('Lokation');
   t('Meeting ID');
   t('Meeting sub ID');

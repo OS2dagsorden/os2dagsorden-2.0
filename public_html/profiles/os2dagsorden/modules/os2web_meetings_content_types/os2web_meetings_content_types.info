@@ -68,6 +68,7 @@ features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_mee
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_active
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_cat
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_color
+features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_import
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_shname
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_subid
 features[field][] = taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_commiteeid
