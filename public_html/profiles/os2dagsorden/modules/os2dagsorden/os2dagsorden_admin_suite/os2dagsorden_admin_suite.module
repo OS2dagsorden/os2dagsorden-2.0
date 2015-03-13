@@ -901,10 +901,12 @@ function os2dasorden_admin_suite_reschedule_file_adlib(){
 	    $bullet = node_load($nid);
 	    if (!$bullet->field_os2web_meetings_bpa_html['und']){
 		$file = file_load($bullet->field_os2web_meetings_bpa_file['und'][0]['fid']);
-		if ($file->filemime !== 'application/pdf'){
+		if ($file->filemime !== 'application/pdf' && $file->filemime !== 'image/jpeg' && $file->filemime !== 'image/tiff' && $file->filemime !== 'text/html' && $file->filemime !== 'image/gif'){
 		    print("<br/>");
-		    print($file->fid . ' ' . $bullet->nid);
-		    os2web_adlib_api_convert_to_pdf($file->fid);
+		    print($file->filemime . ' ' . $file->fid . ' ' . $bullet->nid);
+		    if ($file->fid) {
+			//os2web_adlib_api_convert_to_pdf($file->fid);
+		    }
 		}
 	    }
 	}
