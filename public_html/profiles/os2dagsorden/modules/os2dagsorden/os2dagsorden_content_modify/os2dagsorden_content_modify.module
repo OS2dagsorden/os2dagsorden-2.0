@@ -36,7 +36,7 @@ function os2dagsorden_content_modify_menu() {
     'title' => 'User edit simple',
     'page callback' => '_os2dagsorden_content_modify_user_edit_page',
     'page arguments' => array(1),
-    'access arguments' => array('administer os2web'),
+    'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -125,7 +125,7 @@ function _os2dagsorden_content_modify_user_edit_page($uid = null){
       $uid = $full_user->uid;
   }
 
-  if (!user_access('administer os2web', $full_user)){
+  if (!user_access('administer users', $full_user)){
     if ($full_user->uid != $uid){
       drupal_goto('user/simple_edit');
     }
@@ -175,9 +175,9 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#title' =>"<b>" . t('Calendar preferences:') . "</b>",
     '#description' => t('Which types of meetings should user see in the calendar'),
   );
-  
+
   $form['forbidden_cat'] = array(
-    '#access' => user_access('administer os2web'),
+    '#access' => user_access('administer users'),
     '#type' => 'checkboxes',
     '#options' => array(
       'pol' => t('Political'),
@@ -188,7 +188,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   );
   
   $form['user_can_send_closed_bp'] = array(
-    '#access' => user_access('administer os2web'), 
+    '#access' => user_access('administer users'), 
     '#type' => 'radios',    
     '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
     '#default_value' => false,
@@ -252,7 +252,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   );
  
   $form['member_of_div'] = array(
-    '#access' => user_access('administer os2web'),  
+    '#access' => user_access('administer users'),  
     '#type' => 'item' ,
     '#prefix' => '<label>' . t('Member of:') . '</label>',       
     '#markup' => '',
@@ -276,7 +276,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     )
   );
   $form['follows_plus_div'] = array(
-    '#access' => user_access('administer os2web'),  
+    '#access' => user_access('administer users'),  
     '#type' => 'item' ,
     '#prefix' => '<label>' . t('Follows+:') . '</label>',       
     '#markup' => '',
@@ -290,7 +290,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   );
 
   $form['follows_plus_plus_div'] = array(
-    '#access' => user_access('administer os2web'),  
+    '#access' => user_access('administer users'),  
     '#type' => 'item' ,
     '#prefix' => '<label>' . t('Follows++:') . '</label>',       
     '#markup' => '',
@@ -406,7 +406,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
   }
 
   $form['member_of'] = array(
-      '#access' => user_access('administer os2web'),
+      '#access' => user_access('administer users'),
       '#type' => 'select',
       '#title' => t('Member of:'),
       '#options' => $com_select,
@@ -428,7 +428,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
   );
   
   $form['follows_plus'] = array(
-      '#access' => user_access('administer os2web'),
+      '#access' => user_access('administer users'),
       '#type' => 'select',
       '#title' => t('Follows+:'),
       '#options' => $com_select,
@@ -439,7 +439,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
   );
     
   $form['follows_plus_plus'] = array(
-      '#access' => user_access('administer os2web'),
+      '#access' => user_access('administer users'),
       '#type' => 'select',
       '#title' => t('Follows++:'),
       '#options' => $com_select,
