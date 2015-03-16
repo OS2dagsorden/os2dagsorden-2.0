@@ -429,17 +429,17 @@ function _os2dagsorden_admin_views_create_committee_term($xml_data, $vid, $weigh
 
 function _os2dagsorden_admin_views_sort_terms($a, $b) {
     if (isset($_GET['order'])){
-        if ($_GET['order'] == 'Name'){
+        if ($_GET['order'] == t('Name')){
             if ($_GET['sort'] == 'asc')
                 return strcasecmp($a['name'], $b['name']);
             else
                 return strcasecmp($b['name'], $a['name']);
-        } elseif ($_GET['order'] == 'Active'){
+        } elseif ($_GET['order'] == t('Active')){
             if ($_GET['sort'] == 'asc')
                 return strcasecmp($a['field_os2web_meetings_com_active']['und'][0]['value'], $b['field_os2web_meetings_com_active']['und'][0]['value']);
             else
                 return strcasecmp($b['field_os2web_meetings_com_active']['und'][0]['value'], $a['field_os2web_meetings_com_active']['und'][0]['value']);
-        } elseif ($_GET['order'] == 'Import'){
+        } elseif ($_GET['order'] == t('Import')){
             if ($_GET['sort'] == 'asc')
                 return strcasecmp($a['field_os2web_meetings_com_import']['und'][0]['value'], $b['field_os2web_meetings_com_import']['und'][0]['value']);
             else
