@@ -28,7 +28,7 @@ function os2dagsorden_content_modify_menu() {
     'title' => 'Assign user positions to users',
     'description' => 'Module that supports assigning/removing roles from the users',
     'page callback' => '_os2dagsorden_content_modify_users',
-    'access arguments' => array('administer os2web'),
+    'access arguments' => array('administer users'),
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -199,7 +199,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   );
 
   $form['user_roles'] = array(
-    '#access' => (user_access('administer users', $full_user) || user_access('administer os2web', $full_user)),
+    '#access' => (user_access('administer users', $full_user)),
     '#type' => 'checkboxes',
     '#options' => array(
       'os2dagsorden limited' => t('OS2Dagsorden limited') .'<i>' . t(' (Kan kun tilgå udvalg man er medlem af)') .'</i>',
@@ -209,6 +209,9 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#title' => '<b>' . t('Brugerroller') . '</b>',
     '#description' => t('Hvilke roller tilsættes til brugeren'),
   );
+  
+  if (!user_access('administer os2web', $full_user)) 
+      $form['user_roles']['administrator++']['#disabled']  = TRUE;
 
   if (!os2dagsorden_access_helper_is_touch()){
     //render drag and drop functionality
@@ -588,7 +591,7 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
   }
   } 
 
-  if (user_access('administer os2web')){//only for the full form submit
+  if (user_access('administer users')){//only for the full form submit
     //unsetting positions
     $user->field_user_positions['und'] = array();
     if ($user_pos){
@@ -634,17 +637,18 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
     $user_roles_saved = $user->roles;
       
     //os2dagsorden admin role
-    if (!$user_roles['administrator++']){
-      if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
-	  unset($user_roles_saved[$key]);
-      }
-    } else {
-      if ((array_search('administrator++', $user_roles_saved)) === false) {
-	  $rid = user_role_load_by_name('administrator++')->rid;
-	  $user_roles_saved[$rid] = 'administrator++';
-      }
+    if(user_access('administer os2web')){
+        if (!$user_roles['administrator++']){
+          if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
+              unset($user_roles_saved[$key]);
+          }
+        } else {
+          if ((array_search('administrator++', $user_roles_saved)) === false) {
+              $rid = user_role_load_by_name('administrator++')->rid;
+              $user_roles_saved[$rid] = 'administrator++';
+          }
+        }
     }
-
     if (!$user_roles['os2dagsorden limited']){
       if (($key = array_search('os2dagsorden limited', $user_roles_saved)) !== false) {
 	  unset($user_roles_saved[$key]);
