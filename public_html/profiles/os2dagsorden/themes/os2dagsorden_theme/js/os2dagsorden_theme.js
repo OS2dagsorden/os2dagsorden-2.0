@@ -163,6 +163,12 @@ function hide_side_menu(){
   });
 }
 
+function hide_side_menu_completely(){
+  jQuery(document).ready(function() {
+      jQuery("#show_hide_menu_button").hide();
+       hide_side_menu();
+  });
+ }  
 /**
  * A funtion show hide the menu
  */

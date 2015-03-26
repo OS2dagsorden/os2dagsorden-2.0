@@ -310,12 +310,19 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => $options3,
     '#description' => t('This decides whether a side menu expanded/collapsed.'),
   );
+  
   $form['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = array(
     '#type' => 'radios',
     '#title' => t('Show/Hide search block title'),
     '#default_value' => variable_get('os2dagsorden_show_search_block_title', 'true'),
     '#options' => array('true' => t('Show'), 'false' => t('Hide')),
     '#description' => t('This decides whether a search block title show/hide.'),
+  );
+  $form['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide right side menu'),
+    '#default_value' => variable_get('os2dagsorden_hide_menu', FALSE),
+     '#description' => t('This decides whether a side menu hided/unhided.'),
   );
 
   //meeting search view settings
