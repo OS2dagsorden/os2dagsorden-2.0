@@ -563,7 +563,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
 
       if (isset($bullet['images'])) {
         foreach ($bullet['images'] as $image) {
-          $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) . '" /></div>';
+          $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) . '" style="width:90%;" /></div>';
         }
       }
 
