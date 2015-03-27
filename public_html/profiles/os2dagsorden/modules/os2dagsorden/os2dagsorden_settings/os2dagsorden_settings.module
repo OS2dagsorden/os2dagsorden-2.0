@@ -65,8 +65,8 @@ function os2dagsorden_settings_menu() {
 
 function os2dagsorden_settings_export_to_file(){
     header("Content-type: text/plain");
-    header("Content-Disposition: attachment; filename=os2dagsorden_settings.settings");
-
+    header("Content-Disposition:attachment;filename=os2dagsorden_settings.settings");
+    ob_clean();
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee'] = variable_get('os2dagsorden_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_enddate'] = variable_get('os2dagsorden_show_meeting_enddate', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_type'] = variable_get('os2dagsorden_show_meeting_type', TRUE);
@@ -102,7 +102,8 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu'] = variable_get('os2dagsorden_collapse_menu', TRUE);
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = variable_get('os2dagsorden_show_search_block_title', 'true');
- 
+    $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu'] = variable_get('os2dagsorden_hide_menu', FALSE);
+    
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
@@ -135,9 +136,7 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_show_meeting_category'] = variable_get('os2dagsorden_show_meeting_category');
     $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_user_default_meeting_category']= variable_get('os2dagsorden_user_default_meeting_category', 'pol');
-    //$setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_default_meeting_cateroty'] = variable_get('os2dagsorden_default_meeting_cateroty','pol');
-
-
+    
     $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
     $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
     $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
@@ -191,7 +190,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_closed_agenda'] = variable_get('os2dagsorden_title_meeting_closed_agenda', 'Lukket Dagsorden:');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_committee'] = variable_get('os2dagsorden_title_meeting_committee', 'Udvalg');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_new_speaker_paper'] = variable_get('os2dagsorden_title_meeting_new_speaker_paper', 'Nyt talepapir');
-
+    
     print os2dagsorden_settings_write_ini_file($setting_array, TRUE);
     print $content;
 }
