@@ -1188,9 +1188,10 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     file_save($file);
 
     variable_set('os2dagsorden_settings_file', $file->fid);
-
+    $content = file_get_contents(drupal_realpath($file->uri));
+    file_put_contents(drupal_realpath($file->uri), trim($content));
     $setting_array = parse_ini_file(drupal_realpath($file->uri),true);
-
+  
     variable_set('os2dagsorden_show_meeting_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee']);
     variable_set('os2dagsorden_show_meeting_enddate', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_enddate']);
     variable_set('os2dagsorden_show_meeting_type', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_type']);
@@ -1227,7 +1228,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 
     variable_set('os2dagsorden_collapse_menu', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu']);
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
-
+    variable_set('os2dagsorden_hide_menu',  $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu']);
+   
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
