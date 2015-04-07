@@ -1529,7 +1529,7 @@ a.annotator-wrapper {
 .attachment_text_container .attachment_text_trimmed_container #pdf-main,  .attachment_text_container .attachment_text_trimmed_container #page-container{
   position: relative;
   background: #BEBEBE;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
 
@@ -1583,22 +1583,55 @@ a.annotator-wrapper {
   border-bottom-right-radius: 4px;
 }
 
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_full_trimmed_container{
+ .attachment_text_container .attachment_text_trimmed_container,
+ .attachment_text_container .attachment_full_trimmed_container {
+    position: relative;
+}
+
+/*
+.attachment_text_container .attachment-text {
+    overflow-y: hidden;
+}
+
+
+.grid-18 .attachment_text_container .attachment_text_trimmed_container,
+.grid-18 .attachment_text_container .attachment_full_trimmed_container{
   max-width: 425px;
   position: relative;
 }
 
-.attachment_text_container .attachment-text{
-  overflow-y: hidden;
-  max-width: 425px;
+.grid-24 .attachment_text_container .attachment_text_trimmed_container,
+.grid-24 .attachment_text_container .attachment_full_trimmed_container{
+  max-width: 625px;
+  position: relative;
 }
+
+.grid-18  .attachment_text_container .attachment-text{
+ overflow-y: hidden;
+  max-width: 425px;
+ 
+}
+
+.grid-24  .attachment_text_container .attachment-text{
+  overflow-y: hidden;
+  max-width: 625px;
+}
+.attachment_text_container{
+  overflow-x: auto;
+}*/
 
 .attachment-text img{
     max-width: 100%;
 }
 
-.attachment_text_container .attachment_text_full_container, .attachment_text_container .attachment_text_trimmed_container{
-  padding: 5px 5px 0  5px;
+.attachment_text_container .attachment_text_full_container .attachment-text {
+    overflow: auto;
+    padding: 5px;
+}
+
+.attachment_text_container .attachment_text_full_container,
+.attachment_text_container .attachment_text_trimmed_container{
+  width: 100%;
 }
 
 .close-overlay-bilag-link{
@@ -1647,6 +1680,9 @@ a.annotator-wrapper {
 .view-meetings-search .views-table,
 .bullet-point-attachments .views-table{
   table-layout: fixed;
+}
+.page-meeting-bullet-point .views-table table{
+   table-layout: fixed; 
 }
 
 .bullet-point-attachments .views-table .print-bullet-point-link,
@@ -1793,3 +1829,4 @@ ul.droptrue li {
     padding: 5px; 
     background: none; background-color: white;
 }
+
