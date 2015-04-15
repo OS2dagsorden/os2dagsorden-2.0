@@ -83,6 +83,14 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
     ),
     'module' => 'menu',
   );
+  
+  $permissions['administer nodes'] = array(
+    'name' => 'administer nodes',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+    'module' => 'node',
+  );
 
   // Exported permission: administer os2web.
   $permissions['administer os2web'] = array(
@@ -145,6 +153,15 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
       0 => 'authenticated user',
     ),
     'module' => 'node',
+  );
+  
+  // Exported permission: edit any os2web_meetings_meeting content.
+  $permissions['edit any os2web_meetings_meeting content'] = array(
+    'name' => 'edit any os2web_meetings_meeting content',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+   'module' => 'node',
   );
 
   // Exported permission: edit context.
