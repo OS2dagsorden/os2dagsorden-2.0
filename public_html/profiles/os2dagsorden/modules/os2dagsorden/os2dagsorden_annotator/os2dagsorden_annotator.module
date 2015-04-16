@@ -149,6 +149,8 @@ function _os2dagsorden_annotator_create() {
  * @return the found note in JSON.
  */
 function _os2dagsorden_annotator_read($id) {
+    drupal_add_http_header('Content-Type', 'application/json');
+
     global $user;
     
     $result = db_select('os2dagsorden_annotator_notes', 'notes')
@@ -178,7 +180,9 @@ function _os2dagsorden_annotator_read($id) {
  *
  * @return none.
  */
-function _os2dagsorden_annotator_update($id) {    
+function _os2dagsorden_annotator_update($id) {
+    drupal_add_http_header('Content-Type', 'application/json');
+
     global $user;
     $note_json = json_decode(file_get_contents('php://input'), true);
 
@@ -213,6 +217,7 @@ function _os2dagsorden_annotator_delete($id) {
       ->condition('id', $id)
       ->execute();
 
+    drupal_add_http_header('Content-Type', 'application/json');
     print(json_encode(array()));
 }
 
@@ -223,6 +228,8 @@ function _os2dagsorden_annotator_delete($id) {
  * @return list of notes in JSON.
  */
 function _os2dagsorden_annotator_search() {
+    drupal_add_http_header('Content-Type', 'application/json');
+
     global $user;
 
     $possible_meetings = os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($_GET['meeting_id']);
