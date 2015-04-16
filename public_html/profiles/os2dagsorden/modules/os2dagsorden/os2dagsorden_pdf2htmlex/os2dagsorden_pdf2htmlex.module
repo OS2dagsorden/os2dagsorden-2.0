@@ -130,7 +130,8 @@ function os2dagsorden_pdf2htmlex_do_convert(){
  *
  */
 function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
-  db_insert('os2dagsorden_pdf2htmlex_files')
+  try {
+    db_insert('os2dagsorden_pdf2htmlex_files')
     ->fields(array(
       'fid' => $fid,
       'did' => $did,
@@ -139,6 +140,9 @@ function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
       'progress' => NULL,
     ))
     ->execute();
+  } catch (Exception $e) {
+    watchdog('pdf2htmlEX', 'Cannot schedule a file: fid: %fid, did: %did, e: %e', array('%fid' => $fid, '%did' => $did, '%e' => $e->getMessage()), WATCHDOG_ERROR);
+  }
 }
 
 function os2dagsorden_pdf2htmlex_cronapi($op, $job = NULL) {
