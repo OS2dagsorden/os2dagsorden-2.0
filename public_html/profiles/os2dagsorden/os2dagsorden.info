@@ -80,6 +80,7 @@ dependencies[] = os2web_print_send_to_friend
 dependencies[] = os2web_audit_log
 dependencies[] = os2dagsorden_settings
 dependencies[] = os2web_pdf_conversion_manager
+dependencies[] = os2dagsorden_content_modify
 
 ; OS2Web Features
 dependencies[] = os2web_settings
@@ -94,3 +95,4 @@ dependencies[] = os2dagsorden_meeting_views
 dependencies[] = os2dagsorden_sidepane_menu
 dependencies[] = os2dagsorden_ultimate_cron_configuration
 dependencies[] = os2dagsorden_fields_and_content_types
+dependencies[] = os2dagsorden_admin_views
