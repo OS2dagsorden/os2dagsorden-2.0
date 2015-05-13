@@ -1,6 +1,6 @@
 name = OS2Dagsorden
 description = Basic install
-version = 1.0-alpha
+version = 2.1
 core = 7.x
 
 ; core modules
@@ -20,8 +20,6 @@ dependencies[] = toolbar
 dependencies[] = path
 
 ; contrib modules
-;dependencies[] = advanced_help
-;dependencies[] = front
 dependencies[] = ctools
 dependencies[] = context
 dependencies[] = context_ui
@@ -33,10 +31,9 @@ dependencies[] = date_popup
 dependencies[] = date_views
 dependencies[] = features
 dependencies[] = fe_block
-;dependencies[] = ftools
 dependencies[] = computed_field
 dependencies[] = entityreference
-dependencies[] = autologout 
+dependencies[] = autologout
 dependencies[] = background_process
 dependencies[] = entity
 dependencies[] = job_scheduler
@@ -60,12 +57,6 @@ dependencies[] = views_ui
 dependencies[] = views_content
 dependencies[] = views_php
 dependencies[] = file_lock
-;dependencies[] = ldap
-;dependencies[] = ldap_authentication
-;dependencies[] = ldap_authorization
-;dependencies[] = ldap_profile
-;dependencies[] = ldap_servers
-;dependencies[] = ldap_sso
 dependencies[] = edit_own_user_account_permission
 dependencies[] = smtp
 dependencies[] = lightbox2
@@ -74,11 +65,8 @@ dependencies[] = php
 dependencies[] = delete_all
 dependencies[] = piwik
 dependencies[] = piwik_stats
-
-; Development - Disable on prod.
-;dependencies[] = features_tools
-;dependencies[] = devel
-;dependencies[] = devel_generate
+dependencies[] = admin_views
+dependencies[] = better_watchdog_ui
 
 ; OS2Dagsorden modules
 dependencies[] = os2dagsorden_access_helper
@@ -92,19 +80,19 @@ dependencies[] = os2web_print_send_to_friend
 dependencies[] = os2web_audit_log
 dependencies[] = os2dagsorden_settings
 dependencies[] = os2web_pdf_conversion_manager
+dependencies[] = os2dagsorden_content_modify
 
 ; OS2Web Features
 dependencies[] = os2web_settings
 
 ; OS2Dagsorden Features
-; dependencies[] = os2dagsorden_ad_integration
 dependencies[] = os2dagsorden_automated_logout_configuration
 dependencies[] = os2dagsorden_blocks_positioning
 dependencies[] = os2dagsorden_front_page_feature
 dependencies[] = os2dagsorden_front_page_views
 dependencies[] = os2dagsorden_meetings_calendar_view
 dependencies[] = os2dagsorden_meeting_views
-;dependencies[] = os2dagsorden_rules_and_permissions
 dependencies[] = os2dagsorden_sidepane_menu
 dependencies[] = os2dagsorden_ultimate_cron_configuration
 dependencies[] = os2dagsorden_fields_and_content_types
+dependencies[] = os2dagsorden_admin_views

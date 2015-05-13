@@ -10,6 +10,78 @@
 function os2dagsorden_fields_and_content_types_field_default_fields() {
   $fields = array();
 
+  // Exported field: 'node-os2web_meetings_bullet-field_os2web_meetings_bul_com_n'.
+  $fields['node-os2web_meetings_bullet-field_os2web_meetings_bul_com_n'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_bul_com_n',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'translatable' => '0',
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_bullet',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 9,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_os2web_meetings_bul_com_n',
+      'label' => 'Comname',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '9',
+      ),
+    ),
+  );
+
   // Exported field: 'node-os2web_meetings_spaper-field_os2web_meetings_sp_shared'.
   $fields['node-os2web_meetings_spaper-field_os2web_meetings_sp_shared'] = array(
     'field_config' => array(
@@ -167,7 +239,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -241,7 +313,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '5',
+        'weight' => '6',
       ),
     ),
   );
@@ -314,7 +386,71 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '6',
+        'weight' => '9',
+      ),
+    ),
+  );
+
+  // Exported field: 'user-user-field_user_can_send_closed_bp'.
+  $fields['user-user-field_user_can_send_closed_bp'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_user_can_send_closed_bp',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => 'No',
+          1 => 'Yes',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => array(
+        0 => array(
+          'value' => '0',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 14,
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_user_can_send_closed_bp',
+      'label' => 'User can send to friend closed bullet points',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => 1,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '2',
       ),
     ),
   );
@@ -389,6 +525,66 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'settings' => array(),
         'type' => 'options_buttons',
         'weight' => '3',
+      ),
+    ),
+  );
+
+  // Exported field: 'user-user-field_user_forrbidden_categories'.
+  $fields['user-user-field_user_forrbidden_categories'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '2',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_user_forrbidden_categories',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          'pol' => 'Political',
+          'org' => 'Organizational',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 15,
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_user_forrbidden_categories',
+      'label' => 'Forrbidden categories',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => 0,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '12',
       ),
     ),
   );
@@ -530,7 +726,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '9',
+        'weight' => '10',
       ),
     ),
   );
@@ -543,6 +739,9 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_user_meetings_category',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
       'foreign keys' => array(),
       'indexes' => array(
         'value' => array(
@@ -563,7 +762,14 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
     ),
     'field_instance' => array(
       'bundle' => 'user',
-      'default_value' => NULL,
+      'default_value' => array(
+        0 => array(
+          'value' => 'pol',
+        ),
+        1 => array(
+          'value' => 'org',
+        ),
+      ),
       'deleted' => '0',
       'description' => '',
       'display' => array(
@@ -594,21 +800,91 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
         'module' => 'options',
         'settings' => array(),
         'type' => 'options_buttons',
-        'weight' => '6',
+        'weight' => '8',
+      ),
+    ),
+  );
+
+  // Exported field: 'user-user-field_user_organization'.
+  $fields['user-user-field_user_organization'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_user_organization',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'translatable' => '0',
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'user',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 16,
+        ),
+      ),
+      'entity_type' => 'user',
+      'field_name' => 'field_user_organization',
+      'label' => 'Organization',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => 0,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'text',
+        'settings' => array(
+          'size' => '60',
+        ),
+        'type' => 'text_textfield',
+        'weight' => '2',
       ),
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Comname');
   t('Follows committees');
   t('Follows committees+');
   t('Follows committees++');
+  t('Forrbidden categories');
   t('Full name');
   t('ID');
   t('Is part of Committee');
   t('Meeting category');
+  t('Organization');
   t('Shared with');
+  t('User can send to friend closed bullet points');
   t('represents the committees the user is a part of');
 
   return $fields;

@@ -1,0 +1,487 @@
+<?php
+
+/**
+ * @file
+ * Code for the OS2Dagsorden admin views feature.
+ */
+include_once 'os2dagsorden_admin_views.features.inc';
+/**
+ * Implements hook_menu.
+ */
+function os2dagsorden_admin_views_menu() {
+ $items = array();
+ $items['os2dagsorden/committee/export'] = array(
+   'page callback' => 'os2dagsorden_admin_views_committee_taxomony_terms_export',
+   'access arguments' => array('administer os2web'),
+   'type' => MENU_CALLBACK,
+ );
+ $items['admin/structure/taxonomy/%/import'] = array(
+   'title' => 'Import committee',
+   'access arguments' => array(3),
+   'access callback' => 'os2dagsorden_admin_views_committee_import_access_callback',
+   'page callback' => 'drupal_get_form',
+   'page arguments' => array('os2dagsorden_admin_views_committee_export_import_form'),
+   'type' => MENU_LOCAL_TASK,
+   'position' => 'right',
+   'weight' => 150,
+ );
+ return $items;
+}
+
+function os2dagsorden_admin_views_committee_import_access_callback($term_name) {
+  if (user_access('administer os2web') && $term_name == 'os2web_meetings_tax_committee') {
+    return TRUE;
+  }
+    return FALSE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os2dagsorden_admin_views_form_taxonomy_overview_terms_alter(&$form, &$form_state, $form_id) {
+  if ($form['#vocabulary']->machine_name == 'os2web_meetings_tax_committee') {
+    array_unshift($form['#submit'], 'os2dagsorden_admin_views_submit_taxomony');
+    array_unshift($form['#theme'], 'os2dagsorden_admin_views_taxonomy_overview_terms');
+ }
+}
+
+//function os2dagsorden_admin_views_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
+// if ($form['#vocabulary']->machine_name == 'os2web_meetings_tax_committee') {
+//    array_unshift($form['#submit'], 'os2dagsorden_admin_views_submit_taxomony_term');
+//  }
+//}
+
+/*function os2dagsorden_admin_views_submit_taxomony_term(&$form, &$form_state) {
+  $vid = db_select('taxonomy_vocabulary', 'tv')
+     ->fields('tv', array('vid'))
+     ->condition('machine_name', 'os2web_meetings_tax_committee')
+     ->execute()
+     ->fetchField();
+
+  $old_sub_ids = array();
+  $new_sub_ids = array();
+   
+  $old_term = taxonomy_term_load($form_state['values']['tid']);
+  foreach ($form_state['values']['field_os2web_meetings_com_subid']['und']as $key => $id) {
+     if (is_array($id) && isset($id['value']) && !empty($id['value']))
+       $new_sub_ids[] = $id['value'];
+  }
+  
+  foreach ($old_term->field_os2web_meetings_com_subid['und'] as $key => $id)
+     $old_sub_ids[] = $id['value'];
+
+  $ids_to_add = array_diff($new_sub_ids, $old_sub_ids);
+  $ids_to_delete = array_diff($old_sub_ids, $new_sub_ids);
+  
+  foreach ($ids_to_delete as $id) {
+    $children_terms = taxonomy_get_children($form_state['values']['tid'], $vid);
+    foreach ($children_terms as $children_term) {
+      foreach ($children_term->field_os2web_meetings_com_subid['und'] as $key => $subid) {
+        if (intval($subid['value']) == intval($id)) {
+          $children_term->parent = 0;
+          taxonomy_term_save($children_term);
+          break;
+        }
+       }
+     }
+    }
+    
+    $is_second_level_term = taxonomy_get_parents($old_term->tid);
+    if ( $is_second_level_term )  {
+         foreach ($is_second_level_term as $parent_term) {
+             foreach ($old_term->field_os2web_meetings_com_subid['und'] as $id) {
+                if($form_state['values']['field_os2web_meetings_com_import']['und'][0]['value']==0)
+                     os2dagsorden_admin_views_remove_subid($parent_term, $id['value']);
+                else
+                    os2dagsorden_esdh_provider_committee_add_subid($parent_term, $id['value']);
+             }
+         }
+      }
+    if (!empty($ids_to_add) && !empty($is_second_level_term)) {
+      header("Location:" . $GLOBALS['base_url'] . "/" . $_GET['destination']);
+      drupal_set_message(t('Can\'t add a child element to the term of the second level ("' . $old_term->name . '")'), 'warning');
+      drupal_exit();
+    } 
+    else {
+      foreach ($ids_to_add as $id) {
+        $new_children_term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($id);
+        if ($new_children_term) {
+          $new_children_term->parent[] = array($form_state['values']['tid'] => (string) $form_state['values']['tid']);
+          taxonomy_term_save($new_children_term);
+        }
+      }
+   }
+}
+*/
+/**
+ * Implements hook_theme().
+ */
+function os2dagsorden_admin_views_theme() {
+  return array(
+     'os2dagsorden_admin_views_taxonomy_overview_terms' => array(
+      'render element' => 'form',
+  ),
+ );
+}
+
+function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
+ 
+  $form = $variables['form'];
+  $page_increment = $form['#page_increment'];
+  $page_entries = $form['#page_entries'];
+  $back_step = $form['#back_step'];
+  $forward_step = $form['#forward_step'];
+
+   $header = array(
+        array('data' => t('Name'), 'field' => 'name', 'sort' => 'asc'),
+        array('data' => t('Weight'), 'field' => 'weight'),
+        array('data' => t('Operations')),
+        array('data' => t('Active'), 'field' => 'a.field_os2web_meetings_com_active_value'),
+        array('data' => t('Import'), 'field' => 'i.field_os2web_meetings_com_import_value'));
+   
+    // Add drag and drop if parent fields are present in the form.
+  if ($form['#parent_fields']) {
+    drupal_add_tabledrag('taxonomy', 'match', 'parent', 'term-parent', 'term-parent', 'term-id', FALSE);
+    drupal_add_tabledrag('taxonomy', 'depth', 'group', 'term-depth', NULL, NULL, FALSE);
+    drupal_add_js(drupal_get_path('module', 'taxonomy') . '/taxonomy.js');
+    drupal_add_js(array('taxonomy' => array('backStep' => $back_step, 'forwardStep' => $forward_step)), 'setting');
+    drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
+  }
+  drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'term-weight');
+
+  $errors = form_get_errors() != FALSE ? form_get_errors() : array();
+  $rows = array();
+  $terms_list = element_children($form);
+  $my_terms_list = array();
+
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['#term'])) {
+         $term = &$form[$key];
+        $term_full = taxonomy_term_load($term['#term']['tid']);
+        $term_full->key = $key;
+        //print_r($term_full); 
+        if (isset($my_terms_list[$term['#term']['parent']]))
+        $my_terms_list[$term['#term']['parent']]['children'][$term['#term']['tid']] = (array) $term_full;    
+            else
+        $my_terms_list[$term['#term']['tid']] = (array) $term_full;
+     }
+}
+   // print($_GET['order']);
+    usort($my_terms_list, '_os2dagsorden_admin_views_sort_terms');
+    // sort children element
+     foreach($my_terms_list as$key=> $child_term){
+        if (isset($child_term['children']) && count($child_term['children'])>1  ) {
+           usort($child_term['children'], '_os2dagsorden_admin_views_sort_terms');
+           $my_terms_list[$key]['children']=$child_term['children'];
+        }
+    }
+    
+
+    foreach ($my_terms_list as $full_term) {
+        $term = &$form[$full_term['key']];
+        $rows[$full_term['key']] = _os2dagsorden_admin_views_render_row($term, $form);
+        if (isset($full_term['children'])){
+          foreach($full_term['children'] as $child_term){
+            $term = &$form[$child_term['key']];        
+        $rows[$child_term['key']] =  _os2dagsorden_admin_views_render_row($term, $form);
+            }
+        }
+    }
+    
+    // Add necessary classes to rows.
+    $row_position = 0;
+    foreach ($rows as $key => $row) {
+      $rows[$key]['class'] = array();
+      if (isset($form['#parent_fields'])) {
+          $rows[$key]['class'][] = 'draggable';
+      }
+
+        // Add classes that mark which terms belong to previous and next pages.
+      if ($row_position < $back_step || $row_position >= $page_entries - $forward_step) {
+          $rows[$key]['class'][] = 'taxonomy-term-preview';
+      }
+
+      if ($row_position !== 0 && $row_position !== count($rows) - 1) {
+          if ($row_position == $back_step - 1 || $row_position == $page_entries - $forward_step - 1) {
+              $rows[$key]['class'][] = 'taxonomy-term-divider-top';
+          } elseif ($row_position == $back_step || $row_position == $page_entries - $forward_step) {
+              $rows[$key]['class'][] = 'taxonomy-term-divider-bottom';
+          }
+      }
+
+      // Add an error class if this row contains a form error.
+      foreach ($errors as $error_key => $error) {
+        if (strpos($error_key, $key) === 0) {
+           $rows[$key]['class'][] = 'error';
+        }
+      }
+      $row_position++;
+    }
+
+    if (empty($rows)) {
+       $rows[] = array(array(
+         'data' => $form['#empty_text'],
+          'colspan' => '3',
+        ));
+    }
+
+  
+    $output = '<div><a href="/os2dagsorden/committee/export">Export committee terms to XML file</a></div>';
+
+    $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy')));
+    $output .= drupal_render_children($form);
+    $output .= theme('pager');
+
+    return $output;
+}
+
+function os2dagsorden_admin_views_committee_taxomony_terms_export() {
+  $xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><data />");
+  $vid = db_select('taxonomy_vocabulary', 'tv')
+            ->fields('tv', array('vid'))
+            ->condition('machine_name', 'os2web_meetings_tax_committee')
+            ->execute()
+            ->fetchField();
+  $committes_taxomony_tree = taxonomy_get_tree($vid, 0, 1);
+
+  $xml = $xml->addChild('ArrayOfCommittee');
+  foreach ($committes_taxomony_tree as $term) {
+    $term_full = taxonomy_term_load($term->tid);
+    $committee = $xml->addChild("Committee");
+    _os2dagsorden_admin_views_export_committee_to_xml($term_full, $committee);
+    $children_terms = taxonomy_get_children($term->tid, $vid);
+    if (!empty($children_terms)) {
+        $children_term_array = $committee->addChild('ArrayOfChildrenCommittee');
+        foreach ($children_terms as $child_term) {
+           $child_committee = $children_term_array->addChild("Committee");
+           _os2dagsorden_admin_views_export_committee_to_xml($child_term, $child_committee);
+         }
+     }
+   }
+
+   header("Content-Type: application/force-download; name=\"committees.xml");
+   header("Content-type: text/xml");
+   header("Content-Transfer-Encoding: binary");
+   header("Content-Disposition: attachment; filename=\"committees.xml");
+   header("Expires: 0");
+   header("Cache-Control: no-cache, must-revalidate");
+   header("Pragma: no-cache");
+   echo $xml->asXML();
+}
+
+function os2dagsorden_admin_views_submit_taxomony(&$form, &$form_state) {
+  foreach ($form_state['values'] as $key => $value) {
+     if (isset($value["tid"])) {
+         $term = taxonomy_term_load($value["tid"]);
+           if ((int) $value["parent"] != 0) {
+              $parent_terms = taxonomy_get_parents($value["parent"]);
+               if (!empty($parent_terms) || (int) $form_state['values']['tid:' . $value["parent"] . ':0']['parent'] != 0) {
+                   $old_parent_terms = taxonomy_get_parents($value["tid"]);
+
+                    if (!empty($old_parent_terms)) {
+                        $parent_term_tid = array_keys($old_parent_terms);
+                        $form_state['values'][$key]["parent"] = $parent_term_tid[0];                        
+                    } else {
+                        $form_state['values'][$key]["parent"] = "0";                        
+                    }
+                    drupal_set_message(t('Can\'t add a child element to the term of the second level ("' . $term->name . '")'), 'warning');
+                   continue;
+                }
+                
+               /* if (is_array($term->field_os2web_meetings_com_subid['und'])) {
+                   $parent_term = taxonomy_term_load($value["parent"]);
+                   foreach ($term->field_os2web_meetings_com_subid['und'] as $id) {
+                     if ($term->field_os2web_meetings_com_import['und'][0]['value']==1)  
+                       os2dagsorden_esdh_provider_committee_add_subid($parent_term, $id['value']);
+                   }
+               }*/
+            }/*else {
+                $parent_terms = taxonomy_get_parents($value["tid"]);
+                foreach ($parent_terms as $parent_term) {
+                   foreach ($term->field_os2web_meetings_com_subid['und'] as $id) {
+                     os2dagsorden_admin_views_remove_subid($parent_term, $id['value']);
+                   }
+                }
+            }*/
+        }
+    }
+}
+
+function os2dagsorden_admin_views_remove_subid($committee_term, $sub_id) {
+    //check already has this subid
+    $contains = FALSE;
+    if (isset($committee_term->field_os2web_meetings_com_subid['und'])) {
+        foreach ($committee_term->field_os2web_meetings_com_subid['und'] as $key => $id_raw) {
+            if (intval($id_raw['value']) == intval($sub_id)) {
+                unset($committee_term->field_os2web_meetings_com_subid['und'][$key]);
+                taxonomy_term_save($committee_term);
+                break;
+            }
+        }
+    }
+}
+
+function _os2dagsorden_admin_views_export_committee_to_xml($term, &$xml) {
+    $xml->tid = $term->tid;
+    $xml->name = (string) $term->name;
+    $xml->id = (int) $term->field_os2web_meetings_commiteeid['und'][0]['value'];
+    $xml->description = (string) $term->description;
+    $xml->active = ($term->field_os2web_meetings_com_active['und'][0]['value']) ? 1 : 0;
+    $xml->import = ($term->field_os2web_meetings_com_import['und'][0]['value']) ? 1 : 0;
+    $xml->color = $term->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'];
+    $xml->acadrename = $term->field_os2web_meetings_acadrename['und'][0]['value'];
+    $xml->shortname = $term->field_os2web_meetings_com_shname['und'][0]['value'];
+    $xml->category = $term->field_os2web_meetings_com_cat['und'][0]['value'];
+    $sub_ids = $xml->addChild('ArrayOfSubIDs');
+    foreach ($term->field_os2web_meetings_com_subid['und'] as $sysid) {
+        $sub_ids->sysid[] = $sysid['value'];
+    }
+    //return $xml;
+}
+
+function os2dagsorden_admin_views_committee_export_import_form($form, $form_state) {
+    $form['os2dagsorden_admin_views_import_fieldset'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+        '#title' => t('Import Committees'),
+    );
+    $form['os2dagsorden_admin_views_import_fieldset']['os2dagsorden_admin_views_committee_file'] = array(
+        '#title' => t('Committe XML file '),
+        '#type' => 'managed_file',
+        '#description' => t('Extract the committees from the file. All exists committees will be deleted'),
+        '#upload_location' => 'public://os2dagsorden_committes',
+        '#upload_validators' => array(
+            'file_validate_extensions' => array('xml'),
+        ),
+    );
+    $form['os2dagsorden_admin_views_import_fieldset']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Import committees from file'),
+        '#submit' => array('os2dagsorden_admin_views_import_committes_from_file'),
+    );
+    return $form;
+}
+
+function os2dagsorden_admin_views_import_committes_from_file($form, &$form_state) {
+    if (!$form_state['values']['os2dagsorden_admin_views_committee_file']) {
+        drupal_set_message(t('No file has beed added'), 'error');
+    } else {
+        drupal_set_message(t('Imported settings from file'));
+    }
+    $file = file_load($form_state['values']['os2dagsorden_admin_views_committee_file']);
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+    $committees = simplexml_load_file(drupal_realpath($file->uri));
+
+    if (is_object($committees)) {
+        $vid = db_select('taxonomy_vocabulary', 'tv')
+                ->fields('tv', array('vid'))
+                ->condition('machine_name', 'os2web_meetings_tax_committee')
+                ->execute()
+                ->fetchField();
+        /*  Remove all committees  */
+        $tree = taxonomy_get_tree($vid);
+        foreach ($tree as $key => $val) {
+            taxonomy_term_delete($val->tid);
+        }
+        $weight = 0;
+        foreach ($committees->Committee as $key => $committee) {
+
+            $term = _os2dagsorden_admin_views_create_committee_term($committee, $vid, $weight);
+            $weight++;
+            // var_dump($term);
+            if (isset($committee->ArrayOfChildrenCommittee->Committee)) {
+                $child_weight = 0;
+                foreach ($committee->ArrayOfChildrenCommittee->Committee as $child_committee) {
+
+                    $child_term = _os2dagsorden_admin_views_create_committee_term($child_committee, $vid, $child_weight, (string) $term);
+                    $child_weight++;
+                }
+            }
+        }
+    }
+}
+
+function _os2dagsorden_admin_views_create_committee_term($xml_data, $vid, $weight = 0, $parent = "0") {
+    $term = new stdClass();
+    $term->vid = $vid;
+    $term->name = (string) $xml_data->name;
+    $term->field_os2web_meetings_commiteeid['und'][0]['value'] = (int) $xml_data->id;
+    $term->description = (string) $xml_data->description;
+    $term->parent = $parent;
+    $term->field_os2web_meetings_com_active['und'][0]['value'] = ($xml_data->active == 1) ? 1 : null;
+    $term->field_os2web_meetings_com_import['und'][0]['value'] = ($xml_data->import == 1) ? 1 : null;
+    $term->weight = $weight;
+    $term->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] = (string) $xml_data->color;
+    $term->field_os2web_meetings_acadrename ['und'][0]['value'] = (string) $xml_data->acadrename;
+    $term->field_os2web_meetings_com_shname['und'][0]['value'] = (string) $xml_data->shortname;
+    $term->field_os2web_meetings_com_cat['und'][0]['value'] = (string) $xml_data->category;
+    if (isset($xml_data->ArrayOfSubIDs))
+        foreach ($xml_data->ArrayOfSubIDs->sysid as $key => $sysid) {
+            $term->field_os2web_meetings_com_subid['und'][]['value'] = (int) $sysid;
+        }
+
+    taxonomy_term_save($term);
+    return $term->tid;
+}
+
+
+function _os2dagsorden_admin_views_sort_terms($a, $b) {
+    if (isset($_GET['order'])){
+        if ($_GET['order'] == t('Name')){
+            if ($_GET['sort'] == 'asc')
+                return strcasecmp($a['name'], $b['name']);
+            else
+                return strcasecmp($b['name'], $a['name']);
+        } elseif ($_GET['order'] == t('Active')){
+            if ($_GET['sort'] == 'asc')
+                return strcasecmp($a['field_os2web_meetings_com_active']['und'][0]['value'], $b['field_os2web_meetings_com_active']['und'][0]['value']);
+            else
+                return strcasecmp($b['field_os2web_meetings_com_active']['und'][0]['value'], $a['field_os2web_meetings_com_active']['und'][0]['value']);
+        } elseif ($_GET['order'] == t('Import')){
+            if ($_GET['sort'] == 'asc')
+                return strcasecmp($a['field_os2web_meetings_com_import']['und'][0]['value'], $b['field_os2web_meetings_com_import']['und'][0]['value']);
+            else
+                return strcasecmp($b['field_os2web_meetings_com_import']['und'][0]['value'], $a['field_os2web_meetings_com_import']['und'][0]['value']);
+        }
+    }  
+    else {
+      return strcasecmp($a['name'], $b['name']); 
+    }
+        
+ }
+  
+function _os2dagsorden_admin_views_render_row(&$term, $form)   {
+    $term_full = taxonomy_term_load($term['#term']['tid']);
+
+        $sub_ids = array();
+        if (is_array($term_full->field_os2web_meetings_com_subid['und'])) {
+            foreach ($term_full->field_os2web_meetings_com_subid['und'] as $id)
+                $sub_ids[] = $id['value'];
+        }
+
+        $row = array();
+        $row[] = (isset($term['#term']['depth']) && $term['#term']['depth'] > 0 ? theme('indentation', array('size' => $term['#term']['depth'])) : '') . drupal_render($term['view']);
+       
+        if ($form['#parent_fields']) {
+            $form['#parent_fields'];
+            $term['tid']['#attributes']['class'] = array('term-id');
+            $term['parent']['#attributes']['class'] = array('term-parent');
+            $term['depth']['#attributes']['class'] = array('term-depth');
+            if (!empty($sub_ids)) {
+               $row[0] .= ' (' . implode(',', $sub_ids) . ')';
+            }
+            $row[0] .= drupal_render($term['parent']) . drupal_render($term['tid']) . drupal_render($term['depth']);
+        }
+  
+        $term['weight']['#attributes']['class'] = array('term-weight');
+        $row[] = drupal_render($term['weight']);
+
+        $row[] = drupal_render($term['edit']);
+        $row[] = ($term_full->field_os2web_meetings_com_active['und'][0]['value']) ? '<b>' . t('Active') . '</b>' : t('Inactive');
+        $row[] = ($term_full->field_os2web_meetings_com_import['und'][0]['value']) ? '<b>' . t('Import') . '</b>' : t('Don\'t import');
+        
+        $row = array('data' => $row);
+        return $row;
+}      

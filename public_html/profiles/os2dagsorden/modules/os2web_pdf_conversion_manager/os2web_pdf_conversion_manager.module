@@ -144,7 +144,6 @@ function os2web_pdf_conversion_manager_cron() {
     drupal_flush_all_caches();
     
     drupal_set_message('OS2Web PDF converter has been successfully run');
-    drupal_goto('admin/config/os2web/pdf_converter');
 }
 function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  $converted_files = Array();     
@@ -224,7 +223,7 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
        ->execute();
     while ($d_file = $result->fetchAssoc()) {
      $original_path_parts = pathinfo($d_file['uri']);
-     $dest = drupal_realpath($original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf');
+    // $dest = drupal_realpath($original_path_parts['dirname'] ). '/' . $original_path_parts['filename'] . '.pdf';
      $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf';
      if (_os2web_pdf_conversion_manager_update_managed_file($d_file['fid'], $d_file['uri'], $convertion_dir_path . "/" . $file_arr['pdf'])){     
        if (module_exists('os2dagsorden_pdf2htmlex')) 
@@ -243,46 +242,46 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  }
 }
 function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
-    $convertion_dir_path = drupal_realpath(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR));
-    if (file_exists($convertion_dir_path)===FALSE) {
-       watchdog('os2web pdf conversion manager:', 'Folder %uri is not created', array('%uri' => variable_get('os2web_convertion_dir',OS2WEB_CONVERTION_DIR)), WATCHDOG_WARNING);
-       return;
-    }
-    $file = file_load($fid);
-    $filename = $file->uri;    
-    $filename_parts = pathinfo($filename);
-    //tmp_file name is needed to avoid rewriting the files from different meetings, which might have the same name
-    $tmp_filename = md5(md5_file(drupal_realpath($filename)) . $filename_parts['basename']) . '.' . $filename_parts['extension'];
-    $type_arr = explode(',', variable_get('os2web_copied_filetype',OS2WEB_COPIED_FILETYPE));
-    $pdf_path = $filename_parts['dirname'] . '/' . $filename_parts['filename'] . '.PDF';
+  $convertion_dir_path = drupal_realpath(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR));
+  if (file_exists($convertion_dir_path)===FALSE) {
+    watchdog('os2web pdf conversion manager:', 'Folder %uri is not created', array('%uri' => variable_get('os2web_convertion_dir',OS2WEB_CONVERTION_DIR)), WATCHDOG_WARNING);
+    return;
+  }
+  $file = file_load($fid);
+  $filename = $file->uri;    
+  $filename_parts = pathinfo($filename);
+  // Tmp_file name is needed to avoid rewriting the files from different meetings, which might have the same name.
+  $tmp_filename = md5(md5_file(drupal_realpath($filename)) . $filename_parts['basename']) . '.' . $filename_parts['extension'];
+  $type_arr = explode(',', variable_get('os2web_copied_filetype',OS2WEB_COPIED_FILETYPE));
+  $pdf_path = $filename_parts['dirname'] . '/' . $filename_parts['filename'] . '.PDF';
 
-    if (_os2web_pdf_conversion_manager_similar_file_exists(drupal_realpath($pdf_path)))
-        return;
+  if (_os2web_pdf_conversion_manager_similar_file_exists(drupal_realpath($pdf_path)))
+    return;
 
-    if (in_array(strtolower($filename_parts['extension']), array_map('strtolower', $type_arr))) {
-        copy(drupal_realpath($filename), $convertion_dir_path . '/' . $tmp_filename);
-        $file_exists = db_query('SELECT f.fid
-             FROM {os2web_pdf_conversion_manager_files} f
-             WHERE f.fid = :fid', array(':fid' => $fid))
-                ->fetchField();
-        if ($file_exists) {
-            db_update('os2web_pdf_conversion_manager_files')
-                    ->fields(array(
-                        'filename' => $filename_parts['basename'],
-                        'tmp_filename' => $tmp_filename))
-                    ->condition('fid', $fid)
-                    ->execute();
-        } else {
-            db_insert('os2web_pdf_conversion_manager_files')
-                    ->fields(array(
-                        'fid' => $fid,
-                        'filename' => $filename_parts['basename'],
-                        'tmp_filename' => $tmp_filename,
-                        'status' => 'Scheduled',
-                        'attempt' => 0))
-                    ->execute();
-        }
+  if (in_array(strtolower($filename_parts['extension']), array_map('strtolower', $type_arr))) {
+    copy(drupal_realpath($filename), $convertion_dir_path . '/' . $tmp_filename);
+    $file_exists = db_query('SELECT f.fid
+      FROM {os2web_pdf_conversion_manager_files} f
+      WHERE f.fid = :fid', array(':fid' => $fid))
+      ->fetchField();
+    if ($file_exists) {
+      db_update('os2web_pdf_conversion_manager_files')
+        ->fields(array(
+          'filename' => $filename_parts['basename'],
+          'tmp_filename' => $tmp_filename))
+        ->condition('fid', $fid)
+        ->execute();
+    } else {
+        db_insert('os2web_pdf_conversion_manager_files')
+          ->fields(array(
+            'fid' => $fid,
+            'filename' => $filename_parts['basename'],
+            'tmp_filename' => $tmp_filename,
+            'status' => 'Scheduled',
+            'attempt' => 0))
+          ->execute();
     }
+  }
 }
 
 
@@ -303,7 +302,7 @@ function _os2web_pdf_conversion_manager_similar_file_exists($filename) {
 function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $html_file){
     if (!file_exists($html_file)) return FALSE;   
     $original_path_parts = pathinfo($original_file);
-    $dest = drupal_realpath($original_path_parts['dirname'] . '/' .  $original_path_parts['filename'] . '.html');
+    $dest = drupal_realpath($original_path_parts['dirname'] ) . '/' .  $original_path_parts['filename'] . '.html';
     $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.html';
 
     if ($file_path=file_unmanaged_copy($html_file, $dest, FILE_EXISTS_RENAME)){
@@ -352,7 +351,7 @@ function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $ht
 }
 function _os2web_pdf_conversion_manager_update_managed_file($fid, $original_file, $pdf_file) {
     $original_path_parts = pathinfo($original_file);
-    $dest = drupal_realpath($original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf');
+    $dest = drupal_realpath($original_path_parts['dirname']) . '/' . $original_path_parts['filename'] . '.pdf';
     $uri = $original_path_parts['dirname'] . '/' . $original_path_parts['filename'] . '.pdf';
     if ($file_path=file_unmanaged_copy($pdf_file, $dest, FILE_EXISTS_RENAME)) { //copy PDF file
      if ($file_path!=$dest)
@@ -560,7 +559,7 @@ function os2web_pdf_conversion_manager_file_delete($file){
  * Implements hook_watchdog().
  */
 function os2web_pdf_conversion_manager_watchdog($log_entry) {
-    if ($log_entry['severity']==3){//TODO: set the priority
+    if ($log_entry['severity']==1){//TODO: set the priority
         // Set up the mail body.
     
         $from = variable_get('site_mail', '');

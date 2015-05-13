@@ -1,0 +1,11 @@
+name = OS2Web rules pack
+description = OS2Web Related Rules for LDAP.
+
+package = OS2Web
+core = 7.x
+version = 7.x-1.0-beta1
+
+dependencies[] = features
+dependencies[] = rules
+#features[features_api][] = api:1
+

@@ -23,7 +23,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );
@@ -59,34 +60,60 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access toolbar'] = array(
     'name' => 'access toolbar',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'toolbar',
+  );
+
+  // Exported permission: access user profiles.
+  $permissions['access user profiles'] = array(
+    'name' => 'access user profiles',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+    'module' => 'user',
   );
 
   // Exported permission: administer menu.
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'menu',
+  );
+  
+  $permissions['administer nodes'] = array(
+    'name' => 'administer nodes',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: administer os2web.
   $permissions['administer os2web'] = array(
     'name' => 'administer os2web',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'os2web_settings',
+  );
+
+  // Exported permission: administer permissions.
+  $permissions['administer permissions'] = array(
+    'name' => 'administer permissions',
+    'roles' => array(),
+    'module' => 'user',
   );
 
   // Exported permission: administer taxonomy.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'taxonomy',
   );
@@ -95,7 +122,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer ultimate cron'] = array(
     'name' => 'administer ultimate cron',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'ultimate_cron',
   );
@@ -104,59 +131,10 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'user',
-  );
-
-  // Exported permission: create field_follows_committee.
-  $permissions['create field_follows_committee'] = array(
-    'name' => 'create field_follows_committee',
-    'roles' => array(
-      0 => 'anonymous user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: create field_follows_committee_plus.
-  $permissions['create field_follows_committee_plus'] = array(
-    'name' => 'create field_follows_committee_plus',
-    'roles' => array(
-      0 => 'anonymous user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: create field_follows_committee_pp.
-  $permissions['create field_follows_committee_pp'] = array(
-    'name' => 'create field_follows_committee_pp',
-    'roles' => array(
-      0 => 'anonymous user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: create field_user_committee.
-  $permissions['create field_user_committee'] = array(
-    'name' => 'create field_user_committee',
-    'roles' => array(
-      0 => 'anonymous user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: create field_user_id.
-  $permissions['create field_user_id'] = array(
-    'name' => 'create field_user_id',
-    'roles' => array(
-      0 => 'anonymous user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
   );
 
   // Exported permission: create os2web_meetings_spaper content.
@@ -176,104 +154,23 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
     ),
     'module' => 'node',
   );
+  
+  // Exported permission: edit any os2web_meetings_meeting content.
+  $permissions['edit any os2web_meetings_meeting content'] = array(
+    'name' => 'edit any os2web_meetings_meeting content',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+   'module' => 'node',
+  );
 
   // Exported permission: edit context.
   $permissions['edit context'] = array(
     'name' => 'edit context',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
-  );
-
-  // Exported permission: edit field_follows_committee.
-  $permissions['edit field_follows_committee'] = array(
-    'name' => 'edit field_follows_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit field_follows_committee_plus.
-  $permissions['edit field_follows_committee_plus'] = array(
-    'name' => 'edit field_follows_committee_plus',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit field_follows_committee_pp.
-  $permissions['edit field_follows_committee_pp'] = array(
-    'name' => 'edit field_follows_committee_pp',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit field_user_committee.
-  $permissions['edit field_user_committee'] = array(
-    'name' => 'edit field_user_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit field_user_id.
-  $permissions['edit field_user_id'] = array(
-    'name' => 'edit field_user_id',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit own field_follows_committee.
-  $permissions['edit own field_follows_committee'] = array(
-    'name' => 'edit own field_follows_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit own field_follows_committee_plus.
-  $permissions['edit own field_follows_committee_plus'] = array(
-    'name' => 'edit own field_follows_committee_plus',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit own field_follows_committee_pp.
-  $permissions['edit own field_follows_committee_pp'] = array(
-    'name' => 'edit own field_follows_committee_pp',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit own field_user_committee.
-  $permissions['edit own field_user_committee'] = array(
-    'name' => 'edit own field_user_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: edit own field_user_id.
-  $permissions['edit own field_user_id'] = array(
-    'name' => 'edit own field_user_id',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
   );
 
   // Exported permission: edit own os2web_meetings_spaper content.
@@ -298,7 +195,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['list context'] = array(
     'name' => 'list context',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
@@ -307,8 +204,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
     'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'authenticated user',
     ),
     'module' => 'filter',
   );
@@ -320,107 +217,12 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
     'module' => 'filter',
   );
 
-  // Exported permission: view field_follows_committee.
-  $permissions['view field_follows_committee'] = array(
-    'name' => 'view field_follows_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view field_follows_committee_plus.
-  $permissions['view field_follows_committee_plus'] = array(
-    'name' => 'view field_follows_committee_plus',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view field_follows_committee_pp.
-  $permissions['view field_follows_committee_pp'] = array(
-    'name' => 'view field_follows_committee_pp',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view field_user_committee.
-  $permissions['view field_user_committee'] = array(
-    'name' => 'view field_user_committee',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view field_user_id.
-  $permissions['view field_user_id'] = array(
-    'name' => 'view field_user_id',
-    'roles' => array(
-      0 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view own field_follows_committee.
-  $permissions['view own field_follows_committee'] = array(
-    'name' => 'view own field_follows_committee',
-    'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view own field_follows_committee_plus.
-  $permissions['view own field_follows_committee_plus'] = array(
-    'name' => 'view own field_follows_committee_plus',
-    'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view own field_follows_committee_pp.
-  $permissions['view own field_follows_committee_pp'] = array(
-    'name' => 'view own field_follows_committee_pp',
-    'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view own field_user_committee.
-  $permissions['view own field_user_committee'] = array(
-    'name' => 'view own field_user_committee',
-    'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden',
-      2 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
-  // Exported permission: view own field_user_id.
-  $permissions['view own field_user_id'] = array(
-    'name' => 'view own field_user_id',
-    'roles' => array(
-      0 => 'authenticated user',
-      1 => 'os2dagsorden admin',
-    ),
-    'module' => 'field_permissions',
-  );
-
   // Exported permission: view the administration theme.
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      0 => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );

@@ -26,10 +26,13 @@
  * @return none
  */
 function os2dagsorden_theme_preprocess_page(&$variables) 
-{    
+{   drupal_add_library('system', 'ui.draggable'); 
     drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/os2dagsorden_theme.js');
+    
     drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu', true) . ');', 'inline');
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
+    if (variable_get('os2dagsorden_hide_menu', FALSE))
+       drupal_add_js('hide_side_menu_completely();', 'inline'); 
     drupal_add_js('add_indicator_help_text();', 'inline');
     drupal_add_js('hide_print_buttons();', 'inline');
     drupal_add_js('resize_listener();', 'inline');
@@ -128,7 +131,7 @@ function os2dagsorden_theme_date_nav_title($params)
             $date_arg = $date_info->year;
             break;
         case 'month':
-            $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F Y' : 'F');
+            $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F Y' : 'F Y');
             $title = date_format_date($date_info->min_date, 'custom', $format);
             $date_arg = $date_info->year . '-' . date_pad($date_info->month);
             break;
@@ -277,7 +280,7 @@ function os2dagsorden_theme_menu_local_task($variables) {
   $href = explode('/', $link['href']);
   $node = node_load($href[1]);
   
-  if ($link['path'] === 'node/%/edit' && $node->type !== 'page')//disabling edit tab, if only node type is not page
+  if ($link['path'] === 'node/%/edit' && $node->type !== 'os2web_page')//disabling edit tab, if only node type is not page
     return '';
   else if ($link['path'] === 'node/%/view')//disabling view tab
     return '';

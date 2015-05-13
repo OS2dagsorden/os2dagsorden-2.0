@@ -12,3 +12,13 @@ include_once 'inc/os2dagsorden_meeting_views_bullet_point_fields.inc';
 include_once 'inc/os2dagsorden_meeting_views_meetings_search_fields.inc';
 include_once 'inc/os2dagsorden_meeting_views_last_8_meetings_fields.inc';
 include_once 'inc/os2dagsorden_meeting_views_coming_meetings_fields.inc';
+
+/**
+ * Implements hook_form_alter().
+ */
+function os2dagsorden_meeting_views_form_alter(&$form, &$form_state, $form_id) {
+  // The 'All' option in the exposed views filter isn't translated.
+  if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-meetings-search-page') {
+    $form['field_os2web_meetings_committee_tid']['#options']['All'] = 'Alle';
+  }
+}

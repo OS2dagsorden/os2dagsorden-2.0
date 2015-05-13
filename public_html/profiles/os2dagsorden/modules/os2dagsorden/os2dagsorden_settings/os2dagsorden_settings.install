@@ -36,9 +36,9 @@ function os2dagsorden_settings_requirements($phase){
             $requirements['os2dagsorden_settings'] = array(
                 'title' => $t('pdf2htmlEX path'),
                 'value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
-                'severity' => (strpos($exec, 'pdf2htmlEX version') !== false) ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+                'severity' => (strpos($exec, 'version') !== false) ? REQUIREMENT_OK : REQUIREMENT_ERROR,
             );
-            if (strpos($exec, 'pdf2htmlEX version') === false) {
+            if (strpos($exec, 'version') === false) {
                 $requirements['os2dagsorden_settings']['description'] = $t('Specified pdf2htmlEX path is not correct. Please check pdf2htmlEX path in OS2dagsorner setup page.');
             }
         }

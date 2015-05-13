@@ -7,7 +7,7 @@
  */
 function os2dagsorden_content_modify_menu() {
   $items = array();
-  
+
   $items['admin/config/os2dagsorden/create_committee'] = array(
     'title' => 'Committees',
     'description' => 'Module that supports manual creation or editing of the committee',
@@ -15,7 +15,7 @@ function os2dagsorden_content_modify_menu() {
     'access arguments' => array('administer os2web'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   $items['admin/config/os2dagsorden/create_user_position'] = array(
     'title' => 'User positions',
     'description' => 'Module that supports manual creation or editing of the user position',
@@ -23,23 +23,23 @@ function os2dagsorden_content_modify_menu() {
     'access arguments' => array('administer os2web'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   $items['admin/config/os2dagsorden/attach_user_position'] = array(
     'title' => 'Assign user positions to users',
     'description' => 'Module that supports assigning/removing roles from the users',
     'page callback' => '_os2dagsorden_content_modify_users',
-    'access arguments' => array('administer os2web'),
+    'access arguments' => array('administer users'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   $items['user/%/simple_edit'] = array(
     'title' => 'User edit simple',
     'page callback' => '_os2dagsorden_content_modify_user_edit_page',
     'page arguments' => array(1),
-    'access arguments' => array('administer os2web'),
+    'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   $items['user/simple_edit'] = array(
     'title' => 'Kontoindstillinger',
     'page callback' => '_os2dagsorden_content_modify_user_edit_page',
@@ -101,7 +101,7 @@ function os2dagsorden_content_modify_user_operations() {
  * Redirect for the user edit link from user operation menu.
  * Redirects to simple edit link.
  *
- * @param $accounts array array of the user ids. 
+ * @param $accounts array array of the user ids.
  *
  * @return none
  */
@@ -111,7 +111,7 @@ function _os2dagsorden_content_modify_user_edit_redirect($accounts){
 }
 
 /**
- * Calls form for user simple edit. 
+ * Calls form for user simple edit.
  * If user has no administer os2web rights, he will be allowed only to edit his own profile.
  *
  * @param $uid int id of the user to modify.
@@ -120,12 +120,12 @@ function _os2dagsorden_content_modify_user_edit_redirect($accounts){
  */
 function _os2dagsorden_content_modify_user_edit_page($uid = null){
   $full_user = os2dagsorden_access_helper_get_user();
-  
+
   if (empty($uid)){
       $uid = $full_user->uid;
   }
-  
-  if (!user_access('administer os2web', $full_user)){
+
+  if (!user_access('administer users', $full_user)){
     if ($full_user->uid != $uid){
       drupal_goto('user/simple_edit');
     }
@@ -144,176 +144,88 @@ function _os2dagsorden_content_modify_user_edit_page($uid = null){
  * @return form
  */
 function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
+   
   $form[] = array(
-    '#markup' => '<div class="node">',
+    '#markup' => '<div class="node clearfix">',
   );
-  
+
   $form['full_name'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Full name:'), 
-    '#size' => 60, 
-    '#maxlength' => 128, 
+    '#type' => 'textfield',
+    '#title' => t('Full name:'),
+    '#size' => 60,
+    '#maxlength' => 128,
     '#description' => t('Is displayed in the top right corner.'),
   );
   
+    $form['organization'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Organization:'),
+    '#size' => 60,
+    '#maxlength' => 128,
+    
+  );
+
   $form['calendar_pref'] = array(
-    '#access' => user_access('administer os2web', $full_user),
+    //'#access' => user_access('administer os2web', $full_user),
     '#type' => 'checkboxes',
     '#options' => array(
-      'pol' => t('Political'), 
+      'pol' => t('Political'),
       'org' => t('Organizational')
     ),
-    '#title' => t('Calendar preferences:'),
+    '#title' =>"<b>" . t('Calendar preferences:') . "</b>",
     '#description' => t('Which types of meetings should user see in the calendar'),
   );
+
+  $form['forbidden_cat'] = array(
+    '#access' => user_access('administer users'),
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'pol' => t('Political'),
+      'org' => t('Organizational')
+    ),
+    '#title' =>"<b>" . t('Forbidden categories:') . "</b>",
+    '#description' => t('Which categories the user is FORBIDDEN to have access to'),
+  );
   
-  $user_pos = taxonomy_vocabulary_machine_name_load('user_position');
-  $user_pos_terms = taxonomy_get_tree($user_pos->vid);
-  $user_pos_select = array();
-  foreach ($user_pos_terms as $user_pos_term) {
-    $user_pos_term = taxonomy_term_load($user_pos_term->tid);
-    
-    //only manually created User positions - without ID
-    if (field_get_items('taxonomy_term', $user_pos_term, 'field_user_pos_id')){
-      continue;
-    }
-    
-    if (field_get_items('taxonomy_term', $user_pos_term, 'field_priority')){
-      $priority_field = array_pop(field_get_items('taxonomy_term', $user_pos_term, 'field_priority'));
-      $priority = ' [' . $priority_field['value'] .']';
-    }
-    $user_pos_select[$user_pos_term->tid] = $user_pos_term->name . $priority;
+  $form['user_can_send_closed_bp'] = array(
+    '#access' => user_access('administer users'), 
+    '#type' => 'radios',    
+    '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
+    '#default_value' => false,
+    '#options' => array(
+      true => t('Yes'),
+      false => t('No')
+    ),
+  );
+
+  $form['user_roles'] = array(
+    '#access' => (user_access('administer users', $full_user)),
+    '#type' => 'checkboxes',
+    '#options' => array(
+      'os2dagsorden limited' => t('OS2Dagsorden limited') .'<i>' . t(' (Kan kun tilgå udvalg man er medlem af)') .'</i>',
+      'administrator+' => t('Administrator+')  . '<i>' . t(' (adgang til redigering af udvalg og brugere)').'</i>',  
+      'administrator++' => t('Administrator++') . '<i>' . t(' (rettigheder til al konfiguration og alle settings)').'</i>',      
+    ),
+    '#title' => '<b>' . t('Brugerroller') . '</b>',
+    '#description' => t('Hvilke roller tilsættes til brugeren'),
+  );
+  
+  if (!user_access('administer os2web', $full_user)) 
+      $form['user_roles']['administrator++']['#disabled']  = TRUE;
+
+  if (!os2dagsorden_access_helper_is_touch()){
+    //render drag and drop functionality
+    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, $uid);
+  } else {
+    //fallback to default controls
+    _os2dagsorden_content_modify_render_default_controls($form, $uid);
   }
-  $form['user_pos'] = array(
-      '#access' => user_access('administer os2web', $full_user),
-      '#type' => 'select',
-      '#title' => t('User positions:'),
-      '#options' => $user_pos_select,
-      '#multiple' => TRUE,
-      '#size' => 10,
-      '#description' => t('You can choose only from the user positions, created manually. For multiple selection hold <b>CTRL</b>.<br/>
-      The number in <b>[X]</b> shows the role\'s priority. 
-      Role with the highest priority is shown next to user\'s full name in the top right conter.'),
-  );
-  
-  $com = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
-  $com_terms = taxonomy_get_tree($com->vid);
-  $com_select = array();
-  foreach ($com_terms as $com_term) {
-    $com_select[$com_term->tid] = $com_term->name;
-  }
-  $form['member_of'] = array(
-      '#access' => user_access('administer os2web', $full_user),
-      '#type' => 'select',
-      '#title' => t('Member of:'),
-      '#options' => $com_select,
-      '#multiple' => TRUE,
-      '#size' => 10,
-      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      The committees user is member of are presented in the right side pane.'),
-  );
-  
-  $form['follows'] = array(
-      '#type' => 'select',
-      '#title' => t('Follows:'),
-      '#options' => $com_select,
-      '#multiple' => TRUE,
-      '#size' => 10,
-      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      The committees user follows are presented in the right side pane.'),
-  );
-  
-  $form['follows_plus'] = array(
-      '#access' => user_access('administer os2web', $full_user),
-      '#type' => 'select',
-      '#title' => t('Follows+:'),
-      '#options' => $com_select,
-      '#multiple' => TRUE,
-      '#size' => 10,
-      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      The committees user follows+ are presented in the right side pane.'),
-  );
-  
-  $form['follows_plus_plus'] = array(
-      '#access' => user_access('administer os2web', $full_user),
-      '#type' => 'select',
-      '#title' => t('Follows++:'),
-      '#options' => $com_select,
-      '#multiple' => TRUE,
-      '#size' => 10,
-      '#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      The committees user follows+ are presented in the right side pane.'),
-  );
-  
+
+  //loading common user fields
   if ($uid) {
-    //saving for usage in the submit function
-    $form['uid'] = array(
-      '#type' => 'value',
-      '#value' => $uid,
-    );
-    $user = user_load($uid);
-    
-    //filling the fields
-    if (field_get_items('user', $user, 'field_user_full_name')){
-      $full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
-      $form['full_name']['#default_value'] = $full_name_field['value'];
-    }
-    
-    if (field_get_items('user', $user, 'field_user_meetings_category')){
-      $calendar_prefs_field = field_get_items('user', $user, 'field_user_meetings_category');
-      $selection = array();
-      foreach ($calendar_prefs_field as $cal_pref){
-	$selection[] = $cal_pref[value];
-      }
-      $form['calendar_pref']['#default_value'] = $selection;
-    }
-    
-    if (field_get_items('user', $user, 'field_user_positions')){
-      $user_positions_field = field_get_items('user', $user, 'field_user_positions');
-      $selection = array();
-      foreach ($user_positions_field as $user_pos){
-	$selection[] = $user_pos['tid'];
-      }
-      $form['user_pos']['#default_value'] = $selection;
-    }
-    
-    if (field_get_items('user', $user, 'field_user_committee')){
-      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
-      $selection = array();
-      foreach ($user_member_of_field as $member_of){
-	$selection[] = $member_of['tid'];
-      }
-      $form['member_of']['#default_value'] = $selection;
-    }
-    
-    if (field_get_items('user', $user, 'field_follows_committee')){
-      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
-      $selection = array();
-      foreach ($user_follows_field as $follows){
-	$selection[] = $follows['tid'];
-      }
-      $form['follows']['#default_value'] = $selection;
-    }
-    
-    if (field_get_items('user', $user, 'field_follows_committee_plus')){
-      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
-      $selection = array();
-      foreach ($user_follows_plus_field as $follows_plus){
-	$selection[] = $follows_plus['tid'];
-      }
-      $form['follows_plus']['#default_value'] = $selection;
-    }
-   if (field_get_items('user', $user, 'field_follows_committee_pp')){
-      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
-      $selection = array();
-      foreach ($user_follows_plus_field as $follows_plus){
-	$selection[] = $follows_plus['tid'];
-      }
-      $form['follows_plus_plus']['#default_value'] = $selection;
-    } 
+    _os2dagsorden_conten_modify_load_user_fields($form, $uid);
   }
-  
-   
+ 
   $form['save_user'] = array(
     '#type' => 'submit',
     '#attributes' => array(
@@ -322,17 +234,319 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#value' => t('Save User'),
     '#submit' => array('os2dagsorden_content_modify_user_submit'),
   );
-  
   $form[] = array(
       '#markup' => '</div>',
   );
-  
+
+  $form[] = array(
+      '#markup' => '</div>',
+  );
+
   return $form;
+}
+
+function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid){
+  $form[] = array(
+    '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
+  );
+
+  $form[] = array(
+    '#markup' => '<div class="select-committee">',
+  );
+ 
+  $form['member_of_div'] = array(
+    '#access' => user_access('administer users'),  
+    '#type' => 'item' ,
+    '#prefix' => '<label>' . t('Member of:') . '</label>',       
+    '#markup' => '',
+  ); 
+  $form['member_of_hidden'] = array(
+    '#type' => 'hidden',       
+    '#attributes' => array(   
+      'id' => 'member_of_hidden',
+    )
+  );
+  $form['follows_div'] = array(
+    '#type' => 'item' ,
+    '#prefix' => '<label>' . t('Follows:') . '</label>',       
+    '#markup' => '',
+  );
+
+  $form['follows_hidden'] = array(
+    '#type' => 'hidden',       
+    '#attributes' => array(   
+      'id' => 'follows_hidden',
+    )
+  );
+  $form['follows_plus_div'] = array(
+    '#access' => user_access('administer users'),  
+    '#type' => 'item' ,
+    '#prefix' => '<label>' . t('Follows+:') . '</label>',       
+    '#markup' => '',
+     
+  ); 
+  $form['follows_plus_hidden'] = array(
+    '#type' => 'hidden',       
+    '#attributes' => array(   
+      'id' => 'follows_plus_hidden',
+    )
+  );
+
+  $form['follows_plus_plus_div'] = array(
+    '#access' => user_access('administer users'),  
+    '#type' => 'item' ,
+    '#prefix' => '<label>' . t('Follows++:') . '</label>',       
+    '#markup' => '',
+     
+  ); 
+  $form['follows_plus_plus_hidden'] = array(
+    '#type' => 'hidden',       
+    '#attributes' => array(   
+      'id' => 'follows_plus_plus_hidden',
+    )
+  );
+  $form[] = array(
+   '#markup' => '</div >',//<div class="select-committee">
+  );
+
+  $all_user_committee = array();
+  if ($uid){
+    $user = user_load($uid);
+
+    $com_terms = os2dagsorden_settings_get_active_committees();
+    $com_select = array();
+    foreach ($com_terms as $com_term) {
+      $com_select[$com_term->tid] = $com_term->name;
+    }
+  
+    $content = "<ul id='member_of' class='droptrue'>";
+    if (field_get_items('user', $user, 'field_user_committee')) {
+      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+      $selection = array();
+      foreach ($user_member_of_field as $member_of) {
+	if (isset($com_select[$member_of['tid']])) {
+	  $content .= "<li id='{$member_of['tid']}' class='ui-state-default'>{$com_select[$member_of['tid']]}</li>";
+	  $selection[] = $member_of['tid'];
+	  $all_user_committee[] = $member_of['tid'];          
+	} 
+      }
+      $form['member_of_hidden']['#value'] = implode(',', $selection);
+    }
+    $form['member_of_div']['#markup'] = $content .'</ul>';
+    
+    $content = "<ul id='follows' class='droptrue'>";
+    if (field_get_items('user', $user, 'field_follows_committee')) {
+      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+      $selection = array();
+      
+      foreach ($user_follows_field as $follows) {
+	if (isset($com_select[$follows['tid']])) {
+	  $content .= "<li id='{$follows['tid']}' class='ui-state-default'>{$com_select[$follows['tid']]}</li>";
+	  $selection[] = $follows['tid'];
+	  $all_user_committee[] = $follows['tid'];          
+	} 
+      }
+      $form['follows_hidden']['#value'] = implode(',', $selection);
+    }
+    $form['follows_div']['#markup'] = $content .'</ul>';
+    
+    $content = "<ul id='follows_plus' class='droptrue'>";
+    if (field_get_items('user', $user, 'field_follows_committee_plus')) {
+      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+      $selection = array();
+  
+      foreach ($user_follows_plus_field as $follows_plus) {
+	if (isset($com_select[$follows_plus['tid']])) { 
+	  $selection[] = $follows_plus['tid'];
+	  $content .= "<li id='{$follows_plus['tid']}' class='ui-state-default'>{$com_select[$follows_plus['tid']]}</li>";
+	  $all_user_committee[] = $follows_plus['tid'];
+	} 
+      }
+      $form['follows_plus_hidden']['#value'] = implode(',', $selection);
+    }
+    
+    $form['follows_plus_div']['#markup'] = $content .'</ul>';
+    
+    $content = "<ul id='follows_plus_plus' class='droptrue'>";
+    if (field_get_items('user', $user, 'field_follows_committee_pp')) {
+      $user_follows_plus_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+      $selection = array();
+      foreach ($user_follows_plus_plus_field as $follows_plus_plus) {
+	if (isset($com_select[$follows_plus_plus['tid']])) {  
+	  $selection[] = $follows_plus_plus['tid'];
+	  $content .= "<li id='{$follows_plus_plus['tid']}' class='ui-state-default'>{$com_select[$follows_plus_plus['tid']]}</li>";
+	  $all_user_committee[] = $follows_plus_plus['tid'];
+	}
+      }
+      $form['follows_plus_plus_hidden']['#value'] = implode(',', $selection);
+    }
+    $form['follows_plus_plus_div']['#markup'] = $content .'</ul>';
+  }
+
+  $com_list = "<ul id='available_committee' class='droptrue'>"; 
+  foreach ($com_select as $tid=>$com_term) {
+    if (!in_array($tid, $all_user_committee))
+    $com_list  .= "<li id='{$tid}' class='ui-state-default'>{$com_term}</li>"; 
+  }
+  $com_list .= "</ul>";
+  $form['available_committee'] = array(
+    '#type' => 'item' ,
+    '#prefix' => "<div class='available_committee'><label>" . t('Available committee') . ":</label>",       
+    '#markup' => $com_list,
+    '#suffix' => '</div>'
+  ); 
+  $form[] = array(
+    '#markup' => "<div style='clear:both'>",
+  );
+}
+
+function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
+  $com_terms = os2dagsorden_settings_get_active_committees();
+  $com_select = array();
+
+  foreach ($com_terms as $com_term) {
+    $com_select[$com_term->tid] = $com_term->name;
+  }
+
+  $form['member_of'] = array(
+      '#access' => user_access('administer users'),
+      '#type' => 'select',
+      '#title' => t('Member of:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      //The committees user is member of are presented in the right side pane.'),
+  );
+    
+
+  $form['follows'] = array(
+      '#type' => 'select',
+      '#title' => t('Follows:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      //The committees user follows are presented in the right side pane.'),
+  );
+  
+  $form['follows_plus'] = array(
+      '#access' => user_access('administer users'),
+      '#type' => 'select',
+      '#title' => t('Follows+:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      //The committees user follows+ are presented in the right side pane.'),
+  );
+    
+  $form['follows_plus_plus'] = array(
+      '#access' => user_access('administer users'),
+      '#type' => 'select',
+      '#title' => t('Follows++:'),
+      '#options' => $com_select,
+      '#multiple' => TRUE,
+      '#size' => 10,
+      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
+      //The committees user follows+ are presented in the right side pane.'),
+  );
+
+  if ($uid){
+    $user = user_load($uid);
+
+    if (field_get_items('user', $user, 'field_user_committee')){
+      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+      $selection = array();
+      foreach ($user_member_of_field as $member_of){
+	$selection[] = $member_of['tid'];
+      }
+      $form['member_of']['#default_value'] = $selection;
+    }
+  
+    if (field_get_items('user', $user, 'field_follows_committee')){
+      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+      $selection = array();
+      foreach ($user_follows_field as $follows){
+	$selection[] = $follows['tid'];
+      }
+      $form['follows']['#default_value'] = $selection;
+    }
+  
+    if (field_get_items('user', $user, 'field_follows_committee_plus')){
+      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+      $selection = array();
+      foreach ($user_follows_plus_field as $follows_plus){
+	$selection[] = $follows_plus['tid'];
+      }
+      $form['follows_plus']['#default_value'] = $selection;
+    }
+    if (field_get_items('user', $user, 'field_follows_committee_pp')){
+      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+      $selection = array();
+      foreach ($user_follows_plus_field as $follows_plus){
+	$selection[] = $follows_plus['tid'];
+      }
+      $form['follows_plus_plus']['#default_value'] = $selection;
+    }
+  }
+}
+
+function _os2dagsorden_conten_modify_load_user_fields(&$form, $uid){
+    //saving for usage in the submit function
+    $form['uid'] = array(
+      '#type' => 'value',
+      '#value' => $uid,
+    );
+    $user = user_load($uid);
+
+    //filling the fields
+    if (field_get_items('user', $user, 'field_user_full_name') ){
+      $full_name_field = array_pop(field_get_items('user', $user, 'field_user_full_name'));
+      $form['full_name']['#default_value'] = $full_name_field['value'];
+    }
+    if (field_get_items('user', $user, 'field_user_organization') ){
+      $organization_field = array_pop(field_get_items('user', $user, 'field_user_organization'));
+      $form['organization']['#default_value'] = $organization_field['value'];
+    }
+
+
+    if (field_get_items('user', $user, 'field_user_can_send_closed_bp')){
+      $user_can_send_closed_bp = array_pop(field_get_items('user', $user, 'field_user_can_send_closed_bp'));
+      $form['user_can_send_closed_bp']['#default_value'] = $user_can_send_closed_bp['value'];
+    }
+    
+   if (field_get_items('user', $user, 'field_user_forrbidden_categories')) {
+      $forrbidden_cats_field = field_get_items('user', $user, 'field_user_forrbidden_categories');
+      $selection = array();
+      
+      foreach ($forrbidden_cats_field as $forrbidden_cat) {
+	$selection[] = $forrbidden_cat['value'];
+      };
+      $form['forbidden_cat']['#default_value'] = $selection;
+      $options = $form['calendar_pref']['#options'];
+      foreach ($selection as $forbidden_cat){
+          unset($options[$forbidden_cat]);
+      }
+      $form['calendar_pref']['#options'] = $options;
+    }
+  
+    if (field_get_items('user', $user, 'field_user_meetings_category')) {
+      $calendar_prefs_field = field_get_items('user', $user, 'field_user_meetings_category');
+      $selection = array();
+      foreach ($calendar_prefs_field as $cal_pref) {
+         $selection[]=$cal_pref['value'];
+    }
+   
+    $form['calendar_pref']['#default_value'] = $selection;
+    }
+
+    $form['user_roles']['#default_value'] = $user->roles;
 }
 
 /**
  * Submit for user edit form. Updates user profile.
- * 
+ *
  * @param $form       mixed the form
  * @param $form_state mixed state of the form
  *
@@ -340,28 +554,44 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
  */
 function os2dagsorden_content_modify_user_submit($form, $form_state){
   $input = $form_state['input'];
-   
+
   //input extraction
   extract($input);
+  if (!os2dagsorden_access_helper_is_touch()){
+    $follows = explode(',', $follows_hidden);
+    $member_of = explode(',', $member_of_hidden);
+    $follows_plus = explode(',', $follows_plus_hidden);
+    $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
+  }
 
   $user = user_load($form_state['values']['uid']);
   $user->field_user_full_name['und'][0]['value'] = $full_name;
-  
+  $user->field_user_organization['und'][0]['value'] = $organization;
+  $user->field_user_can_send_closed_bp['und'][0]['value'] = $user_can_send_closed_bp;
+         
   //unsetting follows committees
   $user->field_follows_committee['und'] = array();
   if ($follows){
-    foreach ($follows as $tid){
-      $user->field_follows_committee['und'][]['tid'] = $tid;
+    foreach ($follows as $tid){  
+    if (!empty($tid))       
+     $user->field_follows_committee['und'][]['tid'] = $tid;
     }
   }
-  
-  if (user_access('administer os2web')){//only for the full form submit
-    //unsetting calendar preferences
-    $user->field_user_meetings_category['und'] = array();
-    foreach ($calendar_pref as $cal_pref){
-      $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
-    }
-  
+
+  //unsetting calendar preferences
+  $user->field_user_meetings_category['und'] = array();
+  if (isset($calendar_pref)){
+  foreach ($calendar_pref as $cal_pref){
+    if (isset($forbidden_cat)){
+      if (!in_array($cal_pref, $forbidden_cat)) 
+        $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+      }
+    else  
+    $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+  }
+  } 
+
+  if (user_access('administer users')){//only for the full form submit
     //unsetting positions
     $user->field_user_positions['und'] = array();
     if ($user_pos){
@@ -370,29 +600,79 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
       }
     }
     
+    //unsetting calendar preferences
+  $user->field_user_forrbidden_categories['und'] = array();
+  foreach ($forbidden_cat as $f_cat){
+    $user->field_user_forrbidden_categories['und'][]['value'] = $f_cat;
+  }
     //unsetting committees
     $user->field_user_committee['und'] = array();
     if ($member_of){
+        
       foreach ($member_of as $tid){
+        if (!empty($tid))      
 	$user->field_user_committee['und'][]['tid'] = $tid;
       }
     }
-    
+
     //unsetting follows plus committees
     $user->field_follows_committee_plus['und'] = array();
     if ($follows_plus){
       foreach ($follows_plus as $tid){
-	$user->field_follows_committee_plus['und'][]['tid'] = $tid;
+       if (!empty($tid))   
+	 $user->field_follows_committee_plus['und'][]['tid'] = $tid;
       }
     }
-     //unsetting follows ++ committees
+    
+    //unsetting follows ++ committees
     $user->field_follows_committee_pp['und'] = array();
     if ($follows_plus_plus){
-      foreach ($follows_plus as $tid){
-	$user->field_follows_committee_pp['und'][]['tid'] = $tid;
-      } 
+      foreach ($follows_plus_plus as $tid){
+        if (!empty($tid))      
+	 $user->field_follows_committee_pp['und'][]['tid'] = $tid;
+      }
     }
+
+    //os2dagsorden limited role
+    $user_roles_saved = $user->roles;
+      
+    //os2dagsorden admin role
+    if(user_access('administer os2web')){
+        if (!$user_roles['administrator++']){
+          if (($key = array_search('administrator++', $user_roles_saved)) !== false) {
+              unset($user_roles_saved[$key]);
+          }
+        } else {
+          if ((array_search('administrator++', $user_roles_saved)) === false) {
+              $rid = user_role_load_by_name('administrator++')->rid;
+              $user_roles_saved[$rid] = 'administrator++';
+          }
+        }
+    }
+    if (!$user_roles['os2dagsorden limited']){
+      if (($key = array_search('os2dagsorden limited', $user_roles_saved)) !== false) {
+	  unset($user_roles_saved[$key]);
+      }
+    } else {
+      if ((array_search('os2dagsorden limited', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('os2dagsorden limited')->rid;
+	  $user_roles_saved[$rid] = 'os2dagsorden limited';
+      }
+    }
+    
+    if (!$user_roles['administrator+']){
+      if (($key = array_search('administrator+', $user_roles_saved)) !== false) {
+	  unset($user_roles_saved[$key]);
+      }
+    } else {
+      if ((array_search('administrator+', $user_roles_saved)) === false) {
+	  $rid = user_role_load_by_name('administrator+')->rid;
+	  $user_roles_saved[$rid] = 'administrator+';
+      }
+    }
+    $user->roles = $user_roles_saved;
   }
-  
+
   user_save($user);
+  drupal_set_message(t('Dine ændringer er blevet gemt'));
 }

@@ -11,6 +11,8 @@
  * @return int  $nid        node id of the created attachment
  */
 function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
+  global $PROCESSING_MEETING_ID, $PROCESSING_BP;
+
   //creating attachment content
   $node = new stdClass();
   $node->type = "os2web_meetings_bullet_attach";
@@ -19,13 +21,17 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   node_object_prepare($node);
 
   if (variable_get('os2dagsorden_add_type_prefix', 'true') === 'true'  && !isset($enclosure['is_bp_summary']))
-      $node->title = $enclosure['type'] . ': ' . (($enclosure['title']) ? $enclosure['title'] : 'Indhold');
- else
+     $node->title = $enclosure['type'] . ': ' . (($enclosure['title']) ? $enclosure['title'] : 'Indhold');
+  else
      $node->title = ($enclosure['title'])? $enclosure['title'] : 'Indhold';
+
+  watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Initialized BPA import: !title',
+    array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $enclosure['sysid'], '!title' => $node->title), WATCHDOG_INFO);
  
   if (strlen($node->title) > 254)
     $node->title = substr($node->title, 0, 254);
-    
+  if (isset($enclosure['sysid']))
+    $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] =  $enclosure['sysid'];
   $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;
   if (!$enclosure['access'])//TODO: Look here
     $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 1;
@@ -36,9 +42,11 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   
   node_submit($node);
   node_save($node);
+  watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Finished BPA import, nid: !nid',
+    array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $enclosure['sysid'], '!nid' => $node->nid), WATCHDOG_INFO);
 
   //PDF conversion
-  if (module_exists(os2dagsorden_pdf2htmlex)){
+  if (module_exists("os2dagsorden_pdf2htmlex")){
     if (file_get_mimetype($file->uri) === 'application/pdf')//if is PDF, schedule for HTML conversion
       os2dagsorden_pdf2htmlex_schedule($file->fid, $node->nid);
   }
@@ -114,8 +122,7 @@ function os2dagsorden_esdh_provider_find_sofd_meeting($committee, $meeting_start
  * @return Object     $node updated bullet node
  */
 function os2dagsorden_esdh_provider_process_closed_bullet($node, $item){
-  $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][]['value'] = 0;
-
+  
   // Gather the bullets for the item.
   if (isset($item['bullets']) && is_array($item['bullets'])) {
     $bullet_nids = _os2web_esdh_provider_import_bullets($item['bullets']);
@@ -263,10 +270,35 @@ function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity
     $attachment = node_load($attachment_nid['target_id']);
     err_debug('=======Comparing ' . $attachment->title . '[' . $attachment->nid . '] vs ' . $bullet_entity['title'] . ' result: ');
     if (strcasecmp($bullet_entity['title'], $attachment->title) == 0
-      && strcasecmp($bullet['body'], $attachment->field_os2web_meetings_bpa_body[$node->language][0]['value']) == 0){
+      && strcasecmp($bullet_entity['body'], $attachment->field_os2web_meetings_bpa_body[$attachment->language][0]['value']) == 0){
       err_debug('Match');
       return $attachment;
     }
   }
   return NULL;
+}
+
+/**
+ * This function will either returns the existing committee or create a new one
+ *
+ * @param @sub_id
+ * @param @name
+ * @return $committee term
+ */
+function osdagsorden_esdh_provider_import_or_return_committee($sub_id, $name){
+ $term =_os2dagsorden_access_helper_get_committee_by_subid_and_name($sub_id, $name);   
+ if (!$term ){
+    $term = _acadre_esdh_import_term($name, 'os2web_meetings_tax_committee');
+    os2dagsorden_esdh_provider_committee_add_subid($term, $sub_id);
+  }
+  else {
+      // check if has parent term
+      $parent_tids = taxonomy_get_parents($term->tid);
+      if(!empty($parent_tids)){
+      $tid = reset($parent_tids);
+   
+      $term = taxonomy_term_load($tid->tid);
+  }
+  }
+  return $term;
 }

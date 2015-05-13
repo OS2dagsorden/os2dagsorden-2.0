@@ -80,11 +80,6 @@ body{
     min-height: 40px;
 }
 
-#region-footer-first{
-    background: url('../img/footer_logo.png') no-repeat center 5px;
-    border-top: 1px solid #e5e5e5;
-}
-
 .zone-branding-wrapper{
     padding: 15px 0 15px 0;
 }
@@ -591,6 +586,26 @@ ul li.leaf {
     padding: 5px 10px 5px 10px;
 }
 
+.user-logout-block .settings-btn {
+    /* Fallback */
+    background: #c0c0c0 url('../img/icon_settings.png') no-repeat 5px 50%;
+    /* W3C */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, linear-gradient(top, #fcfcfc 0%,#c0c0c0 100%);
+    /* Safari 4-5, Chrome 1-9 */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e7e7e7), to(#c0c0c0));
+    /* Safari 5.1, Chrome 10+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -webkit-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* Firefox 3.6+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -moz-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* IE 10 */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -ms-linear-gradient(top, #fcfcfc, #c0c0c0);
+    /* Opera 11.10+ */
+    background: url('../img/icon_settings.png') no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);
+    
+    padding: 5px 10px 5px 25px;
+    white-space:nowrap;
+}
+
 .user-logout-block .user-logout-btn {
     /* Fallback */
     background: #c0c0c0 url('../img/icon_log_out.png') no-repeat 5px 50%;
@@ -696,6 +711,10 @@ div.attachment{
 
 .block-views .view-content{
     overflow: hidden;
+}
+
+.block-views .view-user-logout-menu .view-content{
+    overflow: visible;
 }
 
 /*---------------------------- Views End ----------------------------*/
@@ -1303,7 +1322,8 @@ div.speaker-paper-all-print{
     top: 5px;
 }
 
-.view-display-id-attachment_print_all_speaker_papers{
+.view-display-id-attachment_print_all_speaker_papers,
+.view-display-id-attachment_print_all_speaker_papers_tillaeg {
     position: absolute;
     right: 5px;
 }
@@ -1335,7 +1355,17 @@ table .hide_show_all_attachments_text{
     background: url('../img/icon_print_bullet_point.png') no-repeat 50% top;;
     height: 16px;
     width: 16px;
+     display:block;
     float: right;
+}
+.bullet-point-send-link {
+    background: url('../img/icon-send-to-friend-bullet-point.png') no-repeat 50% top;;
+    height: 20px;
+    width: 20px;
+    display:block;  
+    float: right;
+    margin-right: 8px;
+   
 }
 
 /*meeting details table end*/
@@ -1499,7 +1529,7 @@ a.annotator-wrapper {
 .attachment_text_container .attachment_text_trimmed_container #pdf-main,  .attachment_text_container .attachment_text_trimmed_container #page-container{
   position: relative;
   background: #BEBEBE;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
 
@@ -1553,18 +1583,55 @@ a.annotator-wrapper {
   border-bottom-right-radius: 4px;
 }
 
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_full_trimmed_container{
+ .attachment_text_container .attachment_text_trimmed_container,
+ .attachment_text_container .attachment_full_trimmed_container {
+    position: relative;
+}
+
+/*
+.attachment_text_container .attachment-text {
+    overflow-y: hidden;
+}
+
+
+.grid-18 .attachment_text_container .attachment_text_trimmed_container,
+.grid-18 .attachment_text_container .attachment_full_trimmed_container{
   max-width: 425px;
   position: relative;
 }
 
-.attachment_text_container .attachment-text{
-  overflow-y: hidden;
-  max-width: 425px;
+.grid-24 .attachment_text_container .attachment_text_trimmed_container,
+.grid-24 .attachment_text_container .attachment_full_trimmed_container{
+  max-width: 625px;
+  position: relative;
 }
 
-.attachment_text_container .attachment_text_full_container, .attachment_text_container .attachment_text_trimmed_container{
-  padding: 5px 5px 0  5px;
+.grid-18  .attachment_text_container .attachment-text{
+ overflow-y: hidden;
+  max-width: 425px;
+ 
+}
+
+.grid-24  .attachment_text_container .attachment-text{
+  overflow-y: hidden;
+  max-width: 625px;
+}
+.attachment_text_container{
+  overflow-x: auto;
+}*/
+
+.attachment-text img{
+    max-width: 100%;
+}
+
+.attachment_text_container .attachment_text_full_container .attachment-text {
+    overflow: auto;
+    padding: 5px;
+}
+
+.attachment_text_container .attachment_text_full_container,
+.attachment_text_container .attachment_text_trimmed_container{
+  width: 100%;
 }
 
 .close-overlay-bilag-link{
@@ -1610,7 +1677,18 @@ a.annotator-wrapper {
 .bullet-point-attachments #arrow-controls {
     left: 0;
 }
+.view-meetings-search .views-table,
+.bullet-point-attachments .views-table{
+  table-layout: fixed;
+}
+.page-meeting-bullet-point .views-table table{
+   table-layout: fixed; 
+}
 
+.bullet-point-attachments .views-table .print-bullet-point-link,
+.bullet-point-attachments .views-table .send-bullet-point-link{
+  width: 1%;
+}
 /* ---------------------------- Pagescroller styles END---------------------------- */
 
 
@@ -1715,3 +1793,40 @@ a.annotator-wrapper {
   margin-top: 0;
 }
 /* ---------------------------- Search block END---------------------------- */
+
+/* -- autocomplete input -- */
+#autocomplete {
+  background-color: #fff;
+  z-index: 900;
+}
+#autocomplete ul{
+  padding-left: 0;
+  margin-left: 0;
+}
+
+/* -- user_simple_edit drug&drop -- */
+
+.select-committee {
+    float: left;
+}
+.available_committee {
+    float: right;
+    overflow-y: scroll;
+}
+
+ul.droptrue{
+    list-style: none;
+    padding: 0;
+    background: #fff;
+    border: 1px solid rgb(169, 169, 169);
+    min-height: 45px;
+}
+
+ul.droptrue li {
+    margin: 0;
+    cursor: move; 
+    margin: 5px; 
+    padding: 5px; 
+    background: none; background-color: white;
+}
+

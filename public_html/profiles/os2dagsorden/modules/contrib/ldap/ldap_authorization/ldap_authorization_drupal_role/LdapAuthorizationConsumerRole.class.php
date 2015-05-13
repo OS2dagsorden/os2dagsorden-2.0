@@ -140,12 +140,12 @@ class LdapAuthorizationConsumerDrupalRole extends LdapAuthorizationConsumerAbstr
         WATCHDOG_ERROR);
         return FALSE;
     }
-    debug($user->roles);
+    //debug($user->roles);
     $new_roles = $user->roles + array($this->drupalRolesByName[$role_name] => $role_name);
     $user_edit = array('roles' => $new_roles);
 
-    debug($new_roles);
-    debug($user_edit);
+    //debug($new_roles);
+    //debug($user_edit);
     if ($this->detailedWatchdogLog) {
       watchdog('ldap_authorization', 'grantSingleAuthorization in drupal rold' . print_r($user, TRUE), array(), WATCHDOG_DEBUG);
     }

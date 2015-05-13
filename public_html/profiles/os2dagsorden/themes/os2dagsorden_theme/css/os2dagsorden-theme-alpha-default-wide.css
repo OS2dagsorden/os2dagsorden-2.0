@@ -1,17 +1,41 @@
 /* This file will hold styles that are loaded using the same media query as the wide grid. */
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_text_full_container{
-  max-width: 600px;
+/*.grid-18 .attachment_text_container .attachment_text_trimmed_container,
+.grid-18 .attachment_text_container .attachment_text_full_container{
+ max-width: 600px;
+ width: 100%;
 }
 
-.attachment_text_container .attachment-text{
-  overflow-y: hidden;
-  max-width: 600px;
+.grid-24 .attachment_text_container .attachment_text_trimmed_container,
+.grid-24 .attachment_text_container .attachment_text_full_container{
+  //max-width: 800px;
+ // width: 100%;
 }
+
+.grid-18 .attachment_text_container .attachment-text{
+  overflow: hidden;
+
+  //max-width: 600px;
+  //width: 100%;
+}
+
+.grid-24 .attachment_text_container .attachment-text{
+  overflow: hidden;
+  //max-width: 800px;
+ // width:100%;
+}*/
 
 /*---------------------------- Date override START ----------------------------*/
 
 div.date-heading h3 a, div.date-heading h3 {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 /*---------------------------- Date override END ----------------------------*/
+.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_text_full_container,
+.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_container .attachment_text_full_container.attachment_text_max_size{
+  max-width: none;
+}
+
+.attachment_text_container .attachment_text_max_size .attachment-text, .attachment_text_container .attachment-text{
+  max-width: none;
+}
