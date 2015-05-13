@@ -59,7 +59,11 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   if (!os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime(drupal_realpath($meeting_id['uri']))) &&
     !os2web_esdh_provider_index_meeting_has_deleted_agendas($meeting_id['id'])) {
     $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
-    watchdog('acadre MM', '[XML_ID: !id] Latest meeting version is already imported into nid: !nid. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_INFO);
+    if ($nid) {
+      watchdog('acadre MM', '[XML_ID: !id] Latest meeting version is already imported into nid: !nid. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_INFO);
+    } else {
+      watchdog('acadre MM', '[XML_ID: !id] No agendas to import. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_INFO);
+    }
     lock_release(__FUNCTION__ . $meeting_id['id']);
     return;
   }
@@ -294,11 +298,11 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     if (!empty($meeting['full_doc'])){
       if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {
         if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0){
-          $node->field_os2web_meetings_full_doc_c[LANGUAGE_NONE][0] = (array) $file;
+          $node->field_os2web_meetings_full_doc_c[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings closed description: !uri ', array('!id' => $PROCESSING_MEETING_ID, '!uri' => $file->uri), WATCHDOG_DEBUG);
         }
         else {
-          $node->field_os2web_meetings_full_doc[LANGUAGE_NONE][0] = (array) $file;
+          $node->field_os2web_meetings_full_doc[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings open description: !uri ', array('!id' => $PROCESSING_MEETING_ID, '!uri' => $file->uri), WATCHDOG_DEBUG);
         }
       }

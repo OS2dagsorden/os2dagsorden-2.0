@@ -64,7 +64,7 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda){
 }
 
 function os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_xmlid, $currentXmlChanged){
-  if (!os2web_esdh_provider_index_meeting_is_meeting_indexed($meeting_xmlid))//manifest is not indexed
+  if (!os2web_esdh_provider_index_meeting_is_meeting_indexed($meeting_xmlid)) //manifest is not indexed
     return TRUE;
 
   $rowCount = db_select('os2web_esdh_provider_import', 'o')
@@ -102,24 +102,30 @@ function os2web_esdh_provider_index_meeting_is_meeting_indexed($meeting_xmlid, $
   return $rowCount > 0;
 }
 
-function os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, $agenda_sysid, $status){
-  db_update('os2web_esdh_provider_import')
+function os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, $agenda_sysid = null , $status){
+  $query = db_update('os2web_esdh_provider_import')
     ->fields(array(
       'import_status' => $status,
     ))
-    ->condition('meeting_xmlid', $meeting_xmlid, '=')
-    ->condition('agenda_sysid', $agenda_sysid, '=')
-    ->execute();
+    ->condition('meeting_xmlid', $meeting_xmlid, '=');
+  
+    if ($agenda_sysid)
+      $query->condition('agenda_sysid', $agenda_sysid, '=');
+    
+    $query->execute();
 }
 
-function os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, $agenda_sysid, $nid){
-  db_update('os2web_esdh_provider_import')
+function os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, $agenda_sysid = null, $nid){
+  $query = db_update('os2web_esdh_provider_import')
     ->fields(array(
       'nid' => $nid,
     ))
-    ->condition('meeting_xmlid', $meeting_xmlid, '=')
-    ->condition('agenda_sysid', $agenda_sysid, '=')
-    ->execute();
+    ->condition('meeting_xmlid', $meeting_xmlid, '=');
+    
+    if ($agenda_sysid)
+      $query->condition('agenda_sysid', $agenda_sysid, '=');
+    
+    $query->execute();
 }
 
 function os2web_esdh_provider_index_meeting_get_nid($meeting_xmlid){

@@ -193,8 +193,8 @@ function os2web_esdh_provider_node_delete($node) {
     $meeting_xmlid = $node->field_os2web_meetings_system_id['und'][0]['value'];
     $agenda_sysid = $node->field_os2web_meetings_sub_id['und'][0]['value'];
 
-    os2web_esdh_provider_index_meeting_update_status($meeting_xmlid , $agenda_sysid , IMPORT_STATUS_DELETED);
-    os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, $agenda_sysid, 0);
+    os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, null, IMPORT_STATUS_DELETED);
+    os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, null, 0);
   }
   if ($node->type === 'os2web_meetings_bullet') {
     // Delete bullet attachments from meeting.
