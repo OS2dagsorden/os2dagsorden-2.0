@@ -7637,7 +7637,8 @@ function entity_get_info($entity_type = NULL) {
   $langcode = $language->language;
 
   if (empty($entity_info)) {
-    if ($cache = cache_get("entity_info:$langcode")) {
+    //if ($cache = cache_get("entity_info:$langcode")) {
+    if ($cache = cache_get("entity_info")) {
       $entity_info = $cache->data;
     }
     else {
