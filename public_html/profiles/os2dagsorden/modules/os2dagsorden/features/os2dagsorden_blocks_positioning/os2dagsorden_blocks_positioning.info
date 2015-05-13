@@ -19,6 +19,7 @@ dependencies[] = views
 features[context][] = os2dagsorden_annotator_light
 features[ctools][] = context:context:3
 features[ctools][] = strongarm:strongarm:1
+features[fe_block_boxes][] = show_hide_menu_block
 features[fe_block_boxes][] = os2dagsorden_version_number
 features[fe_block_settings][] = block-os2dagsorden_version_number
 features[fe_block_settings][] = user-login
