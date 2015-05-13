@@ -5,20 +5,18 @@
  * This module implements Acadre ESDH backend for use in os2web
  */
 
-include_once('os2web_acadre_esdh.features.inc');
-
-define('ACADRE_MM_IMPORT_DIR', 'public://acadre');
-define('ACADRE_MM_DEFAULT_APPROVED', '62,59,64,53,54,56,57,63,58,51,55,61,68,69,42');
+define('OS2WEB_ACADRE_ESDH_ACADRE_MM_IMPORT_DIR', 'public://acadre');
+define('OS2WEB_ACADRE_ESDH_ACADRE_MM_DEFAULT_APPROVED', '62,59,64,53,54,56,57,63,58,51,55,61,68,69,42');
 
 /**
  * Implements hook_ctools_plugin_directory().
  *
  * Register as provider of esdh plugins
  */
-function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {  
+function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {
   $enabled_plugins = variable_get('os2web_acadre_esdh_enabled_plugins', drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type())));
   if ($module == 'os2web_esdh_provider' && $enabled_plugins[$plugin]) {
-        return "plugins/$plugin";
+    return "plugins/$plugin";
   }
 }
 
@@ -27,57 +25,79 @@ function os2web_acadre_esdh_ctools_plugin_directory($module, $plugin) {
  *
  * Add configuration to the settings form.
  */
-function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state) {
-
+function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == "os2web_settings_settings_form") {
+   array_unshift($form['#submit'], 'os2web_acadre_esdh_form_os2web_settings_settings_form_submit');
+  }
   // MM configuration.
-  $form['meetings'] = array(
+  $form['os2web_mm'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Referat import',
-    '#description' => 'Indstillinger der vedrører importen af Acadre referater og dagsordener.',
+    '#title' => t('Meeting import'),
+    '#description' => t('Settings regarding import of Acadre minutes and meetings.'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  $form['meetings']['os2web_meetings_path'] = array(
+  $form['os2web_mm']['os2web_meetings_path'] = array(
     '#type' => 'textfield',
-    '#title' => 'Sti til acadre publish folder.',
-    '#description' => 'Dette er stien hvor Acadre publisere .XML filer til.',
-    '#default_value' => variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR),
+    '#title' => t('Path to Acadre publish folder.'),
+    '#description' => t('This is the path where Acadre publish .XML files to.'),
+    '#default_value' => variable_get('os2web_meetings_path', OS2WEB_ACADRE_ESDH_ACADRE_MM_IMPORT_DIR),
   );
-  $form['meetings']['os2web_acadre_add_committee_to_title'] = array(
+  $form['os2web_mm']['os2dagsorden_committees_positive_list_as_import_list'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use list of active committees during import'),
+    '#default_value' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
+    '#description' => t('If checkbox is clicked, the list of positive committees (defined in <a href="@link">here</a>) will be used', array('@link' => '/admin/structure/taxonomy/os2web_meetings_tax_committee')),
+  );
+
+  $form['os2web_mm']['os2web_meetings_approved_committee'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Approved committees'),
+    '#maxlength' => 200,
+    '#disabled' => variable_get('os2dagsorden_committees_positive_list_as_import_list', false),
+    '#description' => t('Comma separated list of committees ID approved for publishing.'),
+    '#default_value' => variable_get('os2web_meetings_approved_committee', OS2WEB_ACADRE_ESDH_ACADRE_MM_DEFAULT_APPROVED),
+  );
+
+  $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
     '#type' => 'checkbox',
     '#default_value' => variable_get('os2web_acadre_add_committee_to_title', false),
     '#title' => t('Add committee name to meeting title'), 
     '#description' =>'This decides whether a committee name will be added to meeting title'
- );
-
-  $form['meetings']['os2web_meetings_approved_committee'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Godkendte Udvalg',
-    '#maxlength' => 200,
-    '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
-    '#default_value' => variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED),
   );
-
-  $form['meetings']['os2web_meetings_import_closed_agenda'] = array(
+  $form['os2web_mm']['os2web_meetings_import_closed_agenda'] = array(
     '#type' => 'checkbox',
     '#title' => t('Import closed agenda'),
-    '#description'=>t('This decides if closed agenda is or is not to be imported'),
-    '#default_value' => variable_get('os2web_meetings_import_closed_agenda', false),
+    '#description' => t('This decides if closed agenda is or is not to be imported'),
+    '#default_value' => variable_get('os2web_meetings_import_closed_agenda', FALSE),
+  );
+
+  $form['os2web_mm']['os2web_acadre_location_field'] = array(
+    '#type' => 'radios',
+    '#title' => t('Get the address for the meeting from'),
+    '#default_value' => variable_get('s2web_acadre_location_field', 'true'),
+    '#options' => $options2 = array('true' => t('the location field'), 'false' => t('the address field')),
+    '#description' => t('This decides from which field meeting address gets'),
   );
   
-  $form['os2web_acadre_plugins'] =array(
+  $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('os2web_acadre_add_committee_to_title', FALSE),
+    '#title' => t('Add committee name to meeting title'),
+    '#description' => 'This decides whether a committee name will be added to meeting title',
+  );
+
+  $form['os2web_acadre_plugins'] = array(
     '#type' => 'fieldset',
     '#title' => t('Acadre plugins configuration'),
   );
-  $form['os2web_acadre_plugins']["os2web_acadre_esdh_enabled_plugins"] =array(
+  $form['os2web_acadre_plugins']["os2web_acadre_esdh_enabled_plugins"] = array(
     '#type' => 'checkboxes',
-     '#title' => t('Enabled plugins'),
-     '#description'=>t('This decides which acadre plugins should be enabled'), 
-     '#options' => drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type())),
-     '#default_value' => variable_get('os2web_acadre_esdh_enabled_plugins', drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type()))),
+    '#title' => t('Enabled plugins'),
+    '#description' => t('This decides which acadre plugins should be enabled'),
+    '#options' => drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type())),
+    '#default_value' => variable_get('os2web_acadre_esdh_enabled_plugins', drupal_map_assoc(array_keys(os2web_esdh_provider_ctools_plugin_type()))),
   );
-
-
   // CM Configuration.
   $form['os2web_pws_config_group'] = array(
     '#type' => 'fieldset',
@@ -113,7 +133,8 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#title' => t('PWS password'),
     '#description' => t('PWS HTTP authentification password.'),
   );
-  // Proxy setups
+
+  // Proxy setups.
   $form['os2web_pws_proxy_group'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
@@ -146,9 +167,15 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#title' => t('URL for Adlib service endpoint'),
     '#description' => t('URL to the webservice endpoint that runs the Adlib service.'),
   );
-  
 }
-
+/**
+ * Implements hook_form_submit().
+ */
+function os2web_acadre_esdh_form_os2web_settings_settings_form_submit(&$form, &$form_state) {      
+  if (substr(trim($form_state['values']['os2web_meetings_path']), -1) !='/')
+     $form_state['values']['os2web_meetings_path']=$form_state['values']['os2web_meetings_path'].'/';
+        
+}
 /**
  * Implements hook_os2web_help().
  */
@@ -159,14 +186,3 @@ function os2web_acadre_esdh_os2web_help($sections) {
   $sections['configuration'] .= t('<p><a href="@url" target="_blank">See the advanced documentation for acadre</a></p>', array('@url' => url('admin/help/os2web_acadre_esdh')));
   return $sections;
 }
-
-/**
- * Implements hook_help().
- */
-//function os2web_acadre_esdh_help($path, $arg) {
-//  switch ($path) {
-//    case 'admin/help#os2web_acadre_esdh':
-      // TODO.
-//      return t('Missing documentation.');
-//  }
-//}

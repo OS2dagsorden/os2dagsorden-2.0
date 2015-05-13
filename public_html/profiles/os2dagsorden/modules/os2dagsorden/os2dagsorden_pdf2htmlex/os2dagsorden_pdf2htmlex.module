@@ -13,7 +13,7 @@
  */
 define('DEFAULT_PDF_HTML_ZOOM', 1.25); // default zoom for convertion
 define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/')); // default zoom for convertion
-define('DEFAULT_PDF_HTML_TRANS_LIMIT', 50);//number of files to handle at once
+define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);//number of files to handle at once
 
 // to delete
 function os2dagsorden_pdf2htmlex_menu() {
@@ -55,11 +55,18 @@ function os2dagsorden_pdf2htmlex_report(){
       ))
       ->condition('fid', $fid, '=')
       ->execute();
+
+    drupal_goto('admin/reports/pdf2htmlex');
   }
 
   //table output
+    $or = db_or();
+    $or->condition('progress', 'Completed','!=');
+    $or->condition('progress', NULL);
+
   $result = db_select('os2dagsorden_pdf2htmlex_files', 'o')
     ->fields('o')
+    ->condition($or)
     ->execute()
     ->fetchAllAssoc('fid');
 
@@ -123,7 +130,8 @@ function os2dagsorden_pdf2htmlex_do_convert(){
  *
  */
 function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
-  db_insert('os2dagsorden_pdf2htmlex_files')
+  try {
+    db_insert('os2dagsorden_pdf2htmlex_files')
     ->fields(array(
       'fid' => $fid,
       'did' => $did,
@@ -132,6 +140,9 @@ function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
       'progress' => NULL,
     ))
     ->execute();
+  } catch (Exception $e) {
+    watchdog('pdf2htmlEX', 'Cannot schedule a file: fid: %fid, did: %did, e: %e', array('%fid' => $fid, '%did' => $did, '%e' => $e->getMessage()), WATCHDOG_ERROR);
+  }
 }
 
 function os2dagsorden_pdf2htmlex_cronapi($op, $job = NULL) {
@@ -170,7 +181,7 @@ function os2dagsorden_pdf2htmlex_cron() {
 	  ->condition('progress', 'Converted')
 	  ->range(0,DEFAULT_PDF_HTML_TRANS_LIMIT);
     $result = $query->execute();
-    
+
     while($record = $result->fetchAssoc()) {
 	$destination = node_load($record['did']);
 	
@@ -200,10 +211,10 @@ function os2dagsorden_pdf2htmlex_cron() {
             $purl= drupal_realpath(variable_get('pdf2html_rendering_path'));
             $uri = str_replace($purl, variable_get('pdf2html_rendering_path'), $path);      
        } else {
-          if (strpos($path,drupal_realpath('private://'))===FALSE)
-            $uri=str_replace(drupal_realpath('public://'), 'public://',  $path);
+          if (strpos($path,drupal_realpath('private://') . '/')===FALSE)
+            $uri=str_replace(drupal_realpath('public://') . '/', 'public://',  $path);
          else
-           $uri=str_replace(drupal_realpath('private://'),  'private://',$path);
+           $uri=str_replace(drupal_realpath('private://') . '/',  'private://',$path);
        }
 	$fid = db_select('file_managed', 'fm')
                         ->fields('fm', array('fid'))
@@ -301,6 +312,17 @@ function _os2dagsorden_pdf2htmlex_improve_html($data){
  * @return none
  */
 function os2dagsorden_pdf2htmlex_convert($fid, $did) {
+  // deleting entry if the did is not pointing anywhere
+  if (!node_load($did)){
+    db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('fid', $fid)
+      ->condition('did', $did)
+      ->execute();
+
+    return;
+  }
+
+
   $file = file_load($fid);
   
   $file_path_real = drupal_realpath($file->uri);//with file name
@@ -320,10 +342,13 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
 
     //check if already convered
     if(!file_exists($path)){
-      $shell_file_path_real = "'" . str_replace("'", "\'", $file_path_real) . "'";
-      $shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
+	setlocale(LC_CTYPE, "en_DK.UTF-8");//TODO: one has to know the exact locale of the system, otherwise uncomment the lines
+	$shell_file_path_real = escapeshellarg($file_path_real);
+	$shell_dest_dir_real = escapeshellarg($dest_dir_real);
+      //$shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";
+      //$shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
 
-	  shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
+	shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
 
         //successful conversion?
 	if (file_exists($path)) {
@@ -402,13 +427,15 @@ function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
 	$nids = array_keys($result['node']);
 	$meeting = reset(entity_load('node', $nids));
 	
-	if (os2dagsorden_access_helper_meeting_fully_converted($meeting)){
-	    if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0)
-	        $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden+";
-	    else
-		$meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat+";
-	    node_submit($node);
-	    node_save($node);
+	if ($meeting){
+	    if (os2dagsorden_access_helper_meeting_fully_converted($meeting)){
+		if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0)
+		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
+		else
+		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
+		node_submit($meeting);
+		node_save($meeting);
+	    }
 	}
       }
     }

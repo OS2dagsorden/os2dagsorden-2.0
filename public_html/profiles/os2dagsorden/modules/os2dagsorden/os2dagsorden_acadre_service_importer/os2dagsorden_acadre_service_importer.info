@@ -1,0 +1,5 @@
+name = OS2Dagsorden acadre extended service importer module
+description = This module will import meetings and committees from acadre extended service.
+package = OS2Dagsorden
+core = 7.x
+version = "dev"

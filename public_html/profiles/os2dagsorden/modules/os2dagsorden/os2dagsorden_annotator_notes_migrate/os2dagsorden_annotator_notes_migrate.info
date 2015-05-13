@@ -1,0 +1,6 @@
+name = OS2Dagsorden Annotator Notes Migrate
+description = A module for exporting and importing annotator notes.
+core = 7.x
+package = OS2Dagsorden
+
+

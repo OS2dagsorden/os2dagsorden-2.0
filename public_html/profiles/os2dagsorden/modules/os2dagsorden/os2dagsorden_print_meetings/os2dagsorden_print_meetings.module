@@ -20,7 +20,7 @@ function os2dagsorden_print_meetings_menu() {
     $items = array();
 
     $items['meetings/print'] = array(
-        'title' => 'MØDEKALENDER ' . date('Y'),
+        'title' => variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender'),
         'type' => MENU_CALLBACK,
         'page callback' => '_os2dagsorden_print_meetings_callback',
         'access arguments' => array('access content')
@@ -37,7 +37,7 @@ function os2dagsorden_print_meetings_menu() {
 function _os2dagsorden_print_meetings_callback() {
     global $base_url;
     $breadcrumb[] = l('Hjem', $base_url);
-    $breadcrumb[] .= '<span class="breadcrumb-active">Halvårs-kalender</span>';
+    $breadcrumb[] .= '<span class="breadcrumb-active">' . variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . '</span>';
     drupal_set_breadcrumb($breadcrumb);
 
     drupal_add_css(drupal_get_path('module', 'os2dagsorden_print_meetings') . '/css/os2dagsorden_print_meetings.css');
@@ -95,7 +95,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $form['submit_1_half'] = array(
             '#type' => 'submit',
             '#submit' => array('_os2dagsorden_print_meetings_form_submit_1_half'),
-            '#value' => t('Hent tabellen for det første halvår'),
+            '#value' => t('FØRSTE HALVÅR') . ' ' . date('Y'),
 	    '#attributes' => ($from_month == 1 ? array('class' => array('button-active')) : ''),
         );
 
@@ -106,7 +106,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $form['submit_2_half'] = array(
             '#type' => 'submit',
             '#submit' => array('_os2dagsorden_print_meetings_form_submit_2_half'),
-            '#value' => t('Hent tabellen for det sidste halvår'),
+            '#value' => t('ANDET HALVÅR') . ' ' . date('Y'),
 	    '#attributes' => ($from_month == 7 ? array('class' => array('button-active')) : ''),
         );
 
@@ -180,9 +180,8 @@ function _os2dagsorden_print_meetings_form_submit_2_half($form, &$form_state) {
  * @return generated table
  */
 function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
-    global $user;
-    $user = user_load($user->uid);
-    
+    $user = os2dagsorden_access_helper_get_user();
+
     //selecting the node of type meetings
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -191,12 +190,6 @@ function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $from_month . '-01 00:00:00', '>=')//selecting meetings from the from_month
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $to_month . '-31 23:59:59', '<=')//selecting meetings up to the to_month
       ->fieldOrderBy('field_os2web_meetings_date', 'value', 'ASC');
-    
-    if (!empty($user->field_user_meetings_category['und'])){
-      if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
-	$query->fieldCondition('field_os2web_meetings_category', 'value', $user->field_user_meetings_category['und'][0]['value'], '=');
-      }
-    }
     $result = $query->execute();
     
     $meetings = array();
@@ -204,6 +197,8 @@ function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
 	  $results = array_keys($result['node']);
 	  $meetings = node_load_multiple($results, array('type' => array('os2web_meetings_meeting')));
     }
+
+    
 
     return _os2dagsorden_print_meetings_get_six_month_data($from_month, $to_month, $meetings);
 }
@@ -265,6 +260,9 @@ function os2dagsorden_print_meetings_generate_month_headers($from_month, $to_mon
  */
 function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $meetings) {
     global $base_url;
+    global $user;
+    $user = user_load($user->uid);
+    
     $html = "<tr>";
     for ($month = $from_month; $month <= $to_month; $month++) {
         $html .= "<td width='16.6%' class='no-pad valign_top'>";
@@ -275,19 +273,34 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
             $html .= "<td class='inside content" . _os2dagsorden_print_meetings_mark_weekend_gray($month, $i) . "'" . _os2dagsorden_print_meetings_add_col_span($month, $i) . ">";
             //filling with the content
             foreach ($meetings as $met) {
+		//filtering out tillaegs agenda
+		if (isset($met->field_os2web_meetings_addendum['und'])){
+		    continue;
+		}
+
+		//checking user rights
+		if (!os2dagsorden_access_helper_check_user_can_see_meeting($met)) {
+		    continue;
+		}
+                
+               $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
+                if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
+	         if (strcasecmp($user->field_user_meetings_category['und'][0]['value'], $committee->field_os2web_meetings_com_cat['und'][0]['value']) != 0)
+                     continue;
+               }
                 if (substr($met->field_os2web_meetings_date['und'][0]['value'], 0, 10) === date('Y-m-d', mktime(0, 0, 0, $month, $i, date("Y")))) {
                     $link = $base_url . '/meeting/' . $met->nid;
 
-                    $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
+                   
 		    $title = '';
                     if (!empty($committee->field_os2web_meetings_com_abbr['und'][0]['value']))
 			 $title = $committee->field_os2web_meetings_com_abbr['und'][0]['value'];
-                    elseif (!empty($met->field_os2web_meetings_abbr['und'][0]['value']))
-			 $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
+                   // elseif (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($met->field_os2web_meetings_abbr['und'][0]['value']))
+			// $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
                     else
 			 $title = $met->title;
                     
-                    $html .= '<a href="' . $link . '"><font color="' . $met->field_os2web_meetings_hex['und'][0]['value'] . '">' . $title . '</font></a>, ';    
+                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, '; 
                 }
             }
             //end of content

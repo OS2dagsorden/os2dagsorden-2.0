@@ -2,3 +2,15 @@
 /* If you are using the default media queries provided by Omega, these styles will also
  *  apply to the normal and widescreen layouts. You may override these styles in the normal
  *  and widescreen CSS files as appropriate. */
+.view-meetings-search .views-table th.views-field.views-field-php-7 {
+  width: 75px;
+}
+.view-meetings-search .views-table th.views-field.views-field-field-os2web-meetings-date {
+  width: 100px;
+}
+.view-meetings-search .views-table th.views-field.views-field-php-3 {
+  width: 300px;
+}
+.view-meetings-search .views-table td.views-field.views-field-php-3 {
+  overflow: hidden;
+}

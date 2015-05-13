@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * @file
  * Code for the OS2Web Meeting Views - common/shared field
@@ -31,10 +31,24 @@ function os2dagsorden_meeting_views_common_meeting_has_notes($meeting_id){
     print '<div class="indicator-has-notes"></div>';
 }
 
+function os2dagsorden_meeting_views_common_meeting_is_closed_else_empty($meeting_id){
+  if (os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id))
+    print '<div class="indicator-unlocked"></div>';
+  else
+    print '<div class="indicator-empty"></div>';
+}
+
+function os2dagsorden_meeting_views_common_meeting_is_closed($meeting_id){
+  if (os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id))
+    print '<div class="indicator-unlocked"></div>';
+}
+
 function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   $title = '';
-  if (isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
-    $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
+  $committee= taxonomy_term_load($data->_field_data['nid']['entity']->field_os2web_meetings_committee['und'][0]['tid']);
+  //if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
+  if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($committee->field_os2web_meetings_com_shname['und']) && !empty($committee->field_os2web_meetings_com_shname['und'][0]['value']))
+   $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'] ;//$data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;
 
@@ -55,11 +69,16 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
 function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_committee');
-    print taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    $short_name=taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+    if (!empty($short_name))
+       print taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+    else
+        print taxonomy_term_load($meeting_committee[0]["tid"])->name;  
 }
 function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_location');
+      
     print taxonomy_term_load($meeting_committee[0]["tid"])->name;
 }
 /////////////////////////////////////////meeting END/////////////////////////////////////////
@@ -76,3 +95,48 @@ function os2dagsorden_meeting_views_common_bullet_point_has_sp($bp_id){
     print '<div class="indicator-has-speaker-paper"></div>';
 }
 /////////////////////////////////////////bullet point END/////////////////////////////////////////
+
+
+/////////////////////////////////////////FILTER START /////////////////////////////////////////
+
+/**
+ * Checks if the current committee is in the user's list
+ * Returns INVERTED VALUE
+ */
+function os2dagsorden_meeting_views_common_filter_in_my_list($tid){
+  $user = os2dagsorden_access_helper_get_user();
+  if (!empty($user->field_user_committee)) { //is part of the committee
+    foreach ($user->field_user_committee['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+  
+  if (!empty($user->field_follows_committee)) { //follows committee
+    foreach ($user->field_follows_committee['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  if (!empty($user->field_follows_committee_plus)) { //follows committee PLUS
+    foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  if (!empty($user->field_follows_committee_pp)) { //follow committee PLUS PLUS
+    foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
+      if ($tid == $user_committee_id['tid']) {
+	return FALSE;
+      }
+    }
+  }
+
+  return TRUE;
+}
+/////////////////////////////////////////FILTER END /////////////////////////////////////////

@@ -14,7 +14,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access PDF version'] = array(
     'name' => 'access PDF version',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'print_pdf',
   );
@@ -23,7 +23,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );
@@ -32,7 +33,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access content'] = array(
     'name' => 'access content',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -41,7 +42,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access content overview'] = array(
     'name' => 'access content overview',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -50,7 +51,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access print'] = array(
     'name' => 'access print',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'print',
   );
@@ -59,34 +60,60 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['access toolbar'] = array(
     'name' => 'access toolbar',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'toolbar',
+  );
+
+  // Exported permission: access user profiles.
+  $permissions['access user profiles'] = array(
+    'name' => 'access user profiles',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+    'module' => 'user',
   );
 
   // Exported permission: administer menu.
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'menu',
+  );
+  
+  $permissions['administer nodes'] = array(
+    'name' => 'administer nodes',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+    'module' => 'node',
   );
 
   // Exported permission: administer os2web.
   $permissions['administer os2web'] = array(
     'name' => 'administer os2web',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'os2web_settings',
+  );
+
+  // Exported permission: administer permissions.
+  $permissions['administer permissions'] = array(
+    'name' => 'administer permissions',
+    'roles' => array(),
+    'module' => 'user',
   );
 
   // Exported permission: administer taxonomy.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'taxonomy',
   );
@@ -95,8 +122,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer ultimate cron'] = array(
     'name' => 'administer ultimate cron',
     'roles' => array(
-      'administrator' => 'administrator',
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'ultimate_cron',
   );
@@ -105,7 +131,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'user',
   );
@@ -114,7 +141,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['create os2web_meetings_spaper content'] = array(
     'name' => 'create os2web_meetings_spaper content',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'node',
   );
@@ -123,16 +150,25 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['delete own os2web_meetings_spaper content'] = array(
     'name' => 'delete own os2web_meetings_spaper content',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'node',
+  );
+  
+  // Exported permission: edit any os2web_meetings_meeting content.
+  $permissions['edit any os2web_meetings_meeting content'] = array(
+    'name' => 'edit any os2web_meetings_meeting content',
+    'roles' => array(
+      0 => 'administrator++',
+    ),
+   'module' => 'node',
   );
 
   // Exported permission: edit context.
   $permissions['edit context'] = array(
     'name' => 'edit context',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
@@ -141,16 +177,25 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['edit own os2web_meetings_spaper content'] = array(
     'name' => 'edit own os2web_meetings_spaper content',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      0 => 'authenticated user',
     ),
     'module' => 'node',
+  );
+
+  // Exported permission: edit own user account.
+  $permissions['edit own user account'] = array(
+    'name' => 'edit own user account',
+    'roles' => array(
+      0 => 'os2dagsorden',
+    ),
+    'module' => 'edit_own_user_account_permission',
   );
 
   // Exported permission: list context.
   $permissions['list context'] = array(
     'name' => 'list context',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
@@ -159,7 +204,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator++',
+      1 => 'authenticated user',
     ),
     'module' => 'filter',
   );
@@ -167,10 +213,7 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   // Exported permission: use text format full_html.
   $permissions['use text format full_html'] = array(
     'name' => 'use text format full_html',
-    'roles' => array(
-      'authenticated user' => 'authenticated user',
-      'os2dagsorden' => 'os2dagsorden',
-    ),
+    'roles' => array(),
     'module' => 'filter',
   );
 
@@ -178,7 +221,8 @@ function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      'os2dagsorden admin' => 'os2dagsorden admin',
+      0 => 'administrator+',
+      1 => 'administrator++',
     ),
     'module' => 'system',
   );
