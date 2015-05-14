@@ -54,6 +54,7 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   return $node->nid;
 }
 
+
 /**
  * Adds the subid to the committee term, if this subid has not been added there before.
  * @access protected
@@ -111,41 +112,6 @@ function os2dagsorden_esdh_provider_find_sofd_meeting($committee, $meeting_start
       $found_meeting = node_load(array_shift($result['node'])->nid);
       return $found_meeting;
   }
-}
-
-/**
- * Processed the closed bullet point same way as the opened bullet point it processed (code is a bit simplified)
- *
- * @param node object $node the created bullet node
- * @param array       $item raw bullet information
- *
- * @return Object     $node updated bullet node
- */
-function os2dagsorden_esdh_provider_process_closed_bullet($node, $item){
-  
-  // Gather the bullets for the item.
-  if (isset($item['bullets']) && is_array($item['bullets'])) {
-    $bullet_nids = _os2web_esdh_provider_import_bullets($item['bullets']);
-    foreach ($bullet_nids as $nid) {
-      $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = $nid;
-    }
-  }
-  else {
-    $node->field_os2web_meetings_attach[LANGUAGE_NONE] = array();
-  }
-
-  // Gather enclosures.
-  foreach ($item['enclosures'] as $enclosure) {
-      if ($file = _os2web_esdh_provider_import_file($enclosure)) {
-        $node->field_os2web_meetings_enclosures[LANGUAGE_NONE][] = (array) $file;
-        $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = os2dagsorden_esdh_provider_process_enclosure($enclosure, $file);
-      }
-      else {
-        watchdog('acadre MM', 'There was an error importing file %uri ', array('%uri' => $enclosure['uri']), WATCHDOG_ERROR);
-      }
-  }
-
-  return $node;
 }
 
 /**
@@ -264,11 +230,8 @@ function os2dagsorden_esdh_provider_find_corresponding_bullet($title, $bullet_ni
  * @return mixed
  */
 function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity, $attachment_nids){
-  err_debug('=====here');
   foreach($attachment_nids as $attachment_nid){
-    err_debug('=====Starting to compare');
     $attachment = node_load($attachment_nid['target_id']);
-    err_debug('=======Comparing ' . $attachment->title . '[' . $attachment->nid . '] vs ' . $bullet_entity['title'] . ' result: ');
     if (strcasecmp($bullet_entity['title'], $attachment->title) == 0
       && strcasecmp($bullet_entity['body'], $attachment->field_os2web_meetings_bpa_body[$attachment->language][0]['value']) == 0){
       err_debug('Match');

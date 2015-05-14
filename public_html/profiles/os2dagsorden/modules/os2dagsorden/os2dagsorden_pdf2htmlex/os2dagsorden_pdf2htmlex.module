@@ -555,3 +555,21 @@ function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
           os2dagsorden_pdf2htmlex_schedule($fid, $nid);
     }
 }
+
+/**
+ * Hook to file delete, deletes the corresponding row in the table.
+ */
+function os2dagsorden_pdf2htmlex_file_delete($file) {
+  db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('fid', $file->fid)
+      ->execute();
+}
+
+/**
+ * Hook to node delete, deletes the corresponding row in the table.
+ */
+function os2dagsorden_pdf2htmlex_node_delete($node) {
+  db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('did', $node->nid)
+      ->execute();
+}
