@@ -260,7 +260,7 @@ function osdagsorden_esdh_provider_import_or_return_committee($sub_id, $name){
       if(!empty($parent_tids)){
       $tid = reset($parent_tids);
 
-      $term = array_pop(taxonomy_term_load($tid->tid));
+      $term = taxonomy_term_load($tid->tid);
   }
   }
   return $term;
