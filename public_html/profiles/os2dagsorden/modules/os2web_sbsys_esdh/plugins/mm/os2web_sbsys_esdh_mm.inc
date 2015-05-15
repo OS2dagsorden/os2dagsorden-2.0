@@ -106,6 +106,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
       $meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
+      $xml_id = $manifest->xpath("Agendas/Agenda/Meeting/@ID");
       $meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
       $meeting_name = (string) $meeting_name[0];
       $acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
@@ -120,12 +121,13 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $committee_name = (string) $committee_name[0];
       $meeting_name = $committee_name;
       $sys_id = (string) $sys_id[0][ID];
+      $xml_id = (string) $xml_id[0][ID];
       $meeting_public = (string) $meeting_public[0];
 
       switch (((string) $meeting_type[0])){
         case '0':
           $meeting_type = 'Kladde';
-          watchdog('SBsys MM', 'Ikke importeret: Møde %id %name har typen %type.', array('%id' => $sys_id, '%name' => $meeting_name, '%type' => $meeting_type), WATCHDOG_WARNING);
+          watchdog('SBsys MM', 'Ikke importeret: Møde %id %name har typen %type.', array('%id' => $xml_id, '%name' => $meeting_name, '%type' => $meeting_type), WATCHDOG_WARNING);
           return FALSE;
           break;
         case '1':
@@ -184,8 +186,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       }
 
       $meeting = array(
-        'system_id' => $sys_id,
-        'meeting_id' => $sys_id,
+        'system_id' => $xml_id,
+        'meeting_id' => $xml_id,
         'committee' => $meeting_name,
         'committee_name' => $committee_name,
         'committee_id' => $committee,
@@ -230,6 +232,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         $imported = _os2web_sbsys_esdh_mm_import_meeting_agenda($meeting, $meeting_agenda);
         if (is_array($imported)) {
           $imported['publish'] = TRUE;
+          $imported['agenda_access'] = "Lukket";//forcing agenda access to lukket, which indicates, that this agenda is allowed to import both closed and opened BP
+          $imported['meeting_sub_id'] = $sys_id;
           $meetings[] = $imported;
         }
       }
