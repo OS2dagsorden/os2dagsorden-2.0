@@ -290,10 +290,12 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       array('!id' => $PROCESSING_MEETING_ID, '!term_name' => $committee_term->name, '!tid' => $committee_term->tid), WATCHDOG_DEBUG);
 
     // location term
-    $location_term = _acadre_esdh_import_term($meeting['location'], 'os2web_meetings_tax_location');
-    $node->field_os2web_meetings_location[LANGUAGE_NONE][0]['tid'] = $location_term->tid;
-    watchdog('acadre MM', '[XML_ID: !id] Meetings location: !term_name (TID: !tid)',
-      array('!id' => $PROCESSING_MEETING_ID, '!term_name' => $location_term->name, '!tid' => $location_term->tid), WATCHDOG_DEBUG);
+    if ($meeting['location']) {
+      $location_term = _acadre_esdh_import_term($meeting['location'], 'os2web_meetings_tax_location');
+      $node->field_os2web_meetings_location[LANGUAGE_NONE][0]['tid'] = $location_term->tid;
+      watchdog('acadre MM', '[XML_ID: !id] Meetings location: !term_name (TID: !tid)',
+        array('!id' => $PROCESSING_MEETING_ID, '!term_name' => $location_term->name, '!tid' => $location_term->tid), WATCHDOG_DEBUG);
+    }
 
     //adding description
     if (!empty($meeting['full_doc'])){
