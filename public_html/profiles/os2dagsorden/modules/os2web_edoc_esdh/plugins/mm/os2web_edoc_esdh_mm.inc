@@ -525,7 +525,7 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
  * @return int|string
  */
 function _os2web_edoc_esdh_generate_meeting_id($meeting_date, $committee) {
-  $meeting_id = crc32($meeting_date . ' ' . $committee);//generated meeting_id
+  $meeting_id = sprintf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
   if ($meeting_id > 2147483647){
     $meeting_id = substr($meeting_id, 0,9);//mysql int out of range fix
   }
@@ -540,7 +540,7 @@ function _os2web_edoc_esdh_generate_meeting_id($meeting_date, $committee) {
  * @param $doc_id
  */
 function _os2web_edoc_esdh_generate_item_id($committee, $meeting_date, $doc_id) {
-  $item_id = crc32($committee . ' ' . $meeting_date . ' ' . $doc_id);
+  $item_id = sprintf("%u", crc32($committee . ' ' . $meeting_date . ' ' . $doc_id));
   if ($item_id > 2147483647){
     $item_id = substr($item_id, 0,9);//mysql int out of range fix
   }
@@ -554,7 +554,7 @@ function _os2web_edoc_esdh_generate_item_id($committee, $meeting_date, $doc_id) 
  * @return int|string
  */
 function _os2web_edoc_esdh_generate_committee_id($committee_name) {
-  $committee_id = crc32($committee_name);
+  $committee_id = sprintf("%u", crc32($committee_name));
   if ($committee_id > 2147483647){
     $committee_id = substr($committee_id, 0,9);//mysql int out of range fix
   }
