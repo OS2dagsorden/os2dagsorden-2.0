@@ -136,13 +136,6 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
 	  
 	// Collecting agenda items
 	$meeting_agendas_items = $meeting_agenda->xpath('MeetingAgendaItems'); //$manifest->xpath("/Meeting/MeetingAgendaTypes/MeetingAgendaType/MeetingAgendaItems");
-	
-	// Check if the committee is allowed to publish.
-	$publish_committee = array_map('trim', explode(',', variable_get('os2web_edoc_esdh_approved_committees', MM_DEFAULT_APPROVED)));
-	if ($committee == '' || !in_array($committee, $publish_committee)) {
-	  watchdog('eDoc MM', 'Ignored agenda from "%committee" .', array('%committee' => $committee));
-	  return FALSE;
-	}
 
 	// Fix dates.
 	$date_obj = date_create($meeting_date);
@@ -216,6 +209,13 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
  *   Meeting_struct array for an accepted import, else FALSE
  */
 function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
+  // Check if the committee is allowed to publish.
+  $publish_committee = array_map('trim', explode(',', variable_get('os2web_edoc_esdh_approved_committees', MM_DEFAULT_APPROVED)));
+  if ($meeting['committee'] == '' || !in_array($meeting['committee'], $publish_committee)) {
+    watchdog('eDoc MM', 'Ignored agenda from "%committee" .', array('%committee' => $meeting['committee']));
+    return FALSE;
+  }
+
   $meeting['items'] = array();
   $agenda = $meeting;
   // Only add the agenda if its PDF exists.
