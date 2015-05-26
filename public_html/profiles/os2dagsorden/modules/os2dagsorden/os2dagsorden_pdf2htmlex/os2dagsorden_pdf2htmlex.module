@@ -264,6 +264,7 @@ function os2dagsorden_pdf2htmlex_cron() {
  * @return page amount
  */
 function _os2dagsorden_pdf2htmlex_calc_page_amount($html){
+  ini_set('max_execution_time', 0);
   $doc = new DOMDocument();
   libxml_use_internal_errors(true);
   $doc->loadHTML($html);
