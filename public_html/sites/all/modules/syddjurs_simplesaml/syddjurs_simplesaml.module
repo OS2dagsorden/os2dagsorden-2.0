@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_user_login().
+ *
+ * Updates the user's LOOP account details.
+ */
+function syddjurs_simplesaml_user_login(&$edit, $account) {
+  $attributes = simplesamlphp_auth_get_attributes();
+  
+  if (!empty($attributes)) {
+    if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'])) {
+      $edit['field_first_name'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+    }
+    if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'])) {
+      $edit['field_last_name'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
+    }
+    if (isset($attributes['http://www.syddjurs.dk/claims/title'])) {
+      $edit['field_job_title'][LANGUAGE_NONE][0]['value'] =
+        $attributes['http://www.syddjurs.dk/claims/title'];
+    }
+    if (isset($attributes['http://www.syddjurs.dk/claims/physicalDeliveryOfficeName'])) {
+      $edit['field_location_place'][LANGUAGE_NONE][0]['value'] =
+        $attributes['http://www.syddjurs.dk/claims/physicalDeliveryOfficeName'];
+    }
+    user_save($account, $edit);
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function syddjurs_simplesaml_init() {
+  // Do not run this from CLI.
+  if (php_sapi_name() != 'cli') {
+    if (user_is_anonymous() && !in_array($_GET['q'], array('saml_login', 'user/logout', 'user/login'))) {
+      drupal_goto('saml_login', array('query' => array('ReturnTo' => url($_GET['q'], array('absolute' => TRUE)))));
+    }
+  }
+}
