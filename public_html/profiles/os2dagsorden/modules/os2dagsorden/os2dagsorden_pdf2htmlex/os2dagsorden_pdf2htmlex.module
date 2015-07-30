@@ -264,6 +264,7 @@ function os2dagsorden_pdf2htmlex_cron() {
  * @return page amount
  */
 function _os2dagsorden_pdf2htmlex_calc_page_amount($html){
+  ini_set('max_execution_time', 0);
   $doc = new DOMDocument();
   libxml_use_internal_errors(true);
   $doc->loadHTML($html);
@@ -554,4 +555,22 @@ function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
         foreach (array_keys($res['node']) as $nid)
           os2dagsorden_pdf2htmlex_schedule($fid, $nid);
     }
+}
+
+/**
+ * Hook to file delete, deletes the corresponding row in the table.
+ */
+function os2dagsorden_pdf2htmlex_file_delete($file) {
+  db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('fid', $file->fid)
+      ->execute();
+}
+
+/**
+ * Hook to node delete, deletes the corresponding row in the table.
+ */
+function os2dagsorden_pdf2htmlex_node_delete($node) {
+  db_delete('os2dagsorden_pdf2htmlex_files')
+      ->condition('did', $node->nid)
+      ->execute();
 }

@@ -675,6 +675,7 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
  * Todo, add docblock.
  */
 function _acadre_esdh_mm_improve_body_html($data) {
+  $data = _acadre_esdh_mm_remove_empty_tags($data);
   if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
     foreach ($uri[0] as $file) {
       $file = str_replace('"', '', $file);
@@ -705,10 +706,21 @@ function _acadre_esdh_mm_improve_body_html($data) {
       // Modify uri.
       $data = str_replace($file, $new_uri, $data);
     }
-  }
+  } 
   return $data;
 }
+function _acadre_esdh_mm_remove_empty_tags($data) {
+do
+{
+   $len1 = mb_strlen($data);
+   $data = preg_replace( '/(<(a|span)[^>]*>[\s|&nbsp;?]*<(\/a|\/span)>)/', ' ' ,$data);
+   $len2 = mb_strlen($data);
 
+} while ($len1 > 0 && $len2 > 0 && $len1 != $len2);
+
+return $data;
+
+}
 function _get_value_from_xml($xml_raw, $convert_to = 'string'){
   if ($convert_to == 'string')
     return trim((string) array_shift($xml_raw));
