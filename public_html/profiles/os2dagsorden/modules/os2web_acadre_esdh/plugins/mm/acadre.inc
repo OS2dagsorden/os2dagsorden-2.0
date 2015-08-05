@@ -692,10 +692,6 @@ function _acadre_esdh_mm_improve_body_html($data) {
       if (!is_file($dest_dir_realpath)) {
         mkdir($dest_dir_realpath);
       }
-      error_log("Jeg skal lave noget");
-      error_log($file_realpath);
-      error_log($dest_dir_realpath);
-      error_log($filename);
       copy($file_realpath, $dest_dir_realpath . '/' . $filename);
       $new_uri = file_create_url(implode('/', array(
         'public://',
