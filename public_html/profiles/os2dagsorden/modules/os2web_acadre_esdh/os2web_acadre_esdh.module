@@ -79,6 +79,13 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#options' => $options2 = array('true' => t('the location field'), 'false' => t('the address field')),
     '#description' => t('This decides from which field meeting address gets'),
   );
+  $form['os2web_mm']['os2web_acadre_description_field'] = array(
+    '#type' => 'radios',
+    '#title' => t('Get the comments for the meeting from'),
+    '#default_value' => variable_get('os2web_acadre_description_field', 'true'),
+    '#options' => $options2 = array('true' => t('the name field'), 'false' => t('the description field')),
+    '#description' => t('This decides from which field meeting comments gets'),
+  );
   
   $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
     '#type' => 'checkbox',
