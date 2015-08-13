@@ -419,7 +419,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
       $node->type = "os2web_meetings_bullet";
       $node->language = LANGUAGE_NONE;
       $node->uid = 1;
-      $node->title = mb_substr($item['title'], 0, 255);
+      $node->title = mb_substr($item['title'], 0, 200);
       node_object_prepare($node);
       $node->field_os2web_meetings_bul_case[LANGUAGE_NONE][0]['value'] = $item['case_nr'];
       $node->field_os2web_bullet_point_id[$node->language][0]['value'] = $item['sysid'];
@@ -503,7 +503,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
       $node->type = "os2web_meetings_bullet_attach";
       $node->language = LANGUAGE_NONE;
       $node->uid = 1;
-      $node->title = mb_substr($bullet['title'], 0, 254);
+      $node->title = mb_substr($bullet['title'], 0, 200);
       // Set some default values.
       node_object_prepare($node);
       // Let's add body field.
@@ -540,6 +540,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
  *   Drupal standard file object
  */
 function _os2web_esdh_provider_import_file($file_meta) {
+  global $PROCESSING_MEETING_ID, $PROCESSING_BP;
 
   // Since we need to run this often,
   // we reset the execution timer to avoid timeouts.
@@ -555,11 +556,12 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-
   if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
     $file_counter = 0;
     do {
-      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename(mb_substr($fname, 0, 145) . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+      watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Checking !file_counter and !uri_out:',
+        array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!file_counter' => $file_counter, '!uri_out' => $uri_out), WATCHDOG_DEBUG);
     } while (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out)));
   }
 
@@ -568,6 +570,8 @@ function _os2web_esdh_provider_import_file($file_meta) {
 
 
   err_debug('Start import file ' . $uri_out . ' ');
+watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Started importing file !uri and !title into !uri_out',
+      array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!uri' => $file_meta['uri'], '!title' => $fname, '!uri_out' => $uri_out), WATCHDOG_DEBUG);
 
   $uri = FALSE;
   if ($uri_tmp = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
@@ -884,10 +888,10 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   }
   $pi = pathinfo($filename);
   if (isset($pi['extension'])) {
-    return substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
+    return mb_substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
   }
   else {
-    return substr(trim($pi['filename']), 0, 160);
+    return mb_substr(trim($pi['filename']), 0, 160);
   }
 }
 

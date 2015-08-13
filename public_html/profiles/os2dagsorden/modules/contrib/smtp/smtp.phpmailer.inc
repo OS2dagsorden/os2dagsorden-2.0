@@ -465,7 +465,7 @@ class PHPMailer {
       if ($this->exceptions) {
         throw new phpmailerException(t('Invalid address') . ': ' . $address);
       }
-      echo t('Invalid address') . ': ' . $address;
+      //echo t('Invalid address') . ': ' . $address;
       return FALSE;
     }
     if ($kind != 'ReplyTo') {

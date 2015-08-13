@@ -260,6 +260,11 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   $xml_item['document_type'] = (string) $xml_item_document->PublishingType;
   $xml_item['agenda_type'] = (string) $meeting->AgendaType;
   $xml_item['documentid'] = (string) $xml_item_document['documentid'];
+  if (empty($xml_item['documentid']) || $xml_item['documentid'] == '') {
+    $pdf_name = split('.', $xml_item['pdf']);
+    $xml_item['documentid'] = $pdf_name[0];
+  }
+
   $xml_item['full_text'] = trim((string) $xml->FullText);
 
   if(variable_get('os2web_edoc_esdh_nl2br', TRUE)){
@@ -349,7 +354,10 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
          'is_bp_summary' => TRUE,
        );
       foreach ($xml_item_bullet->Attachment as $bullet_xml) {
-       $bullet_id = (string) $bullet_xml['attachmentid'];
+        $bullet_id = (string) $bullet_xml['attachmentid'];
+        if (empty($bullet_id)) {
+          $bullet_id = $xml_item['documentid'];
+        }
         $enclosure_item['filename_in'] = (string) $bullet_xml->PDFDocument;
         $enclosure_item['access'] = (string) $bullet_xml->PublishingType;
         if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] == 'SKAL PUBLICERES') {
