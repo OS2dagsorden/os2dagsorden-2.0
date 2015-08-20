@@ -56,9 +56,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   global $PROCESSING_MEETING_ID, $PROCESSING_MEETING_ACCESS;
   $PROCESSING_MEETING_ID = $meeting_id['id'];
 
+  $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
+  if ($nid) {
+    watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
+  }
+
   if (!os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime(drupal_realpath($meeting_id['uri']))) &&
     !os2web_esdh_provider_index_meeting_has_deleted_agendas($meeting_id['id'])) {
-    $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
     if ($nid) {
       watchdog('acadre MM', '[XML_ID: !id] Latest meeting version is already imported into nid: !nid. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_INFO);
     } else {
@@ -73,7 +77,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   $meetings = os2web_esdh_provider_invoke('mm', 'import_meeting', $meeting_id);
 
   $nids = array();
-  $nid = NULL;
 
   // Do an initially check on if there are any approved meetings.
   if (count($meetings) === 0) {
@@ -88,20 +91,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   $number_of_meetings = count($meetings);
   watchdog('acadre MM', '[XML_ID: !id] Number of agendas: !number', array('!id' => $PROCESSING_MEETING_ID, '!number' => $number_of_meetings), WATCHDOG_DEBUG);
   for ($i = 0; $i < $number_of_meetings; $i++) {
-    if (!$nid) {
-      // Run check to see if meeting is already imported.
-      // System ID is the same on all meetings.
-      $query = new EntityFieldQuery();
-      $result = $query->entityCondition('entity_type', 'node')
-        ->propertyCondition('type', 'os2web_meetings_meeting')
-        ->fieldCondition('field_os2web_meetings_system_id', 'value', $meetings[$i]['system_id'], '=')
-        ->execute();
-      if (isset($result['node'])) {
-        $nid = array_shift($result['node'])->nid;
-        watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
-      }
-    }
-
     os2web_esdh_provider_index_meeting($nid, $meeting_id, $meetings[$i]);
 
     if ($meetings[$i]['publish'] === FALSE) {
@@ -128,9 +117,9 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   // the existing should be unpublished.
   if ($nid && count($meetings) === 0) {
     // Meeting needs to be unpublished.
-    watchdog('acadre MM', '[XML_ID: !id] Starting unpublishing of nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
+    watchdog('acadre MM', '[XML_ID: !id] Starting deleting node with nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
     node_delete($nid);
-    watchdog('acadre MM', '[XML_ID: !id] Unpublished !nid .', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_NOTICE);
+    watchdog('acadre MM', '[XML_ID: !id] Deleted node nid: !nid .', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_NOTICE);
     lock_release(__FUNCTION__ . $meeting_id['id']);
     watchdog('acadre MM', '[XML_ID: !id] Finished meeting import', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_NOTICE);
     return;
