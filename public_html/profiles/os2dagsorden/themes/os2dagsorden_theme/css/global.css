@@ -1808,6 +1808,7 @@ a.annotator-wrapper {
 
 .select-committee {
     float: left;
+		min-width: 250px;
 }
 .available_committee {
     float: right;

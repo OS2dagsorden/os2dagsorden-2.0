@@ -22,6 +22,11 @@ function os2web_pdf_conversion_manager_menu() {
         'access arguments' => array('administer os2web'),
         'type' => MENU_CALLBACK,
     );
+    $items['os2web/pdf_conversion_manager/remove_outdated'] = array(
+        'page callback' => 'os2web_pdf_conversion_manager_remove_outdated',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_CALLBACK,
+    );
     $items['admin/config/os2web/pdf_converter'] = array(
         'title' => 'OS2Web PDF Converter',
         'access arguments' => array('administer os2web'),
@@ -37,6 +42,28 @@ function os2web_pdf_conversion_manager_file_manager() {
     global $debug_info;
 
     os2web_pdf_conversion_manager_cron();
+
+    drupal_goto('admin/config/os2web/pdf_converter');
+}
+
+function os2web_pdf_conversion_manager_remove_outdated() {
+    $result = db_select('os2web_pdf_conversion_manager_files', 'c')
+        ->fields('c')
+        ->condition('status', 'Outdated')
+        ->execute();
+
+    while($record = $result->fetchAssoc()) {
+        drupal_set_message(print_r(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR) . '/' . $record['tmp_filename'],1));
+            unlink(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR) . '/' . $record['tmp_filename']);
+    }
+
+    db_delete('os2web_pdf_conversion_manager_files')
+        ->condition('status', 'Outdated')
+        ->execute();
+
+    drupal_set_message('OS2Web PDF converter has successfully removed outdated items');
+
+    drupal_goto('admin/config/os2web/pdf_converter');
 }
 
 function os2web_pdf_convertion_manager_setting_page(){
@@ -108,6 +135,9 @@ function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
     } 
     $form['os2dagsorden_file_import'][] = array(
         '#markup' => '<div><a href="/os2web/run_file_manager">Run PDF converter</a></div>',
+    );
+    $form['os2dagsorden_file_import'][] = array(
+        '#markup' => '<div><a href="/os2web/pdf_conversion_manager/remove_outdated">Remove all outdated</a></div>',
     );
 
     return system_settings_form($form);
@@ -237,7 +267,14 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
        unlink(drupal_realpath(variable_get('os2web_convertion_dir')) . "/" . $file_arr['pdf']);
        unlink(drupal_realpath(variable_get('os2web_convertion_dir')) . "/" . $file_arr['original']);
      }
-    } 
+    } else {
+        db_update('os2web_pdf_conversion_manager_files')
+        ->fields(array(
+          'status' => 'Outdated',
+          'message' => 'Could not copy file to destination directory'))
+        ->condition('fid', $d_file['fid'])
+        ->execute();
+    }
   }
  }
 }

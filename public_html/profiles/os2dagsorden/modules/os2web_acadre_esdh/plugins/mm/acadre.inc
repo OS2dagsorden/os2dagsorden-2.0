@@ -200,6 +200,13 @@ function _os2web_acadre_esdh_import_meeting($info) {
       watchdog('acadre MM', 'Ignored agenda from %committee (%committee_id).', array('%committee' => $committee, '%committee_id' =>$committee_id));
       return FALSE;
     }
+    
+    if (variable_get('os2web_acadre_description_field', 'true') === 'true')
+      $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']"));
+    else
+      $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='description']"));
+
+    
 
     $meeting = array(
       'title' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='name']")),
@@ -209,7 +216,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'agenda_access' => $info['access'],
       'publication_id' => _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='sysid']")),
       'creation_date' => strtotime(_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='producedate']"))),
-      'description' => _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
+      'description' =>  $description,//_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
       'meeting_date_start' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='date']")),
       'meeting_date_finish' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='finish']")),
       'committee' => $committee,
@@ -675,6 +682,7 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
  * Todo, add docblock.
  */
 function _acadre_esdh_mm_improve_body_html($data) {
+  $data = _acadre_esdh_mm_remove_empty_tags($data);
   if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
     foreach ($uri[0] as $file) {
       $file = str_replace('"', '', $file);
@@ -691,10 +699,6 @@ function _acadre_esdh_mm_improve_body_html($data) {
       if (!is_file($dest_dir_realpath)) {
         mkdir($dest_dir_realpath);
       }
-      error_log("Jeg skal lave noget");
-      error_log($file_realpath);
-      error_log($dest_dir_realpath);
-      error_log($filename);
       copy($file_realpath, $dest_dir_realpath . '/' . $filename);
       $new_uri = file_create_url(implode('/', array(
         'public://',
@@ -705,10 +709,21 @@ function _acadre_esdh_mm_improve_body_html($data) {
       // Modify uri.
       $data = str_replace($file, $new_uri, $data);
     }
-  }
+  } 
   return $data;
 }
+function _acadre_esdh_mm_remove_empty_tags($data) {
+do
+{
+   $len1 = mb_strlen($data);
+   $data = preg_replace( '/(<(a|span)[^>]*>[\s|&nbsp;?]*<(\/a|\/span)>)/', ' ' ,$data);
+   $len2 = mb_strlen($data);
 
+} while ($len1 > 0 && $len2 > 0 && $len1 != $len2);
+
+return $data;
+
+}
 function _get_value_from_xml($xml_raw, $convert_to = 'string'){
   if ($convert_to == 'string')
     return trim((string) array_shift($xml_raw));

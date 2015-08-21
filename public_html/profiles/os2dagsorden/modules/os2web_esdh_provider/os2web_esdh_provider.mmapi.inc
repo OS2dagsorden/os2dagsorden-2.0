@@ -56,9 +56,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   global $PROCESSING_MEETING_ID, $PROCESSING_MEETING_ACCESS;
   $PROCESSING_MEETING_ID = $meeting_id['id'];
 
+  $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
+  if ($nid) {
+    watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
+  }
+
   if (!os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime(drupal_realpath($meeting_id['uri']))) &&
     !os2web_esdh_provider_index_meeting_has_deleted_agendas($meeting_id['id'])) {
-    $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
     if ($nid) {
       watchdog('acadre MM', '[XML_ID: !id] Latest meeting version is already imported into nid: !nid. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_INFO);
     } else {
@@ -73,7 +77,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   $meetings = os2web_esdh_provider_invoke('mm', 'import_meeting', $meeting_id);
 
   $nids = array();
-  $nid = NULL;
 
   // Do an initially check on if there are any approved meetings.
   if (count($meetings) === 0) {
@@ -88,20 +91,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   $number_of_meetings = count($meetings);
   watchdog('acadre MM', '[XML_ID: !id] Number of agendas: !number', array('!id' => $PROCESSING_MEETING_ID, '!number' => $number_of_meetings), WATCHDOG_DEBUG);
   for ($i = 0; $i < $number_of_meetings; $i++) {
-    if (!$nid) {
-      // Run check to see if meeting is already imported.
-      // System ID is the same on all meetings.
-      $query = new EntityFieldQuery();
-      $result = $query->entityCondition('entity_type', 'node')
-        ->propertyCondition('type', 'os2web_meetings_meeting')
-        ->fieldCondition('field_os2web_meetings_system_id', 'value', $meetings[$i]['system_id'], '=')
-        ->execute();
-      if (isset($result['node'])) {
-        $nid = array_shift($result['node'])->nid;
-        watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
-      }
-    }
-
     os2web_esdh_provider_index_meeting($nid, $meeting_id, $meetings[$i]);
 
     if ($meetings[$i]['publish'] === FALSE) {
@@ -128,9 +117,9 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   // the existing should be unpublished.
   if ($nid && count($meetings) === 0) {
     // Meeting needs to be unpublished.
-    watchdog('acadre MM', '[XML_ID: !id] Starting unpublishing of nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
+    watchdog('acadre MM', '[XML_ID: !id] Starting deleting node with nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
     node_delete($nid);
-    watchdog('acadre MM', '[XML_ID: !id] Unpublished !nid .', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_NOTICE);
+    watchdog('acadre MM', '[XML_ID: !id] Deleted node nid: !nid .', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_NOTICE);
     lock_release(__FUNCTION__ . $meeting_id['id']);
     watchdog('acadre MM', '[XML_ID: !id] Finished meeting import', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_NOTICE);
     return;
@@ -419,7 +408,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
       $node->type = "os2web_meetings_bullet";
       $node->language = LANGUAGE_NONE;
       $node->uid = 1;
-      $node->title = mb_substr($item['title'], 0, 255);
+      $node->title = mb_substr($item['title'], 0, 200);
       node_object_prepare($node);
       $node->field_os2web_meetings_bul_case[LANGUAGE_NONE][0]['value'] = $item['case_nr'];
       $node->field_os2web_bullet_point_id[$node->language][0]['value'] = $item['sysid'];
@@ -503,7 +492,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
       $node->type = "os2web_meetings_bullet_attach";
       $node->language = LANGUAGE_NONE;
       $node->uid = 1;
-      $node->title = mb_substr($bullet['title'], 0, 254);
+      $node->title = mb_substr($bullet['title'], 0, 200);
       // Set some default values.
       node_object_prepare($node);
       // Let's add body field.
@@ -540,6 +529,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
  *   Drupal standard file object
  */
 function _os2web_esdh_provider_import_file($file_meta) {
+  global $PROCESSING_MEETING_ID, $PROCESSING_BP;
 
   // Since we need to run this often,
   // we reset the execution timer to avoid timeouts.
@@ -555,11 +545,12 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-
   if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
     $file_counter = 0;
     do {
-      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+      $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename(mb_substr($fname, 0, 145) . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
+      watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Checking !file_counter and !uri_out:',
+        array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!file_counter' => $file_counter, '!uri_out' => $uri_out), WATCHDOG_DEBUG);
     } while (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out)));
   }
 
@@ -568,6 +559,8 @@ function _os2web_esdh_provider_import_file($file_meta) {
 
 
   err_debug('Start import file ' . $uri_out . ' ');
+watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Started importing file !uri and !title into !uri_out',
+      array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!uri' => $file_meta['uri'], '!title' => $fname, '!uri_out' => $uri_out), WATCHDOG_DEBUG);
 
   $uri = FALSE;
   if ($uri_tmp = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
@@ -884,10 +877,10 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   }
   $pi = pathinfo($filename);
   if (isset($pi['extension'])) {
-    return substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
+    return mb_substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
   }
   else {
-    return substr(trim($pi['filename']), 0, 160);
+    return mb_substr(trim($pi['filename']), 0, 160);
   }
 }
 
