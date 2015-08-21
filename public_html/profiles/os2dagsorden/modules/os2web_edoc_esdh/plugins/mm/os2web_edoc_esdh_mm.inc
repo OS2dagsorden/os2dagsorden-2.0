@@ -182,7 +182,6 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
 	  $imported = _os2web_edoc_esdh_mm_import_meeting_agenda($meeting, $meeting_agenda_item);
 	  if (is_array($imported)) {
 	    $imported['publish'] = TRUE;
-        $imported['agenda_access'] = "Lukket";//forcing agenda access to lukket, which indicates, that this agenda is allowed to import both closed and opened BP
 	    $meetings[] = $imported;
 	  }
 	}
