@@ -51,6 +51,18 @@ function os2dagsorden_content_modify_menu() {
     ),
   );
 
+  $items['users-batch-simple-edit/%'] = array(
+    'title' => 'Kontoindstillinger',
+    'page callback' => '_os2dagsorden_content_modify_user_batch_edit_page',
+    'page arguments' => array(1),
+    'access arguments' => array('administer users'),
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'menu-sidepane-menu',
+    'options' => array(
+      'attributes' => array('id' => 'menu-simple-user-edit'),
+    ),
+  );
+
   return $items;
 }
 
@@ -134,6 +146,71 @@ function _os2dagsorden_content_modify_user_edit_page($uid = null){
 }
 
 /**
+ * Callback for users batch edit page.
+ *
+ *
+ * @param $uids CSV of the user ID's (uid) that will be affected by this batch process
+ *
+ * @return form
+ */
+function _os2dagsorden_content_modify_user_batch_edit_page($uids){
+  return drupal_get_form('os2dagsorden_content_modify_user_batch_edit_form', $uids);
+}
+
+function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $uids) {
+  $form['uids'] = array(
+    '#type' => 'value',
+    '#value' => $uids,
+  );
+
+  $form[] = array(
+    '#markup' => '<div class="node clearfix">',
+  );
+
+  $form[] = array(
+    '#markup' => '<div class="form-item"><b>' . t('Batch editing users') . '</b>',
+  );
+  foreach (explode(',', $uids) as $uid) {
+    $batchEditUser = user_load($uid);
+    if ($batchEditUser) {
+      $form[] = array(
+        '#markup' => '<li>' . $batchEditUser->name,
+      );
+    }
+  }
+  $form[] = array(
+    '#markup' => '</div>',
+  );
+
+  if (!os2dagsorden_access_helper_is_touch()){ //TODO: change!
+    //render drag and drop functionality
+    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, explode(',', $uids));
+  } else {
+    //fallback to default controls
+    _os2dagsorden_content_modify_render_default_controls($form, explode(',', $uids));
+  }
+
+  $form[] = array(
+    '#markup' => '<div><i>' . t('Note that you can only ADD the new committees, the exisiting committees will no be removed'). '</i></div>',
+  );
+
+  $form['save_user'] = array(
+    '#type' => 'submit',
+    '#attributes' => array(
+      'class' => array('form-save-submit'),
+    ),
+    '#value' => t('Save User'),
+    '#submit' => array('os2dagsorden_content_modify_user_batch_submit'),
+  );
+
+  $form[] = array(
+    '#markup' => '</div>',
+  );
+
+  return $form;
+}
+
+/**
  * Generates user edit form and (if uid is not null) loads and sets the parameters.
  * Depending on the user rights form is either limited (with no right) of full (with administer os2web right).
  *
@@ -190,7 +267,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
   $form['user_can_send_closed_bp'] = array(
     '#access' => user_access('administer users'), 
     '#type' => 'radios',    
-    '#title' => "<b>" .t('User can send to friend closed bullet points') . "<b>" ,
+    '#title' => "<b>" .t('User can send to friend closed bullet points') . "</b>" ,
     '#default_value' => false,
     '#options' => array(
       true => t('Yes'),
@@ -215,10 +292,10 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
 
   if (!os2dagsorden_access_helper_is_touch()){
     //render drag and drop functionality
-    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, $uid);
+    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, array($uid));
   } else {
     //fallback to default controls
-    _os2dagsorden_content_modify_render_default_controls($form, $uid);
+    _os2dagsorden_content_modify_render_default_controls($form, array($uid));
   }
 
   //loading common user fields
@@ -235,17 +312,13 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid){
     '#submit' => array('os2dagsorden_content_modify_user_submit'),
   );
   $form[] = array(
-      '#markup' => '</div>',
-  );
-
-  $form[] = array(
-      '#markup' => '</div>',
+      '#markup' => '</div>',//<div class="node clearfix">
   );
 
   return $form;
 }
 
-function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid){
+function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids){
   $form[] = array(
     '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
   );
@@ -309,98 +382,133 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
    '#markup' => '</div >',//<div class="select-committee">
   );
 
-  $all_user_committee = array();
-  if ($uid){
-    $user = user_load($uid);
+  $shared_all_user_committee = array();
 
+  if ($uids){
     $com_terms = os2dagsorden_settings_get_active_committees();
     $com_select = array();
     foreach ($com_terms as $com_term) {
       $com_select[$com_term->tid] = $com_term->name;
     }
-  
-    $content = "<ul id='member_of' class='droptrue'>";
-    if (field_get_items('user', $user, 'field_user_committee')) {
-      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
-      $selection = array();
-      foreach ($user_member_of_field as $member_of) {
-	if (isset($com_select[$member_of['tid']])) {
-	  $content .= "<li id='{$member_of['tid']}' class='ui-state-default'>{$com_select[$member_of['tid']]}</li>";
-	  $selection[] = $member_of['tid'];
-	  $all_user_committee[] = $member_of['tid'];          
-	} 
-      }
-      $form['member_of_hidden']['#value'] = implode(',', $selection);
-    }
-    $form['member_of_div']['#markup'] = $content .'</ul>';
-    
-    $content = "<ul id='follows' class='droptrue'>";
-    if (field_get_items('user', $user, 'field_follows_committee')) {
-      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
-      $selection = array();
-      
-      foreach ($user_follows_field as $follows) {
-	if (isset($com_select[$follows['tid']])) {
-	  $content .= "<li id='{$follows['tid']}' class='ui-state-default'>{$com_select[$follows['tid']]}</li>";
-	  $selection[] = $follows['tid'];
-	  $all_user_committee[] = $follows['tid'];          
-	} 
-      }
-      $form['follows_hidden']['#value'] = implode(',', $selection);
-    }
-    $form['follows_div']['#markup'] = $content .'</ul>';
-    
-    $content = "<ul id='follows_plus' class='droptrue'>";
-    if (field_get_items('user', $user, 'field_follows_committee_plus')) {
-      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
-      $selection = array();
-  
-      foreach ($user_follows_plus_field as $follows_plus) {
-	if (isset($com_select[$follows_plus['tid']])) { 
-	  $selection[] = $follows_plus['tid'];
-	  $content .= "<li id='{$follows_plus['tid']}' class='ui-state-default'>{$com_select[$follows_plus['tid']]}</li>";
-	  $all_user_committee[] = $follows_plus['tid'];
-	} 
-      }
-      $form['follows_plus_hidden']['#value'] = implode(',', $selection);
-    }
-    
-    $form['follows_plus_div']['#markup'] = $content .'</ul>';
-    
-    $content = "<ul id='follows_plus_plus' class='droptrue'>";
-    if (field_get_items('user', $user, 'field_follows_committee_pp')) {
-      $user_follows_plus_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
-      $selection = array();
-      foreach ($user_follows_plus_plus_field as $follows_plus_plus) {
-	if (isset($com_select[$follows_plus_plus['tid']])) {  
-	  $selection[] = $follows_plus_plus['tid'];
-	  $content .= "<li id='{$follows_plus_plus['tid']}' class='ui-state-default'>{$com_select[$follows_plus_plus['tid']]}</li>";
-	  $all_user_committee[] = $follows_plus_plus['tid'];
-	}
-      }
-      $form['follows_plus_plus_hidden']['#value'] = implode(',', $selection);
-    }
-    $form['follows_plus_plus_div']['#markup'] = $content .'</ul>';
-  }
 
-  $com_list = "<ul id='available_committee' class='droptrue'>"; 
-  foreach ($com_select as $tid=>$com_term) {
-    if (!in_array($tid, $all_user_committee))
-    $com_list  .= "<li id='{$tid}' class='ui-state-default'>{$com_term}</li>"; 
+    $shared_member_of = array();
+    $shared_follows = array();
+    $shared_follows_plus = array();
+    $shared_follows_plus_plus = array();
+    foreach ($uids as $uid) {
+      $user = user_load($uid);
+
+      //member of
+      if (field_get_items('user', $user, 'field_user_committee')) {
+        $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+        foreach ($user_member_of_field as $member_of) {
+          if (isset($com_select[$member_of['tid']])) {
+            $shared_member_of[$member_of['tid']]++;
+            $shared_all_user_committee[$member_of['tid']]++;
+          }
+        }
+      }
+
+      //follows
+      if (field_get_items('user', $user, 'field_follows_committee')) {
+        $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+        foreach ($user_follows_field as $follows) {
+          if (isset($com_select[$follows['tid']])) {
+            $shared_follows[$follows['tid']]++;
+            $shared_all_user_committee[$follows['tid']]++;
+          }
+        }
+      }
+
+      //follows plus
+      if (field_get_items('user', $user, 'field_follows_committee_plus')) {
+        $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+        foreach ($user_follows_plus_field as $follows_plus) {
+          if (isset($com_select[$follows_plus['tid']])) {
+            $shared_follows_plus[$follows_plus['tid']]++;
+            $shared_all_user_committee[$follows_plus['tid']]++;
+          }
+        }
+      }
+
+      //follows plus plus
+      if (field_get_items('user', $user, 'field_follows_committee_pp')) {
+        $user_follows_plus_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+        foreach ($user_follows_plus_plus_field as $follows_plus_plus) {
+          if (isset($com_select[$follows_plus_plus['tid']])) {
+            $shared_follows_plus_plus[$follows_plus_plus['tid']]++;
+            $shared_all_user_committee[$follows_plus_plus['tid']]++;
+          }
+        }
+      }
+    }
+
+    //printing member of
+    $form['member_of_hidden']['#value'] = implode(',', array_keys($shared_member_of));
+    $content = "<ul id='member_of' class='droptrue'>";
+    foreach ($shared_member_of as $tid => $count) {
+      if ($count == count($uids)) {
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+      }
+    }
+    $content .= '</ul>';
+    $form['member_of_div']['#markup'] = $content;
+
+    //printing follows
+    $form['follows_hidden']['#value'] = implode(',', array_keys($shared_follows));
+    $content = "<ul id='follows' class='droptrue'>";
+    foreach ($shared_follows as $tid => $count) {
+      if ($count == count($uids)) {
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+      }
+    }
+    $content .= '</ul>';
+    $form['follows_div']['#markup'] = $content;
+
+    //printing follows plus
+    $form['follows_plus_hidden']['#value'] = implode(',', array_keys($shared_follows_plus));
+    $content = "<ul id='follows_plus' class='droptrue'>";
+    foreach ($shared_follows_plus as $tid => $count) {
+      if ($count == count($uids)) {
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+      }
+    }
+    $content .= '</ul>';
+    $form['follows_plus_div']['#markup'] = $content;
+
+    //printing follows plus plus
+    $form['follows_plus_plus_hidden']['#value'] = implode(',', array_keys($shared_follows_plus_plus));
+    $content = "<ul id='follows_plus_plus' class='droptrue'>";
+    foreach ($shared_follows_plus_plus as $tid => $count) {
+      if ($count == count($uids)) {
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+      }
+    }
+    $content .= '</ul>';
+    $form['follows_plus_plus_div']['#markup'] = $content;
+
+    //printing available committees
+    $com_list = "<ul id='available_committee' class='droptrue'>";
+    foreach ($com_select as $tid=>$com_term) {
+      //if the committee actually available?
+      if ($shared_all_user_committee[$tid] < count($uids)) {
+        $com_list  .= "<li id='{$tid}' class='ui-state-default'>{$com_term}</li>";
+      }
+    }
+    $com_list .= "</ul>";
+    $form['available_committee'] = array(
+      '#type' => 'item' ,
+      '#prefix' => "<div class='available_committee'><label>" . t('Available committee') . ":</label>",
+      '#markup' => $com_list,
+      '#suffix' => '</div>'
+    );
+    $form[] = array(
+      '#markup' => "<div style='clear:both'></div>",
+    );
   }
-  $com_list .= "</ul>";
-  $form['available_committee'] = array(
-    '#type' => 'item' ,
-    '#prefix' => "<div class='available_committee'><label>" . t('Available committee') . ":</label>",       
-    '#markup' => $com_list,
-    '#suffix' => '</div>'
-  ); 
-  $form[] = array(
-    '#markup' => "<div style='clear:both'>",
-  );
 }
 
-function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
+function _os2dagsorden_content_modify_render_default_controls(&$form, $uids){
   $com_terms = os2dagsorden_settings_get_active_committees();
   $com_select = array();
 
@@ -415,8 +523,6 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
       '#options' => $com_select,
       '#multiple' => TRUE,
       '#size' => 10,
-      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      //The committees user is member of are presented in the right side pane.'),
   );
     
 
@@ -426,8 +532,6 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
       '#options' => $com_select,
       '#multiple' => TRUE,
       '#size' => 10,
-      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      //The committees user follows are presented in the right side pane.'),
   );
   
   $form['follows_plus'] = array(
@@ -437,8 +541,6 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
       '#options' => $com_select,
       '#multiple' => TRUE,
       '#size' => 10,
-      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      //The committees user follows+ are presented in the right side pane.'),
   );
     
   $form['follows_plus_plus'] = array(
@@ -448,47 +550,77 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uid){
       '#options' => $com_select,
       '#multiple' => TRUE,
       '#size' => 10,
-      //'#description' => t('For multiple selection hold <b>CTRL</b>.<br/>
-      //The committees user follows+ are presented in the right side pane.'),
   );
 
-  if ($uid){
-    $user = user_load($uid);
+  if ($uids) {
+    $shared_member_of = array();
+    $shared_follows = array();
+    $shared_follows_plus = array();
+    $shared_follows_plus_plus = array();
 
-    if (field_get_items('user', $user, 'field_user_committee')){
-      $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
-      $selection = array();
-      foreach ($user_member_of_field as $member_of){
-	$selection[] = $member_of['tid'];
+    //gathering shared committees
+    foreach ($uids as $uid) {
+      $user = user_load($uid);
+
+      //member of
+      if (field_get_items('user', $user, 'field_user_committee')) {
+        $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+        foreach ($user_member_of_field as $member_of){
+          $shared_member_of[$member_of['tid']]++;
+        }
       }
-      $form['member_of']['#default_value'] = $selection;
-    }
-  
-    if (field_get_items('user', $user, 'field_follows_committee')){
-      $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
-      $selection = array();
-      foreach ($user_follows_field as $follows){
-	$selection[] = $follows['tid'];
+
+      //follows
+      if (field_get_items('user', $user, 'field_follows_committee')) {
+        $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+        foreach ($user_follows_field as $follows){
+          $shared_follows[$follows['tid']]++;
+        }
       }
-      $form['follows']['#default_value'] = $selection;
-    }
-  
-    if (field_get_items('user', $user, 'field_follows_committee_plus')){
-      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
-      $selection = array();
-      foreach ($user_follows_plus_field as $follows_plus){
-	$selection[] = $follows_plus['tid'];
+
+      //follows plus
+      if (field_get_items('user', $user, 'field_follows_committee_plus')) {
+        $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+        foreach ($user_follows_plus_field as $follows_plus){
+          $shared_follows_plus[$follows_plus['tid']]++;
+        }
       }
-      $form['follows_plus']['#default_value'] = $selection;
-    }
-    if (field_get_items('user', $user, 'field_follows_committee_pp')){
-      $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
-      $selection = array();
-      foreach ($user_follows_plus_field as $follows_plus){
-	$selection[] = $follows_plus['tid'];
+
+      //follows plus plus
+      if (field_get_items('user', $user, 'field_follows_committee_pp')){
+        $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+        foreach ($user_follows_plus_field as $follows_plus){
+          $shared_follows_plus_plus[$follows_plus['tid']]++;
+        }
       }
-      $form['follows_plus_plus']['#default_value'] = $selection;
     }
+
+    //filling the default values
+    $size = count($uids);
+    foreach ($shared_member_of as $k => $t) {
+      if ($t != $size) {
+        unset($shared_member_of[$k]);
+      }
+    }
+    foreach ($shared_follows as $k => $t) {
+      if ($t != $size) {
+        unset($shared_follows[$k]);
+      }
+    }
+    foreach ($shared_follows_plus as $k => $t) {
+      if ($t != $size) {
+        unset($shared_follows_plus[$k]);
+      }
+    }
+    foreach ($shared_follows_plus_plus as $k => $t) {
+      if ($t != $size) {
+        unset($shared_follows_plus_plus[$k]);
+      }
+    }
+    $form['member_of']['#default_value'] = array_keys($shared_member_of);
+    $form['follows']['#default_value'] = array_keys($shared_follows);
+    $form['follows_plus']['#default_value'] = array_keys($shared_follows_plus);
+    $form['follows_plus_plus']['#default_value'] = array_keys($shared_follows_plus_plus);
   }
 }
 
@@ -571,65 +703,64 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
          
   //unsetting follows committees
   $user->field_follows_committee['und'] = array();
-  if ($follows){
-    foreach ($follows as $tid){  
-    if (!empty($tid))       
-     $user->field_follows_committee['und'][]['tid'] = $tid;
+  if ($follows) {
+    foreach ($follows as $tid) {
+      if (!empty($tid))
+        $user->field_follows_committee['und'][]['tid'] = $tid;
     }
   }
 
   //unsetting calendar preferences
   $user->field_user_meetings_category['und'] = array();
-  if (isset($calendar_pref)){
-  foreach ($calendar_pref as $cal_pref){
-    if (isset($forbidden_cat)){
-      if (!in_array($cal_pref, $forbidden_cat)) 
-        $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
-      }
-    else  
-    $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
-  }
+  if (isset($calendar_pref)) {
+    foreach ($calendar_pref as $cal_pref) {
+      if (isset($forbidden_cat)){
+        if (!in_array($cal_pref, $forbidden_cat))
+          $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+        }
+      else
+      $user->field_user_meetings_category['und'][]['value'] = $cal_pref;
+    }
   } 
 
   if (user_access('administer users')){//only for the full form submit
     //unsetting positions
     $user->field_user_positions['und'] = array();
-    if ($user_pos){
-      foreach ($user_pos as $tid){
-	$user->field_user_positions['und'][]['tid'] = $tid;
+    if ($user_pos) {
+      foreach ($user_pos as $tid) {
+	    $user->field_user_positions['und'][]['tid'] = $tid;
       }
     }
     
     //unsetting calendar preferences
-  $user->field_user_forrbidden_categories['und'] = array();
-  foreach ($forbidden_cat as $f_cat){
-    $user->field_user_forrbidden_categories['und'][]['value'] = $f_cat;
-  }
+    $user->field_user_forrbidden_categories['und'] = array();
+    foreach ($forbidden_cat as $f_cat){
+      $user->field_user_forrbidden_categories['und'][]['value'] = $f_cat;
+    }
     //unsetting committees
     $user->field_user_committee['und'] = array();
-    if ($member_of){
-        
-      foreach ($member_of as $tid){
+    if ($member_of) {
+      foreach ($member_of as $tid) {
         if (!empty($tid))      
-	$user->field_user_committee['und'][]['tid'] = $tid;
+	      $user->field_user_committee['und'][]['tid'] = $tid;
       }
     }
 
     //unsetting follows plus committees
     $user->field_follows_committee_plus['und'] = array();
-    if ($follows_plus){
-      foreach ($follows_plus as $tid){
-       if (!empty($tid))   
-	 $user->field_follows_committee_plus['und'][]['tid'] = $tid;
+    if ($follows_plus) {
+      foreach ($follows_plus as $tid) {
+        if (!empty($tid))
+	      $user->field_follows_committee_plus['und'][]['tid'] = $tid;
       }
     }
     
     //unsetting follows ++ committees
     $user->field_follows_committee_pp['und'] = array();
-    if ($follows_plus_plus){
-      foreach ($follows_plus_plus as $tid){
+    if ($follows_plus_plus) {
+      foreach ($follows_plus_plus as $tid) {
         if (!empty($tid))      
-	 $user->field_follows_committee_pp['und'][]['tid'] = $tid;
+	      $user->field_follows_committee_pp['und'][]['tid'] = $tid;
       }
     }
 
@@ -675,4 +806,74 @@ function os2dagsorden_content_modify_user_submit($form, $form_state){
 
   user_save($user);
   drupal_set_message(t('Dine ændringer er blevet gemt'));
+}
+
+/**
+ * Submit for user bach form. Updates user profiles.
+ *
+ * @param $form       mixed the form
+ * @param $form_state mixed state of the form
+ *
+ * @return none
+ */
+function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
+  $input = $form_state['input'];
+
+  //input extraction
+  extract($input);
+  if (!os2dagsorden_access_helper_is_touch()){
+    $follows = explode(',', $follows_hidden);
+    $member_of = explode(',', $member_of_hidden);
+    $follows_plus = explode(',', $follows_plus_hidden);
+    $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
+  }
+
+  $uids = explode(',', $form_state['values']['uids']);
+  foreach ($uids as $uid) {
+    $user = user_load($uid);
+
+    //user committees
+    if ($member_of) {
+      $existing_tids = os2dagsorden_access_helper_get_user_member_of_committees($uid);
+      foreach ($member_of as $tid) {
+        if (!empty($tid) && !in_array($tid, $existing_tids)) {
+          $user->field_user_committee['und'][]['tid'] = $tid;
+        }
+      }
+    }
+
+    //user follows committees
+    if ($follows) {
+      $existing_tids = os2dagsorden_access_helper_get_user_follow_committees($uid);
+      foreach ($follows as $tid) {
+        if (!empty($tid) && !in_array($tid, $existing_tids)) {
+          $user->field_follows_committee['und'][]['tid'] = $tid;
+        }
+      }
+    }
+
+    //user follows plus committees
+    if ($follows_plus) {
+      $existing_tids = os2dagsorden_access_helper_get_user_follow_committees($uid);
+      foreach ($follows_plus as $tid) {
+        if (!empty($tid) && !in_array($tid, $existing_tids)) {
+          $user->field_follows_committee_plus['und'][]['tid'] = $tid;
+        }
+      }
+    }
+
+    //user follows ++ committees
+    if ($follows_plus_plus) {
+      $existing_tids = os2dagsorden_access_helper_get_user_follow_committees($uid);
+      foreach ($follows_plus_plus as $tid) {
+        if (!empty($tid) && !in_array($tid, $existing_tids)) {
+          $user->field_follows_committee_pp['und'][]['tid'] = $tid;
+        }
+      }
+    }
+
+    user_save($user);
+  }
+
+  drupal_set_message(t('Dine ændringer er blevet gemt til @count bruger', array('@count' => count($uids))));
 }

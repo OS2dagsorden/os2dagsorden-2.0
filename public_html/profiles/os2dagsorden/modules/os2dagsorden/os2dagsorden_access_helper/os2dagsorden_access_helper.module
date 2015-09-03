@@ -400,12 +400,18 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
 }
 
 /**
- * Functions returns the current user member of committees
+ * Functions returns the user member of committees
+ *
+ * @param $uid - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_member_of_committees(){
-  $user = os2dagsorden_access_helper_get_user();
+function os2dagsorden_access_helper_get_user_member_of_committees($uid = null){
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
   $tids = array();
   if (!empty($user->field_user_committee)) { //is part of the committee
     foreach ($user->field_user_committee['und'] as $user_committee_id) {
@@ -416,8 +422,42 @@ function os2dagsorden_access_helper_get_user_member_of_committees(){
   return $tids;
 }
 
-function os2dagsorden_access_helper_get_user_follow_plus_committees(){
-  $user = os2dagsorden_access_helper_get_user();
+/**
+ * Functions returns the user follows committees
+ *
+ * @param $uid - uid of the user, if empty, current user is used
+ *
+ * @return array committees tids
+ */
+function os2dagsorden_access_helper_get_user_follow_committees($uid = nul){
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
+  $tids = array();
+  if (!empty($user->field_follows_committee)) { //is part of the committee
+    foreach ($user->field_follows_committee['und'] as $user_committee_id) {
+      $tids[] = $user_committee_id['tid'];
+    }
+  }
+
+  return $tids;
+}
+
+/**
+ * Functions returns the user follows_plus committees
+ *
+ * @param $uid - uid of the user, if empty, current user is used
+ *
+ * @return array committees tids
+ */
+function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = nul){
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
   $tids = array();
   if (!empty($user->field_follows_committee_plus)) { //is part of the committee
     foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
@@ -428,8 +468,19 @@ function os2dagsorden_access_helper_get_user_follow_plus_committees(){
   return $tids;
 }
 
-function os2dagsorden_access_helper_get_user_follow_pp_committees(){
-  $user = os2dagsorden_access_helper_get_user();
+/**
+ * Functions returns the user follows_plus_plus committees
+ *
+ * @param $uid - uid of the user, if empty, current user is used
+ *
+ * @return array committees tids
+ */
+function os2dagsorden_access_helper_get_user_follow_pp_committees($uid = null){
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
   $tids = array();
   if (!empty($user->field_follows_committee_pp)) { //is part of the committee
     foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
