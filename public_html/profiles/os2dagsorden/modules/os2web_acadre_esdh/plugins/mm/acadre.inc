@@ -709,7 +709,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
                    }
                 }
                 copy($file_realpath, $dest_dir_realpath . '/' . $filename);
-                watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_ERROR);
+                watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_DEBUG);
                
                 $new_uri = file_create_url(variable_get('os2web_meetings_acadre_images_destination_folder') . 
                   implode('/', array(
