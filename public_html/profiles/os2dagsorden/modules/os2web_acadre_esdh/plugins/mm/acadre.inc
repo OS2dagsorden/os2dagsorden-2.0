@@ -711,8 +711,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
                 copy($file_realpath, $dest_dir_realpath . '/' . $filename);
                 watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_ERROR);
                
-                $new_uri = file_create_url(implode('/', array(
-                  variable_get('os2web_meetings_acadre_images_destanation_folder'),
+                $new_uri = file_create_url(variable_get('os2web_meetings_acadre_images_destanation_folder') . implode('/', array(
                   $folder_name,
                   $filename,
                 )));
