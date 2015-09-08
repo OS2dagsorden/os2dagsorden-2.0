@@ -701,10 +701,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
                   $folder_name,
                   $filename,
                 )));
-                $dest_dir_realpath = drupal_realpath('public://') . '/acadre_images/' . $folder_name;
-                if (!is_file($dest_dir_realpath)) {
-                  mkdir($dest_dir_realpath);
-                }
+                $dest_dir_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images_destanation_folder') . $folder_name);
                 if (!file_exists($dest_dir_realpath)) {
                   if (!mkdir($dest_dir_realpath)) {
                      watchdog('acadre MM', 'Could not create subdirectory %dir. Check the permissions', array('%dir' => $dest_dir_realpath), WATCHDOG_ERROR);
@@ -715,8 +712,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
                 watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_ERROR);
                
                 $new_uri = file_create_url(implode('/', array(
-                  'public://',
-                  'acadre_images',
+                  variable_get('os2web_meetings_acadre_images_destanation_folder'),
                   $folder_name,
                   $filename,
                 )));
