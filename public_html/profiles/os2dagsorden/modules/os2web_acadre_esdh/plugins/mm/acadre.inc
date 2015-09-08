@@ -683,34 +683,45 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
  */
 function _acadre_esdh_mm_improve_body_html($data) {
   $data = _acadre_esdh_mm_remove_empty_tags($data);
-  if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
-    foreach ($uri[0] as $file) {
-      $file = str_replace('"', '', $file);
-      $uri_parts = explode('\\', $file);
-      $filename = trim(array_pop($uri_parts));
-      $folder_name = array_pop($uri_parts);
-      $file_realpath = drupal_realpath(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
-        implode('/', array(
-        'images',
-        $folder_name,
-        $filename,
-      )));
-      $dest_dir_realpath = drupal_realpath('public://') . '/acadre_images/' . $folder_name;
-      if (!is_file($dest_dir_realpath)) {
-        mkdir($dest_dir_realpath);
+ // if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
+  // foreach ($uri[0] as $file) {
+   $doc = new DOMDocument();
+   $doc->loadHTML( $data);
+  $elements = $doc->getElementsByTagName('img');
+  if($elements->length > 0){
+      foreach($elements as $element)  {
+	 $file = $element->getAttribute('src');
+            if (strpos($file, 'http://') === FALSE) {
+               $file = str_replace('"', '', $file);
+               $uri_parts = explode('\\', $file);
+               $filename = trim(array_pop($uri_parts));
+               $folder_name = array_pop($uri_parts);
+               $file_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images') .
+                  implode('/', array(
+                  $folder_name,
+                  $filename,
+                )));
+                $dest_dir_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images_destination_folder') . $folder_name);
+                if (!file_exists($dest_dir_realpath)) {
+                  if (!mkdir($dest_dir_realpath)) {
+                     watchdog('acadre MM', 'Could not create subdirectory %dir. Check the permissions', array('%dir' => $dest_dir_realpath), WATCHDOG_ERROR);
+                    return $data;
+                   }
+                }
+                copy($file_realpath, $dest_dir_realpath . '/' . $filename);
+                watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_ERROR);
+               
+                $new_uri = file_create_url(variable_get('os2web_meetings_acadre_images_destination_folder') . 
+                  implode('/', array(
+                  $folder_name,
+                  $filename,
+                )));
+                // Modify uri.
+                $data = str_replace($file, $new_uri, $data);
+         }
       }
-      copy($file_realpath, $dest_dir_realpath . '/' . $filename);
-      $new_uri = file_create_url(implode('/', array(
-        'public://',
-        'acadre_images',
-        $folder_name,
-        $filename,
-      )));
-      // Modify uri.
-      $data = str_replace($file, $new_uri, $data);
-    }
-  } 
-  return $data;
+   } 
+   return $data;
 }
 function _acadre_esdh_mm_remove_empty_tags($data) {
 do
