@@ -692,13 +692,12 @@ function _acadre_esdh_mm_improve_body_html($data) {
       foreach($elements as $element)  {
 	 $file = $element->getAttribute('src');
             if (strpos($file, 'http://') === FALSE) {
-                $file = str_replace('"', '', $file);
-                $uri_parts = explode('\\', $file);
-                $filename = trim(array_pop($uri_parts));
-                $folder_name = array_pop($uri_parts);
-                $file_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images', ACADRE_MM_IMPORT_DIR) .
+               $file = str_replace('"', '', $file);
+               $uri_parts = explode('\\', $file);
+               $filename = trim(array_pop($uri_parts));
+               $folder_name = array_pop($uri_parts);
+               $file_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images') .
                   implode('/', array(
-                  'images',
                   $folder_name,
                   $filename,
                 )));
