@@ -53,12 +53,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     return;
   }
   timer_start('mm_import');
-  global $PROCESSING_MEETING_ID, $PROCESSING_MEETING_ACCESS;
+  global $PROCESSING_MEETING_ID, $PROCESSING_MEETING_NID, $PROCESSING_MEETING_ACCESS;
   $PROCESSING_MEETING_ID = $meeting_id['id'];
 
   $nid = os2web_esdh_provider_index_meeting_get_nid($meeting_id['id']);
   if ($nid) {
     watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid), WATCHDOG_DEBUG);
+    $PROCESSING_MEETING_NID = $nid;
   }
 
   if (!os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime(drupal_realpath($meeting_id['uri']))) &&
@@ -385,7 +386,7 @@ else
  *   List of imported node ids
  */
 function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
-  global $PROCESSING_MEETING_ID, $PROCESSING_BP, $PROCESSING_MEETING_ACCESS;
+  global $PROCESSING_MEETING_ID, $PROCESSING_MEETING_NID, $PROCESSING_BP, $PROCESSING_MEETING_ACCESS;
   $nids = array();
   foreach ($items as $item) {
     $PROCESSING_BP = $item['sysid'];
@@ -396,8 +397,18 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
     if (module_exists('os2dagsorden_esdh_provider')) {
       if (!empty($existing_bullets)) {
         $node = os2dagsorden_esdh_provider_find_corresponding_bullet($item['title'], $existing_bullets);
-        watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Found existing BP node nid: !nid',
-          array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!nid' => $node->nid), WATCHDOG_INFO);
+        if ($node) {
+          watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Found existing BP node nid: !nid',
+            array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!nid' => $node->nid), WATCHDOG_INFO);
+        }
+      }
+
+      //try find bullet from the tillægsagenda
+      if (!$node && $PROCESSING_MEETING_NID && TRUE) {
+        $node = os2dagsorden_esdh_provider_find_and_reassign_additional_agenda_bullet($PROCESSING_BP, $PROCESSING_MEETING_NID);
+        if ($node) {
+          $node->title = mb_substr($item['title'], 0, 200);
+        }
       }
     }
 
@@ -485,8 +496,10 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
     if (module_exists('os2dagsorden_esdh_provider')) {
       if (!empty($existing_attachments)) {
         $node = os2dagsorden_esdh_provider_find_corresponding_attachment($bullet, $existing_attachments);
-        watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Found existing BPA node: !nid',
-          array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $bullet['sysid'], '!nid' => $node->nid), WATCHDOG_INFO);
+        if ($node) {
+          watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Found existing BPA node: !nid',
+            array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $bullet['sysid'], '!nid' => $node->nid), WATCHDOG_INFO);
+        }
       }
     }
    

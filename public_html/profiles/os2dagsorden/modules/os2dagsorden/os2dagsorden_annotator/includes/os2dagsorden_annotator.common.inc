@@ -128,3 +128,18 @@ function os2dagsorden_annotator_get_notes_by_meeting_id($meeting_id) {
 
     return $notes;
 }
+
+/**
+ * Function that updates the reference of meeting nid
+ *
+ * @param $old_meeting_nid
+ * @param $new_meeting_nid
+ */
+function os2dagsorden_annotator_update_notes_meeting($old_meeting_nid, $new_meeting_nid){
+  db_update('os2dagsorden_annotator_notes')
+    ->fields(array(
+      'meeting_id' => $new_meeting_nid
+    ))
+    ->condition('meeting_id', $old_meeting_nid,'=')
+    ->execute();
+}

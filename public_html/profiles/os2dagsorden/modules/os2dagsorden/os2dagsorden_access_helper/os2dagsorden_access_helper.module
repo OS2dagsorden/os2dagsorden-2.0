@@ -698,6 +698,28 @@ function os2dagsorden_access_helper_check_bullet_point_is_part_of_meeting($meeti
 }
 
 /**
+ * Returns an array of meetings additional agendas (tillaegs meetings).
+ *
+ * @param int $meeting_id initial meeting ID
+ *
+ * @return array of ids
+ */
+function os2dagsorden_access_helper_tillaegs_meetings($meeting_id){
+  $possible_meetings = array();
+
+  //adding tillaegs meetings, if any
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->fieldCondition('field_os2web_meetings_addendum', 'nid', $meeting_id, '=');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $possible_meetings = array_keys($result['node']);
+  }
+
+  return $possible_meetings;
+}
+
+/**
   * Returns an array of ids of meeting and all of its additional (tillaegs meetings).
   *
   * @param int $meeting_id initial meeting ID
