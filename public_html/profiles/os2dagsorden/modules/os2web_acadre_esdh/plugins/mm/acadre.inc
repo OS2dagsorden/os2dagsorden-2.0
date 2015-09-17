@@ -148,6 +148,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
 
           // Publication not published or public.
           $meetings[] = array(
+            'meeting_id' => _get_value_from_xml($manifest->xpath("/root/table[@name='meeting']/fields/field/@sysid"), 'int'),
             'meeting_sub_id' => _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int'),
             'agenda_access' => $agendainfo['access'],
             'publish' => FALSE,

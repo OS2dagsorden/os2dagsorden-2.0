@@ -48,7 +48,7 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda){
         'meeting_xml' => $manifest['uri'],
         'meeting_xmlid' => $manifest['id'],
         'meeting_name' => $agenda['title'],
-        'meeting_sysid' => $manifest['meeting_id'],
+        'meeting_sysid' => $agenda['meeting_id'],
         'meeting_xml_changed' => ($manifest['uri'])? filemtime(drupal_realpath($manifest['uri'])) : NULL,
         'agenda_sysid' => $agenda['meeting_sub_id'],
         'agenda_xmlid' => $agenda['agenda_xmlid'],
