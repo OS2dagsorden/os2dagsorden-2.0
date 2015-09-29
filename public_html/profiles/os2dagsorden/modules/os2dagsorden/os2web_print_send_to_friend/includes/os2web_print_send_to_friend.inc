@@ -110,6 +110,7 @@ function os2web_print_send_to_friend_send_to_friend_form($meeting_id, $bullet_po
  *
  */
 function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_id) {
+  global $user;
   $bullet_point = node_load($bullet_point_id);
   $subject = 'Dagsorden Punkt: ' . $bullet_point->title;
 
@@ -148,6 +149,12 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
 
   $system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;
+  os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was send to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO, 
+      array('uid' => $user->uid, 
+        'bullet_point_uri' => $bullet_point_uri,
+        'email' => $to_email,
+        
+        ));
   watchdog('Send to friend', 'Bullet point %title (%uri) was send to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO);
 }
 

@@ -1,0 +1,88 @@
+<?php
+/**
+ * Implements hook_os2dagsorden_logging_channel_info().
+ */
+function os2dagsorden_logging_monolog_channel_info() {
+  $channels = array();
+
+  $channels['os2dagsorden_watchdog_logging'] = array(
+    'label' => t('Os2dagsorden Watchdog Logging'),
+    'description' => t('Channel that watchdog messages are routed through.'),
+    'default profile' => 'production',
+  );
+
+  return $channels;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function os2dagsorden_logging_menu() {
+  $items['admin/config/development/monolog/os2dagsorden_logging_settings'] = array(
+    'title'            => 'Os2dagsorden Logging',
+    'description'      => t('Configure watchlist for specific watchdog log messages.'),
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('os2dagsorden_logging_settings_settings_form'),
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+/**
+ * Implementation of settings form  OS2dagsorden logging system.
+ *
+ * @param $form       the settings form
+ * @param $form_state the state of the form
+ *
+ * @return settings form.
+ */
+function os2dagsorden_logging_settings_settings_form($form, $form_state) {
+  $type_array;
+  $query = db_select('watchdog','w')->fields('w', array('type'))->distinct()->orderBy('type', 'ASC');
+  $result = $query->execute();
+  foreach ($result as $res) {
+    $type_array[$res->type] = $res->type;
+  }
+  $form['os2dagsorden_logging_message_type'] = array(
+     '#type' => 'select',
+  	    '#multiple' => TRUE,
+	    '#title' => t('Watchdog message type'),
+        '#description' => t('Select the watchdog log type to monitor.'),
+	    '#required' => FALSE,
+	    '#options' => $type_array,
+        '#size' => 10,
+        '#default_value' => variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")),
+   );
+ return system_settings_form($form);
+}
+function os2dagsorden_logging_watchdog(array $log_entry) {
+  try {
+  
+      if (in_array($log_entry['type'], variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")))){
+     
+      // Perform a partial bootstrap if watchdog is called prior to the
+      // DRUPAL_BOOTSTRAP_FULL phase.
+      if (!function_exists('monolog')) {
+        monolog_logging_bootstrap();
+      }
+
+      $logger = monolog('os2dagsorden_watchdog_logging');
+ 
+      $enabled_contexts = monolog_logging_get_contexts();
+      $context = array_intersect_key($log_entry, $enabled_contexts);
+      if (isset($enabled_contexts['request_id'])) {
+        $context['request_id'] = monolog_request_id();
+      }
+      $message = strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables']));
+      $level = monolog_logging_map_severity_level($log_entry['severity']);
+      $logger->log($level, $message,  $context);
+    } 
+  }
+  catch (Exception $e) {
+  
+    // Fail silently since we cannot log any messages or do anything that would
+    // trigger another watchdog call.
+  }
+}
+
+  

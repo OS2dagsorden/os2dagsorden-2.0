@@ -1,0 +1,6 @@
+name = OS2Dagsorden Logging 
+description = Various functions that help to log error. 
+package = OS2Dagsorden
+core = 7.x
+
+dependencies[] = "monolog"
