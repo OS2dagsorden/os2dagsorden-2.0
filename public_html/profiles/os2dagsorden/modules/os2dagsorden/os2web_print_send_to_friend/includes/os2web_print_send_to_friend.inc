@@ -149,7 +149,7 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
 
   $system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;
-  os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was send to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO, 
+  os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was sent to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO, 
       array('uid' => $user->uid, 
         'text' => check_plain(trim($_POST['message'])),
         
