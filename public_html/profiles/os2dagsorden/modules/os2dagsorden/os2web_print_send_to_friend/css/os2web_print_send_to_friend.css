@@ -33,3 +33,25 @@ input[type="text"] {
   background: #FFF !important;
   opacity: 1 !important;
 }
+
+#os2web-print-send-to-friend-log-filter-form  .filter-fields .form-item.form-type-textfield {
+    display: inline-block;
+    margin-right: 30px;
+}
+#os2web-print-send-to-friend-log-filter-form  .filter-fields .form-item.form-type-textfield input[type="text"] {
+   width: 350px; 
+}
+#os2web-print-send-to-friend-log-filter-form .filter-buttons {
+    display: block;
+    float: left;
+}
+#os2web-print-send-to-friend-log-filter-form .filter-buttons input[type="submit"] {
+    float: left;  
+    margin-bottom: 40px;
+}
+#os2web-print-send-to-friend-log-filter-form  .filter-fields .filter-date-fields .form-item.form-type-textfield{
+  margin-right: 10px;  
+}
+#os2web-print-send-to-friend-log-filter-form  .filter-fields .filter-date-fields .form-item.form-type-textfield input[type="text"] {
+   width: 150px; 
+}

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2dagsorden Logging feature.
+ */
+
+include_once 'os2dagsorden_logging_feature.features.inc';

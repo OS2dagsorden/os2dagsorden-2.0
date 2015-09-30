@@ -1,4 +1,8 @@
 <?php
+
+
+use Monolog\Logger;
+
 /**
  * Implements hook_os2dagsorden_logging_channel_info().
  */
@@ -8,7 +12,7 @@ function os2dagsorden_logging_monolog_channel_info() {
   $channels['os2dagsorden_watchdog_logging'] = array(
     'label' => t('Os2dagsorden Watchdog Logging'),
     'description' => t('Channel that watchdog messages are routed through.'),
-    'default profile' => 'production',
+    'default profile' => 'os2dagsorden_logging_production',
   );
 
   return $channels;
@@ -24,37 +28,12 @@ function os2dagsorden_logging_menu() {
     'page callback'    => 'drupal_get_form',
     'page arguments'   => array('os2dagsorden_logging_settings_settings_form'),
     'access arguments' => array('administer os2web'),
+    'file' => 'os2dagsorden_logging.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
 }
-/**
- * Implementation of settings form  OS2dagsorden logging system.
- *
- * @param $form       the settings form
- * @param $form_state the state of the form
- *
- * @return settings form.
- */
-function os2dagsorden_logging_settings_settings_form($form, $form_state) {
-  $type_array;
-  $query = db_select('watchdog','w')->fields('w', array('type'))->distinct()->orderBy('type', 'ASC');
-  $result = $query->execute();
-  foreach ($result as $res) {
-    $type_array[$res->type] = $res->type;
-  }
-  $form['os2dagsorden_logging_message_type'] = array(
-     '#type' => 'select',
-  	    '#multiple' => TRUE,
-	    '#title' => t('Watchdog message type'),
-        '#description' => t('Select the watchdog log type to monitor.'),
-	    '#required' => FALSE,
-	    '#options' => $type_array,
-        '#size' => 10,
-        '#default_value' => variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")),
-   );
- return system_settings_form($form);
-}
+
 function os2dagsorden_logging_watchdog(array $log_entry) {
   try {
   
@@ -63,18 +42,18 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
       // Perform a partial bootstrap if watchdog is called prior to the
       // DRUPAL_BOOTSTRAP_FULL phase.
       if (!function_exists('monolog')) {
-        monolog_logging_bootstrap();
+        os2dagsorden_logging_bootstrap();
       }
 
       $logger = monolog('os2dagsorden_watchdog_logging');
  
-      $enabled_contexts = monolog_logging_get_contexts();
+      $enabled_contexts = os2dagsorden_logging_get_contexts();
       $context = array_intersect_key($log_entry, $enabled_contexts);
       if (isset($enabled_contexts['request_id'])) {
         $context['request_id'] = monolog_request_id();
       }
       $message = strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables']));
-      $level = monolog_logging_map_severity_level($log_entry['severity']);
+      $level = os2dagsorden_logging_map_severity_level($log_entry['severity']);
       $logger->log($level, $message,  $context);
     } 
   }
@@ -85,4 +64,80 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
   }
 }
 
-  
+
+/**
+ * Ensure that required subsystems and modules are loaded if watchdog messages
+ * are logged prior to a full Drupal bootstrap.
+ *
+ * @see _drupal_bootstrap_full()
+ * @see http://drupal.org/node/1997462
+ */
+function os2dagsorden_logging_bootstrap() {
+  static $bootstrapped = FALSE;
+  if (!$bootstrapped) {
+    $bootstrapped = TRUE;
+
+    // CTools requires the drupal_get_path() and list_themes() functions.
+    require_once DRUPAL_ROOT . '/includes/common.inc';
+    require_once DRUPAL_ROOT . '/includes/theme.inc';
+    require_once DRUPAL_ROOT . '/includes/unicode.inc';
+
+    // Monolog requires the file_prepare_directory() function.
+    require_once DRUPAL_ROOT . '/includes/file.inc';
+
+    // Load the required modules.
+    drupal_load('module', 'system');
+    drupal_load('module', 'ctools');
+    drupal_load('module', 'composer_manager');
+    drupal_load('module', 'monolog');
+
+    // Detect string handling method.
+    unicode_check();
+
+    // Undo magic quotes.
+    fix_gpc_magic();
+
+    // file_get_stream_wrappers() is called during the normal application flow.
+  }
+}
+/**
+ * Returns the selected event contexts.
+ *
+ * @return array
+ */
+function os2dagsorden_logging_get_contexts() {
+  static $contexts = array();
+  if (!$contexts) {
+    $contexts = array_filter(variable_get('os2dagsorden_logging_contexts', array(
+      'uid' => 'uid',
+      'request_uri' => 'request_uri',
+      'referer' => 'referer',
+      'ip' => 'ip',
+      'link' => 'link',
+    )));
+  }
+  return $contexts;
+}
+
+/**
+ * Maps a Watchdog severity level to Monolog severity levels.
+ *
+ * @param string $level
+ *   The Watchdog severity level.
+ *
+ * @return int
+ *   The Monolog severity level.
+ */
+function os2dagsorden_logging_map_severity_level($level) {
+  $levels = array(
+    WATCHDOG_DEBUG => Logger::DEBUG,
+    WATCHDOG_INFO => Logger::INFO,
+    WATCHDOG_NOTICE => Logger::NOTICE,
+    WATCHDOG_WARNING => Logger::WARNING,
+    WATCHDOG_ERROR => Logger::ERROR,
+    WATCHDOG_CRITICAL => Logger::CRITICAL,
+    WATCHDOG_ALERT => Logger::ALERT,
+    WATCHDOG_EMERGENCY => Logger::EMERGENCY,
+  );
+  return isset($levels[$level]) ? $levels[$level] : Logger::NOTICE;
+}

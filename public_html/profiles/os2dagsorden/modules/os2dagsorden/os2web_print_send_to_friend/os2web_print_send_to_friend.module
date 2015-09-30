@@ -12,6 +12,7 @@
  * @link     http://bellcom.dk
  */
 require drupal_get_path('module', 'os2web_print_send_to_friend') . '/includes/os2web_print_send_to_friend.inc';
+require drupal_get_path('module', 'os2web_print_send_to_friend') . '/handlers/database.inc';
 
 /**
  * Implementation of hook_menu().
@@ -76,7 +77,7 @@ function os2web_print_send_to_friend_monolog_channel_info() {
   $channels['os2web_send_to_friend_channel'] = array(
     'label' => t('Send to friend'),
     'description' => t('Channel for handling bullet point sharing - "Send til ven"'),
-    'default profile' => 'Send to friend',
+    'default profile' => 'os2web_send_to_friend',
   );
 
   return $channels;
@@ -88,33 +89,14 @@ function os2web_print_send_to_friend_monolog_handler_info() {
   $handlers['send_to_friend_db'] = array(
     'label' => t('Send to friend (database)'),
     'description' => t('Logs records into send to friend database table'),
-    // 'default settings' => array(
-    // 'filepath' => 'public://monolog/drupal.log',
-    //),
     'settings callback' => 'os2web_print_send_to_friend_handler_settings',
     'loader callback' => 'os2web_print_send_to_friend_handler_loader',
-    // 'handler file' => 'MODULE_PATH/handlers/database.inc'
-    // "handler file" defaults to `MODULE_PATH/handlers/stream.inc` since the
-    // hook_monolog_handler_path() returns "handlers".
   );
   return $handlers;
 }
 
-function os2web_print_send_to_friend_handler_settings(&$form, &$form_state) {
-  
-}
 
-use Monolog\Handler\MySQLHandler;
 
-/**
- * Monolog loader callback; Loads a ChromePHPHandler handler.
- *
- * @return HandlerInterface
- */
-function os2web_print_send_to_friend_handler_loader($options) {
-
-  return new MySQLHandler(Database::getConnection(), 'os2web_print_send_to_friend_log', array('uid', 'bullet_point_uri', 'email'), $options['level'], $options['bubble']);
-}
 
 function os2web_print_send_to_friend_add_to_log($message, $variables = array(), $severity, $context = array()) {
   try {
@@ -122,12 +104,12 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
     // Perform a partial bootstrap if watchdog is called prior to the
     // DRUPAL_BOOTSTRAP_FULL phase.
     if (!function_exists('monolog')) {
-      monolog_logging_bootstrap();
+      os2dagsorden_logging_bootstrap();
     }
     ;
     $logger = monolog('os2web_send_to_friend_channel');
     $message = addslashes(strip_tags(format_string($message, $variables)));
-    $level = monolog_logging_map_severity_level($severity);
+    $level = os2dagsorden_logging_map_severity_level($severity);
 
     $logger->log($level, $message, $context);
   } catch (Exception $e) {
@@ -138,73 +120,100 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
 }
 
 function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
+  drupal_add_css(drupal_get_path('module', 'os2web_print_send_to_friend') . '/css/os2web_print_send_to_friend.css');
+  drupal_add_library('system', 'ui.datepicker');   
+  drupal_add_js("(function ($) { $('#date-from').datepicker(); $('#date-to').datepicker();})(jQuery);", 
+      array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
   $form = array();
-  $form['filter']['user'] = array(
+  $form ['filter-fields'] = array(
+    '#type' => container,
+    '#attributes'=> array(
+      'class' => array(
+        'filter-fields',
+      ),
+    )  
+  );  
+  $form['filter-fields']['user'] = array(
     '#type' => 'textfield',
     '#title' => t('User'),
-    '#size' => 60,
+    '#size' => 60,  
     '#maxlength' => 60,
     '#autocomplete_path' => 'user/autocomplete',
     '#default_value' => $user,
   );
-  $form['filter']['email'] = array(
+  $form['filter-fields']['text'] = array(
     '#type' => 'textfield',
     '#title' => t('Email'),
     '#size' => 60,
     '#maxlength' => 60,
-    '#default_value' => $email,
+    '#default_value' => $text,
   );
-  $form['filter']['message'] = array(
+  $form['filter-fields']['message'] = array(
     '#type' => 'textfield',
     '#title' => t('Message'),
     '#size' => 60,
     '#maxlength' => 60,
     '#default_value' => $message,
   );
-  $form['filter']['date']['from'] = array(
+   $form ['filter-fields']['date'] = array(
+    '#type' => container,
+    '#attributes'=> array(
+      'class' => array(
+        'filter-date-fields',
+      ),
+    )  
+  );
+  $form['filter-fields']['date']['from'] = array(
     '#type' => 'textfield',
     '#title' => t('Date'),
+    '#attributes' => array('id' => 'date-from'),
     '#size' => 30,
     '#maxlength' => 60,
     '#field_prefix' => t('From'),
-    '#field_suffix' => t('format: YY-MM-DD HH:MM:SS'),
     '#default_value' => $from,
+   
   );
-  $form['filter']['date']['to'] = array(
+  $form['filter-fields']['date']['to'] = array(
     '#type' => 'textfield',
     '#size' => 30,
     '#maxlength' => 60,
     '#default_value' => $to,
-    '#field_suffix' => t('format: YY-MM-DD HH:MM:SS'),
+    '#attributes' => array('id' => 'date-to'),
     '#field_prefix' => t('To'),
   );
-  $form['filter']['filter'] = array(
+  $form ['buttons'] = array(
+    '#type' => container,
+    '#attributes'=> array(
+      'class' => array(
+        'filter-buttons',
+      ),
+    )  
+  );
+  $form['buttons']['aply'] = array(
     '#type' => 'submit',
     '#value' => t('Filter'),
   );
-  $form['filter']['reset'] = array(
+  $form['buttons']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Clear'),
-    '#weight' => 9,
-    '#validate' => array(),
+    
   );
-
+ if (db_table_exists(os2web_print_send_to_friend_log)) {
   $headers = array(
     array('data' => t('Date'), 'field' => 'time', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'message'),
-    array('data' => t('Bullet point uri'), 'field' => 'bullet_point_uri'),
-    array('data' => t('Email'), 'field' => 'email'),
+    array('data' => t('Text'), 'field' => 'text'),
     array('data' => t('User'), 'field' => 'name'));
   $query = db_select('os2web_print_send_to_friend_log', 'l');
   $query->innerJoin('users', 'u', 'l.uid = u.uid');
-  $query->fields('l', array('time', 'message', 'bullet_point_uri', 'email'));
+  $query->fields('l', array('time', 'message', 'text'));
   $query->fields('u', array('name'));
   if (isset($form_state['user']) && !empty($form_state['user'])) {
     $query->condition('u.name', '%' . db_like($form_state['user']) . '%', 'LIKE');
   }
 
-  if (isset($form_state['email']) && !empty($form_state['email'])) {
-    $query->condition('l.email', '%' . db_like($form_state['email']) . '%', 'LIKE');
+  if (isset($form_state['text']) && !empty($form_state['text'])) {
+    $query->condition('l.text', '%' . db_like($form_state['text']) . '%', 'LIKE');
   }
   if (isset($form_state['message']) && !empty($form_state['message'])) {
     $query->condition('l.message', '%' . db_like($form_state['message']) . '%', 'LIKE');
@@ -235,19 +244,23 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
     '#header' => $headers,
     '#rows' => $rows,
   );
+ }
+ else {
+   drupal_set_message('There are not log entries yet');
+ }
   return $form;
 }
 
 function os2web_print_send_to_friend_log_filter_form_submit($form, &$form_state) {
   if ($form_state["values"]["op"] == 'Clear') {
     $form_state['values']['user'] = "";
-    $form_state['values']['email'] = "";
+    $form_state['values']['text'] = "";
     $form_state['values']['message'] = "";
     $form_state['values']['from'] = "";
     $form_state['values']['to'] = "";
   } else {
     $form_state['user'] = $form_state['values']['user'];
-    $form_state['email'] = $form_state['values']['email'];
+    $form_state['text'] = $form_state['values']['text'];
     $form_state['message'] = $form_state['values']['message'];
     $form_state['date']['from'] = $form_state['values']['from'];
     $form_state['date']['to'] = $form_state['values']['to'];
