@@ -16,6 +16,15 @@ function os2dagsorden_logging_default_monolog_profiles() {
   $profile->name = 'os2dagsorden_logging_development';
   $profile->options = array(
     'handlers' => array(
+      'rotating_file_handler' => array(
+        'weight' => 1,
+        'label' => 'Rotating File Handler',
+        'level' => '200',
+        'bubble' => 1,
+        'filepath' => 'public://monolog/import.log',
+        'max_files' => '30',
+        'handler' => 'rotating_file',
+      ),
       'native_mail_handler' => array(
         'weight' => '1',
         'label' => 'Native Mail Handler',
@@ -25,14 +34,6 @@ function os2dagsorden_logging_default_monolog_profiles() {
         'subject' => 'Log message sent by OS2Dagsorden TEST',
         'from' => '<site-mail>',
         'handler' => 'native_mailer',
-      ),
-      'stream_handler' => array(
-        'weight' => '1',
-        'label' => 'Stream Handler',
-        'level' => '100',
-        'bubble' => '1',
-        'filepath' => 'public://monolog/import.log',
-        'handler' => 'stream',
       ),
     ),
     'label' => 'Os2dagsorden logging development',
@@ -45,14 +46,6 @@ function os2dagsorden_logging_default_monolog_profiles() {
   $profile->name = 'os2dagsorden_logging_production';
   $profile->options = array(
     'handlers' => array(
-      'stream_handler' => array(
-        'weight' => 1,
-        'label' => 'Stream Handler',
-        'level' => '500',
-        'bubble' => 1,
-        'filepath' => 'public://monolog/import.log',
-        'handler' => 'stream',
-      ),
       'native_mail_handler' => array(
         'weight' => 1,
         'label' => 'Native Mail Handler',
@@ -62,6 +55,15 @@ function os2dagsorden_logging_default_monolog_profiles() {
         'subject' => 'Log message sent by OS2Dagsorden TEST',
         'from' => '<site-mail>',
         'handler' => 'native_mailer',
+      ),
+      'rotating_file_handler' => array(
+        'weight' => 1,
+        'label' => 'Rotating File Handler',
+        'level' => '500',
+        'bubble' => 1,
+        'filepath' => 'public://monolog/import.log',
+        'max_files' => '30',
+        'handler' => 'rotating_file',
       ),
     ),
     'label' => 'Os2dagsorden logging production',
@@ -74,13 +76,14 @@ function os2dagsorden_logging_default_monolog_profiles() {
   $profile->name = 'os2web_send_to_friend';
   $profile->options = array(
     'handlers' => array(
-      'stream_handler' => array(
+      'rotating_file_handler' => array(
         'weight' => 1,
-        'label' => 'Stream Handler',
+        'label' => 'Rotating File Handler',
         'level' => '200',
         'bubble' => 1,
         'filepath' => 'public://monolog/sendto.log',
-        'handler' => 'stream',
+        'max_files' => '30',
+        'handler' => 'rotating_file',
       ),
       'send_to_friend_database_' => array(
         'weight' => 1,
