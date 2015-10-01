@@ -1,5 +1,6 @@
 <?php
 
+include_once 'os2dagsorden_logging.features.inc';
 
 use Monolog\Logger;
 

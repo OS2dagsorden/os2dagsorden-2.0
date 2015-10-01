@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * os2dagsorden_logging_feature.monolog.inc
+ * os2dagsorden_logging.monolog.inc
  */
 
 /**
  * Implements hook_default_monolog_profiles().
  */
-function os2dagsorden_logging_feature_default_monolog_profiles() {
+function os2dagsorden_logging_default_monolog_profiles() {
   $export = array();
 
   $profile = new stdClass();

@@ -4,3 +4,8 @@ package = OS2Dagsorden
 core = 7.x
 
 dependencies[] = "monolog"
+features[ctools][] = monolog:monolog:1
+features[features_api][] = api:1
+features[monolog_profile][] = os2dagsorden_logging_development
+features[monolog_profile][] = os2dagsorden_logging_production
+features[monolog_profile][] = os2web_send_to_friend
