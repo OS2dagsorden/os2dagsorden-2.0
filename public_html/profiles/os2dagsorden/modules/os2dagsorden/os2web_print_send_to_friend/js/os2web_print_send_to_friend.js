@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
   $(".throbber").hide();
+  $('.datepicker').datepicker(); 
   $("#send_to_friend_form").submit(function(e){
     e.preventDefault;
     var $form = $("#send_to_friend_form");
