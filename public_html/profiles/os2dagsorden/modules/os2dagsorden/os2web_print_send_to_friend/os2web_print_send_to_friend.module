@@ -198,7 +198,7 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
     '#value' => t('Clear'),
     
   );
- if (db_table_exists(os2web_print_send_to_friend_log)) {
+ if (db_table_exists('os2web_print_send_to_friend_log')) {
   $headers = array(
     array('data' => t('Date'), 'field' => 'time', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'message'),

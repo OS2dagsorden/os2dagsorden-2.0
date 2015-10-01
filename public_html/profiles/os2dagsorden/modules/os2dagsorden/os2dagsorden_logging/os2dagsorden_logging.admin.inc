@@ -21,7 +21,13 @@ function os2dagsorden_logging_settings_settings_form($form, $form_state) {
   foreach ($result as $res) {
     $type_array[$res->type] = $res->type;
   }
-  $form['os2dagsorden_logging_message_type'] = array(
+  $form['os2dagsorden_logging_import'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Import logging settings'),
+  );
+  $form['os2dagsorden_logging_import']['os2dagsorden_logging_message_type'] = array(
      '#type' => 'select',
   	    '#multiple' => TRUE,
 	    '#title' => t('Watchdog message type'),
@@ -31,7 +37,7 @@ function os2dagsorden_logging_settings_settings_form($form, $form_state) {
         '#size' => 10,
         '#default_value' => variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")),
    );
-  $form['os2dagsorden_logging_contexts'] = array(
+  $form['os2dagsorden_logging_import']['os2dagsorden_logging_contexts'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Include contexts in record'),
     '#description' => t('Include the selected contexts in all log messages that are routed through Monolog from <code>watchdog()</code>.'),
@@ -51,6 +57,20 @@ function os2dagsorden_logging_settings_settings_form($form, $form_state) {
       'ip' => 'ip',
       'link' => 'link',
     )),
+  );
+  $form['os2dagsorden_logging_send_to_friend'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Send to friend logging settings'),
+  );
+   $form['os2dagsorden_logging_send_to_friend']['os2dagsorden_logging_day_limit'] = array(
+    '#type' => 'textfield',
+    '#title' => t('"Send to friend" log messages  clearing interval'),
+    '#default_value' => variable_get('os2dagsorden_logging_day_limit', 100),
+    '#size' => 10,
+    '#field_prefix' => 'Keep log messages for',
+    '#field_suffix' => 'days'
   );
  return system_settings_form($form);
 }
