@@ -233,7 +233,6 @@ function os2dagsorden_esdh_provider_find_corresponding_attachment($bullet_entity
     $attachment = node_load($attachment_nid['target_id']);
     if (strcasecmp($bullet_entity['title'], $attachment->title) == 0
       && strcasecmp($bullet_entity['body'], $attachment->field_os2web_meetings_bpa_body[$attachment->language][0]['value']) == 0){
-      err_debug('Match');
       return $attachment;
     }
   }
@@ -327,4 +326,23 @@ function os2dagsorden_esdh_provider_find_and_reassign_additional_agenda_bullet($
   }
 
   return null;
+}
+
+function os2dagsorden_esdh_provider_reassign_notes($attachments_to_delete_nids, $existing_attachments_nids){
+  $attachments_to_delete = node_load_multiple($attachments_to_delete_nids);
+  $existing_attachments = node_load_multiple($existing_attachments_nids);
+
+  foreach ($attachments_to_delete as $del_nid => $del_node) {
+    if (os2dagsorden_annotator_get_notes_by_attachment_id($del_nid)) {
+      //finding the corresponding bullet point from the existing attachments
+      foreach($existing_attachments as $exist_nid => $exist_node) {
+        if (strcasecmp($del_node->title,$exist_node->title) == 0) {
+          os2dagsorden_annotator_update_notes_attachment($del_nid, $exist_nid);
+
+          //remove from stack, as we won't need it anymore
+          unset($existing_attachments[$exist_nid]);
+        }
+      }
+    }
+  }
 }

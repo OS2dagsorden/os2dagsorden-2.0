@@ -143,3 +143,18 @@ function os2dagsorden_annotator_update_notes_meeting($old_meeting_nid, $new_meet
     ->condition('meeting_id', $old_meeting_nid,'=')
     ->execute();
 }
+
+/**
+ * Function that updates the reference of bilag nid
+ *
+ * @param $old_attachment_nid
+ * @param $new_attachment_nid
+ */
+function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $new_attachment_nid){
+  db_update('os2dagsorden_annotator_notes')
+    ->fields(array(
+      'bilag_id' => $new_attachment_nid
+    ))
+    ->condition('bilag_id', $old_attachment_nid,'=')
+    ->execute();
+}
