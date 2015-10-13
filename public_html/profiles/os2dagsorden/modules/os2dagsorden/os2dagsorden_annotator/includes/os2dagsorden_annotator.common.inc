@@ -166,22 +166,28 @@ function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $ne
     while ($record = $result->fetchAssoc()) { 
       //add note to first word in the string
        $ranges=json_decode($record["note_info"]);
-       $bpa_body=strip_tags($new_attachment->field_os2web_meetings_bpa_body['und'][0]['value']);
-       $firstWord=strstr($bpa_body, ' ',true);  
-       $ranges->quote=$word;
+       $bpa_body = $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'];
+       $bpa_body=trim(preg_replace('/<\/?(?:td)\b[^>]*>\s*/i', ' ', $bpa_body));
+       $bpa_body=trim(strip_tags($bpa_body));
+       $firstWord=trim(strstr($bpa_body, ' ',true)); 
+       $firstWord_pos =strpos( $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'], $firstWord);
+       $tags=substr( $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'],0,$firstWord_pos); //get start tags
+       $tags = preg_replace( "|<(\w+)([^>/]+)?|",  "<$1",$tags); //remove tag attributes
+       $tags=str_replace(array('>',' '), array(''),$tags);
+       $tags=str_replace(array('<'), array('/'),$tags);
+       $ranges->quote= $firstWord;
        $ranges->ranges[0]->startOffset=0;
-       $ranges->ranges[0]->start = "\/div\/p";
-       $ranges->ranges[0]->end = "\/div\/p";
-       $ranges->ranges[0]->endOffset=strlen($firstWord)+1;
+       $ranges->ranges[0]->start = "\/div" . $tags;
+       $ranges->ranges[0]->end = "\/div" . $tags;
+       $ranges->ranges[0]->endOffset=strlen($firstWord);
        db_update('os2dagsorden_annotator_notes')
-       ->fields(array(
-       'note_info' => json_encode($ranges),
-       'bilag_id' => $new_attachment_nid
-      ))
-    ->condition('id', $record['id'],'=')
-    ->execute();      
-    }
-    
+        ->fields(array(
+        'note_info' => json_encode($ranges),
+        'bilag_id' => $new_attachment_nid
+       ))
+        ->condition('id', $record['id'],'=')
+        ->execute();      
+    }    
   }
   else {  
   db_update('os2dagsorden_annotator_notes')
