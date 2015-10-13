@@ -151,10 +151,44 @@ function os2dagsorden_annotator_update_notes_meeting($old_meeting_nid, $new_meet
  * @param $new_attachment_nid
  */
 function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $new_attachment_nid){
+  $old_attachment = node_load($old_attachment_nid);
+  $new_attachment = node_load($new_attachment_nid);
+  
+  //bullet point attachment body changed 
+  //needs notes update
+  if (strcasecmp($old_attachment->field_os2web_meetings_bpa_body[['und']][0]['value'], 
+        $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value']) != 0){
+    
+    $result = db_select('os2dagsorden_annotator_notes', 'notes')
+            ->fields('notes')     
+            ->condition('bilag_id', $old_attachment_nid,'=')
+            ->execute();
+    while ($record = $result->fetchAssoc()) { 
+      //add note to first word in the string
+       $ranges=json_decode($record["note_info"]);
+       $bpa_body=strip_tags($new_attachment->field_os2web_meetings_bpa_body['und'][0]['value']);
+       $firstWord=strstr($bpa_body, ' ',true);  
+       $ranges->quote=$word;
+       $ranges->ranges[0]->startOffset=0;
+       $ranges->ranges[0]->start = "\/div\/p";
+       $ranges->ranges[0]->end = "\/div\/p";
+       $ranges->ranges[0]->endOffset=strlen($firstWord)+1;
+       db_update('os2dagsorden_annotator_notes')
+       ->fields(array(
+       'note_info' => json_encode($ranges),
+       'bilag_id' => $new_attachment_nid
+      ))
+    ->condition('id', $record['id'],'=')
+    ->execute();      
+    }
+    
+  }
+  else {  
   db_update('os2dagsorden_annotator_notes')
     ->fields(array(
       'bilag_id' => $new_attachment_nid
     ))
     ->condition('bilag_id', $old_attachment_nid,'=')
     ->execute();
+  } 
 }
