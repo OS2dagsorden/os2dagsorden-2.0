@@ -164,22 +164,37 @@ function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $ne
             ->condition('bilag_id', $old_attachment_nid,'=')
             ->execute();
     while ($record = $result->fetchAssoc()) { 
-      //add note to first word in the string
-       $ranges=json_decode($record["note_info"]);
-       $bpa_body = $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'];
-       $bpa_body=trim(preg_replace('/<\/?(?:td)\b[^>]*>\s*/i', ' ', $bpa_body));
-       $bpa_body=trim(strip_tags($bpa_body));
-       $firstWord=trim(strstr($bpa_body, ' ',true)); 
-       $firstWord_pos =strpos( $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'], $firstWord);
-       $tags=substr( $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'],0,$firstWord_pos); //get start tags
-       $tags = preg_replace( "|<(\w+)([^>/]+)?|",  "<$1",$tags); //remove tag attributes
-       $tags=str_replace(array('>',' '), array(''),$tags);
-       $tags=str_replace(array('<'), array('/'),$tags);
-       $ranges->quote= $firstWord;
-       $ranges->ranges[0]->startOffset=0;
-       $ranges->ranges[0]->start = "\/div" . $tags;
-       $ranges->ranges[0]->end = "\/div" . $tags;
-       $ranges->ranges[0]->endOffset=strlen($firstWord);
+      $bpa_body = $new_attachment->field_os2web_meetings_bpa_body['und'][0]['value'];
+      $bpa_body = preg_replace('#<(meta)(?:[^>]+)?>.*?#s', '', $bpa_body);
+      $bpa_body = preg_replace('#<(style)(?:[^>]+)?>.*?</\1>#s', '', $bpa_body);
+
+      //first word
+      $text = strip_tags($bpa_body);
+      $text = preg_replace("/&nbsp;/",' ',$text);
+      $text = preg_replace('/[\n\r]/',' ',$text);
+      $text = trim($text);
+      $first_word = mb_strstr($text, ' ',true);
+
+      //first word path
+      $doc = new DOMDocument();
+      $doc->loadHTML($bpa_body);
+      $path = _os2dagsorden_annotator_find_path($doc, $first_word);
+      $path = str_replace('/html/body/','/div/',$path);
+      //$path = str_replace('/','\/',$path);
+
+      //ranges
+      $text = strip_tags($bpa_body);
+      $text = trim($text);
+      $start = strpos($text,$first_word);
+      $end = strlen($first_word)+$start;
+
+      $ranges=json_decode($record["note_info"]);
+      $ranges->quote = $first_word;
+      $ranges->ranges[0]->startOffset = $start;
+      $ranges->ranges[0]->start = $path;
+      $ranges->ranges[0]->end = $path;
+      $ranges->ranges[0]->endOffset = $end;
+
        db_update('os2dagsorden_annotator_notes')
         ->fields(array(
         'note_info' => json_encode($ranges),
@@ -197,4 +212,29 @@ function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $ne
     ->condition('bilag_id', $old_attachment_nid,'=')
     ->execute();
   } 
+}
+
+function _os2dagsorden_annotator_find_path(DOMNode $domNode, $first_word, $current_path= ''){
+  foreach ($domNode->childNodes as $node) {
+    if ($node->nodeName == 'style') {
+      continue;
+    }
+    if ($node->nodeType == XML_ELEMENT_NODE) {
+      if($node->hasChildNodes()) {
+        return _os2dagsorden_annotator_find_path($node, $first_word, $current_path . '/' . $node->nodeName);
+      }
+    } else if ($node->nodeType == XML_TEXT_NODE) {
+
+      $text = strip_tags($node->nodeValue);
+      $text = utf8_decode($text);
+      $text = preg_replace("/&nbsp;/",'',$text);
+      $text = trim($text);
+
+      if ($text != '') {
+        if (substr($text, 0, strlen($first_word)) === $first_word) {
+          return $current_path;
+        }
+      }
+    }
+  }
 }
