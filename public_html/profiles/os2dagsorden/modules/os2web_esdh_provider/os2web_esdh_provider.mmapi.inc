@@ -708,6 +708,10 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
         if (!empty($attachments_to_delete)) {
           watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Imported attachment to be deleted !list',
             array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!list' => print_r($attachments_to_delete, TRUE)), WATCHDOG_DEBUG);
+
+          //if any of the attachment had attached notes, we try to save the notes
+          os2dagsorden_esdh_provider_reassign_notes($attachments_to_delete, $bullet_nids);
+
           node_delete_multiple($attachments_to_delete);
           unset($node->field_os2web_meetings_attach['und']);
         }
