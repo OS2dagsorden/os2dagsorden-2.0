@@ -19,6 +19,19 @@ function os2dagsorden_meeting_views_meetings_search_help_text(){
 }
 /////////////////////////////////////////header END /////////////////////////////////////////
 
+/////////////////////////////////////////filter start /////////////////////////////////////////
+function os2dagsorden_meeting_views_meetings_search_filter_additional_agendas($nid){
+  //checking if the filtering is needed
+  if (!variable_get('os2dagsorden_meetings_search_include_add_agenda', TRUE)) {
+    $meeting = node_load($nid);
+    if (!empty($meeting->field_os2web_meetings_addendum['und']) && empty($_GET['search_params'])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+/////////////////////////////////////////filter END /////////////////////////////////////////
+
 /////////////////////////////////////////PAGE START/////////////////////////////////////////
 function os2dagsorden_meeting_views_meetings_search_fields_bp_id($meta_data){
   $search_param = $_GET['search_params'];

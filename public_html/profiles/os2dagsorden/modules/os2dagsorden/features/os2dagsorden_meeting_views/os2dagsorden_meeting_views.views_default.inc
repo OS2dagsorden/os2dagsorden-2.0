@@ -2898,6 +2898,13 @@ os2dagsorden_meeting_views_meetings_search_fields_placering($meta_data);
     5 => 0,
     3 => 0,
   );
+  /* Filter criterion: Additional agenda filter */
+  $handler->display->display_options['filters']['php']['id'] = 'php';
+  $handler->display->display_options['filters']['php']['table'] = 'views';
+  $handler->display->display_options['filters']['php']['field'] = 'php';
+  $handler->display->display_options['filters']['php']['ui_name'] = 'Additional agenda filter';
+  $handler->display->display_options['filters']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['filters']['php']['php_filter'] = 'return os2dagsorden_meeting_views_meetings_search_filter_additional_agendas($row->nid);';
   $handler->display->display_options['path'] = 'meetings-search';
   $translatables['meetings_search'] = array(
     t('Master'),

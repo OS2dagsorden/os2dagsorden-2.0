@@ -346,9 +346,16 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show meeting status on meeting serach view'),
+    '#title' => t('Show meeting status on meeting search view'),
     '#description' => t('This decides whether a meeting status is visible on meeting search view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE),
+  );
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include additional agendas into search by committee (empty keyword)'),
+    '#description' => t('This decides whether the additional agenda meeting (tillaæegsdagsorden) will be included into the search results, when keyword is empty.<br/>
+      If keyword is not empty additional agenda meeting will be included disregarding of this setting.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_search_include_add_agenda', TRUE),
   );
 
   $month_choise = array();
@@ -1233,6 +1240,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
+    variable_set('os2dagsorden_meetings_search_include_add_agenda', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda']);
+
     variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
     variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
     variable_set('os2dagsorden_search_meeting_is_closed', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_meeting_is_closed']);

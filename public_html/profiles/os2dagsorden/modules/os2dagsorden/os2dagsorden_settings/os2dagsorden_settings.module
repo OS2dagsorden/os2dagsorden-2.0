@@ -107,6 +107,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda'] = variable_get('os2dagsorden_meetings_search_include_add_agenda', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate'] = variable_get('os2dagsorden_search_startdate', 1);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate'] = variable_get('os2dagsorden_search_enddate', 1);
   
