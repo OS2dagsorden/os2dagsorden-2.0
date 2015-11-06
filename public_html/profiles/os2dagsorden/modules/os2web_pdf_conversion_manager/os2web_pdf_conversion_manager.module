@@ -170,7 +170,7 @@ function os2web_pdf_conversion_manager_cron() {
     _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path);     
     _os2web_pdf_conversion_manager_manage_pdf($convertion_dir_path);
     _os2web_pdf_conversion_manager_delete_msg_attachments_folder($convertion_dir_path);
-     _os2web_pdf_conversion_manager_delete_lock_files($convertion_dir_path);
+    _os2web_pdf_conversion_manager_delete_lock_files($convertion_dir_path);
   
     drupal_flush_all_caches();
     
