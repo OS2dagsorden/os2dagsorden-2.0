@@ -178,7 +178,19 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Title of the meeting additional description download button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF'),
   );
-
+  $form['os2dagsorden_meeting_view_settings']['print_pdf_page_orientation'] = array(
+      '#type' => 'select',
+      '#title' => t('Page orientation in PDF file'),
+      '#options' => array('portrait' => t('Portrait'), 'landscape' => t('Landscape')),
+      '#default_value' => variable_get('print_pdf_page_orientation', PRINT_PDF_PAGE_ORIENTATION_DEFAULT),
+      '#description' => t('Choose the page orientation of the generated PDF.'),
+    );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_print_pdf_show_commitee'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show committee and meeting date in bullet point title'),
+      '#default_value' => variable_get('os2dagsorden_print_pdf_show_commitee', FALSE),
+      '#description' => t('This decides whether meetimg committee and date will be shown in bullet point title in PDF'),
+  );
   //speaker paper view
   $form['os2dagsorden_speaker_paper_settings'] = array(
     '#type' => 'fieldset',
