@@ -10,11 +10,8 @@ function os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_poi
   module_load_include('inc', 'os2dagsorden_meeting_views', 'os2dagsorden_meeting_views_common_fields' );  
   $bullet_point = node_load($bullet_point_id);
  
-  if (strcmp($bullet_point->type, 'os2web_meetings_bullet') == 0) {
-     
-    if (variable_get('os2dagsorden_print_pdf_show_commitee', FALSE) === FALSE)
-     $html = '<h2>' . $bullet_point->title . '</h2>';
-    else {
+  if (strcmp($bullet_point->type, 'os2web_meetings_bullet') == 0) {     
+    if (variable_get('os2dagsorden_print_pdf_show_commitee', FALSE)){
      $meeting = node_load($meeting_id);
      $date = field_get_items('node', $meeting, 'field_os2web_meetings_date');
      $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_committee');
@@ -24,9 +21,10 @@ function os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_poi
      else
        $commitee =  taxonomy_term_load($meeting_committee[0]["tid"])->name;
      $meeting_date =format_date(strtotime($date[0]["value"]), $type = 'short', '', $date[0]['timezone']);
-     $html = '<h2>' . $bullet_point->title . '(' . $commitee . ' ' . $meeting_date . ')</h2>';
-    }
-  
+     $html = '<h2>' . $bullet_point->title . ' (' . $commitee . ' ' . $meeting_date . ')</h2>';
+    }     
+    else 
+     $html = '<h2>' . $bullet_point->title . '</h2>';
     //eliminating duplicates in bullet points attachments
     $attachments = array();
     if ($bullet_point->field_os2web_meetings_attach['und']) {
