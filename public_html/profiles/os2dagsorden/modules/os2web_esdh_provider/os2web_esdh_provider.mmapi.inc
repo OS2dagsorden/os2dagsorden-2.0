@@ -396,7 +396,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
 
     if (module_exists('os2dagsorden_esdh_provider')) {
       if (!empty($existing_bullets)) {
-        $node = os2dagsorden_esdh_provider_find_corresponding_bullet($item['title'], $existing_bullets);
+        $node = os2dagsorden_esdh_provider_find_corresponding_bullet($item['title'], $item['sysid'], $existing_bullets);
         if ($node) {
           watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Found existing BP node nid: !nid',
             array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!nid' => $node->nid), WATCHDOG_INFO);
