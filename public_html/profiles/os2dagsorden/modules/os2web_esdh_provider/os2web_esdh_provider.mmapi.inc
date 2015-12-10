@@ -457,7 +457,8 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
       }
     }
     else {
-      $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][]['value'] = 0;
+      $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][0]['value'] = 0;
+      $node->field_os2web_meetings_bul_pers[LANGUAGE_NONE][0]['value'] = 0;
       $node = _os2web_esdh_import_handle_bullets($node, $item);
     }
     node_submit($node);
