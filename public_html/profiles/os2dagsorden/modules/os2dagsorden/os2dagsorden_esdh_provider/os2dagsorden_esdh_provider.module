@@ -208,13 +208,16 @@ function os2dagsorden_esdh_provider_assign_meeting_category($node, $committee_su
  * Returns the corresponding bullet if exists, bases on the name
  *
  * @param $title
+ * @param $sys_id
  * @param $bullet_nids
  * @return mixed
  */
-function os2dagsorden_esdh_provider_find_corresponding_bullet($title, $bullet_nids){
+function os2dagsorden_esdh_provider_find_corresponding_bullet($title, $sys_id, $bullet_nids){
   foreach($bullet_nids as $bullet_nid){
     $bullet = node_load($bullet_nid['target_id']);
-    if (strcasecmp($title, $bullet->title) == 0){
+    if (strcasecmp($title, $bullet->title) == 0) {
+      return $bullet;
+    } elseif (strcasecmp($sys_id, $bullet->field_os2web_bullet_point_id['und'][0]['value']) == 0) {
       return $bullet;
     }
   }

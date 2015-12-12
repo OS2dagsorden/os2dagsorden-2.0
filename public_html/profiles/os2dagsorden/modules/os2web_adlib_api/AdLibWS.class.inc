@@ -100,7 +100,6 @@ class AdLibWS {
       <JOB:DOCOUTPUT FILENAME="!outfile" FOLDER="!outfolder" DOCTYPE="!jobtype" />
     </JOB:DOCOUTPUTS>
     <JOB:SETTINGS>
-      <JOB:HEADER ENABLED="Yes" TEXTRIGHT="&amp;[Page] of &amp;[Pages]" LAYER="Foreground" />
       <JOB:NATIVEAPPSETTINGS>
         <JOB:MSOUTLOOK CONVERSIONMODE="IFTS" PROCESSATTACHMENTS="No"/>
       </JOB:NATIVEAPPSETTINGS>
