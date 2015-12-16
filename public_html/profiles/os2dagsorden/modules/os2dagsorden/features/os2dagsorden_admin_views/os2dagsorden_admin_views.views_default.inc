@@ -381,7 +381,24 @@ function os2dagsorden_admin_views_views_default_views() {
   );
   $handler->display->display_options['filters']['field_follows_committee_pp_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_follows_committee_pp_tid']['vocabulary'] = 'os2web_meetings_tax_committee';
-
+  /* Filter criterion: User: Organization (field_user_organization) */
+  $handler->display->display_options['filters']['field_user_organization_value']['id'] = 'field_user_organization_value';
+  $handler->display->display_options['filters']['field_user_organization_value']['table'] = 'field_data_field_user_organization';
+  $handler->display->display_options['filters']['field_user_organization_value']['field'] = 'field_user_organization_value';
+  $handler->display->display_options['filters']['field_user_organization_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_user_organization_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_user_organization_value']['expose']['operator_id'] = 'field_user_organization_value_op';
+  $handler->display->display_options['filters']['field_user_organization_value']['expose']['label'] = 'Organization';
+  $handler->display->display_options['filters']['field_user_organization_value']['expose']['operator'] = 'field_user_organization_value_op';
+  $handler->display->display_options['filters']['field_user_organization_value']['expose']['identifier'] = 'field_user_organization_value';
+  $handler->display->display_options['filters']['field_user_organization_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    5 => 0,
+    3 => 0,
+    4 => 0,
+    6 => 0,
+  );
   /* Display: System */
   $handler = $view->new_display('system', 'System', 'system_1');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
