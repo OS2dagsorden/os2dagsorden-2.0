@@ -294,6 +294,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a closed indicator will be shown next to meeting if meeting has at least one bullet that is closed'),
     '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', FALSE),
   );
+  $form['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_meeting_title_len'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting title lenght'),
+    '#description' => t('This specify how many characters the "møde column" should crop the text at. If this is set to 0 then we show the full title.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25),
+  );
   
   // frontpage layout settings
   $form['os2dagsorden_frontpage_layout'] = array(
