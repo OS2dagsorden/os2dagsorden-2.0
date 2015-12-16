@@ -300,6 +300,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This specify how many characters the "møde column" should crop the text at. If this is set to 0 then we show the full title.'),
     '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25),
   );
+  $form['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_meeting_location_len'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting location lenght'),
+    '#description' => t('This specify how many characters the location column should crop the text at. If this is set to 0 then we show the full title.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25),
+  );
   
   // frontpage layout settings
   $form['os2dagsorden_frontpage_layout'] = array(
