@@ -84,8 +84,14 @@ function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
 function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_location');
-      
-    print taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    $location = taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    if (variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25) == 0)
+       print $location;
+    else if (mb_strlen($location) > variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25))      
+      print mb_substr($location, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25)) . '...';
+    else
+      print $location;  
+    
 }
 /////////////////////////////////////////meeting END/////////////////////////////////////////
 
