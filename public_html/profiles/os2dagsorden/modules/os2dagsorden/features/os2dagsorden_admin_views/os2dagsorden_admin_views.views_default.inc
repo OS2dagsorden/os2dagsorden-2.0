@@ -210,7 +210,7 @@ function os2dagsorden_admin_views_views_default_views() {
       'selected' => 1,
       'skip_confirmation' => 1,
       'override_label' => 1,
-      'label' => 'Batch add committees',
+      'label' => 'Batch edit committees',
       'settings' => array(
         'url' => 'users-batch-simple-edit',
       ),
@@ -409,7 +409,7 @@ function os2dagsorden_admin_views_views_default_views() {
     t('Delete'),
     t('Change value'),
     t('Change user roles'),
-    t('Batch add committees'),
+    t('Batch edit committees'),
     t('Send e-mail'),
     t('Navn'),
     t('Full name'),
