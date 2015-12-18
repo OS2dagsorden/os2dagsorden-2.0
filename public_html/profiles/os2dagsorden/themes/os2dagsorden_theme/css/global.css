@@ -1812,7 +1812,7 @@ a.annotator-wrapper {
 }
 .available_committee {
     float: right;
-    /*overflow: scroll;*/
+    overflow-y: scroll;
 }
 
 ul.droptrue{
