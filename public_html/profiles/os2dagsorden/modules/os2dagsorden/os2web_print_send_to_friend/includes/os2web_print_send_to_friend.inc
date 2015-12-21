@@ -4,13 +4,27 @@
  * Creates a light version of the bullet point for printing
  *
  * @param int $bullet_point_id bullet point id
- *
+ * @param bool $show_commitee
  */
-function os2web_print_send_to_friend_print_bullet_point($bullet_point_id) {
+function os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_point_id, $show_commitee = TRUE) {
+  module_load_include('inc', 'os2dagsorden_meeting_views', 'os2dagsorden_meeting_views_common_fields' );  
   $bullet_point = node_load($bullet_point_id);
-  if (strcmp($bullet_point->type, 'os2web_meetings_bullet') == 0) {
-    $html = '<h2>' . $bullet_point->title . '</h2>';
-
+ 
+  if (strcmp($bullet_point->type, 'os2web_meetings_bullet') == 0) {     
+    if (variable_get('os2dagsorden_print_pdf_show_commitee', FALSE) && $show_commitee){
+     $meeting = node_load($meeting_id);
+     $date = field_get_items('node', $meeting, 'field_os2web_meetings_date');
+     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_committee');
+     $short_name=taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+     if (!empty($short_name))
+       $commitee = taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
+     else
+       $commitee =  taxonomy_term_load($meeting_committee[0]["tid"])->name;
+     $meeting_date =format_date(strtotime($date[0]["value"]), $type = 'short', '', $date[0]['timezone']);
+     $html = '<h2>' . $bullet_point->title . ' (' . $commitee . ' ' . $meeting_date . ')</h2>';
+    }     
+    else 
+     $html = '<h2>' . $bullet_point->title . '</h2>';
     //eliminating duplicates in bullet points attachments
     $attachments = array();
     if ($bullet_point->field_os2web_meetings_attach['und']) {
@@ -122,7 +136,7 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
 
   $body .= $name . " har sendt dig et dagsordenspunkt med beskeden:<br/>" . $message . "<br/><br/>";
 
-  $body .= os2web_print_send_to_friend_print_bullet_point($bullet_point_id);
+  $body .= os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_point_id);
 
   $body .= "</body></html>";
 
@@ -196,9 +210,9 @@ function os2web_print_send_to_friend_print_dagsorden($meeting_id) {
   if (isset($meeting->field_os2web_meetings_bullets['und'])) {
     foreach ($meeting->field_os2web_meetings_bullets['und'] as $bullet_point) {
       if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bullet_point['target_id']))
-        $html .= os2web_print_send_to_friend_print_bullet_point($bullet_point['target_id']);
+        $html .= os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_point['target_id'], FALSE);
       else
-        $html .=  os2web_print_send_to_friend_print_bullet_point_title($bullet_point['target_id']);
+        $html .=  os2web_print_send_to_friend_print_bullet_point_title($meeting_id, $bullet_point['target_id']);
     }
   }
 
