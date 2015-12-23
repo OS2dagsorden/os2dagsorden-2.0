@@ -43,6 +43,19 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#description' => t('This is the path where Acadre publish .XML files to.'),
     '#default_value' => variable_get('os2web_meetings_path', OS2WEB_ACADRE_ESDH_ACADRE_MM_IMPORT_DIR),
   );
+  $form['os2web_mm']['os2web_meetings_acadre_images'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to Acadre images publish folder'),
+    '#description' => t('This is the path where Acadre acadre images are located'),
+   '#default_value' => variable_get('os2web_meetings_acadre_images'),
+  );
+   $form['os2web_mm']['os2web_meetings_acadre_images_destination_folder'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path to Acadre images destination folder'),
+    '#description' => t('This is the path where Acadre acadre images are copied'),
+   '#default_value' => variable_get('os2web_meetings_acadre_images_destination_folder'),
+  );
+  
   $form['os2web_mm']['os2dagsorden_committees_positive_list_as_import_list'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use list of active committees during import'),
@@ -78,6 +91,13 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
     '#default_value' => variable_get('s2web_acadre_location_field', 'true'),
     '#options' => $options2 = array('true' => t('the location field'), 'false' => t('the address field')),
     '#description' => t('This decides from which field meeting address gets'),
+  );
+  $form['os2web_mm']['os2web_acadre_description_field'] = array(
+    '#type' => 'radios',
+    '#title' => t('Get the comments for the meeting from'),
+    '#default_value' => variable_get('os2web_acadre_description_field', 'true'),
+    '#options' => $options2 = array('true' => t('the name field'), 'false' => t('the description field')),
+    '#description' => t('This decides from which field meeting comments gets'),
   );
   
   $form['os2web_mm']['os2web_acadre_add_committee_to_title'] = array(
@@ -174,7 +194,13 @@ function os2web_acadre_esdh_form_os2web_settings_settings_form_alter(&$form, &$f
 function os2web_acadre_esdh_form_os2web_settings_settings_form_submit(&$form, &$form_state) {      
   if (substr(trim($form_state['values']['os2web_meetings_path']), -1) !='/')
      $form_state['values']['os2web_meetings_path']=$form_state['values']['os2web_meetings_path'].'/';
-        
+  
+  if (substr(trim($form_state['values']['os2web_meetings_acadre_images']), -1) !='/')
+     $form_state['values']['os2web_meetings_acadre_images']=$form_state['values']['os2web_meetings_acadre_images'].'/';
+       
+  if (substr(trim($form_state['values']['os2web_meetings_acadre_images_destination_folder']), -1) !='/')
+     $form_state['values']['os2web_meetings_acadre_images_destination_folder']=$form_state['values']['os2web_meetings_acadre_images_destination_folder'].'/';
+     
 }
 /**
  * Implements hook_os2web_help().

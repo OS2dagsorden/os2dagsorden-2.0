@@ -148,6 +148,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
 
           // Publication not published or public.
           $meetings[] = array(
+            'meeting_id' => _get_value_from_xml($manifest->xpath("/root/table[@name='meeting']/fields/field/@sysid"), 'int'),
             'meeting_sub_id' => _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int'),
             'agenda_access' => $agendainfo['access'],
             'publish' => FALSE,
@@ -200,6 +201,13 @@ function _os2web_acadre_esdh_import_meeting($info) {
       watchdog('acadre MM', 'Ignored agenda from %committee (%committee_id).', array('%committee' => $committee, '%committee_id' =>$committee_id));
       return FALSE;
     }
+    
+    if (variable_get('os2web_acadre_description_field', 'true') === 'true')
+      $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']"));
+    else
+      $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='description']"));
+
+    
 
     $meeting = array(
       'title' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='name']")),
@@ -209,7 +217,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'agenda_access' => $info['access'],
       'publication_id' => _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='sysid']")),
       'creation_date' => strtotime(_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='producedate']"))),
-      'description' => _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
+      'description' =>  $description,//_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
       'meeting_date_start' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='date']")),
       'meeting_date_finish' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='finish']")),
       'committee' => $committee,
@@ -675,40 +683,59 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
  * Todo, add docblock.
  */
 function _acadre_esdh_mm_improve_body_html($data) {
-  if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
-    foreach ($uri[0] as $file) {
-      $file = str_replace('"', '', $file);
-      $uri_parts = explode('\\', $file);
-      $filename = trim(array_pop($uri_parts));
-      $folder_name = array_pop($uri_parts);
-      $file_realpath = drupal_realpath(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
-        implode('/', array(
-        'images',
-        $folder_name,
-        $filename,
-      )));
-      $dest_dir_realpath = drupal_realpath('public://') . '/acadre_images/' . $folder_name;
-      if (!is_file($dest_dir_realpath)) {
-        mkdir($dest_dir_realpath);
+  $data = _acadre_esdh_mm_remove_empty_tags($data);
+ // if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
+  // foreach ($uri[0] as $file) {
+   $doc = new DOMDocument();
+   $doc->loadHTML( $data);
+  $elements = $doc->getElementsByTagName('img');
+  if($elements->length > 0){
+      foreach($elements as $element)  {
+	 $file = $element->getAttribute('src');
+            if (strpos($file, 'http://') === FALSE) {
+               $file = str_replace('"', '', $file);
+               $uri_parts = explode('\\', $file);
+               $filename = trim(array_pop($uri_parts));
+               $folder_name = array_pop($uri_parts);
+               $file_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images') .
+                  implode('/', array(
+                  $folder_name,
+                  $filename,
+                )));
+                $dest_dir_realpath = drupal_realpath(variable_get('os2web_meetings_acadre_images_destination_folder') . $folder_name);
+                if (!file_exists($dest_dir_realpath)) {
+                  if (!mkdir($dest_dir_realpath)) {
+                     watchdog('acadre MM', 'Could not create subdirectory %dir. Check the permissions', array('%dir' => $dest_dir_realpath), WATCHDOG_ERROR);
+                    return $data;
+                   }
+                }
+                copy($file_realpath, $dest_dir_realpath . '/' . $filename);
+                watchdog('acadre MM', 'Copying %from to %to', array('%from' => $file_realpath, '%to' => $dest_dir_realpath . '/' . $filename), WATCHDOG_DEBUG);
+               
+                $new_uri = file_create_url(variable_get('os2web_meetings_acadre_images_destination_folder') . 
+                  implode('/', array(
+                  $folder_name,
+                  $filename,
+                )));
+                // Modify uri.
+                $data = str_replace($file, $new_uri, $data);
+         }
       }
-      error_log("Jeg skal lave noget");
-      error_log($file_realpath);
-      error_log($dest_dir_realpath);
-      error_log($filename);
-      copy($file_realpath, $dest_dir_realpath . '/' . $filename);
-      $new_uri = file_create_url(implode('/', array(
-        'public://',
-        'acadre_images',
-        $folder_name,
-        $filename,
-      )));
-      // Modify uri.
-      $data = str_replace($file, $new_uri, $data);
-    }
-  }
-  return $data;
+   } 
+   return $data;
 }
+function _acadre_esdh_mm_remove_empty_tags($data) {
+do
+{
+   $len1 = mb_strlen($data);
+   $data = preg_replace( '/(<(a|span)[^>]*>[\s|&nbsp;?]*<(\/a|\/span)>)/', ' ' ,$data);
+   $len2 = mb_strlen($data);
 
+} while ($len1 > 0 && $len2 > 0 && $len1 != $len2);
+
+return $data;
+
+}
 function _get_value_from_xml($xml_raw, $convert_to = 'string'){
   if ($convert_to == 'string')
     return trim((string) array_shift($xml_raw));

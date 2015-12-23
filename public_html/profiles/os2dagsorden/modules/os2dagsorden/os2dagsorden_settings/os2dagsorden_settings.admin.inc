@@ -178,7 +178,19 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Title of the meeting additional description download button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF'),
   );
-
+  $form['os2dagsorden_meeting_view_settings']['print_pdf_page_orientation'] = array(
+      '#type' => 'select',
+      '#title' => t('Page orientation in PDF file'),
+      '#options' => array('portrait' => t('Portrait'), 'landscape' => t('Landscape')),
+      '#default_value' => variable_get('print_pdf_page_orientation', PRINT_PDF_PAGE_ORIENTATION_DEFAULT),
+      '#description' => t('Choose the page orientation of the generated PDF.'),
+    );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_print_pdf_show_commitee'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show committee and meeting date in bullet point title'),
+      '#default_value' => variable_get('os2dagsorden_print_pdf_show_commitee', FALSE),
+      '#description' => t('This decides whether meetimg committee and date will be shown in bullet point title in PDF'),
+  );
   //speaker paper view
   $form['os2dagsorden_speaker_paper_settings'] = array(
     '#type' => 'fieldset',
@@ -294,6 +306,18 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a closed indicator will be shown next to meeting if meeting has at least one bullet that is closed'),
     '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', FALSE),
   );
+  $form['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_meeting_title_len'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting title lenght'),
+    '#description' => t('This specify how many characters the "møde column" should crop the text at. If this is set to 0 then we show the full title.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25),
+  );
+  $form['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_meeting_location_len'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting location lenght'),
+    '#description' => t('This specify how many characters the location column should crop the text at. If this is set to 0 then we show the full title.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25),
+  );
   
   // frontpage layout settings
   $form['os2dagsorden_frontpage_layout'] = array(
@@ -346,9 +370,16 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show meeting status on meeting serach view'),
+    '#title' => t('Show meeting status on meeting search view'),
     '#description' => t('This decides whether a meeting status is visible on meeting search view.'),
     '#default_value' => variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE),
+  );
+  $form['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Include additional agendas into search by committee (empty keyword)'),
+    '#description' => t('This decides whether the additional agenda meeting (tillaæegsdagsorden) will be included into the search results, when keyword is empty.<br/>
+      If keyword is not empty additional agenda meeting will be included disregarding of this setting.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_search_include_add_agenda', TRUE),
   );
 
   $month_choise = array();
@@ -1233,6 +1264,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
+    variable_set('os2dagsorden_meetings_search_include_add_agenda', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda']);
+
     variable_set('os2dagsorden_search_startdate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate']);
     variable_set('os2dagsorden_search_enddate', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate']);
     variable_set('os2dagsorden_search_meeting_is_closed', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_meeting_is_closed']);

@@ -356,7 +356,6 @@ table.views-table tr td a:hover {
 	font-family: inherit;
 	background-color: inherit;
 	color: #007aaf;
-	padding: inherit;
 	text-shadow: inherit;
 	border-left: none;
     border-top: none;
@@ -398,17 +397,6 @@ table .hide_show_bilags_cases{
 /* ---------------------------- Table Styles START---------------------------- */
 
 /* ---------------------------- Meeting details attachment text START---------------------------- */
-.attachment_text_container{
-  overflow-x: auto;
-}
-
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_full_trimmed_container{
-  max-width: none;
-}
- 
-.attachment_text_container .attachment-text{
-  max-width: none;
-}
 
 .attachment-text table, 
 .attachment-text tbody,
@@ -442,15 +430,7 @@ table.views-table tr td li.bilag a:hover {
 }
 /*---------------------------- Show hide menu End ----------------------------*/
 
-.views-table .annotator-wrapper{
-	position:initial!important;
-}
 tr.bulletpoint-row{
 	position:relative;
 	display:block;
-}
-
- .views-table .annotator-outer{
-	margin-top: 78px;
-	margin-left:102px;
 }

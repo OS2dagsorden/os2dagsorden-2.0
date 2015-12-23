@@ -106,35 +106,31 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
       $meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
+      $xml_id = $manifest->xpath("Agendas/Agenda/Meeting/@ID");
       $meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
       $meeting_name = (string) $meeting_name[0];
       $acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
       $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
-      
-      # if a meeting is kladde then it should not be published. So we need the meeting type early. 
       $meeting_type = $manifest->xpath('/Publication/PublicationTypeAsValue');
-      # end of type
+      switch (((string) $meeting_type[0])) {
+          case '0':
+            $meeting_type = 'Kladde';
+            break;
+          case '1':
+            $meeting_type = 'Dagsorden';
+            break;
+          case '2':
+            $meeting_type = 'Referat';
+            break;
+      }
 
       $committee = (string) $committee[0][ID];
       $committee_group_id = (string) $committee_group_id[0][ID];
       $committee_name = (string) $committee_name[0];
       $meeting_name = $committee_name;
       $sys_id = (string) $sys_id[0][ID];
+      $xml_id = (string) $xml_id[0][ID];
       $meeting_public = (string) $meeting_public[0];
-
-      switch (((string) $meeting_type[0])){
-        case '0':
-          $meeting_type = 'Kladde';
-          watchdog('SBsys MM', 'Ikke importeret: Møde %id %name har typen %type.', array('%id' => $sys_id, '%name' => $meeting_name, '%type' => $meeting_type), WATCHDOG_WARNING);
-          return FALSE;
-          break;
-        case '1':
-          $meeting_type = 'Dagsorden';
-          break;
-        case '2':
-          $meeting_type = 'Referat';
-          break;
-      }
 
       $meeting_date_when = $meeting_data[0]->When;
       $meeting_date_until = $meeting_data[0]->Until;
@@ -148,13 +144,6 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $dir_parts = explode('/',$directory_name);     
       $pdf = array_pop($dir_parts).".pdf";
      
-      // Check if the committee is allowed to publish.
-      $publish_committee = array_map('trim', explode(',', variable_get('os2web_sbsys_esdh_approved_committees', MM_DEFAULT_APPROVED)));
-      if ($committee == '' || !in_array($committee, $publish_committee)) {
-        watchdog('SBsys MM', 'Ignored agenda from "%committee" .', array('%committee' => $committee));
-        return FALSE;
-      }
-
       // Fix dates.
       $date_obj = date_create($meeting_date_when);
       date_timezone_set($date_obj, timezone_open('UTC'));
@@ -184,8 +173,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       }
 
       $meeting = array(
-        'system_id' => $sys_id,
-        'meeting_id' => $sys_id,
+        'system_id' => $xml_id,
+        'meeting_id' => $xml_id,
         'committee' => $meeting_name,
         'committee_name' => $committee_name,
         'committee_id' => $committee,
@@ -230,6 +219,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         $imported = _os2web_sbsys_esdh_mm_import_meeting_agenda($meeting, $meeting_agenda);
         if (is_array($imported)) {
           $imported['publish'] = TRUE;
+          $imported['meeting_sub_id'] = $sys_id;
           $meetings[] = $imported;
         }
       }
@@ -255,6 +245,19 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
  *   Meeting_struct array for an accepted import, else FALSE
  */
 function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
+  // Check if the committee is allowed to publish.
+  $publish_committee = array_map('trim', explode(',', variable_get('os2web_sbsys_esdh_approved_committees', MM_DEFAULT_APPROVED)));
+  if ($meeting['committee_id'] == '' || !in_array($meeting['committee_id'], $publish_committee)) {
+    watchdog('SBsys MM', 'Ignored agenda from "%committee" .', array('%committee' => $meeting['committee_id']));
+    return FALSE;
+  }
+
+  // Check meeting status
+  if ($meeting['type'] == 'Klade'){
+    watchdog('SBsys MM', 'Ignored DRAFT: Meeting %id is of type %type.', array('%id' => $meeting['system_id'], '%type' => $meeting['type']), WATCHDOG_WARNING);
+    return FALSE;
+  }
+
   $meeting['items'] = array();
   $agenda = $meeting;
  

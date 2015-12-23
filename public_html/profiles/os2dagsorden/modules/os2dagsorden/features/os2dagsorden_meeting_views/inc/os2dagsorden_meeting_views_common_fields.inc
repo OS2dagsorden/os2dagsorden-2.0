@@ -51,16 +51,22 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
    $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'] ;//$data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;
+  
 
   //logic for touch devices
   if (os2dagsorden_access_helper_is_touch()){
-    if (mb_strlen($title) > 25)
+    if ((variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25) == 0 || variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))
+          && mb_strlen($title) > 25)
       echo mb_substr($title, 0, 22) . '...';
+    else if (mb_strlen($title) > variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))
+      echo mb_substr($title, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25)) . '...';
     else
       echo $title;
   } else {//desktop device
-    if (mb_strlen($title) > 45)
-      echo mb_substr($title, 0, 42) . '...';
+    if (variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25) == 0)
+       echo $title;
+    else if (mb_strlen($title) > variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))      
+      echo mb_substr($title, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25)) . '...';
     else
       echo $title;
   }
@@ -78,8 +84,14 @@ function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
 function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     $meeting = node_load($meeting_id);
     $meeting_committee=field_get_items('node', $meeting, 'field_os2web_meetings_location');
-      
-    print taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    $location = taxonomy_term_load($meeting_committee[0]["tid"])->name;
+    if (variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25) == 0)
+       print $location;
+    else if (mb_strlen($location) > variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25))      
+      print mb_substr($location, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25)) . '...';
+    else
+      print $location;  
+    
 }
 /////////////////////////////////////////meeting END/////////////////////////////////////////
 

@@ -1071,6 +1071,10 @@ pager li.pager-first, .pager li.pager-previous.first {
     padding: 0;
 }
 
+.item-list ul,
+.item-list ol {
+    padding-left: 1.2em;
+}
 .controls-right {
   float: right;
   margin: 7px;
@@ -1808,6 +1812,7 @@ a.annotator-wrapper {
 
 .select-committee {
     float: left;
+		min-width: 250px;
 }
 .available_committee {
     float: right;

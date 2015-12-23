@@ -107,6 +107,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
+    $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_include_add_agenda'] = variable_get('os2dagsorden_meetings_search_include_add_agenda', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_startdate'] = variable_get('os2dagsorden_search_startdate', 1);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_search_enddate'] = variable_get('os2dagsorden_search_enddate', 1);
   
@@ -271,13 +272,34 @@ function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
        $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_participants', 'Deltagere');
     if ($view->display_handler->options['fields']['php']['ui_name'] == 'Participants (Cancelled)')
         $view->display_handler->options['fields']['php']['label'] = variable_get('os2dagsorden_title_meeting_cancelled_participants', 'Afbud / Fraværende');
-  } else if ($view->name == 'events'){
-    //print_r($view);
-    //print($view->name);
+  } else if ($view->name == 'os2dagsorden_users_view'){
+      $vid = db_select('taxonomy_vocabulary', 'tv')
+      ->fields('tv', array('vid'))
+      ->condition('machine_name', 'os2web_meetings_tax_committee')
+      ->orderBy('name', 'ASC')//ORDER BY created
+      ->execute()
+      ->fetchField();
+
+      foreach (taxonomy_get_tree($vid, 0, 1) as $com) {
+        $first_level_committees[$com->name] = $com->tid;
+      }
+      ksort($first_level_committees);
+
+      foreach ($first_level_committees as $com){
+        $view->display_handler->default_display->options['filters']['field_user_committee_tid']['value'][$com] = $com;
+        $view->display_handler->default_display->options['filters']['field_follows_committee_tid']['value'][$com] = $com;
+        $view->display_handler->default_display->options['filters']['field_follows_committee_plus_tid']['value'][$com] = $com;
+        $view->display_handler->default_display->options['filters']['field_follows_committee_pp_tid']['value'][$com] = $com;
+      }
+
+      $view->display_handler->default_display->options['filters']['field_user_committee_tid']['expose']['reduce'] = 1;
+      $view->display_handler->default_display->options['filters']['field_follows_committee_tid']['expose']['reduce'] = 1;
+      $view->display_handler->default_display->options['filters']['field_follows_committee_plus_tid']['expose']['reduce'] = 1;
+      $view->display_handler->default_display->options['filters']['field_follows_committee_pp_tid']['expose']['reduce'] = 1;
   }
 }
 
-function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) { 
+function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
     $content = "";
     if ($has_sections){ 
         foreach ($assoc_arr as $key=>$elem){ 
@@ -335,6 +357,13 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
     global $user;
     $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
     $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
+  }
+
+  if ($form['#id'] == 'views-exposed-form-os2dagsorden-users-view-system-1') {
+    asort($form['field_user_committee_tid']['#options']);
+    asort($form['field_follows_committee_tid']['#options']);
+    asort($form['field_follows_committee_plus_tid']['#options']);
+    asort($form['field_follows_committee_pp_tid']['#options']);
   }
 }
 
