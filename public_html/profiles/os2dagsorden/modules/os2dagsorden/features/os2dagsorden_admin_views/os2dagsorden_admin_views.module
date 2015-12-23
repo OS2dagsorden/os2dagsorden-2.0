@@ -45,6 +45,75 @@ function os2dagsorden_admin_views_form_taxonomy_overview_terms_alter(&$form, &$f
  }
 }
 
+function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
+  if ($form['#id'] == 'views-exposed-form-os2dagsorden-users-view-system-1') {
+    drupal_add_js(drupal_get_path('module', 'os2dagsorden_admin_views') . '/js/os2dagsorden_admin_views_users.js');
+   
+// $vocabulary = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
+    $terms = os2dagsorden_settings_get_active_committees();
+    $options = array();
+
+    foreach ($terms as $key => $value)
+      $options[$key] = $value->name;
+    asort($options);
+    $options=array_replace_recursive(array("All" => t("- Any -")), $options );
+        
+    $field = array ('commitee' =>  array(
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => 0,
+    ));
+    $filter = array( "filter-commitee" => array(
+        "label" => t("Commitee:"),
+        "value" => "commitee"
+    ));
+    $form = _os2dagsorden_admin_views_array_push_after($form, $field, 'field_user_organization_value');
+    $form['#info'] = _os2dagsorden_admin_views_array_push_after($form['#info'], $filter, "filter-field_user_organization_value");
+     
+  }
+  
+}
+
+function os2dagsorden_admin_views_query_alter(&$view, &$query){ 
+  if ($view->alterMetaData['view']->name == 'os2dagsorden_users_view') {
+     if (isset($_POST['commitee']) && $_POST['commitee']!= 'All'){      
+      if ($_POST['field_user_committee_tid'] == 'All')
+        $view->leftjoin('field_data_field_user_committee', 'u_com', 'uid = u_com.entity_id');
+       if ($_POST['field_follows_committee_tid'] == 'All')
+         $view->leftjoin('field_data_field_follows_committee', 'u_fc', 'uid = u_fc.entity_id');
+       if ($_POST['field_follows_committee_plus_tid'] == 'All')
+         $view->leftjoin('field_data_field_follows_committee_plus', 'u_fcp', 'uid = u_fcp.entity_id');
+       if ($_POST['field_follows_committee_pp_tid'] == 'All')
+         $view->leftjoin('field_data_field_follows_committee_pp', 'u_fcpp', 'uid = u_fcpp.entity_id');
+       $view->where('(field_user_committee_tid = ' . $_POST['commitee'] . ') '
+         . 'OR ( field_follows_committee_tid = ' . $_POST['commitee'] .')'
+         . 'OR ( field_follows_committee_plus_tid = ' . $_POST['commitee'] .')'
+         . 'OR ( field_follows_committee_pp_tid = ' . $_POST['commitee'] .')'); 
+    }
+       
+  }
+  
+}
+
+
+
+
+/**
+* @return array
+* @param array $src
+* @param array $in
+* @param int|string $pos
+*/
+function _os2dagsorden_admin_views_array_push_after($src,$in,$pos){
+    if(is_int($pos)) $R=array_merge(array_slice($src,0,$pos+1), $in, array_slice($src,$pos+1));
+    else{
+        foreach($src as $k=>$v){
+            $R[$k]=$v;
+            if($k==$pos)$R=array_merge($R,$in);
+        }
+    }return $R;
+}
+
 //function os2dagsorden_admin_views_form_taxonomy_form_term_alter(&$form, &$form_state, $form_id) {
 // if ($form['#vocabulary']->machine_name == 'os2web_meetings_tax_committee') {
 //    array_unshift($form['#submit'], 'os2dagsorden_admin_views_submit_taxomony_term');
