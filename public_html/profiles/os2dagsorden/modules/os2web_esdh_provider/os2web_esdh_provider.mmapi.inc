@@ -1091,14 +1091,57 @@ function os2web_esdh_provider_clear_cache($success, $results, $operations) {
  * Removed inline styles from html tags
  */
 
-function os2web_esdh_provider_filter_html_tags($data) {    
-    $tags = explode(',', variable_get('os2dagsorden_filtered_tags', ''));
-    foreach ($tags as $tag) {
-        preg_match_all('#<' . $tag . '(.*?)>(.*?)</' . $tag . '>#is', $data, $matches);
-        foreach ($matches[0] as $match) {
-            $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
-            $data = str_replace($match, $filtred_data, $data);
-        }
+function os2web_esdh_provider_filter_html_tags($data) {
+  $tags = explode(',', variable_get('os2dagsorden_filtered_tags', ''));
+  foreach ($tags as $tag) {
+    preg_match_all('#<' . $tag . '(.*?)>(.*?)</' . $tag . '>#is', $data, $matches);
+    foreach ($matches[0] as $match) {
+      $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
+      $data = str_replace($match, $filtred_data, $data);
     }
-    return $data;
+  }
+
+  //remove all a tags with attribute Name="Acadre..    
+  while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
+    $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
+    $data = str_replace($aTags[0], $str, $data);
+  }
+
+  $stripped_tags = explode(',', variable_get('os2dagsorden_stripped_tags', ''));
+  $data = _os2web_esdh_provider_strip_tags($data, $stripped_tags);
+
+  //remove all img tags that link missing files
+  $data = _os2web_esdh_provider_remove_img_tags($data);
+  //replace all <p></p> and <p>&nbsp;</p> tags with <br />  
+  $data = preg_replace('#(<p>((<span>)*?)(|&nbsp;)((<\/span>)*?)<\/p>\s*)+#i', '<br />', $data);
+  return $data;
+}
+
+function _os2web_esdh_provider_remove_img_tags($data){
+  preg_match_all('/<img[^>]+>/i',$data, $imgTags); 
+  for ($i = 0; $i < count($imgTags[0]); $i++) {
+    // get the source string
+     preg_match('/src="([^"]+)/i',$imgTags[0][$i], $imgage);
+  
+     $file_headers = @get_headers($imgage[0]);
+     if($file_headers=== FALSE or $file_headers[0] == 'HTTP/1.0 404 Not Found')       {
+         $data = str_replace($imgTags[0][$i], "",  $data);
+     }  
+   }
+  
+  return $data;
+}
+
+function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
+    $content = '';
+    if(!is_array($tags)) {
+        $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+        if(end($tags) == '') array_pop($tags);
+    }
+    foreach($tags as $tag) {
+        if ($stripContent)
+             $content = '(.+</'.$tag.'[^>]*>|)';
+         $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
+    }
+    return $str;
 }

@@ -8,3 +8,4 @@ project = os2web_esdh_provider
 dependencies[] = ctools
 dependencies[] = features
 features[features_api][] = api:1
+stylesheets[all][] = css/os2web_esdh_provider.css

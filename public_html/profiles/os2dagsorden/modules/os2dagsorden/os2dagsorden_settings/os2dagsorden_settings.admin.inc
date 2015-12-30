@@ -545,6 +545,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_filtered_tags', ''),
     '#description' => t('Comma-separated list of html tags that want to filter out (fe. p,h1,h2).'),
   );
+  $form['os2dagsorden_meeting_import']['os2dagsorden_stripped_tags'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Striped HTML tags lists'),
+    '#maxlength' => 250,
+    '#default_value' => variable_get('os2dagsorden_stripped_tags', ''),
+    '#description' => t('Comma-separated list of html tags that want to strip (fe. font, span).'),
+  );
 
   //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {
