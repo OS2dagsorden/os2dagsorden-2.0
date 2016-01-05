@@ -36,7 +36,8 @@
 }
 /* Links in attachment preview */
 table.views-table tr td .attachment_text_trimmed_container a:link, table.views-table tr td .attachment_text_trimmed_container a:visited , 
-table.views-table tr td .attachment_text_full_container a:link, table.views-table tr td .attachment_text_full_container a:visited {
+table.views-table tr td .attachment_text_full_container a:link, table.views-table tr td .attachment_text_full_container a:visited,
+.agenda-item .item-list .field-items a:link, .agenda-item .item-list .field-items a:visited {
   display: inline;
   padding: 5px 5px;
   border:none;
