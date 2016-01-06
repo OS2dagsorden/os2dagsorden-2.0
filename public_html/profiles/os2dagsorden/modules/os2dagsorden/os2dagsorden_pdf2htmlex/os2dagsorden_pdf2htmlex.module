@@ -350,6 +350,7 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
       //$shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
 
 	shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
+	drupal_set_message(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
 
         //successful conversion?
 	if (file_exists($path)) {
