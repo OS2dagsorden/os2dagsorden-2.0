@@ -61,6 +61,7 @@ jQuery(document).ready(function() {
     
     
  jQuery(".available_committee").css('height',jQuery(".select-committee").height()+"px");
+ jQuery(".remove-committee").css('width',jQuery(".select-committee").width()+"px");
   //updatePostOrder();
 });
  

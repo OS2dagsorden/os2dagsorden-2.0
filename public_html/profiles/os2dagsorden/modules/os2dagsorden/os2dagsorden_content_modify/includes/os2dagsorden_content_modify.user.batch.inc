@@ -33,12 +33,17 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
   $form[] = array(
     '#markup' => '</div>',
   );
-
-  if (!os2dagsorden_access_helper_is_touch()) {
-    //render drag and drop functionality
-    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, explode(',', $uids));
+   $form[] = array(
+    '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
+  );
+  if (!os2dagsorden_access_helper_is_touch()) {    
 
     _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls($form);
+    
+   //render drag and drop functionality
+    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, explode(',', $uids));
+    
+    
 
   } else {
     //fallback to default controls
@@ -63,7 +68,7 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
 
 function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls(&$form) {
   $form[] = array(
-    '#markup' => '<div class="select-committee">',
+    '#markup' => '<div class="remove-committee">',
   );
 
   $form['remove_com_div'] = array(
