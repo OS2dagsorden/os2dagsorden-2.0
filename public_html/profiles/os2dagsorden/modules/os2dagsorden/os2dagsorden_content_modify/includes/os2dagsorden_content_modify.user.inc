@@ -121,10 +121,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
  * @param $form mixed the form
  * @param $uids array array of uid
  */
-function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids) {
-  $form[] = array(
-    '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
-  );
+function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids) { 
 
   $form[] = array(
     '#markup' => '<div class="select-committee">',
