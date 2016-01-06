@@ -1,15 +1,16 @@
+private/
 logs
 site
 sessions
 tmp
+cron
 sites/default/files
 public_html_before_gitlist
 
-public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/log.htm
 os2dagsorden_ballerup_dk.sql
-private/
+public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/Helvetica-BoldOblique.afm.php
 public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/Helvetica-Bold.afm.php
 public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/Helvetica-Oblique.afm.php
 public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/Helvetica.afm.php
+public_html/profiles/os2dagsorden/libraries/dompdf/lib/fonts/Times-Bold.afm.php
 public_html/sites/all/modules/stage_file_proxy/
-.git.tar.gz
