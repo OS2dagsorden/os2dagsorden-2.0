@@ -552,6 +552,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_stripped_tags', ''),
     '#description' => t('Comma-separated list of html tags that want to strip (fe. font, span).'),
   );
+   $form['os2dagsorden_meeting_import']['os2dagsorden_tab_tag'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Replace  multiple &amp;nbsp; tags with: '),
+    '#maxlength' => 250,
+    '#default_value' => variable_get('os2dagsorden_tab_tag', '&nbsp;'),
+    '#description' => t('Tag what should be put into the document instead of multiple &amp;nbsp; tags'),
+  );
 
   //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {

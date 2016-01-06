@@ -1099,8 +1099,8 @@ function os2web_esdh_provider_filter_html_tags($data) {
       $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
       $data = str_replace($match, $filtred_data, $data);
     }
-  }
-
+  } 
+  
   //remove all a tags with attribute Name="Acadre..    
   while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
     $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
@@ -1114,7 +1114,9 @@ function os2web_esdh_provider_filter_html_tags($data) {
   $data = _os2web_esdh_provider_remove_img_tags($data);
   //replace all <p></p> and <p>&nbsp;</p> tags with <br />  
   $data = preg_replace('#(<p>((<span>)*?)(|&nbsp;)((<\/span>)*?)<\/p>\s*)+#i', '<br />', $data);
-  return $data;
+  //replace multiple &nbsp; tags with...  
+  $data = preg_replace('/(\x{00A0}|&nbsp;){2,}/u', variable_get('os2dagsorden_tab_tag', '&nbsp;'), $data);
+   return $data;
 }
 
 function _os2web_esdh_provider_remove_img_tags($data){
