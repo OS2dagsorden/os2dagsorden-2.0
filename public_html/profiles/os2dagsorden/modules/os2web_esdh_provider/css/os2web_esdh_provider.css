@@ -1,0 +1,68 @@
+.item-list ul {
+    /*margin: 0.75em 0.75em 0.75em;*/
+    margin: 0;
+    padding: 0;
+}
+
+.item-list ul,
+.item-list ol {
+    padding-left: 1.2em;
+}
+.agenda-item .item-list .field-items ul li {
+    list-style: initial;
+}
+
+.item-list hr {
+  background: #323232;
+}
+
+
+/* Showing list number in attachment preview */
+.attachment_text_trimmed_container ol li {
+  list-style: decimal inside none;
+}
+
+.attachment_text_trimmed_container ul li {
+  list-style: disc inside none;
+}
+
+/* Showing list number in attachment preview */
+.attachment_text_full_container ol li {
+  list-style: decimal inside none;
+}
+
+.attachment_text_full_container ul li {
+  list-style: disc inside none;
+}
+/* Links in attachment preview */
+table.views-table tr td .attachment_text_trimmed_container a:link, table.views-table tr td .attachment_text_trimmed_container a:visited , 
+table.views-table tr td .attachment_text_full_container a:link, table.views-table tr td .attachment_text_full_container a:visited,
+.agenda-item .item-list .field-items a:link, .agenda-item .item-list .field-items a:visited {
+  display: inline;
+  padding: 5px 5px;
+  border:none;
+  background: initial;
+  text-shadow: none;
+  color: #8b0053;
+  text-decoration: underline;
+  font-weight: normal;
+  /*border-bottom-right-radius: 4px;
+  border-right-width: 1px;
+  border-top-right-radius: 4px;
+  
+  border-bottom-left-radius: 4px;
+  border-left-width: 1px;
+  border-top-left-radius: 4px;
+  
+  background-color: #F0EDFF;
+  border-bottom: 1px solid #E5E5E5;
+  border-color: #E5E5E5;
+  border-style: solid;
+  border-top: 1px solid #E5E5E5;
+  color: #333333;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 30px;
+  text-shadow: 1px 1px #F5F5F5;*/
+}
