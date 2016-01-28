@@ -347,7 +347,7 @@ a.form-submit, a.button {
 table.views-table tr td a,
 table.views-table tr td a:hover {
 	font-family: inherit;
-	background-color: inherit;
+	background-color: white;
 	color: #007aaf;
 	padding: inherit;
 	text-shadow: inherit;
