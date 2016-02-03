@@ -1588,17 +1588,6 @@ a.annotator-wrapper {
     padding: 5px;
 }
 
-.attachment_text_full_container p {
-		margin-bottom: 5px;
-}
-
-.attachment_text_full_container ul,
-.attachment_text_full_container ol,
-.attachment_text_full_container table {
-		margin-top: 15px;
-		margin-bottom: 15px;
-}
-
 .attachment_text_container .attachment_text_full_container,
 .attachment_text_container .attachment_text_trimmed_container{
   width: 100%;

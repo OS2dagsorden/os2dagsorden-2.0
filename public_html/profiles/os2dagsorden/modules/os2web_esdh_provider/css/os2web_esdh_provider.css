@@ -18,22 +18,27 @@
 
 
 /* Showing list number in attachment preview */
-.attachment_text_trimmed_container ol li {
-  list-style: decimal inside none;
-}
-
-.attachment_text_trimmed_container ul li {
-  list-style: disc inside none;
-}
-
-/* Showing list number in attachment preview */
+.attachment_text_trimmed_container ol li,
 .attachment_text_full_container ol li {
   list-style: decimal inside none;
 }
 
+.attachment_text_trimmed_container ul li,
 .attachment_text_full_container ul li {
   list-style: disc inside none;
 }
+
+.attachment_text_full_container p {
+		margin-bottom: 5px;
+}
+
+.attachment_text_full_container ul,
+.attachment_text_full_container ol,
+.attachment_text_full_container table {
+		margin-top: 15px;
+		margin-bottom: 15px;
+}
+
 /* Links in attachment preview */
 table.views-table tr td .attachment_text_trimmed_container a:link, table.views-table tr td .attachment_text_trimmed_container a:visited , 
 table.views-table tr td .attachment_text_full_container a:link, table.views-table tr td .attachment_text_full_container a:visited,
