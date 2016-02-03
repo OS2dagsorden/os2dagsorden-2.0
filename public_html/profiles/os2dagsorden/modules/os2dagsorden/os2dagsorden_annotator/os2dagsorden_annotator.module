@@ -414,7 +414,7 @@ HTML;
 	  drupal_set_breadcrumb($breadcrumb);
 	  
 	  //getting text
-	  $text = '<div class="attachment-text">' . $bilag->field_os2web_meetings_bpa_body['und'][0]['value'] . '</div>';
+	  $text = '<div class="attachment-text attachment_text_full_container">' . $bilag->field_os2web_meetings_bpa_body['und'][0]['value'] . '</div>';
 	  
 	  //composing the print link
 	  $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
