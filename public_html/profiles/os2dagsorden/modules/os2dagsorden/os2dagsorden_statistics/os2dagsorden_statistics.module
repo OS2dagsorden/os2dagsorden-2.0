@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2dagsorden Statistics feature.
+ */
+
+include_once 'os2dagsorden_statistics.features.inc';
