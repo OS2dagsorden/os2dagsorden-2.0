@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Login Tracker module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function login_tracker_schema() {
+  $schema['login_tracker'] = array(
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'UID of user.',
+      ),
+      'login_timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => "Timestamp for the user's login.",
+      ),
+      'data' => array(
+        'type' => 'text',
+        'size' => 'medium',
+        'not null' => TRUE,
+        'description' => "Additional data stored at time of login.",
+      ),
+    ),
+    'indexes' => array(
+      'login_tracker_uid' => array('uid'),
+      'login_tracker_login_timestamp' => array('login_timestamp'),
+    ),
+    'foreign keys' => array(
+      'uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+  return $schema;
+}
