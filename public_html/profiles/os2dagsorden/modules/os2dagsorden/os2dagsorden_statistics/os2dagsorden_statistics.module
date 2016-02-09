@@ -1,0 +1,151 @@
+<?php
+/**
+ * @file
+ * Code for the OS2dagsorden Statistics feature.
+ */
+
+include_once 'os2dagsorden_statistics.features.inc';
+
+/**
+ * Implementation of hook_menu()
+ *
+ * @return list of links
+ */
+function os2dagsorden_statistics_menu() {
+  $items['admin/statistik'] = array(
+    'title' => 'Statistik',
+    'description' => 'Statistik',
+    'access arguments' => array('administer os2web'),
+    'page callback' => 'system_admin_menu_block_page',
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/statistik/login_tracker'] = array(
+    'title' => 'User login statistics',
+    'description' => 'User login statistics',
+    'page callback' => 'os2dagsorden_statistics_user_statistics_page',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/statistik/login_tracker/%'] = array(
+    'title' => 'User login statistics',
+    'description' => 'User login statistics',
+    'page callback' => 'os2dagsorden_statistics_user_statistics_by_year',
+    'access arguments' => array('administer os2web'),
+    'page arguments' => array(3),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+function os2dagsorden_statistics_page(){
+$output = "<h3>User statistics</h3>";
+return $output;
+}
+function os2dagsorden_statistics_user_statistics_page(){
+    $output = "<h3>User statistics</h3>";
+    
+    $result = db_query('select  YEAR(FROM_UNIXTIME(login_timestamp)) as Year, count(*) as login from login_tracker group by  YEAR(FROM_UNIXTIME(login_timestamp))');
+    if ($result) {     
+    foreach ($result as $row) {
+       $items[] = l($row->Year . ' (' . $row->login . ') ', '/admin/statistik/login_tracker/' . $row->Year);
+    };    
+    $output .= theme_item_list(array('items' => $items,  'type'=>'ul', 'attributes' => array()));
+    } 
+  return $output;
+}
+
+function os2dagsorden_statistics_user_statistics_by_year($year = null){
+  $output = "<h3>User statistics by $year year</h3>";
+  $headers = array(
+        array('data' => t('UID'), 'field' => 'uid'),
+        array('data' => t('Username'), 'field' => 'name'),      
+        array('data' => t('login'), 'field' => 'login_timestamp', 'sort' => 'desc'));
+  
+    $query = db_select('login_tracker', 'lt');
+    $query->innerJoin('users', 'u', 'lt.uid = u.uid');
+    $query->fields('lt', array('uid', "login_timestamp" ));
+    $query->fields('u', array('name'));
+    $query->where('YEAR(FROM_UNIXTIME(login_timestamp)) = :year', array(':year' => $year));
+    $query ->extend('TableSort') // Add table sort extender.
+            ->orderByHeader($headers);
+    $pager = $query->extend('PagerDefault')
+                        ->limit(100);
+
+    $result = $pager->execute()
+            ->fetchAllAssoc('uid');
+    
+    $rows = array();
+    
+    foreach ($result as $key=>$row) {
+        //$row->login_timestamp = date('d-m-Y H:i:s', $row->timestamp);
+        $rows[$key]['uid'] = $row->uid;
+        $rows[$key]['name'] = $row->name;
+        $rows[$key]["login_timestamp"] = date('d-m-Y H:i:s', $row->login_timestamp);
+    }
+    
+    
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => 'sort-table'))); 
+    $output .=  theme('pager');
+    
+    
+  return $output;
+}
+
+function os2dagsorden_statistics_content_statistics_page(){
+    $output = "<h1>Opgørelse over antal dagsordner og referater der er importeret til OS2dagsorden fordelt på antal år</h1>";
+    $output .= '<div style="margin-top: 20px">
+      <h3>Antal årlige dagsordener og referater</h3></div>';
+    $result = db_query("select  YEAR(FROM_UNIXTIME(created)) as Year, count(*) as nodes from node  where type = 'os2web_meetings_meeting' group by  YEAR(FROM_UNIXTIME(created))");
+    if ($result) {     
+    foreach ($result as $row) {
+       $items[] = l($row->Year . ' (' . $row->nodes . ') ', '/admin/imported-content/' . $row->Year);
+    };    
+    $output .= theme_item_list(array('items' => $items,  'type'=>'ul', 'attributes' => array()));
+    } 
+    $output .= '<i>Antallet er angivet i parantes efter årstallet.</i>';
+  return $output;
+}
+
+function os2dagsorden_statistics_content_statistics_by_year($year = null){
+   $output = "<h1>Opgørelse over antal dagsordner og referater der er importeret til OS2dagsorden fordelt på antal år</h1>";
+   $output .= '<div style="margin-top: 20px">
+      <h3>Antal årlige dagsordener og referater</h3></div>';$headers = array(
+        array('data' => t('')),
+        array('data' => t('Date'), 'field' => 'created'),      
+        array('data' => t('Updated'), 'field' => 'changed', 'sort' => 'desc'),
+        array('data' => t('Name'), 'field' => 'name'));
+  
+    $query = db_select('node', 'n');
+    $query->innerJoin('users', 'u', 'n.uid = u.uid');
+    $query->fields('n', array('title', "created", 'changed', 'nid' ));
+    $query->fields('u', array('name'));
+    $query->where ('type = :type', array(':type' => "os2web_meetings_meeting"));
+    $query->where('YEAR(FROM_UNIXTIME(n.created)) = :year', array(':year' => $year));
+    $query ->extend('TableSort') // Add table sort extender.
+            ->orderByHeader($headers);
+    $pager = $query->extend('PagerDefault')
+                        ->limit(100);
+
+    $result = $pager->execute()
+            ->fetchAllAssoc('nid');
+    
+    $rows = array();
+    
+    foreach ($result as $key=>$row) {
+        //$row->login_timestamp = date('d-m-Y H:i:s', $row->timestamp);
+        $rows[$key]['title'] = l($row->title , '/node/' . $row->nid);
+        $rows[$key]['created'] = date('d-m-Y H:i:s',$row->created);
+        $rows[$key]["changed"] = date('d-m-Y H:i:s', $row->changed);
+        $rows[$key]["name"] = $row->name=="" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid);
+    }
+    
+    
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows, 'attributes' => array('id' => 'sort-table'))); 
+    $output .=  theme('pager');
+    
+    
+  return $output;
+}

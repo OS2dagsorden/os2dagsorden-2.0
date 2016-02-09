@@ -1,0 +1,10 @@
+name = Login tracker
+description = Track user logins
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2014-07-18
+version = "7.x-1.0"
+core = "7.x"
+project = "login_tracker"
+datestamp = "1405669732"
+

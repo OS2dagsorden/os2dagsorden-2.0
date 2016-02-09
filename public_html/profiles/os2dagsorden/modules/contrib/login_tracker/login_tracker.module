@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * The main module file.
+ *
+ * The main module file contains hooks to create the permissions used by the
+ * module, to log the login data, and to expose the module to views.
+ */
+
+/**
+ * Implements hook_permission().
+ */
+function login_tracker_permission() {
+  return array(
+    'excluded from login tracking' => array(
+      'title' => t('Excluded from login tracking.'),
+      'description' => t('Assign this permission to roles, and any logins by users of that role will not be tracked.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Stores the fact that the user has logged in. 3rd party modules may override
+ * whether a particular login is tracked by using
+ * hook_login_tracker_track_login_alter(). Modules may also provide additional
+ * data to be logged by using
+ * hook_login_tracker_login_data_alter().
+ */
+function login_tracker_user_login(&$edit, $account) {
+
+  // Do not track the login by default if the user's role is excluded from
+  // tracking.
+  $track_login = !user_access('excluded from login tracking', $account);
+
+  // Allow other modules to override whether or not we're tracking this
+  // login.
+  drupal_alter('login_tracker_track_login', $track_login, $edit, $account);
+
+  if (!$track_login) {
+    return;
+  }
+
+  $data = array();
+  drupal_alter('login_tracker_login_data', $data, $edit, $account);
+  $data = serialize($data);
+
+  $fields = array(
+    'uid' => $account->uid,
+    'login_timestamp' => REQUEST_TIME,
+    'data' => $data,
+  );
+
+  drupal_write_record('login_tracker', $fields);
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function login_tracker_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'login_tracker') . '/views',
+  );
+}
