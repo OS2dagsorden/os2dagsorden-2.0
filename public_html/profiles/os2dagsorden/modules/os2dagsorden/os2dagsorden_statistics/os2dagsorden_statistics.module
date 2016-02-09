@@ -12,26 +12,38 @@ include_once 'os2dagsorden_statistics.features.inc';
  * @return list of links
  */
 function os2dagsorden_statistics_menu() {
-    
-    $items['admin/statistik/login_tracker'] = array(
-        'title' => 'User login statistics',
-        'description' => 'User login statistics',
-        'page callback' => 'os2dagsorden_statistics_user_statistics_page',        
-        'access arguments' => array('administer os2web'),
-        'type' => MENU_NORMAL_ITEM,        
-    ); 
-    $items['admin/statistik/login_tracker/%'] = array(
-        'title' => 'User login statistics',
-        'description' => 'User login statistics',
-        'page callback' => 'os2dagsorden_statistics_user_statistics_by_year',        
-        'access arguments' => array('administer os2web'),
-         'page arguments' => array(2),
-        'type' => MENU_NORMAL_ITEM,        
-    );
+  $items['admin/statistik'] = array(
+    'title' => 'Statistik',
+    'description' => 'Statistik',
+    'access arguments' => array('administer os2web'),
+    'page callback' => 'system_admin_menu_block_page',
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/statistik/login_tracker'] = array(
+    'title' => 'User login statistics',
+    'description' => 'User login statistics',
+    'page callback' => 'os2dagsorden_statistics_user_statistics_page',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_LOCAL_TASK,
+  );
 
-    return $items;
+  $items['admin/statistik/login_tracker/%'] = array(
+    'title' => 'User login statistics',
+    'description' => 'User login statistics',
+    'page callback' => 'os2dagsorden_statistics_user_statistics_by_year',
+    'access arguments' => array('administer os2web'),
+    'page arguments' => array(3),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
 }
-
+function os2dagsorden_statistics_page(){
+$output = "<h3>User statistics</h3>";
+return $output;
+}
 function os2dagsorden_statistics_user_statistics_page(){
     $output = "<h3>User statistics</h3>";
     
