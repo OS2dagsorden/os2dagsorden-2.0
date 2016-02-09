@@ -13,14 +13,14 @@ include_once 'os2dagsorden_statistics.features.inc';
  */
 function os2dagsorden_statistics_menu() {
     
-    $items['admin/login_tracker'] = array(
+    $items['admin/statistik/login_tracker'] = array(
         'title' => 'User login statistics',
         'description' => 'User login statistics',
         'page callback' => 'os2dagsorden_statistics_user_statistics_page',        
         'access arguments' => array('administer os2web'),
         'type' => MENU_NORMAL_ITEM,        
     ); 
-    $items['admin/login_tracker/%'] = array(
+    $items['admin/statistik/login_tracker/%'] = array(
         'title' => 'User login statistics',
         'description' => 'User login statistics',
         'page callback' => 'os2dagsorden_statistics_user_statistics_by_year',        
@@ -28,21 +28,7 @@ function os2dagsorden_statistics_menu() {
          'page arguments' => array(2),
         'type' => MENU_NORMAL_ITEM,        
     );
-    $items['admin/imported-content'] = array(
-        'title' => 'Usage',
-        'description' => 'Opgørelse over antal dagsordner og referater der er importeret til OS2dagsorden fordelt på antal år',
-        'page callback' => 'os2dagsorden_statistics_content_statistics_page',        
-        'access arguments' => array('administer os2web'),
-        'type' => MENU_NORMAL_ITEM,        
-    ); 
-    $items['admin/imported-content/%'] = array(
-        'title' => 'Usage',
-        'description' => 'Opgørelse over antal dagsordner og referater der er importeret til OS2dagsorden fordelt på antal år',
-        'page callback' => 'os2dagsorden_statistics_content_statistics_by_year',        
-        'access arguments' => array('administer os2web'),
-         'page arguments' => array(2),
-        'type' => MENU_NORMAL_ITEM,        
-    );
+
     return $items;
 }
 
@@ -52,7 +38,7 @@ function os2dagsorden_statistics_user_statistics_page(){
     $result = db_query('select  YEAR(FROM_UNIXTIME(login_timestamp)) as Year, count(*) as login from login_tracker group by  YEAR(FROM_UNIXTIME(login_timestamp))');
     if ($result) {     
     foreach ($result as $row) {
-       $items[] = l($row->Year . ' (' . $row->login . ') ', '/admin/login_tracker/' . $row->Year);
+       $items[] = l($row->Year . ' (' . $row->login . ') ', '/admin/statistik/login_tracker/' . $row->Year);
     };    
     $output .= theme_item_list(array('items' => $items,  'type'=>'ul', 'attributes' => array()));
     } 
