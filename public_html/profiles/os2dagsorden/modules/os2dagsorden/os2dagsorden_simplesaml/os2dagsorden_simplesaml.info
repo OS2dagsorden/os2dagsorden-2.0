@@ -1,0 +1,4 @@
+name = os2dagsorden simpleSAMLphp attribute mapping
+description = Maps SimpleSAMLphp attributes to LOOP user attributes
+core = 7.x
+dependencies[] = simplesamlphp_auth

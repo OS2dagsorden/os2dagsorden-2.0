@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * Implements hook_menu()
+ */
+function os2dagsorden_simplesaml_menu() {
+  $items = array();
+
+  $items['admin/config/people/simplesaml'] = array(
+    'title'            => 'os2dagsorden SimpleSAML',
+    'description'      => 'Administer SimpleSAML',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2dagsorden_simplesaml_settings_form'),
+    'access arguments' => array('administer syddjurs simplesaml')
+  );
+
+  return $items;
+}
+
+/**
+ * Form callback for settings
+ */
+function os2dagsorden_simplesaml_settings_form($form, &$form_state) {
+  $form['os2dagsorden_simplesaml_redirected_ips'] = array(
+    '#title'         => t('Redirect IP\'s to SimpleSAML login'),
+    '#type'          => 'textfield',
+    '#description'   => t('Comma separated. ex. 192.168.1.1,192.168.2.1 (should be public IPs)'),
+    '#default_value' => variable_get('os2dagsorden_simplesaml_redirected_ips')
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Save',
+  );
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_validate().
+ */
+function os2dagsorden_simplesaml_settings_form_validate($form, &$form_state) {
+  if (preg_match("/[^0-9.,]/", $form_state['values']['os2dagsorden_simplesaml_redirected_ips'])) {
+    form_set_error('os2dagsorden_simplesaml_redirected_ips', 'Invalid format');
+  }
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function os2dagsorden_simplesaml_settings_form_submit($form, &$form_state) {
+  variable_set('os2dagsorden_simplesaml_redirected_ips', $form_state['values']['os2dagsorden_simplesaml_redirected_ips']);
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Updates the user's LOOP account details.
+ */
+function os2dagsorden_simplesaml_user_login(&$edit, $account) {
+  $attributes = simplesamlphp_auth_get_attributes();
+
+  #if (!empty($attributes)) {
+  #  if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'])) {
+  #    $edit['field_first_name'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+  #  }
+  #  if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'])) {
+  #    $edit['field_last_name'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
+  #  }
+  #  if (isset($attributes['http://www.syddjurs.dk/claims/title'])) {
+  #    $edit['field_job_title'][LANGUAGE_NONE][0]['value'] =
+  #      $attributes['http://www.syddjurs.dk/claims/title'];
+  #  }
+  #  if (isset($attributes['http://www.syddjurs.dk/claims/physicalDeliveryOfficeName'])) {
+  #   $edit['field_location_place'][LANGUAGE_NONE][0]['value'] =
+  #      $attributes['http://www.syddjurs.dk/claims/physicalDeliveryOfficeName'];
+  #  }
+  #  user_save($account, $edit);
+  #}
+}
+
+/**
+ * Implements hook_boot().
+ */
+function os2dagsorden_simplesaml_boot() {
+  // Do not run this from CLI.
+  if (php_sapi_name() != 'cli' && $GLOBALS['user']->uid == 0) {
+  error_log('saml',print_r($attributes),0);
+    $custom_ips = explode(',', variable_get('os2dagsorden_simplesaml_redirected_ips'));
+    isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $remote_ip = $_SERVER['HTTP_X_FORWARDED_FOR'] : $remote_ip = $_SERVER['REMOTE_ADDR'];
+
+    foreach ($custom_ips as $custom_ip) {
+      // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use normal login
+      if ($remote_ip == $custom_ip) {
+        if (!in_array($_GET['q'], array('saml_login', 'user/logout'))) {
+          require_once (DRUPAL_ROOT . '/includes/common.inc');
+          require_once (DRUPAL_ROOT . '/includes/path.inc');
+          drupal_goto('saml_login', array('query' => drupal_get_destination()));
+        }
+      }
+    }
+  }
+}
