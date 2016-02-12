@@ -33,6 +33,7 @@ function os2dagsorden_pdf2htmlex_schema() {
                 'description' => 'The destination nid.',
                 'type' => 'int',
                 'unsigned' => TRUE,
+                'not null' => TRUE,
             ),
             'filename' => array(
                 'description' => 'Name of the file',

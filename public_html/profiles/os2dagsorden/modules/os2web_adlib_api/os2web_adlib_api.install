@@ -29,6 +29,7 @@ function os2web_adlib_api_schema() {
         'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
         'type' => 'int',
         'unsigned' => TRUE,
+        'not null' => TRUE,
       ),
       'job_id' => array(
         'description' => 'ID used for the pdf conversion job.',

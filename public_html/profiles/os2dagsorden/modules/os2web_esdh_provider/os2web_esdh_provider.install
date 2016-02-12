@@ -89,6 +89,7 @@ function os2web_esdh_provider_schema() {
         'description' => 'ID of meeting XML',
         'type' => 'int',
         'unsigned' => TRUE,
+        'not null' => TRUE,
       ),
       'meeting_name' => array(
         'description' => 'Name of meeting',
