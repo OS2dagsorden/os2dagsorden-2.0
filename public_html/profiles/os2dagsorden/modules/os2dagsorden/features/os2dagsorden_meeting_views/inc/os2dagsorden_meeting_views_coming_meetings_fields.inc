@@ -15,11 +15,15 @@ print '<div class="help-button" title="' . variable_get('os2dagsorden_upcoming_m
 
 /////////////////////////////////////////PAGE start /////////////////////////////////////////
 function os2dagsorden_meeting_views_coming_meetings_fields_meeting_has_sp($meeting_id){
-  os2dagsorden_meeting_views_common_meeting_has_sp_else_empty($meeting_id);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_has_sp_else_empty($meeting_id);
+  }
 }
 
 function os2dagsorden_meeting_views_coming_meetings_fields_meeting_has_notes($meeting_id){
-  os2dagsorden_meeting_views_common_meeting_has_notes_else_empty($meeting_id);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_has_notes_else_empty($meeting_id);
+  }
 }
 
 function os2dagsorden_meeting_views_coming_meetings_fields_meeting_is_closed($meeting_id){
@@ -28,7 +32,9 @@ function os2dagsorden_meeting_views_coming_meetings_fields_meeting_is_closed($me
 }
 
 function os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data){
- os2dagsorden_meeting_views_common_meeting_title_listed($data);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_title_listed($data);
+  }
 }
 
 function os2dagsorden_meeting_views_coming_meetings_fields_meeting_location($meeting_id){

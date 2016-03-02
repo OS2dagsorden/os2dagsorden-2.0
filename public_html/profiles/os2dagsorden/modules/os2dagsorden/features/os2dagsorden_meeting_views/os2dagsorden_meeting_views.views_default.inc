@@ -51,7 +51,6 @@ function os2dagsorden_meeting_views_views_default_views() {
     'php' => 'php_2',
     'php_2' => 'php_2',
     'field_os2web_meetings_date' => 'field_os2web_meetings_date',
-    'field_os2web_meetings_location' => 'field_os2web_meetings_location',
     'php_4' => 'php_4',
     'field_os2web_meetings_committee' => 'field_os2web_meetings_committee',
     'field_os2web_meetings_com_shname' => 'field_os2web_meetings_com_shname',
@@ -93,16 +92,9 @@ function os2dagsorden_meeting_views_views_default_views() {
     'php_2' => array(
       'align' => '',
       'separator' => '',
-      'empty_column' => 0,
+      'empty_column' => 1,
     ),
     'field_os2web_meetings_date' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_os2web_meetings_location' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
       'align' => '',
@@ -211,11 +203,11 @@ os2dagsorden_meeting_views_last_8_meetings_fields_meeting_has_notes($row->nid);
   $handler->display->display_options['fields']['php_2']['element_class'] = 'views-field-field-title-short';
   $handler->display->display_options['fields']['php_2']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_2']['php_output'] = '<?php
-os2dagsorden_meeting_views_last_8_meetings_fields_meeting_title($data)
+os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data);
 ?>';
   $handler->display->display_options['fields']['php_2']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php_2']['php_click_sortable'] = '';
-  /* Felt: Indhold: Date */
+  /* Field: Content: Date */
   $handler->display->display_options['fields']['field_os2web_meetings_date']['id'] = 'field_os2web_meetings_date';
   $handler->display->display_options['fields']['field_os2web_meetings_date']['table'] = 'field_data_field_os2web_meetings_date';
   $handler->display->display_options['fields']['field_os2web_meetings_date']['field'] = 'field_os2web_meetings_date';
@@ -3013,7 +3005,7 @@ os2dagsorden_meeting_views_meetings_search_help_text();
     'php_2' => array(
       'align' => '',
       'separator' => '',
-      'empty_column' => 0,
+      'empty_column' => 1,
     ),
     'field_os2web_meetings_date' => array(
       'sortable' => 0,

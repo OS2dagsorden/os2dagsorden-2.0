@@ -88,11 +88,15 @@ function os2dagsorden_meeting_views_last_8_meetings_block_my_meetings_filter($me
 
 /////////////////////////////////////////PAGE START/////////////////////////////////////////
 function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_has_sp($meeting_id){
-  os2dagsorden_meeting_views_common_meeting_has_sp_else_empty($meeting_id);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_has_sp_else_empty($meeting_id);
+  }
 }
 
 function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_has_notes($meeting_id){
-  os2dagsorden_meeting_views_common_meeting_has_notes_else_empty($meeting_id);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_has_notes_else_empty($meeting_id);
+  }
 }
 
 function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_is_closed($meeting_id){
@@ -101,7 +105,9 @@ function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_is_closed($me
 }
 
 function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_title($data){
- os2dagsorden_meeting_views_common_meeting_title_listed($data);
+  if (variable_get('os2dagsorden_meetings_views_last_8_show_meeting_title', TRUE)) {
+    os2dagsorden_meeting_views_common_meeting_title_listed($data);
+  }
 }
 
 function os2dagsorden_meeting_views_last_8_meetings_fields_meeting_committee($meeting_id){
