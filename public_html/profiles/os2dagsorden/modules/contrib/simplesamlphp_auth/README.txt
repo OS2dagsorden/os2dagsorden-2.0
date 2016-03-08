@@ -14,7 +14,8 @@ identity attribute values.
    an SP visit: http://www.simplesamlphp.org.
 
    IMPORTANT: Your SP must be configured to use something other than phpsession
-   for session storage (in config/config.php set store.type => 'memcache' or 'sql').
+   for session storage (in config/config.php set store.type => 'memcache'
+   or 'sql').
 
    To use memcache session handling you must have memcached installed on your
    server and PHP must have the memcache extension. For more information on
@@ -27,7 +28,8 @@ identity attribute values.
 
 -- INSTALLATION --
 
-Assuming the prerequisites have been met, installation of this module is just like any other Drupal module.
+Assuming the prerequisites have been met, installation of this module is just
+like any other Drupal module.
 
 1) Download the module
 2) Uncompress it

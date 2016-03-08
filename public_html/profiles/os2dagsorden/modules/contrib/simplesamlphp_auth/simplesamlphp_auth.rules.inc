@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_rules_event_info().
+ * Implements hook_rules_event_info().
  * @ingroup rules
  */
 function simplesamlphp_auth_rules_event_info() {
@@ -14,7 +14,7 @@ function simplesamlphp_auth_rules_event_info() {
     'group' => t('User'),
     'module' => 'simplesamlphp_auth',
   );
- 
+
   return array(
     'simplesamlphp_auth_rules_event_register' => $defaults + array(
       'label' => t('After registering a new user account via simpleSAMLphp'),
