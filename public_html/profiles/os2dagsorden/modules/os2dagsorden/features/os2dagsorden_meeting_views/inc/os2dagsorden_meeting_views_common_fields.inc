@@ -51,24 +51,19 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
    $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'] ;//$data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
   else 
     $title = $data->_field_data['nid']['entity']->title;
-  
 
-  //logic for touch devices
-  if (os2dagsorden_access_helper_is_touch()){
-    if ((variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25) == 0 || variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))
-          && mb_strlen($title) > 25)
+  $title_length = variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25);
+  if ($title_length == 0) {
+    //is touch and the title is long enough to add ...
+    if (os2dagsorden_access_helper_is_touch() && mb_strlen($title) > 25) {
       echo mb_substr($title, 0, 22) . '...';
-    else if (mb_strlen($title) > variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))
-      echo mb_substr($title, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25)) . '...';
-    else
+    } else {
       echo $title;
-  } else {//desktop device
-    if (variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25) == 0)
-       echo $title;
-    else if (mb_strlen($title) > variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25))      
-      echo mb_substr($title, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25)) . '...';
-    else
-      echo $title;
+    }
+  } else if (mb_strlen($title) > $title_length) {
+    echo mb_substr($title, 0, $title_length) . '...';
+  } else {
+    echo $title;
   }
 }
 
