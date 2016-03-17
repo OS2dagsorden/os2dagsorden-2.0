@@ -46,20 +46,20 @@ function os2web_sbsys_esdh_mm_get_import_list() {
 
 
 /**
- * Strip illegal characters from the XML. 
+ * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
- * 
+ *
  * @param object $string
  *   string to sanitise
- * 
+ *
  * $return array
- *   The string sanitised 
+ *   The string sanitised
  */
 function utf8_for_xml($string)
 {
   if (variable_get('os2web_sbsys_esdh_banned_activate_regex', FALSE)) {//using regex
     $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_regex','');
-    $str_new = preg_replace($replace_me, "", $string);  
+    $str_new = preg_replace($replace_me, "", $string);
   }
   else {//using CSV list
     $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_char','');
@@ -86,7 +86,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
   $meetings = array();
   if (is_file(drupal_realpath($file))) {
     libxml_use_internal_errors(true);
-    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA); 
+    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA);
     libxml_clear_errors();
     libxml_use_internal_errors(false);
 
@@ -141,9 +141,9 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $acadre_version = (string) $acadre_version[0][ID];
 
       $directory_name = dirname(drupal_realpath($file));
-      $dir_parts = explode('/',$directory_name);     
+      $dir_parts = explode('/',$directory_name);
       $pdf = array_pop($dir_parts).".pdf";
-     
+
       // Fix dates.
       $date_obj = date_create($meeting_date_when);
       date_timezone_set($date_obj, timezone_open('UTC'));
@@ -182,7 +182,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'title' => $meeting_name,
         'uri' => strstr($file , $meeting_uri, TRUE),
         'path' => drupal_realpath($file),
-        'pdf' => $pdf,  
+        'pdf' => $pdf,
         'type' => $meeting_type,
         'meeting_date_start' => $meeting_date_when,
         'meeting_date_finish' => $meeting_date_until,
@@ -206,7 +206,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
           }
         }
       }
-      
+
       $meeting_pdf = $manifest->xpath('/Meeting/MeetingAgendaTypes/MeetingAgendaType/PDFDocument');
       if(!empty($meeting_pdf))
          $meeting['pdf'] = (string) $meeting_pdf[0];
@@ -220,6 +220,9 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         if (is_array($imported)) {
           $imported['publish'] = TRUE;
           $imported['meeting_sub_id'] = $sys_id;
+          //stan@bellcom.dk - 17.03.2016 
+          //forcing the agenda to be considered as closed, otherwise the closed BP will not be imported
+          $imported['agenda_access'] = 'Lukket';
           $meetings[] = $imported;
         }
       }
@@ -228,7 +231,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
-  
+
  return $meetings;
 }
 
@@ -260,15 +263,15 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
 
   $meeting['items'] = array();
   $agenda = $meeting;
- 
+
   if (file_exists(drupal_realpath($meeting['uri']))) {
-// There were no SBSYS meeting with meeting description, therefore disabled.  
-   if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {   
+// There were no SBSYS meeting with meeting description, therefore disabled.
+   if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
     $agenda['full_doc'] = array(
      'uri' => $meeting['uri'] . $meeting['pdf'],
      'title' => $meeting['committee'],
     );
-   } 
+   }
     // Import all agenda items.
     $agenda_bullet = $agenda_xml;
     $meeting['current_item_nr'] = 1;
@@ -340,7 +343,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
 
   // Process attachments.
   foreach ($xml_item_bullet->ItemField as $bullet_xml) {
-    
+
     if (((string) $bullet_xml->HasContent) === 'True'){
       $images = array();
       foreach ($bullet_xml->Images->Image as $image) {
@@ -358,7 +361,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
       );
     }
   }
- 
+
   // Process item history.
   if (!empty($xml_item_history)) {
     $history = array(
@@ -420,7 +423,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
       $non_participants .= (string) $participant->Name . "<br/>";
     }
   }
-  
+
   if (!empty($non_participants)){
     //Add members that did not participate in the bullet discussion as a last bullet point
     $item['bullets'][] = array(
@@ -577,19 +580,19 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
 }
 
 function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
-  
+
     preg_match_all('/src="([^"]+)"/',$html, $matches);
-    
+
     foreach($matches[1] as $path) {
         $image_path = array_pop(glob(drupal_realpath($image_folder_uri . basename($path) . ".*"))) ;
         $image_uri = file_create_url( $image_folder_uri . basename($image_path ));
         if (!empty($image_path)){
-           $html = str_replace( $path, file_create_url($image_uri), $html);        
+           $html = str_replace( $path, file_create_url($image_uri), $html);
         }
        else {
-         $html = str_replace( $path, "", $html);   
+         $html = str_replace( $path, "", $html);
         }
-        
+
     }
   $html = preg_replace('/<img([^>]+)src=""([^>]*)>/', "", $html);
   return $html;
