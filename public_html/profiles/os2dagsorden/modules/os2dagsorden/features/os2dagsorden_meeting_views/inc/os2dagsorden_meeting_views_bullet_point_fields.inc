@@ -369,10 +369,11 @@ function os2dagsorden_meeting_views_bullet_point_fields_print_link($bp_id, $sp_i
 }
 
 function os2dagsorden_meeting_views_bullet_point_fields_create_new_speaker_paper(){
+  global $base_url;
   $q = $_GET['q'];
   $q_exp = explode('/', $q);
   $bullet_point = node_load($q_exp[3]);
-  print '<a href="/node/add/os2web-meetings-spaper?edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bullet_point->title . ' (' . $bullet_point->nid . ')&destination=' . $q . '">Opret et nyt talepapir</a>';
+  print '<a href="' . $base_url . '/node/add/os2web-meetings-spaper?edit[field_os2web_meetings_sp_bullet][und][0][target_id]=' . $bullet_point->title . ' (' . $bullet_point->nid . ')&destination=' . $q . '">Opret et nyt talepapir</a>';
 }
 
 function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id){

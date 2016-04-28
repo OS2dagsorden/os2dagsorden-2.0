@@ -355,6 +355,7 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($form_id == 'os2web_meetings_spaper_node_form'){
+    drupal_set_title(t('Create speaker paper'));
     global $user;
     $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
     $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
@@ -406,7 +407,6 @@ function os2dagsorden_settings_get_active_committees(){
     $committees = taxonomy_get_tree($vid);
 
     $active_committees = array();
-    //print_r('here');
     foreach ($committees as $committee){
         $committee_full = taxonomy_term_load($committee->tid);
         if (isset($committee_full->field_os2web_meetings_com_active['und']) && $committee_full->field_os2web_meetings_com_active['und'][0]['value']){

@@ -151,7 +151,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_os2web_meetings_sp_shared',
-      'label' => 'Shared with',
+      'label' => 'Deles med',
       'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
@@ -874,6 +874,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Comname');
+  t('Deles med');
   t('Follows committees');
   t('Follows committees+');
   t('Follows committees++');
@@ -883,7 +884,6 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   t('Is part of Committee');
   t('Meeting category');
   t('Organization');
-  t('Shared with');
   t('User can send to friend closed bullet points');
   t('represents the committees the user is a part of');
 
