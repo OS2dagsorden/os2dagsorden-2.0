@@ -57,8 +57,8 @@ function os2dagsorden_simplesaml_settings_form_submit($form, &$form_state) {
  *
  * Updates the user's LOOP account details.
  */
-function os2dagsorden_simplesaml_user_login(&$edit, $account) {
-  $attributes = simplesamlphp_auth_get_attributes();
+#function os2dagsorden_simplesaml_user_login(&$edit, $account) {
+#  $attributes = simplesamlphp_auth_get_attributes();
 
   #if (!empty($attributes)) {
   #  if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'])) {
@@ -77,7 +77,7 @@ function os2dagsorden_simplesaml_user_login(&$edit, $account) {
   #  }
   #  user_save($account, $edit);
   #}
-}
+#}
 
 /**
  * Implements hook_boot().
@@ -91,7 +91,7 @@ function os2dagsorden_simplesaml_boot() {
     foreach ($custom_ips as $custom_ip) {
       // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use normal login
       if ($remote_ip == $custom_ip || empty($custom_ip)) {
-        if (!in_array($_GET['q'], array('saml_login', 'user/logout'))) {
+        if (!in_array($_GET['q'], array('saml_login', 'user/logout', 'logout'))) {
           require_once (DRUPAL_ROOT . '/includes/common.inc');
           require_once (DRUPAL_ROOT . '/includes/path.inc');
           drupal_goto('saml_login', array('query' => drupal_get_destination()));
