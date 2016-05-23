@@ -1,0 +1,51 @@
+diff --git a/simplesamlphp_auth.install b/simplesamlphp_auth.install
+index 9174767..02ed0a7 100644
+--- a/simplesamlphp_auth.install
++++ b/simplesamlphp_auth.install
+@@ -45,5 +45,6 @@ function simplesamlphp_auth_uninstall() {
+   variable_del('simplesamlphp_auth_allowdefaultloginroles');
+   variable_del('simplesamlphp_auth_allowdefaultloginusers');
+   variable_del('simplesamlphp_auth_logoutgotourl');
++  variable_del('simplesamlphp_auth_addauthmaps');
+ 
+ }
+diff --git a/simplesamlphp_auth.module b/simplesamlphp_auth.module
+index b3f3ed1..49cb74c 100644
+--- a/simplesamlphp_auth.module
++++ b/simplesamlphp_auth.module
+@@ -231,9 +231,16 @@ function simplesamlphp_auth_init() {
+         // Retrieve user mapping and attempt to log the user in.
+         $ext_user = user_external_load($authname);
+ 
++        // Add authmaps on the fly for manually created users.
++        if (!$ext_user && ($existing_user = user_load_by_name($authname)) && variable_get('simplesamlphp_auth_addauthmaps', TRUE)) {
++          user_set_authmaps($existing_user, array('simplesamlphp_auth' => $existing_user->name));
++          $ext_user = $existing_user;
++        }
++
+         if (!$ext_user) {
+           // First we check the admin settings for simpleSAMLphp and find out if we are allowed to register users.
+-          if (variable_get('simplesamlphp_auth_registerusers', TRUE)) {
++          // If a user exists with this username, we don't register a new one.
++          if (variable_get('simplesamlphp_auth_registerusers', TRUE) && !$existing_user) {
+ 
+             // We are allowed to register new users.
+             _simplesaml_auth_debug(t('Register [%authname]', array('%authname' => $authname)));
+@@ -532,9 +539,16 @@ function simplesamlphp_auth_settings() {
+     '#type' => 'checkbox',
+     '#title' => t('Register users (i.e., auto-provisioning)'),
+     '#default_value' => variable_get('simplesamlphp_auth_registerusers', TRUE),
+-    '#description' => t('Determines wether or not the module should automatically create/register new Drupal accounts for users that authenticate using SimpleSAMLphp. Unless you\'ve done some custom work to provision Drupal accounts with the necessary authmap entries you will want this checked.<br /><br />NOTE: If unchecked each user must already have been provisioned a Drupal account with an appropriate entry in the authmap table before logging in. Otherwise they will receive a notice and be denied access. Be aware that simply creating a Drupal account will not create the necessary entry in the authmap table.'),
++    '#description' => t('Determines wether or not the module should automatically create/register new Drupal accounts for users that authenticate using SimpleSAMLphp.'),
+   );
+ 
++  $form['simplesamlphp_auth_grp_reg']['simplesamlphp_auth_addauthmaps'] = array(
++    '#type' => 'checkbox',
++    '#title' => t('Enable authentication for manually created users'),
++    '#default_value' => variable_get('simplesamlphp_auth_addauthmaps', TRUE),
++    '#description' => t('Allows users accounts created manually (not created by auto-provisoning) to authenticate using SimpleSAMLphp by adding the necessary authmap entries.'),
++   );
++
+   $form['simplesamlphp_auth_grp_auth'] = array(
+     '#type' => 'fieldset',
+     '#title' => t('Drupal Authentication'),
