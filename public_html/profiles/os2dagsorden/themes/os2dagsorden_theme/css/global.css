@@ -615,7 +615,7 @@ ul li.leaf {
     margin-top: 5px;
 }
 
-.views-exposed-form .views-exposed-widget .form-submit {
+.block-views-exp-meetings-search-page .views-exposed-form .views-exposed-widget .form-submit {
     margin-top: 0;
 }
 
@@ -631,7 +631,7 @@ div.date-heading h3 a, div.date-heading h3{
 .view-id-user_follow_committees,
 .view-id-kommende_m_der_i_mine_udvalg,
 .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_,
-.views-exposed-form,
+.block-views-exp-meetings-search-page .views-exposed-form,
 #user-login-form,
 .node-form,
 .node,
@@ -650,7 +650,7 @@ div.view {
     padding: 1px 5px 5px 5px;
 }
 
-div.views-exposed-form {
+.block-views-exp-meetings-search-page div.views-exposed-form {
     padding: 5px 10px 0  20px;
 }
 

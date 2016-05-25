@@ -207,7 +207,7 @@ os2dagsorden_meeting_views_coming_meetings_fields_meeting_title($data);
 ?>';
   $handler->display->display_options['fields']['php_2']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php_2']['php_click_sortable'] = '';
-  /* Field: Content: Date */
+  /* Felt: Indhold: Date */
   $handler->display->display_options['fields']['field_os2web_meetings_date']['id'] = 'field_os2web_meetings_date';
   $handler->display->display_options['fields']['field_os2web_meetings_date']['table'] = 'field_data_field_os2web_meetings_date';
   $handler->display->display_options['fields']['field_os2web_meetings_date']['field'] = 'field_os2web_meetings_date';
@@ -2930,6 +2930,178 @@ os2dagsorden_meeting_views_meetings_search_help_text();
     t('Fritekst:'),
   );
   $export['meetings_search'] = $view;
+
+  $view = new view();
+  $view->name = 'os2dagsorden_users_view_widget';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'users';
+  $view->human_name = 'OS2Dagsorden users view widget';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access user profiles';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Søg';
+  $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['tags']['first'] = '« første';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ forrige';
+  $handler->display->display_options['pager']['options']['tags']['next'] = 'næste >';
+  $handler->display->display_options['pager']['options']['tags']['last'] = 'sidste »';
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['columns'] = array(
+    'name' => 'name',
+    'entityreference_view_widget' => 'entityreference_view_widget',
+  );
+  $handler->display->display_options['style_options']['default'] = '-1';
+  $handler->display->display_options['style_options']['info'] = array(
+    'name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'entityreference_view_widget' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'Ingen resultater';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  /* Felt: Entity Reference View Widget Checkbox: Bruger */
+  $handler->display->display_options['fields']['entityreference_view_widget']['id'] = 'entityreference_view_widget';
+  $handler->display->display_options['fields']['entityreference_view_widget']['table'] = 'users';
+  $handler->display->display_options['fields']['entityreference_view_widget']['field'] = 'entityreference_view_widget';
+  $handler->display->display_options['fields']['entityreference_view_widget']['label'] = 'AD navn';
+  $handler->display->display_options['fields']['entityreference_view_widget']['element_type'] = 'span';
+  $handler->display->display_options['fields']['entityreference_view_widget']['element_label_type'] = 'span';
+  $handler->display->display_options['fields']['entityreference_view_widget']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['entityreference_view_widget']['element_wrapper_type'] = 'span';
+  $handler->display->display_options['fields']['entityreference_view_widget']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['entityreference_view_widget']['ervw']['force_single'] = 0;
+  $handler->display->display_options['fields']['entityreference_view_widget']['ervw']['label_display'] = 'after';
+  /* Felt: Bruger: Full name */
+  $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
+  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Fuld navn';
+  $handler->display->display_options['fields']['field_user_full_name']['element_default_classes'] = FALSE;
+  /* Felt: Bruger: Navn */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['name']['link_to_user'] = FALSE;
+  /* Sort criterion: Bruger: Full name (field_user_full_name) */
+  $handler->display->display_options['sorts']['field_user_full_name_value']['id'] = 'field_user_full_name_value';
+  $handler->display->display_options['sorts']['field_user_full_name_value']['table'] = 'field_data_field_user_full_name';
+  $handler->display->display_options['sorts']['field_user_full_name_value']['field'] = 'field_user_full_name_value';
+  /* Contextual filter: Bruger: Uid */
+  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['table'] = 'users';
+  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['exception']['title'] = 'Alle';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'fixed';
+  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['uid']['break_phrase'] = TRUE;
+  $handler->display->display_options['arguments']['uid']['not'] = TRUE;
+  /* Filter criterion: Bruger: Aktiv */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'users';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Global: Combine fields filter */
+  $handler->display->display_options['filters']['combine']['id'] = 'combine';
+  $handler->display->display_options['filters']['combine']['table'] = 'views';
+  $handler->display->display_options['filters']['combine']['field'] = 'combine';
+  $handler->display->display_options['filters']['combine']['operator'] = 'contains';
+  $handler->display->display_options['filters']['combine']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['combine']['expose']['operator_id'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['label'] = 'Søg';
+  $handler->display->display_options['filters']['combine']['expose']['operator'] = 'combine_op';
+  $handler->display->display_options['filters']['combine']['expose']['identifier'] = 'combine';
+  $handler->display->display_options['filters']['combine']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+  );
+  $handler->display->display_options['filters']['combine']['fields'] = array(
+    'field_user_full_name' => 'field_user_full_name',
+    'name' => 'name',
+  );
+
+  /* Display: Entity Reference View Widget */
+  $handler = $view->new_display('entityreference_view_widget', 'Entity Reference View Widget', 'os2dagsorden_user_view_widget');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['defaults']['use_ajax'] = FALSE;
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'table';
+  $handler->display->display_options['style_options']['default_row_class'] = FALSE;
+  $handler->display->display_options['style_options']['columns'] = array(
+    'entityreference_view_widget' => 'entityreference_view_widget',
+    'field_user_full_name' => 'field_user_full_name',
+  );
+  $handler->display->display_options['style_options']['default'] = 'field_user_full_name';
+  $handler->display->display_options['style_options']['info'] = array(
+    'entityreference_view_widget' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'field_user_full_name' => array(
+      'sortable' => 0,
+      'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+  );
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $translatables['os2dagsorden_users_view_widget'] = array(
+    t('Master'),
+    t('more'),
+    t('Søg'),
+    t('Gendan'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('« første'),
+    t('‹ forrige'),
+    t('næste >'),
+    t('sidste »'),
+    t('Ingen resultater'),
+    t('AD navn'),
+    t('Fuld navn'),
+    t('Alle'),
+    t('Entity Reference View Widget'),
+  );
+  $export['os2dagsorden_users_view_widget'] = $view;
 
   $view = new view();
   $view->name = 'seneste_8_m_der_i_de_st_ende_politiske_udvalg_';

@@ -38326,7 +38326,48 @@ msgstr "Ingen tilgængelige OpenID-identiteter til denne konto."
 msgid "Install another module"
 msgstr "Installér et andet modul"
 
+#: /
+msgid "Speaker paper"
+msgstr "Talepapir"
+
+#: /
+msgid "Shared with"
+msgstr "Deles med"
+
 
 #: /node/add/os2web-meetings-spaper
 msgid "Create speaker paper"
 msgstr "Opret talepapir"
+
+#: /os2dagsorden/os2dagsorden-2.0/public_html/node/92/edit?destination=meeting/91/bullet-point/1
+msgid "Close Window"
+msgstr "Luk vinduet"
+
+#: /os2dagsorden/os2dagsorden-2.0/public_html/node/92/edit?destination=meeting/91/bullet-point/1
+msgid "Close window"
+msgstr "Luk vinduet"
+
+#: /os2dagsorden/os2dagsorden-2.0/public_html/node/92/edit?destination=meeting/91/bullet-point/1
+msgid "Add items"
+msgstr "Tilføj elementer"
+
+#: /os2dagsorden/os2dagsorden-2.0/public_html/node/92/edit?destination=meeting/91/bullet-point/1
+msgid ""
+"No items have been added yet. Click \"Add items\" to launch the "
+"widget."
+msgstr ""
+"Ingen elementer er endnu ikke tilføjet. Klik på \"Tilføj element\" "
+"for at starte widget."
+
+#: profiles/os2dagsorden/modules/contrib/entityreference_view_widget/entityreference_view_widget.js
+msgid "Select all"
+msgstr "Vælg alle"
+
+#: profiles/os2dagsorden/modules/contrib/entityreference_view_widget/entityreference_view_widget.js
+msgid "Unselect all"
+msgstr "Fravælg alle"
+
+#: /os2dagsorden/os2dagsorden-2.0/public_html/admin/structure/views/view/test_view/preview/entityreference_view_widget_1/ajax
+msgid "Submit"
+msgstr "Gem"
+
