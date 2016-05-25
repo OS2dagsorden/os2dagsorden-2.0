@@ -20,7 +20,7 @@ function os2dagsorden_fields_and_content_types_ctools_plugin_api() {
 function os2dagsorden_fields_and_content_types_node_info() {
   $items = array(
     'os2web_meetings_spaper' => array(
-      'name' => t('Speaker paper'),
+      'name' => t('Talepapir'),
       'base' => 'node_content',
       'description' => '',
       'has_title' => '1',
