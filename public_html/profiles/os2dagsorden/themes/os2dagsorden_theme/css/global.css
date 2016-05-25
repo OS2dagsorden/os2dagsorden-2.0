@@ -153,6 +153,10 @@ body{
     width: 100%;
 }
 
+.pos-rel {
+    position: relative;
+}
+
 /*---------------------------- Small Fixes End ----------------------------*/
 
 
@@ -1303,11 +1307,17 @@ table .hide_show_bilags_cases{
     left: -45px;
     margin-right: -45px;
 }
-table .hide_show_all_attachments_text{
-    position: relative;
-    float:left;
-    left: -75px;
-    margin-right: -45px;
+table .hide_show_all_attachments_text {
+    position: absolute;
+    left: -35px;
+}
+
+table .hide_show_all_attachments_text.bottom {
+    bottom: 8px;
+}
+
+table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
+    left: -55px;
 }
 
 .bullet-point-print-link {

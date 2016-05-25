@@ -254,7 +254,7 @@ function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bi
 
           });
       }
-    jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val('⇈');
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val('⇈');
 }
 /**
  * Add expand all behavious for bullet point - opens all of its children.
@@ -264,10 +264,11 @@ function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bi
  */
 function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url, massive_bilag_expand){
   var pathname = window.location.pathname;
-  jQuery(bulletPoint).children("li").first().before("<input type='button' class='button hide_show_all_attachments_text' id='btn_hide_show_all_attachments_text_"+bulletPointIndex+"' value='⇊'></a>");
-console.log(jQuery(bulletPoint).children().first());
-  jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
-    if (jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
+  jQuery(bulletPoint).prepend("<input type='button' class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" top' value='⇊'></a>");
+  jQuery(bulletPoint).append("<input type='button' class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" bottom' value='⇊'></a>");
+
+  jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
+    if (jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
 	jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
 	  if (massive_bilag_expand || !jQuery(this).children().first().hasClass("attachment_text_trimmed_container")){//skip bilags
 	    //saving in the local storage
@@ -281,7 +282,7 @@ console.log(jQuery(bulletPoint).children().first());
 	  attachment_load_content(bulletPointIndex, index_attachment, url);
 	});
 
-	jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
     } else {
       	jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
 	  //saving in the local storage
@@ -292,7 +293,7 @@ console.log(jQuery(bulletPoint).children().first());
 	  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
 	});
 
-	jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
     }
   });
 }
@@ -331,9 +332,9 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       //handle expand all
       if (attachments_expand){
 	if (jQuery("[id^=btn_hide_show_attachment_text_"+bulletPointIndex+"_][value='⇓']").length > 0)
-	  jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
+      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
 	else
-	  jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
+      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
       } else {
 	var new_val = "⇈";
 	jQuery("[id^=btn_hide_show_attachment_text_"+bulletPointIndex+"_]").each(function(){
@@ -343,7 +344,7 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
 	    }
 	  }
 	});
-	jQuery("#btn_hide_show_all_attachments_text_"+bulletPointIndex).val(new_val);
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val(new_val);
       }
     });
 
@@ -498,7 +499,8 @@ function hide_budget_menu(){
 function hide_massive_expand_collapse_button(){
   jQuery(document).ready(function() {
     jQuery(".ul-item-list-dagsordenspunkt").each(function(index) {
-          jQuery("#btn_hide_show_all_attachments_text_"+index).hide();
+          //jQuery("#btn_hide_show_all_attachments_text_"+index).hide();
+          jQuery(".btn_hide_show_all_attachments_text_"+index).hide();
     });
   });
 }

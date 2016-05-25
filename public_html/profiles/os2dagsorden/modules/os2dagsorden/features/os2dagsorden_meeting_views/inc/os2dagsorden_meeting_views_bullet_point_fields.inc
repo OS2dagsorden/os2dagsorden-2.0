@@ -132,7 +132,7 @@ function os2dagsorden_meeting_views_bullet_point_fields_attachments_and_content(
   if (isset($bullet_point->field_os2web_meetings_attach['und'])){
     print '<table><tr><td>';
     print '<div class="item-list item-list-dagsordenspunkt">';
-    print '<ul class="ul-item-list-dagsordenspunkt">';
+    print '<ul class="ul-item-list-dagsordenspunkt pos-rel">';
 
     $bilags = array();
 

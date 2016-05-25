@@ -312,7 +312,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_attachme
   global $user, $base_url;
   $bullet_point = node_load($bp_id);
   if (isset($bullet_point->field_os2web_meetings_attach['und'])){
-    print '<div class="item-list">';
+    print '<div class="item-list pos-rel">';
     print '<ul class="ul-item-list-dagsordenspunkt">';
     if (variable_get('os2dagsorden_show_bp_comname', FALSE) && isset($bullet_point->field_os2web_meetings_bul_com_n['und'])){
       print '<div>Sagen afgøres i: ' . $bullet_point->field_os2web_meetings_bul_com_n['und'][0]['value'] . '</div>';
