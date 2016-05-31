@@ -16435,7 +16435,7 @@ msgstr ""
 
 #: /
 msgid "Kontoindstillinger"
-msgstr ""
+msgstr "Mine indstillinger"
 
 #: /admin/structure/types/manage/meeting/fields
 msgid "Widget med autofuldførsel (tagging)"
@@ -20132,7 +20132,7 @@ msgid "Use the default site language (@language_name)."
 msgstr "Brug sitets standardsprog (@language_name)."
 
 msgid "Account settings"
-msgstr "Kontoindstillinger"
+msgstr "Mine indstillinger"
 
 msgid "Year"
 msgstr "År"
@@ -36208,7 +36208,7 @@ msgid ""
 msgstr ""
 "Felter på brugerkonti er defineret på siteniveau, på fanen <a "
 "href=\"@fields\">Håndtér felter</a> på siden med <a "
-"href=\"@accounts\">Kontoindstillinger</a>. Når du definere et felt "
+"href=\"@accounts\">Mine indstillinger</a>. Når du definere et felt "
 "på brugerkonti bliver det tilføjet til alle brugerkonti. Du kan for "
 "eksempel tilføje et tekstfelt hvor brugerne kan indtaste deres "
 "biografi."
