@@ -14,9 +14,10 @@ function os2dagsorden_blocks_positioning_show_git_version(){
     $info = drupal_parse_info_file($info_path);
     $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
     $gittag = (isset($gittag) || !empty($gittag)) ? $gittag: 'not tagged' ;
-    print '<table>';
-    print '<tr><td>Version: </td><td>' . $version . '</td></tr>' ;
-    print '<tr><td>Gittag: </td><td>' . $gittag  . '</td></tr>' ;
-    print '<tr><td>Github: </td><td><a href="' . $repo_url .'" target="_blank">' . $repo_url . '</a></td></tr>';
-    print '</table>';
+    $output = '<table>';
+    $output .= '<tr><td>Version: </td><td>' . $version . '</td></tr>' ;
+    $output .= '<tr><td>Gittag: </td><td>' . $gittag  . '</td></tr>' ;
+    $output .= '<tr><td>Github: </td><td><a href="' . $repo_url .'" target="_blank">' . $repo_url . '</a></td></tr>';
+    $output .= '</table>';
+    return $output;
 }

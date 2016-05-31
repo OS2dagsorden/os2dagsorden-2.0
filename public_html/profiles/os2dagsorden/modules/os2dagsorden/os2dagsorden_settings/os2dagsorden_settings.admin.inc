@@ -24,6 +24,14 @@ define('OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE', '28');
  * @return settings form.
  */
 function os2dagsorden_settings_settings_form($form, $form_state) {
+  $output = os2dagsorden_blocks_positioning_show_git_version();
+
+  $form['os2dagsorden_version_text'] = array(
+    '#type' => 'item',
+    '#weight' => -10,
+    '#title' => t('OS2dagsorden version'),
+    '#markup' => '<div class= "test">' .  $output . '</div>',
+  );
   $form['os2dagsorden_settings_file_fieldset'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
