@@ -120,7 +120,7 @@ function add_tablet_orientation_listener(){
 
 function add_show_hide_menu_behaviour(menu_collapse){
    jQuery(document).ready(function() {
-          if(menu_collapse)
+          if(menu_collapse || JSON.parse(window.localStorage.getItem('hide_side_menu')) === true)
                    hide_side_menu();
        jQuery("#show_hide_menu_button").click(function(){
           if (jQuery("#show_hide_menu_button").val() == "⇒")
@@ -161,6 +161,7 @@ function hide_side_menu(){
 	jQuery("#show_hide_menu_button").val("⇐");
 	jQuery("#region-content").removeClass("grid-18");
 	jQuery("#region-content").addClass("grid-24");
+        window.localStorage.setItem("hide_side_menu", "true");
   });
 }
 
@@ -178,6 +179,7 @@ function show_side_menu(){
 	jQuery("#show_hide_menu_button").val("⇒");
 	jQuery("#region-content").removeClass("grid-24");
 	jQuery("#region-content").addClass("grid-18");
+        window.localStorage.setItem("hide_side_menu", "false");
 }
 
 /**
