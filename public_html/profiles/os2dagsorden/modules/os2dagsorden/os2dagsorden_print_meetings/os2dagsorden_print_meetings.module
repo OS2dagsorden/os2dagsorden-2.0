@@ -36,7 +36,7 @@ function os2dagsorden_print_meetings_menu() {
  */
 function _os2dagsorden_print_meetings_callback() {
     global $base_url;
-    $breadcrumb[] = l('Hjem', $base_url);
+    $breadcrumb[] = l('Forsiden', $base_url);
     $breadcrumb[] .= '<span class="breadcrumb-active">' . variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender') . '</span>';
     drupal_set_breadcrumb($breadcrumb);
 

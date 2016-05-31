@@ -99,7 +99,7 @@ function os2dagsorden_theme_preprocess_page(&$variables)
       $destination = $_GET['destination'];
       $destination = explode('/', $destination);
       
-      $breadcrumb[] = l('Hjem', $base_url);
+      $breadcrumb[] = l('Forsiden', $base_url);
       $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $destination[1]);
       
       if (isset($destination[3]))//bullet point

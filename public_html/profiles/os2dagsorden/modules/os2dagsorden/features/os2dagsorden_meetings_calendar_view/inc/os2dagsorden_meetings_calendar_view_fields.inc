@@ -8,7 +8,7 @@
 function os2dagsorden_meetings_calendar_view_breadcrumb(){
   global $base_url;
   $q = explode('/',$_GET['q']);
-  $breadcrumb[] = l('Hjem', $base_url);
+  $breadcrumb[] = l('Forsiden', $base_url);
   $breadcrumb[] .= '<span class="breadcrumb-active">Kalender</span>';
   drupal_set_breadcrumb($breadcrumb);
 }

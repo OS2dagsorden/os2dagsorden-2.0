@@ -4297,7 +4297,7 @@ msgstr ""
 
 #: /bgp-start/uc%253Asystem_cron/84bcac18cdc0c6b853831adcb53cc425
 msgid "Hjem"
-msgstr ""
+msgstr "Forsiden"
 
 #: /bgp-start/uc%253Asystem_cron/84bcac18cdc0c6b853831adcb53cc425
 msgid "View help topics"
@@ -18754,7 +18754,7 @@ msgid "Log out"
 msgstr "Log ud"
 
 msgid "Home"
-msgstr "Hjem"
+msgstr "Forsiden"
 
 msgid "Administration"
 msgstr "Administration"

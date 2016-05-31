@@ -983,8 +983,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_home'] = array(
       '#type' => 'textfield',
-      '#default_value' => variable_get('os2dagsorden_title_frontpage_home', 'Hjem'),
-      '#title' => t('Menu: Hjem'),
+      '#default_value' => variable_get('os2dagsorden_title_frontpage_home', 'Forsiden'),
+      '#title' => t('Menu: Forsiden'),
   );
   $form['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_halfyear_calendar'] = array(
       '#type' => 'textfield',

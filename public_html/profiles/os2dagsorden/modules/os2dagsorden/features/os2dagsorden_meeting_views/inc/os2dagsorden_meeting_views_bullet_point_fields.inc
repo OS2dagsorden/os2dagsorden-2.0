@@ -8,7 +8,7 @@
 function os2dagsorden_meeting_views_bullet_point_breadcrumb(){
   global $base_url;
   $q = explode('/',$_GET['q']);
-  $breadcrumb[] = l('Hjem', $base_url);
+  $breadcrumb[] = l('Forsiden', $base_url);
   $breadcrumb[] .= l('Mødedetaljer', 'meeting/'.$q[1]);
   $breadcrumb[] .= '<span class="breadcrumb-active">Dagsordenspunkt</span>';
   drupal_set_breadcrumb($breadcrumb);
