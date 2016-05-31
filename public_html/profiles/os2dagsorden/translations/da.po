@@ -13712,7 +13712,7 @@ msgstr ""
 
 #: /user/20/simple_edit
 msgid "Organizational"
-msgstr ""
+msgstr "Organisatoriske møder"
 
 #: /admin/config
 msgid "Assign user positions to users"
@@ -16435,7 +16435,7 @@ msgstr ""
 
 #: /
 msgid "Kontoindstillinger"
-msgstr "Mine indstillinger"
+msgstr ""
 
 #: /admin/structure/types/manage/meeting/fields
 msgid "Widget med autofuldførsel (tagging)"
@@ -23421,7 +23421,7 @@ msgid "Calendar preferences:"
 msgstr "Kalender preferencer"
 
 msgid "Which types of meetings should user see in the calendar"
-msgstr "Hvilken type af møder skal brugeren kunne se i sin kalender"
+msgstr "Hvilken mødetype vil jeg se i min kalender"
 
 msgid "User positions:"
 msgstr "Stillings betegnelser"

@@ -35,12 +35,12 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
   $form['calendar_pref'] = array(
     //'#access' => user_access('administer os2web', $full_user),
     '#type' => 'checkboxes',
+    '#field_prefix' => t('Which types of meetings should user see in the calendar'),
     '#options' => array(
       'pol' => t('Political'),
       'org' => t('Organizational')
     ),
     '#title' =>"<b>" . t('Calendar preferences:') . "</b>",
-    '#description' => t('Which types of meetings should user see in the calendar'),
   );
 
   $form['forbidden_cat'] = array(
@@ -101,7 +101,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
     '#attributes' => array(
       'class' => array('form-save-submit'),
     ),
-    '#value' => t('Save User'),
+    '#value' => t('Save'),
     '#submit' => array('os2dagsorden_content_modify_user_submit'),
   );
   $form[] = array(

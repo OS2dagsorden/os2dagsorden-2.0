@@ -54,7 +54,7 @@ function os2dagsorden_content_modify_menu() {
   );
 
   $items['users-batch-simple-edit/%'] = array(
-    'title' => 'Mine indstillinger',
+    'title' => 'Kontoindstillinger',
     'page callback' => '_os2dagsorden_content_modify_user_batch_edit_page',
     'page arguments' => array(1),
     'access arguments' => array('administer users'),
