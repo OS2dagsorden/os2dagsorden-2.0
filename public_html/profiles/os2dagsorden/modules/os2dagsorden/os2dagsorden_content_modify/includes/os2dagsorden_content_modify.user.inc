@@ -190,7 +190,6 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($com_terms as $com_term) {
       $com_select[$com_term->tid] = $com_term->name;
     }
-
     $shared_member_of = array();
     $shared_follows = array();
     $shared_follows_plus = array();
@@ -201,6 +200,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       //member of
       if (field_get_items('user', $user, 'field_user_committee')) {
         $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+        $user_member_of_field = os2dagsorden_content_modify_asort($user_member_of_field);
         foreach ($user_member_of_field as $member_of) {
           if (isset($com_select[$member_of['tid']])) {
             $shared_member_of[$member_of['tid']]++;
@@ -212,6 +212,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       //follows
       if (field_get_items('user', $user, 'field_follows_committee')) {
         $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+        $user_follows_field = os2dagsorden_content_modify_asort($user_follows_field);
         foreach ($user_follows_field as $follows) {
           if (isset($com_select[$follows['tid']])) {
             $shared_follows[$follows['tid']]++;
@@ -223,6 +224,8 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       //follows plus
       if (field_get_items('user', $user, 'field_follows_committee_plus')) {
         $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+        $user_follows_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_field);
+
         foreach ($user_follows_plus_field as $follows_plus) {
           if (isset($com_select[$follows_plus['tid']])) {
             $shared_follows_plus[$follows_plus['tid']]++;
@@ -234,6 +237,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       //follows plus plus
       if (field_get_items('user', $user, 'field_follows_committee_pp')) {
         $user_follows_plus_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+        $user_follows_plus_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_plus_field);
         foreach ($user_follows_plus_plus_field as $follows_plus_plus) {
           if (isset($com_select[$follows_plus_plus['tid']])) {
             $shared_follows_plus_plus[$follows_plus_plus['tid']]++;
@@ -385,6 +389,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
       //member of
       if (field_get_items('user', $user, 'field_user_committee')) {
         $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
+        $user_member_of_field = os2dagsorden_content_modify_asort($user_member_of_field);
         foreach ($user_member_of_field as $member_of){
           $shared_member_of[$member_of['tid']]++;
         }
@@ -393,6 +398,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
       //follows
       if (field_get_items('user', $user, 'field_follows_committee')) {
         $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
+        $user_follows_field = os2dagsorden_content_modify_asort($user_follows_field);
         foreach ($user_follows_field as $follows){
           $shared_follows[$follows['tid']]++;
         }
@@ -401,6 +407,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
       //follows plus
       if (field_get_items('user', $user, 'field_follows_committee_plus')) {
         $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
+        $user_follows_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_field);
         foreach ($user_follows_plus_field as $follows_plus){
           $shared_follows_plus[$follows_plus['tid']]++;
         }
@@ -409,6 +416,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
       //follows plus plus
       if (field_get_items('user', $user, 'field_follows_committee_pp')){
         $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
+        $user_follows_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_field);
         foreach ($user_follows_plus_field as $follows_plus){
           $shared_follows_plus_plus[$follows_plus['tid']]++;
         }
@@ -632,4 +640,20 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
 
   user_save($user);
   drupal_set_message(t('Dine ændringer er blevet gemt'));
+}
+
+function os2dagsorden_content_modify_asort($term_list = array()) {
+  $new_array = array();
+  if ($term_list) {
+    foreach ($term_list as $tid) {
+      $term = taxonomy_term_load($tid['tid']);
+      $new_array[$tid['tid']] = $term->name;
+    }
+    asort($new_array);
+    reset($term_list);
+    foreach ($new_array as $tid => $name) {
+      $term_list[] = array('tid' => $tid);
+    }
+  }
+  return $term_list;
 }
