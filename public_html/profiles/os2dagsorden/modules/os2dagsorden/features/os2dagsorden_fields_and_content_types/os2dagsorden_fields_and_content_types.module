@@ -54,3 +54,20 @@ function os2dagsorden_fields_and_content_types_meeting_search_metadata($entity, 
 
   return $output;
 }
+// hook_form_alter function
+function os2dagsorden_fields_and_content_types_form_alter(&$form, &$form_state, $form_id) {
+    // We want this on a specific node type
+    if ($form_id == 'os2web_meetings_spaper_node_form') {
+      $form['#after_build'][] = 'os2dagsorden_fields_and_content_types_meeting_spaper_node_form_after_build';
+    }
+}
+
+// afterbuild function
+function os2dagsorden_fields_and_content_types_meeting_spaper_node_form_after_build($form) {
+    // We want this on a specific field
+    $form['body']['und']['0']['format']['#access'] = FALSE;
+    $form['actions']['submit']['#value'] = t('Gem og del');
+    $form['revision_information']['#access'] = FALSE;
+    $form['field_os2web_meetings_sp_shared'][LANGUAGE_NONE]['add_more']['#value'] = t('Del med flere brugere');
+    return $form;
+}
