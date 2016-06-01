@@ -208,7 +208,6 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
           }
         }
       }
-
       //follows
       if (field_get_items('user', $user, 'field_follows_committee')) {
         $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
@@ -293,6 +292,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
 
     //printing available committees
     $com_list = "<ul id='available_committee' class='droptrue'>";
+    asort($com_select);
     foreach ($com_select as $tid=>$com_term) {
       //if the committee actually available?
       if ($shared_all_user_committee[$tid] < count($uids)) {
@@ -385,7 +385,6 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
     //gathering shared committees
     foreach ($uids as $uid) {
       $user = user_load($uid);
-
       //member of
       if (field_get_items('user', $user, 'field_user_committee')) {
         $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
@@ -644,16 +643,17 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
 
 function os2dagsorden_content_modify_asort($term_list = array()) {
   $new_array = array();
+  $return_array = array();
   if ($term_list) {
     foreach ($term_list as $tid) {
       $term = taxonomy_term_load($tid['tid']);
       $new_array[$tid['tid']] = $term->name;
     }
     asort($new_array);
-    reset($term_list);
+
     foreach ($new_array as $tid => $name) {
-      $term_list[] = array('tid' => $tid);
+      $return_array[] = array('tid' => $tid);
     }
   }
-  return $term_list;
+  return $return_array;
 }
