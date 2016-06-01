@@ -31,6 +31,8 @@ function os2dagsorden_theme_preprocess_page(&$variables)
     
     drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu', true) . ');', 'inline');
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
+    drupal_add_js(array('os2dagsorden_settings' => array('body_font_size' => variable_get('os2dagsorden_body_text_size', '13'))), array('type' => 'setting'));
+
     if (variable_get('os2dagsorden_hide_menu', FALSE))
        drupal_add_js('hide_side_menu_completely();', 'inline'); 
     drupal_add_js('add_indicator_help_text();', 'inline');

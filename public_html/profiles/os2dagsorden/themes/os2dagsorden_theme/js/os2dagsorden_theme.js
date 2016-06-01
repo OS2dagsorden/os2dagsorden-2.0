@@ -30,9 +30,12 @@ if (!Array.prototype.indexOf) {
     }
     return -1;
   };
-  }
-  })(jQuery);
-  /**
+}
+
+})(jQuery);
+
+
+/**
  * Hides print buttons for the iPad
  */
 function hide_print_buttons(){
@@ -73,6 +76,8 @@ jQuery(document).ready(function() {
     jQuery('.form-item-to-date-value-date input.form-text').change(function(){
           jQuery(this).val(prepareDate(jQuery(this).val()));
     })
+      // Set body font size.
+    jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
 });
 
 /* Changed ddmmyy and ddmmyyyy date formats to dd-mm-yyyy  */
