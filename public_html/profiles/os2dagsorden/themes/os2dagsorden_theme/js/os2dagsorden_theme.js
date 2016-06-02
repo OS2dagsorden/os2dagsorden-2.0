@@ -32,7 +32,8 @@ if (!Array.prototype.indexOf) {
   };
   }
   })(jQuery);
-  /**
+
+/**
  * Hides print buttons for the iPad
  */
 function hide_print_buttons(){
@@ -128,29 +129,29 @@ function add_show_hide_menu_behaviour(menu_collapse){
           else
               show_side_menu();
          });
-       var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-
-                         if (width < 1000)
-              hide_side_menu();
+//       var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+//
+//                         if (width < 1000)
+//              hide_side_menu();
    });
 }
 
 
-function resize_listener(){
-    function decide_menu_visible() {
-	  var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-	  if (width < 1000)
-	    hide_side_menu();
-	  else
-	    show_side_menu();
-    };
-
-    var resizeTimer;
-    jQuery(window).resize(function() {
-	clearTimeout(resizeTimer);
-	resizeTimer = setTimeout(decide_menu_visible, 100);
-    });
-}
+//function resize_listener(){
+//    function decide_menu_visible() {
+//	  var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+//	  if (width < 1000)
+//	    hide_side_menu();
+//	  else
+//	    show_side_menu();
+//    };
+//
+//    var resizeTimer;
+//    jQuery(window).resize(function() {
+//	clearTimeout(resizeTimer);
+//	resizeTimer = setTimeout(decide_menu_visible, 100);
+//    });
+//}
 
 /**
  * A funtion to hide the menu
