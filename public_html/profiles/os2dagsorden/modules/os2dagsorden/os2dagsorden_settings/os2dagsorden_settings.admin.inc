@@ -340,6 +340,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => $options3,
     '#description' => t('This decides whether a side menu expanded/collapsed.'),
   );
+  $form['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu_touch'] = array(
+    '#type' => 'radios',
+    '#title' => t('Collapse/expand menu touch devices'),
+    '#default_value' => variable_get('os2dagsorden_collapse_menu_touch', TRUE),
+    '#options' => $options3,
+    '#description' => t('This decides whether a side menu expanded/collapsed for touch devices (tabels, phone etc).'),
+  );
   
   $form['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = array(
     '#type' => 'radios',
@@ -1279,6 +1286,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_meetings_views_last_8_show_meeting_is_closed', $setting_array['os2dagsorden_latest_meetings_view_settings']['os2dagsorden_meetings_views_last_8_show_meeting_is_closed']);
 
     variable_set('os2dagsorden_collapse_menu', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu']);
+    variable_set('os2dagsorden_collapse_menu_touch', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu_touch']);
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
     variable_set('os2dagsorden_hide_menu',  $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu']);
    
