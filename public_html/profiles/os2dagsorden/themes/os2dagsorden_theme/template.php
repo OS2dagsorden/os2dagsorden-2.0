@@ -38,7 +38,8 @@ function os2dagsorden_theme_preprocess_page(&$variables)
     if (variable_get('os2dagsorden_hide_menu', FALSE))
        drupal_add_js('hide_side_menu_completely();', 'inline'); 
     drupal_add_js('add_indicator_help_text();', 'inline');
-    drupal_add_js('hide_print_buttons();', 'inline');
+    //DAGS-298 enabling print for iPad
+    //drupal_add_js('hide_print_buttons();', 'inline');
     drupal_add_js('resize_listener();', 'inline');
     if (variable_get('os2dagsorden_show_search_block_title', 'true')==='false')
         drupal_add_js('hide_search_block_title()', 'inline');
