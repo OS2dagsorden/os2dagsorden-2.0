@@ -1442,6 +1442,16 @@ a.annotator-wrapper {
   border-radius: 5px;
 }
 
+.annotator-touch-controls.dummy-controls {
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.annotator-touch-controls.dummy-controls a{
+    cursor: default;
+    pointer-events: none;
+}
+
 /* ---------------------------- Annotateit override END---------------------------- */
 
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */

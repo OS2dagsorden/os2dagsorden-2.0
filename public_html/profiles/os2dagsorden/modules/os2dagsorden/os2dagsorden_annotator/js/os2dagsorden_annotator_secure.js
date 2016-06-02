@@ -31,7 +31,21 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
 			  search:  'annotator/search'
 			}
 		});
-	}); 
+
+        if (!jQuery("body .annotator-touch-controls.dummy-controls").length ) {
+            jQuery('body').append(
+                '<div class="annotator-touch-widget annotator-touch-controls dummy-controls">' +
+                    '<div class="annotator-touch-widget-inner">' +
+                        '<a class="annotator-button annotator-add annotator-focus">Lav note</a>' +
+                    '</div>' +
+                '</div>'
+            );
+            jQuery('body .annotator-touch-controls.dummy-controls').click(function(e) {
+                console.log('clicked');
+                e.preventDefault();
+            })
+        }
+	});
 }
 
 function annotator_hide_menu(){
