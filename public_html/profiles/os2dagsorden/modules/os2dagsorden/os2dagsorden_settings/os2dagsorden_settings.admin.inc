@@ -29,7 +29,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_version_text'] = array(
     '#type' => 'item',
     '#weight' => -10,
-    '#title' => t('OS2dagsorden version'),
+    '#title' => t('OS2dagsorden - versionsnummer'),
     '#markup' => '<div class= "test">' .  $output . '</div>',
   );
   $form['os2dagsorden_settings_file_fieldset'] = array(
