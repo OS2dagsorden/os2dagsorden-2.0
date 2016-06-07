@@ -377,7 +377,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#size' => 10,
     '#field_suffix' => ' px',
     '#default_value' => variable_get('os2dagsorden_body_text_size', '13'),
-    '#description' => t('Default body text font size is 13 px. When you change the body text size, then please clear the cache to apply change'),
+    '#description' => t('Default body font size is 13 px, where you change the text size here, please clear the cache to apply change'),
   );
 
   //meeting search view settings
