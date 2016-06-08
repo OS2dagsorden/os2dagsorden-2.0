@@ -1102,12 +1102,26 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsed' => FALSE,
   );
   $form['upload_guide']['quick_guide_upload_fid'] = array(
-  '#title' => t('Choose a file'),
-  '#type' => 'managed_file',
-  '#default_value' => variable_get('quick_guide_upload_fid', ''),
-  '#description' => t('Remember to save this form.'),
-  '#upload_location' => 'public://PDF/',
-);
+    '#title' => t('Choose a file'),
+    '#type' => 'managed_file',
+    '#default_value' => variable_get('quick_guide_upload_fid', ''),
+    '#description' => t('Remember to save this form.'),
+    '#upload_location' => 'public://PDF/',
+  );
+    // Upload quide PDF file.
+  $form['os2dagsorden_right_sidebar_arrow_position'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Sidepane arrow position'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['os2dagsorden_right_sidebar_arrow_position']['os2dagsorden_right_sidebar_arrow_position_radios'] = array(
+    '#title' => t('Sidepane arrow position'),
+    '#type' => 'radios',
+    '#options' => array('classic' => 'classic', 'equal_height' => 'equal height'),
+    '#default_value' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'),
+    '#description' => t('Default position or equal height with meeting blocks.'),
+  );
   ksort($form);
   return system_settings_form($form);
 }

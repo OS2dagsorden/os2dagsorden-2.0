@@ -76,8 +76,19 @@ jQuery(document).ready(function() {
     jQuery('.form-item-to-date-value-date input.form-text').change(function(){
           jQuery(this).val(prepareDate(jQuery(this).val()));
     })
-      // Set body font size.
+    // Set body font size.
     jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
+
+    // Sidepane arrow position.
+    if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic' && jQuery(window).width() > 740) {
+      jQuery('#block-block-1').css({'top' : '73px'});
+      jQuery('#region-sidebar-second').css({'margin-top':'42px'});
+    }
+    else if (jQuery(window).width() < 740) {
+      jQuery('#block-block-1').css({'top' : '28px'});
+      jQuery("#region-sidebar-second").removeAttr("style");
+
+    }
 });
 
 /* Changed ddmmyy and ddmmyyyy date formats to dd-mm-yyyy  */
@@ -125,6 +136,7 @@ function add_tablet_orientation_listener(){
 
 function add_show_hide_menu_behaviour(menu_collapse){
    jQuery(document).ready(function() {
+      jQuery("#region-content").removeAttr("style");
           if(menu_collapse)
                    hide_side_menu();
        jQuery("#show_hide_menu_button").click(function(){
@@ -148,6 +160,15 @@ function resize_listener(){
 	    hide_side_menu();
 	  else
 	    show_side_menu();
+
+          if (width < 740 && Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
+            jQuery('#block-block-1').css({'top' : '28px'});
+            jQuery("#region-sidebar-second").removeAttr("style");
+          }
+          else if (width > 740 && Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
+            jQuery('#block-block-1').css({'top' : '73px'});
+            jQuery("#region-sidebar-second").css({'margin-top' : '42px'});
+          }
     };
 
     var resizeTimer;
@@ -166,12 +187,29 @@ function hide_side_menu(){
 	jQuery("#show_hide_menu_button").val("⇐");
 	jQuery("#region-content").removeClass("grid-18");
 	jQuery("#region-content").addClass("grid-24");
+
+        if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
+          if (jQuery(window).width() > 980 ) {
+            jQuery("#region-content").css({'width': '93%'});
+          }
+          else if (jQuery(window).width() > 740 && jQuery(window).width() < 980 ) {
+            jQuery("#region-content").css({'width': '91%'});
+          }
+          else {
+            jQuery("#region-content").removeAttr("style");
+          }
+        }
+
+
   });
 }
 
 function hide_side_menu_completely(){
   jQuery(document).ready(function() {
       jQuery("#show_hide_menu_button").hide();
+      if (jQuery(window).width() < 740) {
+        jQuery("#region-content").removeAttr("style");
+      }
        hide_side_menu();
   });
  }  
@@ -183,6 +221,10 @@ function show_side_menu(){
 	jQuery("#show_hide_menu_button").val("⇒");
 	jQuery("#region-content").removeClass("grid-24");
 	jQuery("#region-content").addClass("grid-18");
+        if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
+          jQuery("#region-content").removeAttr("style");
+        }
+
 }
 
 /**
