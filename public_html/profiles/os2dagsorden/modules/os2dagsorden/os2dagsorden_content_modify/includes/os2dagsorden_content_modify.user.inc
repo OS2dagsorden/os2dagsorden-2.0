@@ -188,7 +188,14 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     $com_terms = os2dagsorden_settings_get_active_committees();
     $com_select = array();
     foreach ($com_terms as $com_term) {
-      $com_select[$com_term->tid] = $com_term->name;
+      // Display term short name if possible.
+      if ($short_name = field_get_items('taxonomy_term', $com_term, 'field_os2web_meetings_com_shname')) {
+        $term_name = $short_name[0]['value'];
+      }
+      else {
+        $term_name = $com_term->name;
+      }
+      $com_select[$com_term->tid] = $term_name;
     }
     $shared_member_of = array();
     $shared_follows = array();
@@ -328,7 +335,14 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
   $com_select = array();
 
   foreach ($com_terms as $com_term) {
-    $com_select[$com_term->tid] = $com_term->name;
+    // Display term short name if possible.
+    if ($short_name = field_get_items('taxonomy_term', $com_term, 'field_os2web_meetings_com_shname')) {
+      $term_name = $short_name[0]['value'];
+    }
+    else {
+      $term_name = $com_term->name;
+    }
+    $com_select[$com_term->tid] = $term_name;
   }
 
   $form['member_of'] = array(
