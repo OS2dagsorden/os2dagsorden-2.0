@@ -1094,6 +1094,20 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_title_meeting_make_note', 'Lav note'),
       '#title' => t('Lav note'),
   );*/
+  // Upload quide PDF file.
+  $form['upload_guide'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Quick quide PDF file'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['upload_guide']['quick_guide_upload_fid'] = array(
+  '#title' => t('Choose a file'),
+  '#type' => 'managed_file',
+  '#default_value' => variable_get('quick_guide_upload_fid', ''),
+  '#description' => t('Remember to save this form.'),
+  '#upload_location' => 'public://PDF/',
+);
   ksort($form);
   return system_settings_form($form);
 }

@@ -439,3 +439,12 @@ function os2dagsorden_settings_get_import_committees_sub_id(){
 
     return $ids;
 }
+function os2dagsorden_settings_get_quide_link() {
+  $fid = variable_get('quick_guide_upload_fid', '');
+  if ($fid && is_numeric($fid)) {
+    $file = file_load($fid);
+    $uri = $file->uri;
+    $url = file_create_url($uri);
+    print l(t('Quick guide'), $url, array('attributes' => array('class' => 'user-logout-textbox', 'target' => '_blank')));
+  }
+}
