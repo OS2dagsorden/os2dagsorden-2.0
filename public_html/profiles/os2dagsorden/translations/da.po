@@ -38371,3 +38371,7 @@ msgstr "Fravælg alle"
 msgid "Submit"
 msgstr "Gem"
 
+#: /os2dagsorden/os2dagsorden-2.0/public_html/admin/structure/views/view/os2dagsorden_users_view_widget/preview/os2dagsorden_user_view_widget/ajax
+msgid "@current of @max"
+msgstr "@current af @max"
+
