@@ -122,9 +122,10 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
  * @param $uids array array of uid
  */
 function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids) { 
+  $single_or_batch_class = (sizeof($uids) == 1)? 'single' : 'batch';
 
   $form[] = array(
-    '#markup' => '<div class="select-committee">',
+    '#markup' => "<div class=\"select-committee {$single_or_batch_class}\">",
   );
 
   $form['member_of_div'] = array(
@@ -144,13 +145,21 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     '#prefix' => '<label>' . t('Follows:') . '</label>',
     '#markup' => '',
   );
-
   $form['follows_hidden'] = array(
     '#type' => 'hidden',
     '#attributes' => array(
       'id' => 'follows_hidden',
     )
   );
+  if (sizeof($uids) == 1) {
+    $form['follows_subscribed_hidden'] = array(
+      '#type' => 'hidden',
+      '#attributes' => array(
+        'id' => 'follows_subscribed_hidden',
+      )
+    );
+  }
+
   $form['follows_plus_div'] = array(
     '#access' => user_access('administer users'),
     '#type' => 'item' ,
@@ -193,6 +202,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
 
     $shared_member_of = array();
     $shared_follows = array();
+    $shared_follows_subscribed = array();
     $shared_follows_plus = array();
     $shared_follows_plus_plus = array();
     foreach ($uids as $uid) {
@@ -216,6 +226,17 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
           if (isset($com_select[$follows['tid']])) {
             $shared_follows[$follows['tid']]++;
             $shared_all_user_committee[$follows['tid']]++;
+          }
+        }
+      }
+
+
+      //follows subscribed, only for single user edit
+      if (sizeof($uids) == 1 && field_get_items('user', $user, 'field_follows_committee')) {
+        $user_follows_subscribed_field = field_get_items('user', $user, 'field_follows_committee_subsc');
+        foreach ($user_follows_subscribed_field as $follows_subs) {
+          if (isset($com_select[$follows_subs['tid']])) {
+            $shared_follows_subscribed[$follows_subs['tid']]++;
           }
         }
       }
@@ -259,7 +280,16 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($shared_follows as $tid => $count) {
       if ($count == count($uids)) {
         $form['follows_hidden']['#value'] .= $tid . ',';
-        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+
+        //setting correct follows subscribed marker, only for single edit
+        if (sizeof($uids) == 1) {
+          $subscribed_class = 'can-subscribe';
+          if ($count == count($shared_follows_subscribed[$tid])) {
+            $subscribed_class .= ' subscribed';
+            $form['follows_subscribed_hidden']['#value'] .= $tid . ',';
+          }
+        }
+        $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}</li>";
       }
     }
     $content .= '</ul>';
@@ -517,6 +547,7 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
   extract($input);
   if (!os2dagsorden_access_helper_is_touch()){
     $follows = explode(',', $follows_hidden);
+    $follows_subscribed = explode(',', $follows_subscribed_hidden);
     $member_of = explode(',', $member_of_hidden);
     $follows_plus = explode(',', $follows_plus_hidden);
     $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
@@ -533,6 +564,17 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
     foreach ($follows as $tid) {
       if (!empty($tid))
         $user->field_follows_committee['und'][]['tid'] = $tid;
+    }
+  }
+
+  if (!os2dagsorden_access_helper_is_touch()){
+    //unsetting follows subscribed committees only on desktop devices
+    $user->field_follows_committee_subsc['und'] = array();
+    if ($follows_subscribed) {
+      foreach ($follows_subscribed as $tid) {
+        if (!empty($tid))
+          $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
+      }
     }
   }
 

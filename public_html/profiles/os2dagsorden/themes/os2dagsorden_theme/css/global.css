@@ -1807,6 +1807,19 @@ ul.droptrue li {
     cursor: move; 
     margin: 5px; 
     padding: 5px; 
-    background: none; background-color: white;
+    background: none;
+    background-color: white;
+}
+
+ul.droptrue li.can-subscribe {
+    padding-left: 25px;
+    background-image: url('../img/icon_bell_mute.png');
+    background-repeat: no-repeat;
+    background-position:   5px 50%;
+    background-size: 16px;
+}
+
+ul.droptrue li.can-subscribe.subscribed {
+    background-image: url('../img/icon_bell.png');
 }
 

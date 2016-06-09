@@ -43,27 +43,80 @@ function hide_print_buttons(){
      }
   });
 }
+
+/*
+ * Adds the subscribe/unsubscribe behavior for elements in the follows committees section
+ */
+function follows_subscribe_click(event) {
+    var subscribed_elements = [];
+    if (jQuery('#follows_subscribed_hidden').val() != '') {
+        subscribed_elements = jQuery('#follows_subscribed_hidden').val().split(',');
+    }
+    var id_toggle = jQuery(event.target).attr('id');
+
+    if (subscribed_elements.indexOf(id_toggle) > -1) {
+        //removing element 1 element
+        subscribed_elements.splice(subscribed_elements.indexOf(id_toggle), 1);
+    } else {
+        //adding this element
+        subscribed_elements.push(id_toggle);
+    }
+
+    jQuery(event.target).toggleClass('subscribed');
+    jQuery('#follows_subscribed_hidden').val(subscribed_elements.join(','));
+    //console.log(event.target);
+}
+
 jQuery(document).ready(function() {
-  jQuery("ul.droptrue").sortable({
-    connectWith: 'ul',
-   });
- jQuery("ul.droptrue").bind("sortreceive", function(event, ui) {
-    var arr_receiver = [];
-    var arr_sender = [];
-    jQuery(jQuery(this).children('li')).each(function(){
-    arr_receiver.push(jQuery(this).attr('id'));
-  });
-     jQuery(jQuery(ui.sender[0]).children('li')).each(function(){
-    arr_sender.push(jQuery(this).attr('id'));
-  })
-  jQuery('#' + jQuery(this).attr('id') + '_hidden').val(arr_receiver.join(','));
-  jQuery('#' + jQuery(ui.sender[0]).attr('id') + '_hidden').val(arr_sender.join(','));
-  });
+    jQuery("ul.droptrue").sortable({
+        connectWith: 'ul',
+    });
+    jQuery("ul.droptrue").bind("sortreceive", function(event, ui) {
+        var arr_receiver = [];
+        var arr_sender = [];
+        jQuery(jQuery(this).children('li')).each(function(){
+            arr_receiver.push(jQuery(this).attr('id'));
+        });
+        jQuery(jQuery(ui.sender[0]).children('li')).each(function(){
+            arr_sender.push(jQuery(this).attr('id'));
+        });
+        jQuery('#' + jQuery(this).attr('id') + '_hidden').val(arr_receiver.join(','));
+        jQuery('#' + jQuery(ui.sender[0]).attr('id') + '_hidden').val(arr_sender.join(','));
+    });
+
+    //add click behaviour to existing items
+    jQuery(".select-committee.single #edit-follows-div ul.droptrue li").click(follows_subscribe_click);
+
+    //add behaviour to item that is added to the follow section
+    jQuery(".select-committee.single #edit-follows-div ul.droptrue").bind("sortreceive", function(event, ui){
+        jQuery(ui.item).addClass('can-subscribe');
+        //console.log(ui.item);
+        jQuery(ui.item).click(follows_subscribe_click);
+    });
+
+    //remove behaviour from item that is removed from the follow section
+    jQuery(".select-committee.single #edit-follows-div ul.droptrue").bind("sortremove", function(event, ui){
+        jQuery(ui.item).removeClass('can-subscribe subscribed');
+        jQuery(ui.item).unbind('click');
+
+        //removing this element from subscribed
+        var subscribed_elements = [];
+        if (jQuery('#follows_subscribed_hidden').val() != '') {
+            subscribed_elements = jQuery('#follows_subscribed_hidden').val().trim().split(',');
+        }
+        var id_toggle = jQuery(ui.item).attr('id');
+
+        if (subscribed_elements.indexOf(id_toggle) > -1) {
+            //removing element 1 element
+            subscribed_elements.splice(subscribed_elements.indexOf(id_toggle), 1);
+        }
+        jQuery('#follows_subscribed_hidden').val(subscribed_elements.join(','));
+    });
+
     
-    
- jQuery(".available_committee").css('height',jQuery(".select-committee").height()+"px");
- jQuery(".remove-committee").css('width',jQuery(".select-committee").width()+"px");
-  //updatePostOrder();
+    jQuery(".available_committee").css('height',jQuery(".select-committee").height()+"px");
+    jQuery(".remove-committee").css('width',jQuery(".select-committee").width()+"px");
+    //updatePostOrder();
 });
  
 

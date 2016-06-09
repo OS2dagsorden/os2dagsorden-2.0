@@ -429,7 +429,7 @@ function os2dagsorden_access_helper_get_user_member_of_committees($uid = null){
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_committees($uid = nul){
+function os2dagsorden_access_helper_get_user_follow_committees($uid = null){
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
   } else {
@@ -446,13 +446,36 @@ function os2dagsorden_access_helper_get_user_follow_committees($uid = nul){
 }
 
 /**
+ * Functions returns the user follows subscribed committees
+ *
+ * @param $uid - uid of the user, if empty, current user is used
+ *
+ * @return array committees tids
+ */
+function os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid = null) {
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
+  $tids = array();
+  if (!empty($user->field_follows_committee_subsc)) { //is part of the committee
+    foreach ($user->field_follows_committee_subsc['und'] as $user_committee_id) {
+      $tids[] = $user_committee_id['tid'];
+    }
+  }
+
+  return $tids;
+}
+
+/**
  * Functions returns the user follows_plus committees
  *
  * @param $uid - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = nul){
+function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = null){
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
   } else {
@@ -1074,6 +1097,7 @@ function os2dagsorden_access_helper_node_presave($node) {
         if (isset($result['user'])) {
           $uids = array_merge($uids, array_keys($result['user']));
         }
+
         //follow
         if (variable_get('os2dagsorden_follows_committee_send_notification', FALSE)) {
           $query = new EntityFieldQuery();
@@ -1084,6 +1108,16 @@ function os2dagsorden_access_helper_node_presave($node) {
             $uids = array_merge($uids, array_keys($result['user']));
           }
         }
+        //follows subscribe
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'user')
+          ->fieldCondition('field_follows_committee', 'tid', $committee_id, '=')
+          ->fieldCondition('field_follows_committee_subsc', 'tid', $committee_id, '=');
+        $result = $query->execute();
+        if (isset($result['user'])) {
+          $uids = array_merge($uids, array_keys($result['user']));
+        }
+
         $cName = taxonomy_term_load($committee_id)->name;
         $mName = check_plain($node->title);
         $mDate = check_plain($node->field_os2web_meetings_date['und'][0]['value']);

@@ -159,12 +159,19 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
     //user follows committees
     if (is_array($follows)) {
       $existing_tids = os2dagsorden_access_helper_get_user_follow_committees($uid);
+      $existing_follow_subscribed_tids = os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid);
 
       $user->field_follows_committee['und'] = array();
+      $user->field_follows_committee_subsc['und'] = array();
       //readding existing tids, if not removed, and not added to any other box
       foreach ($existing_tids as $tid) {
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($member_of, $follows_plus, $follows_plus_plus))) {
           $user->field_follows_committee['und'][]['tid'] = $tid;
+
+          //if committee was in follows subscribed list, it's safe to keep it there
+          if (in_array($tid, $existing_follow_subscribed_tids)) {
+            $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
+          }
         }
       }
 
