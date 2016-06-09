@@ -2991,7 +2991,7 @@ os2dagsorden_meeting_views_meetings_search_help_text();
   $handler->display->display_options['fields']['entityreference_view_widget']['id'] = 'entityreference_view_widget';
   $handler->display->display_options['fields']['entityreference_view_widget']['table'] = 'users';
   $handler->display->display_options['fields']['entityreference_view_widget']['field'] = 'entityreference_view_widget';
-  $handler->display->display_options['fields']['entityreference_view_widget']['label'] = 'AD navn';
+  $handler->display->display_options['fields']['entityreference_view_widget']['label'] = 'Brugerinitialer';
   $handler->display->display_options['fields']['entityreference_view_widget']['element_type'] = 'span';
   $handler->display->display_options['fields']['entityreference_view_widget']['element_label_type'] = 'span';
   $handler->display->display_options['fields']['entityreference_view_widget']['element_label_colon'] = FALSE;
@@ -3003,7 +3003,7 @@ os2dagsorden_meeting_views_meetings_search_help_text();
   $handler->display->display_options['fields']['field_user_full_name']['id'] = 'field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
-  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Fuld navn';
+  $handler->display->display_options['fields']['field_user_full_name']['label'] = 'Navn';
   $handler->display->display_options['fields']['field_user_full_name']['element_default_classes'] = FALSE;
   /* Felt: Bruger: Navn */
   $handler->display->display_options['fields']['name']['id'] = 'name';
@@ -3100,8 +3100,8 @@ os2dagsorden_meeting_views_meetings_search_help_text();
     t('næste >'),
     t('sidste »'),
     t('Ingen resultater'),
-    t('AD navn'),
-    t('Fuld navn'),
+    t('Brugerinitialer'),
+    t('Navn'),
     t('Alle'),
     t('Entity Reference View Widget'),
   );
