@@ -4297,7 +4297,7 @@ msgstr ""
 
 #: /bgp-start/uc%253Asystem_cron/84bcac18cdc0c6b853831adcb53cc425
 msgid "Hjem"
-msgstr ""
+msgstr "Forsiden"
 
 #: /bgp-start/uc%253Asystem_cron/84bcac18cdc0c6b853831adcb53cc425
 msgid "View help topics"
@@ -13712,7 +13712,7 @@ msgstr ""
 
 #: /user/20/simple_edit
 msgid "Organizational"
-msgstr ""
+msgstr "Organisatoriske møder"
 
 #: /admin/config
 msgid "Assign user positions to users"
@@ -18754,7 +18754,7 @@ msgid "Log out"
 msgstr "Log ud"
 
 msgid "Home"
-msgstr "Hjem"
+msgstr "Forsiden"
 
 msgid "Administration"
 msgstr "Administration"
@@ -20132,7 +20132,7 @@ msgid "Use the default site language (@language_name)."
 msgstr "Brug sitets standardsprog (@language_name)."
 
 msgid "Account settings"
-msgstr "Kontoindstillinger"
+msgstr "Mine indstillinger"
 
 msgid "Year"
 msgstr "År"
@@ -23421,7 +23421,7 @@ msgid "Calendar preferences:"
 msgstr "Kalender preferencer"
 
 msgid "Which types of meetings should user see in the calendar"
-msgstr "Hvilken type af møder skal brugeren kunne se i sin kalender"
+msgstr "Hvilken mødetype vil jeg se i min kalender"
 
 msgid "User positions:"
 msgstr "Stillings betegnelser"
@@ -36208,7 +36208,7 @@ msgid ""
 msgstr ""
 "Felter på brugerkonti er defineret på siteniveau, på fanen <a "
 "href=\"@fields\">Håndtér felter</a> på siden med <a "
-"href=\"@accounts\">Kontoindstillinger</a>. Når du definere et felt "
+"href=\"@accounts\">Mine indstillinger</a>. Når du definere et felt "
 "på brugerkonti bliver det tilføjet til alle brugerkonti. Du kan for "
 "eksempel tilføje et tekstfelt hvor brugerne kan indtaste deres "
 "biografi."

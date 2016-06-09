@@ -366,7 +366,7 @@ HTML;
 		<div class="controls-right">';
 		
 	//starting the breadcrumb - common for bilag/not bilag	
-	$breadcrumb[] = l('Hjem', $base_url);
+	$breadcrumb[] = l('Forsiden', $base_url);
 	$breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $meeting_id);
 	$breadcrumb[] .= l('Dagsordenspunkt', 'meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id);
 
@@ -589,7 +589,7 @@ function _os2dagsorden_annotator_meeting_all_notes_view($meeting_id){
     drupal_set_title("Mødenoter");
     
     //breadcrumb
-    $breadcrumb[] = l('Hjem', $base_url);
+    $breadcrumb[] = l('Forsiden', $base_url);
     $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $meeting_id);
     $breadcrumb[] .= '<span class="breadcrumb-active">Mødenoter</span>';
     drupal_set_breadcrumb($breadcrumb);

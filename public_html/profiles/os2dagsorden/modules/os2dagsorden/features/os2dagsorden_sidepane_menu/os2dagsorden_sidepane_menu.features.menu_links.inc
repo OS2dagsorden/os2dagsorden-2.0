@@ -15,7 +15,7 @@ function os2dagsorden_sidepane_menu_menu_default_menu_links() {
     'menu_name' => 'menu-sidepane-menu',
     'link_path' => '<front>',
     'router_path' => '',
-    'link_title' => 'Hjem',
+    'link_title' => 'Forsiden',
     'options' => array(
       'attributes' => array(
         'id' => 'menu-home',
@@ -25,7 +25,7 @@ function os2dagsorden_sidepane_menu_menu_default_menu_links() {
       ),
     ),
     'module' => 'menu',
-    'hidden' => '0',
+    'hidden' => '1',
     'external' => '1',
     'has_children' => '0',
     'expanded' => '0',
@@ -55,7 +55,7 @@ function os2dagsorden_sidepane_menu_menu_default_menu_links() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Halvårs-kalender');
-  t('Hjem');
+  t('Forsiden');
 
 
   return $menu_links;

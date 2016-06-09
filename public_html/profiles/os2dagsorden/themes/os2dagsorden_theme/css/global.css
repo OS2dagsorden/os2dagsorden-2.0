@@ -426,7 +426,13 @@ ul li.leaf {
     float:right;
     background: url('../img/icon_help.png') no-repeat 50% top;
 }
-
+#ToolTipDiv {
+  Position: absolute;
+  background-position-y: 90%;
+  background-position-x: 90%;
+  border-radius: 5px;
+  display: none;
+}
 .indicator-has-notes{
     position: relative;
     float:left;

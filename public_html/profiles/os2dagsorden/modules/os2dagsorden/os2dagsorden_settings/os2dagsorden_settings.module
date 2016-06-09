@@ -105,7 +105,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu_touch'] = variable_get('os2dagsorden_collapse_menu_touch', TRUE);
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = variable_get('os2dagsorden_show_search_block_title', 'true');
     $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu'] = variable_get('os2dagsorden_hide_menu', FALSE);
-    
+    $setting_array['os2dagsorden_body_text_layout']['os2dagsorden_body_text_size'] = variable_get('os2dagsorden_body_text_size', '13');
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee'] = variable_get('os2dagsorden_meetings_search_show_meeting_committee', TRUE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location'] = variable_get('os2dagsorden_meetings_search_show_meeting_location', FALSE);
     $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status'] = variable_get('os2dagsorden_meetings_search_show_meeting_status', FALSE);
@@ -177,7 +177,7 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_member_of'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_following'] = variable_get('os2dagsorden_title_frontpage_following', 'Jeg følger');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_account_settings'] = variable_get('os2dagsorden_title_frontpage_account_settings', 'Konto indstillinger');
-    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_home'] = variable_get('os2dagsorden_title_frontpage_home', 'Hjem');
+    $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_home'] = variable_get('os2dagsorden_title_frontpage_home', 'Forsiden');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_frontpage_placeholder']['os2dagsorden_title_frontpage_halfyear_calendar'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender');
 
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_status'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
@@ -382,8 +382,8 @@ function os2dagsorden_settings_block_view_alter(&$data, $block){
         case 'menu-sidepane-menu':
             foreach ($data['content'] as &$menu_item){
                 if ($menu_item['#theme'] == 'menu_link__menu_sidepane_menu'){//filtering on actual menus
-                    if ($menu_item['#title'] == 'Hjem')//Hjem
-                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_home', 'Hjem');
+                    if ($menu_item['#title'] == 'Forsiden')//Forsiden
+                        $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_home', 'Forsiden');
                     if ($menu_item['#title'] == 'Halvårs-kalender')//Halvårs-kalender
                         $menu_item['#title'] = variable_get('os2dagsorden_title_frontpage_halfyear_calendar', 'Halvårs-kalender');
                 }
@@ -439,4 +439,13 @@ function os2dagsorden_settings_get_import_committees_sub_id(){
     }
 
     return $ids;
+}
+function os2dagsorden_settings_get_quide_link() {
+  $fid = variable_get('quick_guide_upload_fid', '');
+  if ($fid && is_numeric($fid)) {
+    $file = file_load($fid);
+    $uri = $file->uri;
+    $url = file_create_url($uri);
+    print l(t('Quick guide'), $url, array('attributes' => array('class' => 'user-logout-textbox', 'target' => '_blank')));
+  }
 }

@@ -35,6 +35,10 @@ function os2dagsorden_theme_preprocess_page(&$variables)
       drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu_touch', true) . ');', 'inline');
     }
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
+    drupal_add_js(array('os2dagsorden_settings' => array('body_font_size' => variable_get('os2dagsorden_body_text_size', '13'))), array('type' => 'setting'));
+
+    drupal_add_js(array('os2dagsorden_settings' => array('sidepane_arrow_position' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'))), array('type' => 'setting'));
+
     if (variable_get('os2dagsorden_hide_menu', FALSE))
        drupal_add_js('hide_side_menu_completely();', 'inline'); 
     drupal_add_js('add_indicator_help_text();', 'inline');
@@ -104,7 +108,7 @@ function os2dagsorden_theme_preprocess_page(&$variables)
       $destination = $_GET['destination'];
       $destination = explode('/', $destination);
       
-      $breadcrumb[] = l('Hjem', $base_url);
+      $breadcrumb[] = l('Forsiden', $base_url);
       $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $destination[1]);
       
       if (isset($destination[3]))//bullet point

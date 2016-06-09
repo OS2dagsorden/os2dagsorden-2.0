@@ -7,7 +7,7 @@
 /////////////////////////////////////////header START /////////////////////////////////////////
 function os2dagsorden_meeting_views_meeting_details_breadcrumb(){
   global $base_url;
-  $breadcrumb[] = l('Hjem', $base_url);
+  $breadcrumb[] = l('Forsiden', $base_url);
   $breadcrumb[] .= '<span class="breadcrumb-active">Mødedetaljer</span>';
   drupal_set_breadcrumb($breadcrumb);
 }

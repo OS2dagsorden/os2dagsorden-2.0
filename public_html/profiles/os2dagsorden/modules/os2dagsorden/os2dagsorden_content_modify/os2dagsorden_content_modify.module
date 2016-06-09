@@ -43,7 +43,7 @@ function os2dagsorden_content_modify_menu() {
   );
 
   $items['user/simple_edit'] = array(
-    'title' => 'Kontoindstillinger',
+    'title' => 'Mine indstillinger',
     'page callback' => '_os2dagsorden_content_modify_user_edit_page',
     'access arguments' => array('access content'),
     'type' => MENU_NORMAL_ITEM,
