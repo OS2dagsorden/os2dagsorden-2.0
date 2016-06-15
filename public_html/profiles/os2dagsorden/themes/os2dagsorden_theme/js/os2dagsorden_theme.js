@@ -225,7 +225,6 @@ function resize_listener(){
      //    hide_side_menu();
      //  else
      // show_side_menu();
-    console.log(width);
     // Sidepane arrow position.
     if (width < 740 || width > 740) {
       set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', width);
