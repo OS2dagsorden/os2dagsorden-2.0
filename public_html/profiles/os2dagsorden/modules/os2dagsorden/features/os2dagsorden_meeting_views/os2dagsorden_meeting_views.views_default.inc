@@ -2936,7 +2936,7 @@ os2dagsorden_meeting_views_meetings_search_help_text();
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'users';
-  $view->human_name = 'OS2Dagsorden users view widget';
+  $view->human_name = 'OS2dagsorden - deling af talepapir med andre brugere';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */

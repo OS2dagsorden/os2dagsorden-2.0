@@ -38356,8 +38356,7 @@ msgid ""
 "No items have been added yet. Click \"Add items\" to launch the "
 "widget."
 msgstr ""
-"Ingen elementer er endnu ikke tilføjet. Klik på \"Tilføj element\" "
-"for at starte widget."
+"Talepapiret deles ikke med andre brugere. Klik på knappen for at dele med andre brugere."
 
 #: profiles/os2dagsorden/modules/contrib/entityreference_view_widget/entityreference_view_widget.js
 msgid "Select all"

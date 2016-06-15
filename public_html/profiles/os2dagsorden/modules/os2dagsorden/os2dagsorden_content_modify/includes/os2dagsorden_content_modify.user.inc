@@ -702,14 +702,15 @@ function os2dagsorden_content_modify_asort($term_list = array()) {
   $return_array = array();
   if ($term_list) {
     foreach ($term_list as $tid) {
-      $term = taxonomy_term_load($tid['tid']);
-      if ($short_name = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_shname')) {
-        $term_name = $short_name[0]['value'];
+      if ($term = taxonomy_term_load($tid['tid'])) {
+        if ($short_name = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_shname')) {
+          $term_name = $short_name[0]['value'];
+        }
+        else {
+          $term_name = $term->name;
+        }
+        $new_array[$tid['tid']] = $term_name;
       }
-      else {
-        $term_name = $term->name;
-      }
-      $new_array[$tid['tid']] = $term_name;
     }
     asort($new_array);
 
