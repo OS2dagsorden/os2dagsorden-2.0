@@ -132,17 +132,31 @@ jQuery(document).ready(function() {
     jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
 
     // Sidepane arrow position.
-    if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic' && jQuery(window).width() > 740) {
-      jQuery('#block-block-1').css({'top' : '73px'});
-      jQuery('#region-sidebar-second').css({'margin-top':'42px'});
-    }
-    else if (jQuery(window).width() < 740) {
-      jQuery('#block-block-1').css({'top' : '28px'});
-      jQuery("#region-sidebar-second").removeAttr("style");
-
-    }
+    set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', jQuery(window).width());
+    set_up_button_position('.not-front #block-block-1', '.not-front #region-sidebar-second', 'not-front', jQuery(window).width());
+    resize_listener();
 });
+function set_up_button_position(button_id, region_sidebar_second, frontpage, width) {
+  // Sidepane arrow position.
+  if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic' && width > 740) {
+    if (frontpage == 'front') {
+      jQuery(button_id).css({'top' : '73px'});
+      jQuery(region_sidebar_second).css({'margin-top':'42px'});
+    }
+    else {
+      jQuery(button_id).css({'top' : '66px'});
+      jQuery(region_sidebar_second).css({'margin-top':'0px'});
+      jQuery('#breadcrumb').css({'width': '80%'});
+    }
+  }
+  else if (width < 740) {
+    if (frontpage == 'front') {
+      jQuery(button_id).css({'top' : '28px'});
+      jQuery(region_sidebar_second).removeAttr("style");
+    }
 
+  }
+}
 /* Changed ddmmyy and ddmmyyyy date formats to dd-mm-yyyy  */
 function prepareDate(dateValue) {
    fromDateArray=dateValue.match( /^([0-9]{2})([0-9]{2})([0-9]{2,4})$/);
@@ -204,30 +218,28 @@ function add_show_hide_menu_behaviour(menu_collapse){
    });
 }
 
-//function resize_listener(){
-//    function decide_menu_visible() {
-//	  var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-//	  if (width < 1000)
-//	    hide_side_menu();
-//	  else
-//	    show_side_menu();
-//
-//          if (width < 740 && Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
-//            jQuery('#block-block-1').css({'top' : '28px'});
-//            jQuery("#region-sidebar-second").removeAttr("style");
-//          }
-//          else if (width > 740 && Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
-//            jQuery('#block-block-1').css({'top' : '73px'});
-//            jQuery("#region-sidebar-second").css({'margin-top' : '42px'});
-//          }
-//    };
-//
-//    var resizeTimer;
-//    jQuery(window).resize(function() {
-//	clearTimeout(resizeTimer);
-//	resizeTimer = setTimeout(decide_menu_visible, 100);
-//    });
-//}
+function resize_listener(){
+  function decide_menu_visible() {
+    var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+     // if (width < 1000)
+     //    hide_side_menu();
+     //  else
+     // show_side_menu();
+    console.log(width);
+    // Sidepane arrow position.
+    if (width < 740 || width > 740) {
+      set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', width);
+      set_up_button_position('.not-front #block-block-1', '.not-front #region-sidebar-second', 'not-front', width);
+    }
+
+  };
+
+  var resizeTimer;
+  jQuery(window).resize(function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(decide_menu_visible, 100);
+  });
+}
 
 /**
  * A funtion to hide the menu
