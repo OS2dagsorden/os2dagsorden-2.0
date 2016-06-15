@@ -239,7 +239,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
 
 
       //follows subscribed, only for single user edit
-      if (sizeof($uids) == 1 && field_get_items('user', $user, 'field_follows_committee')) {
+      if (sizeof($uids) == 1 && field_get_items('user', $user, 'field_follows_committee_subsc')) {
         $user_follows_subscribed_field = field_get_items('user', $user, 'field_follows_committee_subsc');
         foreach ($user_follows_subscribed_field as $follows_subs) {
           if (isset($com_select[$follows_subs['tid']])) {
