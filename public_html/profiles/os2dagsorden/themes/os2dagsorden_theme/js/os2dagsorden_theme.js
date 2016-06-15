@@ -655,10 +655,10 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
           $("#ToolTipDiv").css({'top': offset.top + 30, 'left': offset.left - 300, 'max-width': '300px'});
           $("#ToolTipDiv").stop(true, true);
           $("#ToolTipDiv")
-            .html($(this).attr('title')).fadeIn(400);
+            .html($(this).attr('aria-label')).fadeIn(400);
           }
         else {
-          $(this).attr('title', $("#ToolTipDiv").html());
+          $(this).attr('aria-label', $("#ToolTipDiv").html());
           $("#ToolTipDiv").fadeOut(400);
         }
       });

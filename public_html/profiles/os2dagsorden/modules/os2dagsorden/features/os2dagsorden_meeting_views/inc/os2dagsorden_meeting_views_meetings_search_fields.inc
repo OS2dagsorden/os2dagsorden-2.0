@@ -14,7 +14,7 @@ function os2dagsorden_meeting_views_meetings_search_breadcrumb(){
 }
 
 function os2dagsorden_meeting_views_meetings_search_help_text(){
-  print '<div class="help-button" title="' . variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de møder der indeholdt møder, 
+  print '<div class="help-button" aria-label="' . variable_get('os2dagsorden_meetings_search_help_text', 'Her vises de møder der indeholdt møder,
   punkter eller bilag der matchede dine søgekriterier. Søgeresultatet vises på mødeniveau i listen.') . '"></div>';
 }
 /////////////////////////////////////////header END /////////////////////////////////////////

@@ -6,7 +6,7 @@
 
 /////////////////////////////////////////header START /////////////////////////////////////////
 function os2dagsorden_meeting_views_last_8_meetings_help_text(){
-  print '<div class="help-button" title="' . variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 møder i alle mødefora. 
+  print '<div class="help-button" aria-label="' . variable_get('os2dagsorden_last_8_meetings_help_text', 'Her vises de seneste 8 møder i alle mødefora.
   Der er ikke et referat tilgængeligt før status er angivet til Referat eller Referat+.') . '"></div>';
 }
 /////////////////////////////////////////header END /////////////////////////////////////////

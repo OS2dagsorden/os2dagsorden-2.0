@@ -425,6 +425,7 @@ ul li.leaf {
     right: 10px;
     float:right;
     background: url('../img/icon_help.png') no-repeat 50% top;
+    cursor: pointer;
 }
 #ToolTipDiv {
   Position: absolute;
