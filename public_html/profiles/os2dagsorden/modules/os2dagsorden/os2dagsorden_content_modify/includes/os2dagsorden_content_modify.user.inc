@@ -229,7 +229,6 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       if (field_get_items('user', $user, 'field_follows_committee')) {
         $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
         $user_follows_field = os2dagsorden_content_modify_asort($user_follows_field);
-        dsm($user_follows_field);
         foreach ($user_follows_field as $follows) {
           if (isset($com_select[$follows['tid']])) {
             $shared_follows[$follows['tid']]++;
