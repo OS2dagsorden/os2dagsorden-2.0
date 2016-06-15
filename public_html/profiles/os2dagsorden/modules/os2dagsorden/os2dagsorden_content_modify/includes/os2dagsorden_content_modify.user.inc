@@ -229,6 +229,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       if (field_get_items('user', $user, 'field_follows_committee')) {
         $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
         $user_follows_field = os2dagsorden_content_modify_asort($user_follows_field);
+        dsm($user_follows_field);
         foreach ($user_follows_field as $follows) {
           if (isset($com_select[$follows['tid']])) {
             $shared_follows[$follows['tid']]++;
@@ -703,7 +704,13 @@ function os2dagsorden_content_modify_asort($term_list = array()) {
   if ($term_list) {
     foreach ($term_list as $tid) {
       $term = taxonomy_term_load($tid['tid']);
-      $new_array[$tid['tid']] = $term->name;
+      if ($short_name = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_shname')) {
+        $term_name = $short_name[0]['value'];
+      }
+      else {
+        $term_name = $term->name;
+      }
+      $new_array[$tid['tid']] = $term_name;
     }
     asort($new_array);
 
