@@ -374,6 +374,7 @@ function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
     }
     $com_select[$com_term->tid] = $term_name;
   }
+  asort($com_select);
 
   $form['member_of'] = array(
     '#access' => user_access('administer users'),
