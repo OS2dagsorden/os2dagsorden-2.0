@@ -74,10 +74,6 @@ os2dagsorden_front_page_views_user_committees_help_text();
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['label'] = '';
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['empty'] = '[name]';
-  /* Sort criterion: Ord i ordforråd: Navn */
-  $handler->display->display_options['sorts']['name']['id'] = 'name';
-  $handler->display->display_options['sorts']['name']['table'] = 'taxonomy_term_data';
-  $handler->display->display_options['sorts']['name']['field'] = 'name';
   /* Sort criterion: Ord i ordforråd: Name short (field_os2web_meetings_com_shname) */
   $handler->display->display_options['sorts']['field_os2web_meetings_com_shname_value']['id'] = 'field_os2web_meetings_com_shname_value';
   $handler->display->display_options['sorts']['field_os2web_meetings_com_shname_value']['table'] = 'field_data_field_os2web_meetings_com_shname';
