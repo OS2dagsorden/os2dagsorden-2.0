@@ -382,8 +382,9 @@ function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id){
     $shared_with_str = null;
     if (isset($sp->field_os2web_meetings_sp_shared['und'])){
       foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
-	  $shared_with_user = user_load($shared_with['target_id']);
-	  $shared_with_str .= ($shared_with_user->field_user_full_name['und'])? $shared_with_user->field_user_full_name['und'][0]['value'] : $shared_with_user->name . ', ';
+	    $shared_with_user = user_load($shared_with['target_id']);
+	    $shared_with_str .= ($shared_with_user->field_user_full_name['und'])? $shared_with_user->field_user_full_name['und'][0]['value'] : $shared_with_user->name;
+        $shared_with_str .= ', ';
       }
     }
     if ($shared_with_str)
