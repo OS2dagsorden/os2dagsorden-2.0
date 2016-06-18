@@ -48,14 +48,14 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
   if ($user_can_see_closed_agendas){
     if (!empty($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri']) . 
-      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF') . ' (lukket)</a>';
+      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . ' (lukket)</a>';
     }
   }
 
   //opened version - if not empty
   if (!empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) . 
-      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF') . '</a>';
+      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . '</a>';
   }
   echo '</div>';
   echo '<div class="clearfix"></div>';
@@ -101,13 +101,13 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
     if ($user_can_see_closed_agendas){
       if (!empty($add_desc['closed'])){
 	echo '<a target="_blank" href="' . file_create_url($add_desc['closed']['uri']) .
-	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF') . ' (lukket)</a>';
+	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Tillægsdokument') . ' (lukket)</a>';
       }
     }
     //opened version additional - if not empty
     if (!empty($add_desc['opened'])){
 	echo '<a target="_blank" href="' . file_create_url($add_desc['opened']['uri']) . 
-	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF') .  '</a>';
+	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Tillægsdokument') .  '</a>';
     }
     echo '</div>';
     echo '<div class="clearfix"></div>';
