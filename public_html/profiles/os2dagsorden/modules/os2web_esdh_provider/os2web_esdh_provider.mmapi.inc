@@ -301,6 +301,19 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       }
     }
 
+    //adding full doc with attachments
+    if (!empty($meeting['full_doc_with_attachments'])){
+      if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc_with_attachments']))) {
+        if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0){
+          $node->field_os2web_meetings_att_doc_c[$node->language][0] = (array) $file;
+          watchdog('acadre MM', '[XML_ID: !id] Meetings closed full doc with attachments: !uri ', array('!id' => $PROCESSING_MEETING_ID, '!uri' => $file->uri), WATCHDOG_DEBUG);
+        } else {
+          $node->field_os2web_meetings_att_doc[$node->language][0] = (array) $file;
+          watchdog('acadre MM', '[XML_ID: !id] Meetings open full doc with attachments: !uri ', array('!id' => $PROCESSING_MEETING_ID, '!uri' => $file->uri), WATCHDOG_DEBUG);
+        }
+      }
+    }
+
     $bullet_points = array();
     if ($node->field_os2web_meetings_bullets['und']) {
       $bullet_points = $node->field_os2web_meetings_bullets['und'];

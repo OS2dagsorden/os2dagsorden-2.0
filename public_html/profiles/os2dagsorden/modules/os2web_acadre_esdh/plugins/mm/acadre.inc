@@ -111,6 +111,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
           'docfilename' => _get_value_from_xml($xml_item->xpath('field/@docfilename')),
           'type' => _get_value_from_xml($xml_item->xpath('field/@type'),'int'),
           'docID' => _get_value_from_xml($xml_item->xpath('field/@docID'), 'int'),
+          'pdffilename' => _get_value_from_xml($xml_item->xpath('field/@pdffilename')),
         );
 
         if ($agendainfo['publish'] === 1 &&
@@ -266,6 +267,19 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'uri' => $uri,  
       'title' => $meeting['title'],
     );
+
+    //Full Doc with content:
+    $full_doc_with_attachements_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR).
+      implode('/', array(
+        $info['filesfolder'],
+        $info['pdffilename']));
+
+    if (file_exists(drupal_realpath($full_doc_with_attachements_uri))) {
+      $meeting['full_doc_with_attachments'] = array(
+        'uri' => $full_doc_with_attachements_uri,
+        'title' => $meeting['title'],
+      );
+    }
 
     // Type:
     switch ($info['type']) {

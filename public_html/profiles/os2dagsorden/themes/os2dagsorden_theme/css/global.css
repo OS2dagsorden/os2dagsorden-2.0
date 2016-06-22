@@ -1051,6 +1051,12 @@ pager li.pager-first, .pager li.pager-previous.first {
   margin: 7px;
 }
 
+.controls-right.breadcrumb-level{
+  position: absolute;
+  right: -7px;
+  top: -41px;
+}
+
 .controls-right a {
   margin-left: 5px;
 }

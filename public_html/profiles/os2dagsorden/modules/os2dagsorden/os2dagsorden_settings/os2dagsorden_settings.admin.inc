@@ -179,12 +179,26 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Title of the meeting description download button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF'),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_with_att_download_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting description with attachments download button'),
+    '#maxlength' => 200,
+    '#description' => t('Title of the meeting description with attachments download button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_with_att_download_title', 'Samlet dokument med bilag'),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = array(
     '#type' => 'textfield',
     '#title' => t('Meeting additional description download button'),
     '#maxlength' => 200,
     '#description' => t('Title of the meeting additional description download button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF'),
+  );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_with_att_download_title_additional'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting additional description with attachments download button'),
+    '#maxlength' => 200,
+    '#description' => t('Title of the meeting additional description with attachments download button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_with_att_download_title_additional', 'Tillægsdokument med bilag'),
   );
   $form['os2dagsorden_meeting_view_settings']['print_pdf_page_orientation'] = array(
       '#type' => 'select',
