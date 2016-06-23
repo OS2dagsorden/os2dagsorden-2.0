@@ -1271,8 +1271,15 @@ div.speaker-paper-print{
 .view-speaking-paper .views-row{
    padding-bottom: 10px;
 }
-
-
+.view-speaking-paper .attachment .view-display-id-attachment_1 a {
+  display: block;
+  color: #333333;
+  padding: 3px 10px 3px 10px;
+  line-height: 30px;
+  font-family: Arial,Helvetica,sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+}
 .form-submit.nav-button, .form-submit.nav-button:hover{
     display: inline-block;
     font-weight: normal;
