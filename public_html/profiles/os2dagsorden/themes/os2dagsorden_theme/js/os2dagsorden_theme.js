@@ -652,11 +652,12 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
         if ($("#ToolTipDiv").css('display') == 'block') {
           if ($("#ToolTipDiv").hasClass($(this).attr('id')) && count % 2==0) {
             $("#ToolTipDiv").fadeOut(400);
-            jQuery("#ToolTipDiv").attr('class', 'tip-darkgray');
+            $("#ToolTipDiv").attr('class', 'tip-darkgray');
             count = 0;
           }
           else {
             $("#ToolTipDiv").css({'top': offset.top + 30, 'left': offset.left - 300, 'max-width': '300px'});
+            $("#ToolTipDiv").attr('class', 'tip-darkgray');
             $("#ToolTipDiv").addClass($(this).attr('id'));
             $("#ToolTipDiv").html($(this).attr('aria-label')).fadeIn(400)
           }
