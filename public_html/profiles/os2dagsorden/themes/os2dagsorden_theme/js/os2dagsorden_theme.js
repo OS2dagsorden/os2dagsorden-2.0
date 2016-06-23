@@ -645,15 +645,12 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     $("body").append("<div id='ToolTipDiv' class='tip-darkgray'></div>");
     $(".help-button").each(function() {
       var offset = $(this).offset();
-      var count = 0;
 
       $(this).click(function(e) {
-        count += 1;
         if ($("#ToolTipDiv").css('display') == 'block') {
-          if ($("#ToolTipDiv").hasClass($(this).attr('id')) && count % 2==0) {
+          if ($("#ToolTipDiv").hasClass($(this).attr('id'))) {
             $("#ToolTipDiv").fadeOut(400);
             $("#ToolTipDiv").attr('class', 'tip-darkgray');
-            count = 0;
           }
           else {
             $("#ToolTipDiv").css({'top': offset.top + 30, 'left': offset.left - 300, 'max-width': '300px'});
