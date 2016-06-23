@@ -645,20 +645,30 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     $("body").append("<div id='ToolTipDiv' class='tip-darkgray'></div>");
     $(".help-button").each(function() {
       var offset = $(this).offset();
+      var count = 0;
 
       $(this).click(function(e) {
-
-        if ($("#ToolTipDiv").css('display') == 'none') {
+        count += 1;
+        if ($("#ToolTipDiv").css('display') == 'block') {
+          if ($("#ToolTipDiv").hasClass($(this).attr('id')) && count % 2==0) {
+            $("#ToolTipDiv").fadeOut(400);
+            jQuery("#ToolTipDiv").attr('class', 'tip-darkgray');
+            count = 0;
+          }
+          else {
+            $("#ToolTipDiv").css({'top': offset.top + 30, 'left': offset.left - 300, 'max-width': '300px'});
+            $("#ToolTipDiv").addClass($(this).attr('id'));
+            $("#ToolTipDiv").html($(this).attr('aria-label')).fadeIn(400)
+          }
+        }
+        else {
 
           $("#ToolTipDiv").css({'top': offset.top + 30, 'left': offset.left - 300, 'max-width': '300px'});
-          $("#ToolTipDiv").stop(true, true);
-          $("#ToolTipDiv")
-            .html($(this).attr('aria-label')).fadeIn(400);
-          }
-        else {
-          $(this).attr('aria-label', $("#ToolTipDiv").html());
-          $("#ToolTipDiv").fadeOut(400);
+          $("#ToolTipDiv").addClass($(this).attr('id'));
+          $("#ToolTipDiv").html($(this).attr('aria-label')).fadeIn(400);
+
         }
+
       });
     });
   });

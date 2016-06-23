@@ -373,7 +373,7 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
 function os2dagsorden_settings_block_view_alter(&$data, $block){
     switch ($block->delta) {
 	case '-exp-meetings_search-page':
-	    $data['content']['#markup'] = '<div class="help-button" aria-label="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der søges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnævnte er konverteret til html. Søgning kan filtreres via dato, udvalg og søgeord.') . '"></div>' . $data['content']['#markup'];
+	    $data['content']['#markup'] = '<div class="help-button" id="os2dagsorden_meetings_search_block_help" aria-label="' . variable_get('os2dagsorden_meetings_search_block_help_text', 'Her kan der søges i dagsordenspunkters tekst og i bilagenes fritekst, hvis sidstnævnte er konverteret til html. Søgning kan filtreres via dato, udvalg og søgeord.') . '"></div>' . $data['content']['#markup'];
             $block->title = variable_get('os2dagsorden_title_general_search', 'Søg');
 	    break;
         case 'events-block_1':
