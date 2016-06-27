@@ -1,0 +1,55 @@
+<?php
+/**
+ * @file
+ * Code for the OS2dagsorden updatedb.
+ */
+function os2dagsorden_updatedb_menu() {
+  $items['admin/updatedb'] = array(
+    'title' => 'OS2dagsorden update DB',
+    'description' => t('Choose the version to run all the hook_update_N() functions'),
+    'access arguments' => array('administer os2web'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2dagsorden_updatedb_setting_form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function os2dagsorden_updatedb_setting_form($form, $form_state) {
+  $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
+  $info = drupal_parse_info_file($info_path);
+  $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
+
+  $form['os2dagsorden_update_setting'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('OS2dagsorden update setting'),
+
+  );
+  $form['os2dagsorden_update_setting']['os2dagsorden_update_version'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OS2dagsorden version'),
+    '#default_value' => variable_get('os2dagsorden_update_version', $version),
+    '#description' => t('Run update hook according to os2dagsorden version ') . variable_get('os2dagsorden_update_version', $version),
+
+  );
+
+  $form['actions']['run_update'] = array(
+    '#type' => 'submit',
+    '#weight' => 15,
+    '#submit' => array('os2dagsorden_updatedb_run'),
+    '#value' => t('Run update hook now'),
+  );
+
+  return system_settings_form($form);
+}
+
+function os2dagsorden_updatedb_run($form, $form_state) {
+  if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
+    form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
+  }
+  $version = $form_state['values']['os2dagsorden_update_version'];
+  $version_d = explode('.', $version);
+  $modules = module_implements('update');
+  dsm($modules);
+}
