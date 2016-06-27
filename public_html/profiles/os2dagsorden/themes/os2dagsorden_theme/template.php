@@ -36,6 +36,7 @@ function os2dagsorden_theme_preprocess_page(&$variables)
     }
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
     drupal_add_js(array('os2dagsorden_settings' => array('body_font_size' => variable_get('os2dagsorden_body_text_size', '13'))), array('type' => 'setting'));
+    drupal_add_js(array('os2dagsorden_settings' => array('title_font_size' => variable_get('os2dagsorden_title_text_size', '13'))), array('type' => 'setting'));
 
     drupal_add_js(array('os2dagsorden_settings' => array('sidepane_arrow_position' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'))), array('type' => 'setting'));
 

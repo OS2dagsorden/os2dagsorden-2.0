@@ -131,6 +131,13 @@ jQuery(document).ready(function() {
     // Set body font size.
     jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
 
+    // Set title font size.
+    jQuery('table.views-table tr td a').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
+    jQuery('.view-user-committee .views-row').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
+    jQuery('.view-user-follow-committees .views-row').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
+    jQuery('.view-user-follow-committees .view-empty').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
+
+
     // Sidepane arrow position.
     set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', jQuery(window).width());
     set_up_button_position('.not-front #block-block-1', '.not-front #region-sidebar-second', 'not-front', jQuery(window).width());

@@ -401,6 +401,23 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Default body text font size is 13 px. When you change the body text size, then please clear the cache to apply change'),
   );
 
+  // Title text size
+  $form['os2dagsorden_title_text_layout'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Title text size'),
+  );
+  $form['os2dagsorden_title_text_layout']['os2dagsorden_title_text_size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title text size'),
+    '#maxlength' => 10,
+    '#size' => 10,
+    '#field_suffix' => ' px',
+    '#default_value' => variable_get('os2dagsorden_title_text_size', '13'),
+    '#description' => t('Default title text font size is 13 px. When you change the title text size, then please clear the cache to apply change'),
+  );
+
   //meeting search view settings
   $form['os2dagsorden_meeting_search_view_settings'] = array(
     '#type' => 'fieldset',
@@ -1318,6 +1335,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     $setting_array = parse_ini_file(drupal_realpath($file->uri),true);
 
     variable_set('os2dagsorden_body_text_size', $setting_array['os2dagsorden_body_text_layout']['os2dagsorden_body_text_size']);
+    variable_set('os2dagsorden_title_text_size', $setting_array['os2dagsorden_title_text_layout']['os2dagsorden_title_text_size']);
 
     variable_set('os2dagsorden_show_meeting_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee']);
     variable_set('os2dagsorden_show_meeting_enddate', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_enddate']);
