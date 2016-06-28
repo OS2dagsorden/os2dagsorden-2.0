@@ -54,7 +54,7 @@ function os2dagsorden_updatedb_setting_form($form, $form_state) {
   return system_settings_form($form);
 }
 
-function os2dagsorden_updatedb_check(&$form, $form_state) {
+function os2dagsorden_updatedb_check($form, &$form_state) {
   if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
     form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
   }
@@ -118,7 +118,7 @@ function os2dagsorden_updatedb_check(&$form, $form_state) {
 
 }
 
-function os2dagsorden_updatedb_run(&$form, $form_state) {
+function os2dagsorden_updatedb_run($form, &$form_state) {
   if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
     form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
   }
