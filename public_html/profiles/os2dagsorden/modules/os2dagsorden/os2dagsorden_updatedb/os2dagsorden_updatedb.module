@@ -1,0 +1,215 @@
+<?php
+/**
+ * @file
+ * Code for the OS2dagsorden updatedb.
+ */
+
+require_once DRUPAL_ROOT . '/includes/update.inc';
+
+function os2dagsorden_updatedb_menu() {
+  $items['admin/updatedb'] = array(
+    'title' => 'OS2dagsorden update DB',
+    'description' => t('Choose the version to run all the hook_update_N() functions'),
+    'access arguments' => array('administer os2web'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2dagsorden_updatedb_setting_form'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+function os2dagsorden_updatedb_setting_form($form, $form_state) {
+  $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
+  $info = drupal_parse_info_file($info_path);
+  $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
+
+  $form['os2dagsorden_update_setting'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('OS2dagsorden update setting'),
+    '#description' => t('None contrib module update list'),
+
+  );
+  $form['os2dagsorden_update_setting']['os2dagsorden_update_version'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OS2dagsorden version'),
+    '#default_value' => variable_get('os2dagsorden_update_version', $version),
+    '#description' => t('Run update hook according to os2dagsorden version (Skriv Format f. eks. 2.1)') . variable_get('os2dagsorden_update_version', $version),
+
+  );
+  $form['actions']['run_update'] = array(
+    '#type' => 'submit',
+    '#weight' => 15,
+    '#submit' => array('os2dagsorden_updatedb_run'),
+    '#value' => t('Run update hook now'),
+  );
+
+  $form['actions']['check_update'] = array(
+    '#type' => 'submit',
+    '#weight' => 15,
+    '#submit' => array('os2dagsorden_updatedb_check'),
+    '#value' => t('Check update hook list'),
+  );
+
+  return system_settings_form($form);
+}
+
+function os2dagsorden_updatedb_check($form, $form_state) {
+  if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
+    form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
+  }
+
+  $version = $form_state['values']['os2dagsorden_update_version'];
+  $version_m = explode('.', $version);
+  foreach ($version_m as $item) {
+    $version_no .= $item;
+  }
+  $version_d = explode('.', VERSION);
+  $version_no = $version_d[0] . $version_no;
+  if (strlen($version_no) < 4) {
+    if (strlen($version_no) < 2) {
+      $version_no .= '000';
+    }
+    elseif (strlen($version_no) < 3) {
+      $version_no .= '00';
+    }
+    else {
+      $version_no .= '0';
+    }
+  }
+  else {
+    $version_no = substr($version_no, 0, 4);
+  }
+
+  $modules = update_get_update_list();
+  $output = '<ul>';
+  $list = array();
+
+  // Make sure that the system module is first in the list of updates.
+  foreach ($modules as $name => $module) {
+    $pending = array();
+    $contrib = os2dagsorden_updatedb_get_module_type($name);
+    if ($contrib == 'contrib') {
+      continue;
+    }
+    if (isset($module['pending'])) {
+      foreach ($module['pending'] as $version => $text) {
+        if ($version >= (int)$version_no) {
+          $pending['pending'][$version] = $text;
+          $output .= '<li>' . $text . '</li>';
+          $pending['start'] = $module['start'];
+        }
+      }
+      if (!empty($pending)) {
+        $list[$name] = $pending;
+      }
+    }
+  }
+  $output .= '</ul>';
+
+  if (!empty($list)) {
+
+    drupal_set_message(t('Avaliable updates') . ': <br /> ' . $output, 'status');
+  }
+  else {
+    drupal_set_message(t('All OS2dagsorden module DB updated.'), 'status');
+  }
+  return $list;
+
+}
+
+function os2dagsorden_updatedb_run(&$form, $form_state) {
+  if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
+    form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
+  }
+  $list = os2dagsorden_updatedb_check($form, $form_state);
+  if (!empty($list)) {
+    //dsm($list);
+    foreach ($list as $module_name => $item) {
+      module_load_include('module', $module_name);
+
+
+      foreach ($item['pending'] as $version => $text) {
+
+        $function = $module_name . '_update_' . $version;
+        module_invoke($module_name, 'update_' . $version);
+        db_update('system')
+        ->fields(array(
+          'schema_version' => $version,
+        ))
+        ->condition('name', $module_name, '=')
+        ->execute();
+      }
+
+    }
+    drupal_set_message(t('All updated.'), 'status');
+  }
+
+}
+function os2dagsorden_updatedb_get_module_type($module) {
+  $record = db_select('system', 's')
+    ->fields('s', array('filename'))
+    ->condition('name', $module, '=')
+    ->execute()
+    ->fetchAssoc();
+  $contrib = explode('/', $record['filename']);
+  return $contrib[3];
+}
+/**
+ * Test - setting os2dagsorden version to 1.0.
+ */
+function os2dagsorden_updatedb_update_7100() {
+
+}
+
+
+/**
+ * Test - setting os2dagsorden version to 2.31.
+ */
+function os2dagsorden_updatedb_update_7231() {
+  $num_updated = db_update('variable') // Table name no longer needs {}
+  ->fields(array(
+    'value' => serialize(2.31),
+  ))
+  ->condition('name', 'os2dagsorden_version_no', '=')
+  ->execute();
+
+}
+
+/**
+ * Test - setting os2dagsorden version to 2.33.
+ */
+function os2dagsorden_updatedb_update_7233() {
+  $num_updated = db_update('variable') // Table name no longer needs {}
+  ->fields(array(
+    'value' => serialize(2.33),
+  ))
+  ->condition('name', 'os2dagsorden_version_no', '=')
+  ->execute();
+
+}
+/**
+ * Test - setting os2dagsorden version to 2.34.
+ */
+function os2dagsorden_updatedb_update_7234() {
+  $num_updated = db_update('variable') // Table name no longer needs {}
+  ->fields(array(
+    'value' => serialize(2.34),
+  ))
+  ->condition('name', 'os2dagsorden_version_no', '=')
+  ->execute();
+
+}
+
+/**
+ * Test - setting os2dagsorden version to 3.34.
+
+function os2dagsorden_updatedb_update_7334() {
+  $num_updated = db_update('variable') // Table name no longer needs {}
+  ->fields(array(
+    'value' => serialize(3.34),
+  ))
+  ->condition('name', 'os2dagsorden_version_no', '=')
+  ->execute();
+
+}*/

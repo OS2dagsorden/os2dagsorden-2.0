@@ -1,0 +1,7 @@
+name = OS2dagsorden update DB
+core = 7.x
+package = OS2Dagsorden
+php = 5.2.4
+version = 7.x-1.0
+project = os2dagsorden_updatedb
+dependencies[] = os2dagsorden

@@ -32,6 +32,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#title' => t('OS2dagsorden - versionsnummer'),
     '#markup' => '<div class= "test">' .  $output . '</div>',
   );
+  variable_set('os2dagsorden_version_no', variable_get('os2dagsorden_version_no', 2.1));
+  $form['os2dagsorden_version_no'] = array(
+    '#type' => 'item',
+    '#weight' => -9,
+    '#title' => t('OS2dagsorden - opdatering version'),
+    '#markup' => variable_get('os2dagsorden_version_no'),
+  );
   $form['os2dagsorden_settings_file_fieldset'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
