@@ -210,8 +210,11 @@ function add_tablet_orientation_listener(){
 function add_show_hide_menu_behaviour(menu_collapse){
    jQuery(document).ready(function() {
       jQuery("#region-content").removeAttr("style");
-          if(menu_collapse || JSON.parse(window.localStorage.getItem('hide_side_menu')) === true)
-                   hide_side_menu();
+       if (menu_collapse && (window.localStorage.getItem('hide_side_menu') === null || window.localStorage.getItem('hide_side_menu').length === 0)) {
+            hide_side_menu();
+       } else if (JSON.parse(window.localStorage.getItem('hide_side_menu')) === true) {
+           hide_side_menu();
+       }
        jQuery("#show_hide_menu_button").click(function(){
           if (jQuery("#show_hide_menu_button").val() == "⇒")
               hide_side_menu();
