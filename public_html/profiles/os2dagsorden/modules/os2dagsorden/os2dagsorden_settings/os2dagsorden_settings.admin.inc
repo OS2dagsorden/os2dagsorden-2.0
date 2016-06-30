@@ -26,18 +26,26 @@ define('OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE', '28');
 function os2dagsorden_settings_settings_form($form, $form_state) {
   $output = os2dagsorden_blocks_positioning_show_git_version();
 
+  $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
+  $info = drupal_parse_info_file($info_path);
+  $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
+
   $form['os2dagsorden_version_text'] = array(
     '#type' => 'item',
     '#weight' => -10,
     '#title' => t('OS2dagsorden - versionsnummer'),
     '#markup' => '<div class= "text">' .  $output . '</div>',
   );
-  variable_set('os2dagsorden_version_no', variable_get('os2dagsorden_version_no', 2.1));
+  variable_set('os2dagsorden_version_no', variable_get('os2dagsorden_version_no', 1.0));
+  $link = '';
+  if ($version > variable_get('os2dagsorden_version_no')) {
+    $link = '<td> <a href="/admin/updatedb">Gå her til at opdatere DB</a></td>';
+  }
   $form['os2dagsorden_version_no'] = array(
     '#type' => 'item',
     '#weight' => -9,
     '#title' => t('OS2dagsorden - opdatering version'),
-    '#markup' => '<div class="text"><table><tr><td style = "width:17%">' . t('DB opdatering version') . ':' .' </td><td> <b>  ' . variable_get('os2dagsorden_version_no') . '</b></td></tr></table></div>',
+    '#markup' => '<div class="text"><table><tr><td style = "width:17%">' . t('DB opdatering version') . ':' .' </td><td> <b>  ' . variable_get('os2dagsorden_version_no') . '</b></td>' . $link . '</tr></table></div>',
   );
   $form['os2dagsorden_settings_file_fieldset'] = array(
     '#type' => 'fieldset',

@@ -160,17 +160,22 @@ function os2dagsorden_updatedb_get_module_type($module) {
  * Test - setting os2dagsorden version to 1.0.
  */
 function os2dagsorden_updatedb_update_7100() {
-
+  $num_updated = db_update('variable')
+  ->fields(array(
+    'value' => serialize(1.0),
+  ))
+  ->condition('name', 'os2dagsorden_version_no', '=')
+  ->execute();
 }
 
 
 /**
- * Test - setting os2dagsorden version to 2.31.
+ * Test - setting os2dagsorden version to 2.10.
  */
-function os2dagsorden_updatedb_update_7231() {
-  $num_updated = db_update('variable') // Table name no longer needs {}
+function os2dagsorden_updatedb_update_7210() {
+  $num_updated = db_update('variable')
   ->fields(array(
-    'value' => serialize(2.31),
+    'value' => serialize(2.1),
   ))
   ->condition('name', 'os2dagsorden_version_no', '=')
   ->execute();
@@ -178,24 +183,24 @@ function os2dagsorden_updatedb_update_7231() {
 }
 
 /**
- * Test - setting os2dagsorden version to 2.33.
- */
-function os2dagsorden_updatedb_update_7233() {
-  $num_updated = db_update('variable') // Table name no longer needs {}
+ * Test - setting os2dagsorden version to 2.20.
+ *
+function os2dagsorden_updatedb_update_7220() {
+  $num_updated = db_update('variable')
   ->fields(array(
-    'value' => serialize(2.33),
+    'value' => serialize(2.20),
   ))
   ->condition('name', 'os2dagsorden_version_no', '=')
   ->execute();
 
 }
 /**
- * Test - setting os2dagsorden version to 2.34.
- */
-function os2dagsorden_updatedb_update_7234() {
-  $num_updated = db_update('variable') // Table name no longer needs {}
+ * Test - setting os2dagsorden version to 2.30.
+ *
+function os2dagsorden_updatedb_update_7230() {
+  $num_updated = db_update('variable')
   ->fields(array(
-    'value' => serialize(2.34),
+    'value' => serialize(2.30),
   ))
   ->condition('name', 'os2dagsorden_version_no', '=')
   ->execute();
