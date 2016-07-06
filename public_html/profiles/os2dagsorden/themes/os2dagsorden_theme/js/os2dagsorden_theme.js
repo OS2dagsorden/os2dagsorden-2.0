@@ -86,10 +86,10 @@ jQuery(document).ready(function() {
     });
 
     //add click behaviour to existing items
-    jQuery(".select-committee.single #edit-follows-div ul.droptrue li").click(follows_subscribe_click);
+    jQuery(".select-committee #edit-follows-div ul.droptrue li").click(follows_subscribe_click);
 
     //add behaviour to item that is added to the follow section
-    jQuery(".select-committee.single #edit-follows-div ul.droptrue").bind("sortreceive", function(event, ui){
+    jQuery(".select-committee #edit-follows-div ul.droptrue").bind("sortreceive", function(event, ui){
         jQuery(ui.item).addClass('can-subscribe');
         //console.log(ui.item);
         jQuery(ui.item).click(follows_subscribe_click);

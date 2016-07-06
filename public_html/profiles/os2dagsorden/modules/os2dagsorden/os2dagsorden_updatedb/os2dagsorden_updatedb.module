@@ -5,6 +5,7 @@
  */
 
 require_once DRUPAL_ROOT . '/includes/update.inc';
+include_once DRUPAL_ROOT . '/includes/install.inc';
 
 function os2dagsorden_updatedb_menu() {
   $items['admin/updatedb'] = array(
