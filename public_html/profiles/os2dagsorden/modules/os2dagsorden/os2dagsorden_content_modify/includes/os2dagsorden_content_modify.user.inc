@@ -151,14 +151,14 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       'id' => 'follows_hidden',
     )
   );
-  if (sizeof($uids) == 1) {
+  //if (sizeof($uids) == 1) {
     $form['follows_subscribed_hidden'] = array(
       '#type' => 'hidden',
       '#attributes' => array(
         'id' => 'follows_subscribed_hidden',
       )
     );
-  }
+  //}
 
   $form['follows_plus_div'] = array(
     '#access' => user_access('administer users'),
@@ -239,14 +239,14 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
 
 
       //follows subscribed, only for single user edit
-      if (sizeof($uids) == 1 && field_get_items('user', $user, 'field_follows_committee_subsc')) {
+    //  if (sizeof($uids) == 1 && field_get_items('user', $user, 'field_follows_committee_subsc')) {
         $user_follows_subscribed_field = field_get_items('user', $user, 'field_follows_committee_subsc');
         foreach ($user_follows_subscribed_field as $follows_subs) {
           if (isset($com_select[$follows_subs['tid']])) {
             $shared_follows_subscribed[$follows_subs['tid']]++;
           }
         }
-      }
+      //}
 
       //follows plus
       if (field_get_items('user', $user, 'field_follows_committee_plus')) {
@@ -292,13 +292,13 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
         $form['follows_hidden']['#value'] .= $tid . ',';
 
         //setting correct follows subscribed marker, only for single edit
-        if (sizeof($uids) == 1) {
+        //if (sizeof($uids) == 1) {
           $subscribed_class = 'can-subscribe';
           if ($count == count($shared_follows_subscribed[$tid])) {
             $subscribed_class .= ' subscribed';
             $form['follows_subscribed_hidden']['#value'] .= $tid . ',';
           }
-        }
+        //}
         $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}</li>";
       }
     }

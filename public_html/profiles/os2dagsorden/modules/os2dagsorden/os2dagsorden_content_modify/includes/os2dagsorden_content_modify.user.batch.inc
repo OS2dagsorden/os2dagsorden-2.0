@@ -36,7 +36,7 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
    $form[] = array(
     '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
   );
-  if (!os2dagsorden_access_helper_is_touch()) {    
+  if (!os2dagsorden_access_helper_is_touch()) {
 
     _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls($form);
     
