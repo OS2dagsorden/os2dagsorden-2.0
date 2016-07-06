@@ -75,24 +75,24 @@ function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
 }
 
 function os2dagsorden_admin_views_query_alter(&$view, &$query){ 
-  if (isset($view->alterMetaData)) {
-  if ($view->alterMetaData['view']->name == 'os2dagsorden_users_view') {
-     if (isset($_POST['commitee']) && $_POST['commitee']!= 'All'){      
-      if ($_POST['field_user_committee_tid'] == 'All')
-        $view->leftjoin('field_data_field_user_committee', 'u_com', 'uid = u_com.entity_id');
-       if ($_POST['field_follows_committee_tid'] == 'All')
-         $view->leftjoin('field_data_field_follows_committee', 'u_fc', 'uid = u_fc.entity_id');
-       if ($_POST['field_follows_committee_plus_tid'] == 'All')
-         $view->leftjoin('field_data_field_follows_committee_plus', 'u_fcp', 'uid = u_fcp.entity_id');
-       if ($_POST['field_follows_committee_pp_tid'] == 'All')
-         $view->leftjoin('field_data_field_follows_committee_pp', 'u_fcpp', 'uid = u_fcpp.entity_id');
-       $view->where('(field_user_committee_tid = ' . $_POST['commitee'] . ') '
-         . 'OR ( field_follows_committee_tid = ' . $_POST['commitee'] .')'
-         . 'OR ( field_follows_committee_plus_tid = ' . $_POST['commitee'] .')'
-         . 'OR ( field_follows_committee_pp_tid = ' . $_POST['commitee'] .')'); 
+  if (isset($view->alterMetaData['view'])) {
+    if ($view->alterMetaData['view']->name == 'os2dagsorden_users_view') {
+       if (isset($_POST['commitee']) && $_POST['commitee']!= 'All'){
+        if ($_POST['field_user_committee_tid'] == 'All')
+          $view->leftjoin('field_data_field_user_committee', 'u_com', 'uid = u_com.entity_id');
+         if ($_POST['field_follows_committee_tid'] == 'All')
+           $view->leftjoin('field_data_field_follows_committee', 'u_fc', 'uid = u_fc.entity_id');
+         if ($_POST['field_follows_committee_plus_tid'] == 'All')
+           $view->leftjoin('field_data_field_follows_committee_plus', 'u_fcp', 'uid = u_fcp.entity_id');
+         if ($_POST['field_follows_committee_pp_tid'] == 'All')
+           $view->leftjoin('field_data_field_follows_committee_pp', 'u_fcpp', 'uid = u_fcpp.entity_id');
+         $view->where('(field_user_committee_tid = ' . $_POST['commitee'] . ') '
+           . 'OR ( field_follows_committee_tid = ' . $_POST['commitee'] .')'
+           . 'OR ( field_follows_committee_plus_tid = ' . $_POST['commitee'] .')'
+           . 'OR ( field_follows_committee_pp_tid = ' . $_POST['commitee'] .')');
+      }
     }
-   }
-       
+
   }
   
 }
@@ -458,7 +458,9 @@ function os2dagsorden_admin_views_import_committes_from_file($form, &$form_state
         }
         $weight = 0;
         foreach ($committees->Committee as $key => $committee) {
-
+          if ($committee->state != 'Aktivt ' && $committee->active != 1) {
+            continue;
+          }
             $term = _os2dagsorden_admin_views_create_committee_term($committee, $vid, $weight);
             $weight++;
             // var_dump($term);
@@ -475,6 +477,7 @@ function os2dagsorden_admin_views_import_committes_from_file($form, &$form_state
 }
 
 function _os2dagsorden_admin_views_create_committee_term($xml_data, $vid, $weight = 0, $parent = "0") {
+
     $term = new stdClass();
     $term->vid = $vid;
     $term->name = (string) $xml_data->name;

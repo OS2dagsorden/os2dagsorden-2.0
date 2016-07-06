@@ -1041,7 +1041,7 @@ function os2dagsorden_access_helper_is_touch() {
  *
  * @return $node meeting
  */
-function os2dagsorden_access_helper_node_presave($node) {    
+function os2dagsorden_access_helper_node_presave($node) {
   if ($node->type === 'os2web_meetings_meeting') {
     $status = $node->field_os2web_meetings_type['und'][0]['value'];
     if (strcasecmp($status, 'Dagsorden') == 0 || strcasecmp($status, 'Referat') == 0) {

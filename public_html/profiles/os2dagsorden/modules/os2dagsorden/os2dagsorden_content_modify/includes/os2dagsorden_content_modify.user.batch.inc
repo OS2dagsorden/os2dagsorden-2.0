@@ -122,6 +122,9 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
   if (!$remove_committees) {
     $remove_committees = array();
   }
+  if (!$follows_subscribed_hidden) {
+    $follows_subscribed_hidden = array();
+  }
 
   if (!os2dagsorden_access_helper_is_touch()) {
     $follows = explode(',', $follows_hidden);
@@ -129,6 +132,7 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
     $follows_plus = explode(',', $follows_plus_hidden);
     $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
     $remove_committees = explode(',', $remove_com_hidden);
+    $follows_subscribed_hidden = explode(',', $follows_subscribed_hidden);
   }
 
   $uids = explode(',', $form_state['values']['uids']);
@@ -173,12 +177,19 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
             $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
           }
         }
+
+        if (in_array($tid, $follows_subscribed_hidden)) {
+          $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
+        }
       }
 
       //newly added committes
       foreach ($follows as $tid) {
         if (!empty($tid) && !in_array($tid, $existing_tids) && !in_array($tid, $remove_committees)) {
           $user->field_follows_committee['und'][]['tid'] = $tid;
+          if (in_array($tid, $follows_subscribed_hidden)) {
+            $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
+          }
         }
       }
     }
