@@ -75,6 +75,7 @@ function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
 }
 
 function os2dagsorden_admin_views_query_alter(&$view, &$query){ 
+  if (isset($view->alterMetaData)) {
   if ($view->alterMetaData['view']->name == 'os2dagsorden_users_view') {
      if (isset($_POST['commitee']) && $_POST['commitee']!= 'All'){      
       if ($_POST['field_user_committee_tid'] == 'All')
@@ -90,6 +91,7 @@ function os2dagsorden_admin_views_query_alter(&$view, &$query){
          . 'OR ( field_follows_committee_plus_tid = ' . $_POST['commitee'] .')'
          . 'OR ( field_follows_committee_pp_tid = ' . $_POST['commitee'] .')'); 
     }
+   }
        
   }
   
