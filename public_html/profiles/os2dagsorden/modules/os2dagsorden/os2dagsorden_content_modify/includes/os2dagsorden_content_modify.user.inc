@@ -247,7 +247,6 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
           }
         }
       }
-
       //follows plus
       if (field_get_items('user', $user, 'field_follows_committee_plus')) {
         $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
@@ -292,13 +291,20 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
         $form['follows_hidden']['#value'] .= $tid . ',';
 
         //setting correct follows subscribed marker, only for single edit
-        //if (sizeof($uids) == 1) {
+        if (sizeof($uids) == 1) {
           $subscribed_class = 'can-subscribe';
           if ($count == count($shared_follows_subscribed[$tid])) {
             $subscribed_class .= ' subscribed';
             $form['follows_subscribed_hidden']['#value'] .= $tid . ',';
           }
-        //}
+        }
+        else {
+          $subscribed_class = 'can-subscribe';
+          if (!empty($shared_follows_subscribed) && array_key_exists($tid, $shared_follows_subscribed)) {
+            $subscribed_class .= ' subscribed';
+            $form['follows_subscribed_hidden']['#value'] .= $tid . ',';
+          }
+        }
         $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}</li>";
       }
     }
