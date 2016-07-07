@@ -46,9 +46,16 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
             })
         }*/
         jQuery("body .annotator-touch-controls.annotator-touch-hide").click(function(e) {
-          var offset = jQuery(this).offset();
-          jQuery("#ToolTipDiv").css({'top': offset.top + 100, 'left': offset.left - 300, 'max-width': '300px'});
-          jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
+          if (jQuery("#ToolTipDiv").css('display') != 'block') {
+            jQuery("#ToolTipDiv").css({'bottom': '100px', 'right': '15px', 'top' : '', 'left' : ''});
+            jQuery("#ToolTipDiv").css({'position': 'fixed'});
+            jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
+          }
+          else {
+            jQuery("#ToolTipDiv").css({'display': 'none'});
+            jQuery("#ToolTipDiv").css({'bottom': '', 'right':''});
+            jQuery("#ToolTipDiv").css({'position': 'absolute'});
+          }
         });
 
 	});

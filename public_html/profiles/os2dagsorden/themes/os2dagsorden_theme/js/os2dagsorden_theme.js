@@ -658,6 +658,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
 
       $(this).click(function(e) {
         if ($("#ToolTipDiv").css('display') == 'block') {
+          $("#ToolTipDiv").css({'position': 'absolute', 'bottom': '', 'right': ''});
           if ($("#ToolTipDiv").hasClass($(this).attr('id'))) {
             $("#ToolTipDiv").fadeOut(400);
             $("#ToolTipDiv").attr('class', 'tip-darkgray');
