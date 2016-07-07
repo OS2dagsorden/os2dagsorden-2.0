@@ -32,7 +32,7 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
 			}
 		});
 
-       /* if (!jQuery("body .annotator-touch-controls.dummy-controls").length ) {
+        if (!jQuery("body .annotator-touch-controls.dummy-controls").length ) {
             jQuery('body').append(
                 '<div class="annotator-touch-widget annotator-touch-controls dummy-controls">' +
                     '<div class="annotator-touch-widget-inner">' +
@@ -43,27 +43,25 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
             jQuery('body .annotator-touch-controls.dummy-controls').click(function(e) {
                 console.log('clicked');
                 e.preventDefault();
+                if (jQuery("#ToolTipDiv").css('display') != 'block') {
+                  jQuery("#ToolTipDiv").css({'bottom': '100px', 'right': '15px', 'top' : '', 'left' : ''});
+                  jQuery("#ToolTipDiv").css({'position': 'fixed'});
+                  jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
+                }
+                else {
+                  if (jQuery("#ToolTipDiv").css('position') != 'fixed') {
+                    jQuery("#ToolTipDiv").css({'bottom': '100px', 'right': '15px', 'top' : '', 'left' : ''});
+                    jQuery("#ToolTipDiv").css({'position': 'fixed'});
+                    jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
+                  }
+                  else {
+                    jQuery("#ToolTipDiv").css({'display': 'none'});
+                    jQuery("#ToolTipDiv").css({'bottom': '', 'right':''});
+                    jQuery("#ToolTipDiv").css({'position': 'absolute'});
+                  }
+                }
             })
-        }*/
-        jQuery("body .annotator-touch-controls.annotator-touch-hide").click(function(e) {
-          if (jQuery("#ToolTipDiv").css('display') != 'block') {
-            jQuery("#ToolTipDiv").css({'bottom': '100px', 'right': '15px', 'top' : '', 'left' : ''});
-            jQuery("#ToolTipDiv").css({'position': 'fixed'});
-            jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
-          }
-          else {
-            if (jQuery("#ToolTipDiv").css('position') != 'fixed') {
-              jQuery("#ToolTipDiv").css({'bottom': '100px', 'right': '15px', 'top' : '', 'left' : ''});
-              jQuery("#ToolTipDiv").css({'position': 'fixed'});
-              jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
-            }
-            else {
-              jQuery("#ToolTipDiv").css({'display': 'none'});
-              jQuery("#ToolTipDiv").css({'bottom': '', 'right':''});
-              jQuery("#ToolTipDiv").css({'position': 'absolute'});
-            }
-          }
-        });
+        }
 
 	});
 }

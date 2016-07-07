@@ -98,8 +98,8 @@
 }
 
 .annotator-touch-widget .annotator-button[disabled] {
-/*opacity: 0.3;
-cursor: default;*/
+  opacity: 0.3;
+  cursor: default;
 }
 
 .annotator-touch-widget .annotator-button::after {
@@ -124,13 +124,13 @@ cursor: default;*/
 }
 
 .annotator-touch-controls.annotator-touch-hide {
-  /*right: -9999em;
-	opacity: 0;
-	-webkit-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-	-moz-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-	-ms-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-	-o-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-	transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;*/
+  right: -9999em;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+  -moz-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+  -ms-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+  -o-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+  transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
 }
 
 .annotator-touch-controls .annotator-button {
