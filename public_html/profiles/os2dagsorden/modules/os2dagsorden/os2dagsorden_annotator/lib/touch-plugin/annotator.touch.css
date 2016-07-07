@@ -98,8 +98,8 @@
 }
 
 .annotator-touch-widget .annotator-button[disabled] {
-	opacity: 0.3;
-	cursor: default;
+/*opacity: 0.3;
+cursor: default;*/
 }
 
 .annotator-touch-widget .annotator-button::after {
