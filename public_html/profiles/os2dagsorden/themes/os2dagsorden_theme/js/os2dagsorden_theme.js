@@ -197,9 +197,11 @@ function add_indicator_help_text(){
 function add_tablet_orientation_listener(){
   jQuery(document).ready(function() {
       jQuery(window).bind('orientationchange', function(event) {
-	if (Math.abs(window.orientation) != 90) //vertical
-	  hide_side_menu();
-      });
+       if (Math.abs(window.orientation) != 90) {//vertical
+       //  hide_side_menu();
+       //  window.localStorage.setItem("hide_side_menu", hide_side_menu_v);
+       }
+     });
   });
 }
 
@@ -221,6 +223,7 @@ function add_show_hide_menu_behaviour(menu_collapse){
           else
               show_side_menu();
          });
+
 //       var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 //
 //                         if (width < 1000)
