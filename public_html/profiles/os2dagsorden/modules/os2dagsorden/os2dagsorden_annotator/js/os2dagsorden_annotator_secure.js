@@ -32,7 +32,7 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
 			}
 		});
 
-        if (!jQuery("body .annotator-touch-controls.dummy-controls").length ) {
+       /* if (!jQuery("body .annotator-touch-controls.dummy-controls").length ) {
             jQuery('body').append(
                 '<div class="annotator-touch-widget annotator-touch-controls dummy-controls">' +
                     '<div class="annotator-touch-widget-inner">' +
@@ -44,7 +44,13 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
                 console.log('clicked');
                 e.preventDefault();
             })
-        }
+        }*/
+        jQuery("body .annotator-touch-controls.annotator-touch-hide").click(function(e) {
+          var offset = jQuery(this).offset();
+          jQuery("#ToolTipDiv").css({'top': offset.top + 100, 'left': offset.left - 300, 'max-width': '300px'});
+          jQuery("#ToolTipDiv").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
+        });
+
 	});
 }
 

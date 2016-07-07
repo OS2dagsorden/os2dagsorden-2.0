@@ -124,13 +124,13 @@
 }
 
 .annotator-touch-controls.annotator-touch-hide {
-	right: -9999em;
+  /*right: -9999em;
 	opacity: 0;
 	-webkit-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
 	-moz-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
 	-ms-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
 	-o-transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
-	transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;
+	transition: opacity 0.2s 0 ease-in, right 0s 0.3s linear;*/
 }
 
 .annotator-touch-controls .annotator-button {
