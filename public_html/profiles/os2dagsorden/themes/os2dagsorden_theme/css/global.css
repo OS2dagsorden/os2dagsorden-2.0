@@ -436,6 +436,8 @@ ul li.leaf {
 }
 #ToolTipDiv2 {
   Position: fixed;
+  bottom: 100px;
+  right: 15px;
   background-position-y: 90%;
   background-position-x: 90%;
   border-radius: 5px;

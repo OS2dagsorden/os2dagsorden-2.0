@@ -47,7 +47,7 @@ function add_annotator(meeting_id, bullet_point_id, bilag_id, element_to_annotat
                   jQuery("#ToolTipDiv2").html("Marker tekst og klik herefter på Lav note").fadeIn(400);
                   setTimeout(function(){
                       jQuery("#ToolTipDiv2").fadeOut("slow");
-                  },8000)
+                  },5000)
                 }
                 else {
                   jQuery("#ToolTipDiv2").css({'display': 'none'});
