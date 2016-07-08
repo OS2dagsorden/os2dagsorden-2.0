@@ -434,6 +434,13 @@ ul li.leaf {
   border-radius: 5px;
   display: none;
 }
+#ToolTipDiv2 {
+  Position: fixed;
+  background-position-y: 90%;
+  background-position-x: 90%;
+  border-radius: 5px;
+  display: none;
+}
 .indicator-has-notes{
     position: relative;
     float:left;

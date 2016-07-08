@@ -653,6 +653,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
 (function($) {
   $(document).ready(function() {
     $("body").append("<div id='ToolTipDiv' class='tip-darkgray'></div>");
+    $("body").append("<div id='ToolTipDiv2' class='tip-darkgray'></div>");
     $(".help-button").each(function() {
       var offset = $(this).offset();
 
