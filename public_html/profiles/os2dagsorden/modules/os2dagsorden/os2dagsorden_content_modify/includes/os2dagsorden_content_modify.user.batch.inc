@@ -172,14 +172,9 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($member_of, $follows_plus, $follows_plus_plus))) {
           $user->field_follows_committee['und'][]['tid'] = $tid;
 
-          //if committee was in follows subscribed list, it's safe to keep it there
-          if (in_array($tid, $existing_follow_subscribed_tids)) {
+          if (!empty($follows_subscribed) && in_array($tid, $follows_subscribed)) {
             $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
           }
-        }
-
-        if (!empty($follows_subscribed) && in_array($tid, $follows_subscribed)) {
-          $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
         }
       }
 
