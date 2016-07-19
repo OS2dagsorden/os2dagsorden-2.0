@@ -43,6 +43,13 @@ function os2dagsorden_ad_integration_user_sync_settings_form($form, $form_state)
     '#default_value' => variable_get('os2dagsorden_ad_integration_user_sync_dn_str'),
     '#required' => TRUE,
   );
+  $form['os2dagsorden_ad_integration_user_sync_query_fieldset']['os2dagsorden_ad_integration_user_inactive_sync_dn_str'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Inactive users base DNs to search in query.',
+    '#description' => 'Each Base DN will be queried and results merged. e.g. ou=campus accounts,dc=ad,dc=uiuc,dc=eduEnter one per line in case if you need more than one.',
+    '#default_value' => variable_get('os2dagsorden_ad_integration_user_inactive_sync_dn_str'),
+    '#required' => TRUE,
+  );
    $form['os2dagsorden_ad_integration_user_sync_query_fieldset']['os2dagsorden_ad_integration_user_sync_filter'] = array(
     '#type' => 'textarea',
     '#title' => 'Filter',
@@ -76,7 +83,8 @@ function os2dagsorden_ad_integration_cronapi($op, $job = NULL) {
  * @return none
  */
 function os2dagsorden_ad_integration_cron() {
- os2dagsorden_ad_integration_do_user_sync();
+  os2dagsorden_ad_integration_do_user_sync();
+  os2dagsorden_ad_integration_do_user_inactive_sync();
 }
 
 function os2dagsorden_ad_integration_do_user_sync() {
@@ -130,4 +138,45 @@ function os2dagsorden_ad_integration_do_user_sync() {
     } else {
         watchdog('LDAP_user_sync', 'LDAP connection error. ', WATCHDOG_ERROR);
     }
+}
+
+function os2dagsorden_ad_integration_do_user_inactive_sync() {
+  if (variable_get('os2dagsorden_ad_integration_user_sync_attr', '') == '' || variable_get('os2dagsorden_ad_integration_user_sync_filter', '') == '' || variable_get('os2dagsorden_ad_integration_user_inactive_sync_dn_str', '') == '') {
+    watchdog('LDAP_user_sync', 'LDAP user sync query options missing. ', WATCHDOG_ERROR);
+
+    return;
+  }
+  if ($ldap_servers = ldap_servers_get_servers(NULL, 'enabled')) {
+    // Get first server.
+    $ldap_server = current($ldap_servers);
+    // Run a search.
+
+    $filters = variable_get('os2dagsorden_ad_integration_user_sync_filter', '');
+    $attr = explode(',', variable_get('os2dagsorden_ad_integration_user_sync_attr', ''));
+
+    $dn_str_values = preg_split('/\r\n|[\r\n]/', variable_get('os2dagsorden_ad_integration_user_inactive_sync_dn_str', ''));
+    foreach ($dn_str_values as $dn_str) {
+      $results = $ldap_server->search($dn_str, $filters, $attr);
+      for ($i = 0; $i < $results["count"]; $i++) {
+        $name = $results[$i]['mailnickname'][0];
+        $mail = $results[$i]['mail'][0];
+
+        if (!empty($mail) && !empty($name) && $name != "admin") {
+          if ($u = user_load_by_name($name)) {
+            $user = $u;
+          } else if ($m = user_load_by_mail($mail)) {
+            $user = $m;
+          }
+
+          if ($user && $user->status != 0) {
+            $user->status = 0;
+            user_save($user);
+            watchdog('LDAP_user_sync', 'User %user deactivated', array('%user' => $name), WATCHDOG_INFO);
+          }
+        }
+      }
+    }
+  } else {
+    watchdog('LDAP_user_sync', 'LDAP connection error. ', WATCHDOG_ERROR);
+  }
 }
