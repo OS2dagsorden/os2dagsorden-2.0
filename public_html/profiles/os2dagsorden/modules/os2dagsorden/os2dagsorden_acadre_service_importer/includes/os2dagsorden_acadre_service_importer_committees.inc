@@ -11,10 +11,14 @@
 function _os2dagsorden_acadre_service_importer_process_committees($xml_file){
     foreach ($xml_file as $row) {
         $xml_data = array(
-	    'sub_id' =>$row->Id,
-            'committee_name' => $row->Name,
+	        'sub_id' => (string) $row->Id,
+            'committee_name' => (string) $row->Name,
+            'state' => (string) $row->State,
+            'active' => (string) $row->Active
         );
-	os2dagsorden_acadre_service_importer_create_committee($xml_data);
+
+        //create/update committee if missing
+	    os2dagsorden_acadre_service_importer_create_committee($xml_data);
     }
 }
 
@@ -43,11 +47,22 @@ function os2dagsorden_acadre_service_importer_create_committee($xml_data){
     }
 
     if (!isset($term->field_os2web_meetings_com_shname['und']) || empty( $term->field_os2web_meetings_com_shname['und'][0]['value']))
-        $term->field_os2web_meetings_com_shname['und'][0]['value'] = $xml_data['committee_name'];
+      $term->field_os2web_meetings_com_shname['und'][0]['value'] = $xml_data['committee_name'];
     if (!isset($term->field_os2web_meetings_com_abbr['und']) || empty($term->field_os2web_meetings_com_abbr['und'][0]['value']))
-       $term->field_os2web_meetings_com_abbr['und'][0]['value'] =  $xml_data['committee_name'];
+      $term->field_os2web_meetings_com_abbr['und'][0]['value'] =  $xml_data['committee_name'];
     if (!isset($term->field_os2web_meetings_com_cat['und']) || empty($term->field_os2web_meetings_com_cat['und'][0]['value']))
-       $term->field_os2web_meetings_com_cat['und'][0]['value'] =  'pol';
+      $term->field_os2web_meetings_com_cat['und'][0]['value'] =  'pol';
+
+    //see if we need to disable it
+    if ($xml_data['state'] == 'Aktivt' && $xml_data['active'] == 'true') {
+      //see if there is no other sub_id to attached to that term
+      $term->field_os2web_meetings_com_active['und'][0]['value'] = 1;
+    } else {
+      if (count($term->field_os2web_meetings_com_subid['und']) == 1) {
+        $term->field_os2web_meetings_com_active['und'][0]['value'] = 0;
+      }
+    }
+
     taxonomy_term_save($term);
     return $term->tid;
 }
