@@ -35,7 +35,7 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'poshy_tip_default_class';
-  $strongarm->value = '.poshy_tip,';
+  $strongarm->value = '.help-button';
   $export['poshy_tip_default_class'] = $strongarm;
 
   $strongarm = new stdClass();
