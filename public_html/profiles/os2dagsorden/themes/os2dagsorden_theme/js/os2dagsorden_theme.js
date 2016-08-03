@@ -197,9 +197,19 @@ function add_indicator_help_text(){
 function add_tablet_orientation_listener(){
   jQuery(document).ready(function() {
       jQuery(window).bind('orientationchange', function(e) {
-       if (screen.orientation.angle != 90) {
-         hide_side_menu(false);
-       }
+          switch (window.orientation) {
+              case -90:
+              case 90:
+                  if (JSON.parse(window.localStorage.getItem('hide_side_menu')) === true) {
+                      hide_side_menu(false);
+                  } else {
+                      show_side_menu(false);
+                  }
+                  break;
+              default:
+                  hide_side_menu(false);
+                  break;
+          }
      });
   });
 }
@@ -214,30 +224,28 @@ function add_show_hide_menu_behaviour(menu_collapse){
        if (menu_collapse && (window.localStorage.getItem('hide_side_menu') === null || window.localStorage.getItem('hide_side_menu').length === 0)) {
           hide_side_menu(false);
        } else if (JSON.parse(window.localStorage.getItem('hide_side_menu')) === true) {
-           hide_side_menu(true);
+           hide_side_menu(false);
+       }
+       //forcing to be closed on portrain orientation
+       if (window.orientation == 0 || window.orientation == 180) {
+           hide_side_menu(false);
        }
        jQuery("#show_hide_menu_button").click(function(){
+          //saving for landscape orientation only, portrait does not affect the saved value
+          var saveForLandscapeOnly = (window.orientation != 0 && window.orientation != 180);
           if (jQuery("#show_hide_menu_button").val() == "⇒") {
-              hide_side_menu(true);
-              window.localStorage.setItem("hide_side_menu", "true");
+              hide_side_menu(saveForLandscapeOnly);
           }
-          else
-              show_side_menu();
-         });
-
-       var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-       if (width < 1000)
-          hide_side_menu();
+          else {
+              show_side_menu(saveForLandscapeOnly);
+          }
+       });
    });
 }
 
 function resize_listener(){
   function decide_menu_visible() {
     var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-     // if (width < 1000)
-     //    hide_side_menu();
-     //  else
-     // show_side_menu();
     // Sidepane arrow position.
     if (width < 740 || width > 740) {
       set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', width);
@@ -245,7 +253,7 @@ function resize_listener(){
     }
     if (width > 768) {
        if (JSON.parse(window.localStorage.getItem('hide_side_menu')) != true) {
-         show_side_menu();
+         show_side_menu(false);
        }    
     }
 
@@ -261,7 +269,7 @@ function resize_listener(){
 /**
  * A funtion to hide the menu
  */
-function hide_side_menu(user_definded){
+function hide_side_menu(user_defined){
   jQuery(document).ready(function() {
 	jQuery(".region-sidebar-second-inner").hide();
 	jQuery("#show_hide_menu_button").val("⇐");
@@ -278,25 +286,16 @@ function hide_side_menu(user_definded){
         jQuery("#region-content").removeAttr("style");
       }
     }
-    if (user_definded === true) {
+    if (user_defined === true) {
       window.localStorage.setItem("hide_side_menu", "true");
     }
   });
 }
 
-function hide_side_menu_completely(){
-  jQuery(document).ready(function() {
-      jQuery("#show_hide_menu_button").hide();
-      if (jQuery(window).width() < 740) {
-        jQuery("#region-content").removeAttr("style");
-      }
-       hide_side_menu(false);
-  });
- }  
 /**
  * A funtion show hide the menu
  */
-function show_side_menu(){
+function show_side_menu(user_defined){
 	jQuery(".region-sidebar-second-inner").show();
 	jQuery("#show_hide_menu_button").val("⇒");
 	jQuery("#region-content").removeClass("grid-24");
@@ -304,7 +303,9 @@ function show_side_menu(){
     if (Drupal.settings.os2dagsorden_settings.sidepane_arrow_position != 'classic') {
       jQuery("#region-content").removeAttr("style");
     }
-    window.localStorage.setItem("hide_side_menu", "false");
+    if (user_defined === true) {
+        window.localStorage.setItem("hide_side_menu", "false");
+    }
 }
 
 /**
