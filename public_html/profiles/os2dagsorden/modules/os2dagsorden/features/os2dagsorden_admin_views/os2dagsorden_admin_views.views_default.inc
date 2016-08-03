@@ -29,7 +29,7 @@ function os2dagsorden_admin_views_views_default_views() {
   $handler->display->display_options['access']['type'] = 'menu';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
-  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+  $handler->display->display_options['query']['options']['distinct'] = TRUE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['exposed_form']['options']['reset_button'] = TRUE;
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
@@ -305,11 +305,12 @@ function os2dagsorden_admin_views_views_default_views() {
   $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
   $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
   $handler->display->display_options['filters']['name']['expose']['remember'] = TRUE;
-   /* Filter criterion: User: Organization (field_user_organization) */
+  /* Filter criterion: Bruger: Organization (field_user_organization) */
   $handler->display->display_options['filters']['field_user_organization_value']['id'] = 'field_user_organization_value';
   $handler->display->display_options['filters']['field_user_organization_value']['table'] = 'field_data_field_user_organization';
   $handler->display->display_options['filters']['field_user_organization_value']['field'] = 'field_user_organization_value';
   $handler->display->display_options['filters']['field_user_organization_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_user_organization_value']['group'] = 1;
   $handler->display->display_options['filters']['field_user_organization_value']['exposed'] = TRUE;
   $handler->display->display_options['filters']['field_user_organization_value']['expose']['operator_id'] = 'field_user_organization_value_op';
   $handler->display->display_options['filters']['field_user_organization_value']['expose']['label'] = 'Organization';
@@ -399,7 +400,8 @@ function os2dagsorden_admin_views_views_default_views() {
   );
   $handler->display->display_options['filters']['field_follows_committee_pp_tid']['type'] = 'select';
   $handler->display->display_options['filters']['field_follows_committee_pp_tid']['vocabulary'] = 'os2web_meetings_tax_committee';
-   /* Display: System */
+
+  /* Display: System */
   $handler = $view->new_display('system', 'System', 'system_1');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['hide_admin_links'] = TRUE;
