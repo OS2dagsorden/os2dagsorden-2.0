@@ -627,6 +627,7 @@ ul li.leaf {
 	float:right;
 	top:28px;
 	position: relative;
+    z-index: 1;
 }
 
 .content #show_hide_menu_container #show_hide_menu_button{
