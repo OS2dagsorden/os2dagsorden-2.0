@@ -37,19 +37,28 @@ function _os2dagsorden_speaker_paper_is_message_sent($uid, $nid) {
  * @param $node
  */
 function _os2dagsorden_speaker_paper_send_message($uid, $node) {
+  global $base_url;
+
   $user = user_load($uid);
 
+  $bullet_point = node_load($node->field_os2web_meetings_sp_bullet['und'][0]['target_id']);
+  $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point->nid);
+  $committee_id = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
+
   $cName = taxonomy_term_load($committee_id)->name;
-  os2dagsorden_acce_helper_
-  $mName = check_plain($node->title);
-  $mDate = check_plain($node->field_os2web_meetings_date['und'][0]['value']);
+  $mName = check_plain($meeting->title);
+  $mDate = check_plain($meeting->field_os2web_meetings_date['und'][0]['value']);
+  $bpName = check_plain($bullet_point->title);
+  $spName = check_plain($node->title);
+  $spLink = $base_url . '/meeting/' . $meeting->nid . '/bullet-point/' . $bullet_point->nid;
+  $uName = empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
+  $author = user_load($node->uid);
+  $authorName = empty($author->field_user_full_name['und'][0]['value']) ? $author->name : $author->field_user_full_name['und'][0]['value'];
 
   //getting subject and body
-  $subject_template = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
-  $body_template = variable_get('os2dagsorden_send_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
-    'Du abonnerer på !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.');
-
-  $uName = empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
+  $subject_template = variable_get('os2dagsorden_speaper_paper_email_subject', '!author har delt talepapiret "!speaker_paper_name" med dig');
+  $body_template = variable_get('os2dagsorden_speaper_paper_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
+    '!author har delt talepapiret "!speaker_paper_name" med dig' . PHP_EOL . 'Du kan læse/ændre dette talepapir her: !speaker_paper_link');
 
   //composing search/replace
   $search = array(
@@ -60,22 +69,22 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
     '!speaker_paper_name',
     '!speaker_paper_link',
     '!user',
-    '!author!',
+    '!author',
     PHP_EOL
   );
-  $replace = array($cName, $mName, $mDate, $uName, '<br/>');
+  $replace = array($cName, $mName, $mDate, $bpName, $spName, $spLink, $uName, $authorName, '<br/>');
 
   //making replacements
-  //$subject = str_replace($search, $replace, $subject_template);
-  //$subject = ucfirst($subject);
-  //$body = str_replace($search, $replace, $body_template);
-  //$body = ucfirst($body);
+  $subject = str_replace($search, $replace, $subject_template);
+  $subject = ucfirst($subject);
+  $body = str_replace($search, $replace, $body_template);
+  $body = ucfirst($body);
 
   $from = variable_get('system_mail');
   $message = array(
     'to' => $user->mail,
-    'subject' => 'SHARED SP', //$subject,
-    'body' => 'congrats', //$body,
+    'subject' => $subject,
+    'body' => $body,
     'headers' => array(
       'MIME-Version' => '1.0',
       'From' => $from,

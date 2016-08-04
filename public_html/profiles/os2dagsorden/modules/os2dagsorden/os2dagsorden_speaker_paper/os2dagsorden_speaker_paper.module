@@ -22,11 +22,9 @@ module_load_include('inc', 'os2dagsorden_speaker_paper', '/includes/os2dagsorden
  */
 function os2dagsorden_speaker_paper_node_presave($node) {
   if ($node->type === 'os2web_meetings_spaper') {
-    drupal_set_message("Here!");
     if (isset($node->field_os2web_meetings_sp_shared['und'])){
       foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with){
         $uid = $shared_with['target_id'];
-        drupal_set_message("Shared with: " . $uid);
         if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
           _os2dagsorden_speaker_paper_send_message($uid, $node);
         }
@@ -53,7 +51,7 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
     '#type' => 'textfield',
     '#title' => 'Speaker paper sharing notification email subject',
     '#description' => 'The email subject, which would be send to user with which the speaker paper has been shared',
-    '#default_value' => variable_get('os2dagsorden_speaper_paper_email_subject', '!meeting_type til !committee er publiceret'),
+    '#default_value' => variable_get('os2dagsorden_speaper_paper_email_subject', '!author har delt talepapiret "!speaker_paper_name" med dig'),
     '#states' => array(
       'visible' => array(
         ':input[name="os2dagsorden_shared_speaker_paper"]' => array('checked' => TRUE),
@@ -65,7 +63,7 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
     '#title' => 'Speaker paper sharing notification email text',
     '#description' => 'The email body, which would be send to user  with which the speaker paper has been shared',
     '#default_value' => variable_get('os2dagsorden_speaper_paper_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
-      'Du abonnerer på !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.'),
+      '!author har delt talepapiret "!speaker_paper_name" med dig' . PHP_EOL . 'Du kan læse/ændre dette talepapir her: !speaker_paper_link'),
     '#states' => array(
       'visible' => array(
         ':input[name="os2dagsorden_shared_speaker_paper"]' => array('checked' => TRUE),

@@ -81,6 +81,7 @@ dependencies[] = os2web_audit_log
 dependencies[] = os2dagsorden_settings
 dependencies[] = os2web_pdf_conversion_manager
 dependencies[] = os2dagsorden_content_modify
+dependencies[] = os2dagsorden_speaker_paper
 
 ; OS2Web Features
 dependencies[] = os2web_settings
