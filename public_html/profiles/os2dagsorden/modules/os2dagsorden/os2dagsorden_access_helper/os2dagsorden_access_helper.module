@@ -1436,3 +1436,15 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
     }
  }
  }
+
+
+/**
+ * Callback function for sort methods, that compares the terms name using strnatcmp comparison.
+ *
+ * @param $term1
+ * @param $term2
+ * @return int
+ */
+function os2dagsorden_access_helper_compare_term_by_name($term1, $term2) {
+  return strnatcmp($term1->name, $term2->name);
+}

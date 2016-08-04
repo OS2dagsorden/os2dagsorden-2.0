@@ -415,6 +415,7 @@ function os2dagsorden_settings_get_active_committees(){
             $active_committees[$committee_full->tid] = $committee_full;
         }
     }
+    uasort($active_committees, 'os2dagsorden_access_helper_compare_term_by_name');
     return $active_committees;
 }
 
