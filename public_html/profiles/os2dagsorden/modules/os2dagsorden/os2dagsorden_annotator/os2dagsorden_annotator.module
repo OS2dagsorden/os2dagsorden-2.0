@@ -410,7 +410,14 @@ HTML;
 		'</div>';
 	} else {//is not an actual bilag
 	  //finishing breadcrumb
+	    if(isset($bilag->title)) {
+	      if( ( strlen($bilag->title)) > 50 ){
+		   $bilag->title = mb_substr($bilag->title, 0, 50);
+		   $bilag->title .= "...";
+		  }
+	    }
 	  $breadcrumb[] .= '<span class="breadcrumb-active">' .$bilag->title. '</span>';
+	    
 	  drupal_set_breadcrumb($breadcrumb);
 	  
 	  //getting text
