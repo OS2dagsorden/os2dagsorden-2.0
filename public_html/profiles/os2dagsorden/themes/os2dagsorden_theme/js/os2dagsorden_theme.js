@@ -251,11 +251,11 @@ function resize_listener(){
       set_up_button_position('.front #block-block-1', '.front #region-sidebar-second', 'front', width);
       set_up_button_position('.not-front #block-block-1', '.not-front #region-sidebar-second', 'not-front', width);
     }
-    if (width > 768) {
-       if (JSON.parse(window.localStorage.getItem('hide_side_menu')) != true) {
-         show_side_menu(false);
-       }    
-    }
+//    if (width > 768) {
+//       if (JSON.parse(window.localStorage.getItem('hide_side_menu')) != true) {
+//         show_side_menu(false);
+//       }
+//    }
 
   };
 

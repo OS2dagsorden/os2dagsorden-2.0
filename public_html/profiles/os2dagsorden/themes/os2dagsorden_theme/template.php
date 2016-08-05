@@ -40,8 +40,8 @@ function os2dagsorden_theme_preprocess_page(&$variables)
 
     drupal_add_js(array('os2dagsorden_settings' => array('sidepane_arrow_position' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'))), array('type' => 'setting'));
 
-    if (variable_get('os2dagsorden_hide_menu', FALSE))
-       drupal_add_js('hide_side_menu_completely();', 'inline'); 
+    os2dagsorden_theme_hide_menu_on_pages();
+
     drupal_add_js('add_indicator_help_text();', 'inline');
     //DAGS-298 enabling print for iPad
     //drupal_add_js('hide_print_buttons();', 'inline');
@@ -298,4 +298,18 @@ function os2dagsorden_theme_menu_local_task($variables) {
     return '';
   else 
     return theme_menu_local_task($variables);
+}
+
+function os2dagsorden_theme_hide_menu_on_pages() {
+  if (os2dagsorden_access_helper_is_touch()) {
+    $pages = variable_get('os2dagsorden_collapse_menu_touch_pages', 'meetings/print');
+    $pages = explode(PHP_EOL, $pages);
+    foreach ($pages as $page) {
+      if (strcmp($page, current_path())) {
+        drupal_add_js('hide_side_menu(false);', 'inline');
+        break;
+      }
+    }
+  }
+
 }

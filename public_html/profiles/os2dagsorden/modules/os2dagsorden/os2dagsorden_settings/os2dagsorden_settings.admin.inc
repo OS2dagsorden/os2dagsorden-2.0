@@ -384,6 +384,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#options' => $options3,
     '#description' => t('This decides whether a side menu expanded/collapsed for touch devices (tabels, phone etc).'),
   );
+  $form['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu_touch_pages'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Hide side menu on those pages (touch)'),
+    '#default_value' => variable_get('os2dagsorden_collapse_menu_touch_pages', 'meetings/print'),
+    '#description' => t('List the pages where the side menu will be hidden by default (overruling the settings).<br/>Each page on new line'),
+  );
   
   $form['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = array(
     '#type' => 'radios',
@@ -391,12 +397,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_show_search_block_title', 'true'),
     '#options' => array('true' => t('Show'), 'false' => t('Hide')),
     '#description' => t('This decides whether a search block title show/hide.'),
-  );
-  $form['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Hide right side menu'),
-    '#default_value' => variable_get('os2dagsorden_hide_menu', FALSE),
-     '#description' => t('This decides whether a side menu hided/unhided.'),
   );
 
   // Body text size
@@ -1389,9 +1389,9 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
 
     variable_set('os2dagsorden_collapse_menu', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu']);
     variable_set('os2dagsorden_collapse_menu_touch', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_collapse_menu_touch']);
+    variable_set('os2dagsorden_frontpage_layout', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_frontpage_layout']);
     variable_set('os2dagsorden_show_search_block_title', $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title']);
-    variable_set('os2dagsorden_hide_menu',  $setting_array['os2dagsorden_frontpage_layout']['os2dagsorden_hide_menu']);
-   
+
     variable_set('os2dagsorden_meetings_search_show_meeting_committee', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_committee']);
     variable_set('os2dagsorden_meetings_search_show_meeting_location', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_location']);
     variable_set('os2dagsorden_meetings_search_show_meeting_status', $setting_array['os2dagsorden_meeting_search_view_settings']['os2dagsorden_meetings_search_show_meeting_status']);
