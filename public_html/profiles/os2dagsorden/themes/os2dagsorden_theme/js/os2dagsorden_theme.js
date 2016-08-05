@@ -92,7 +92,7 @@ jQuery(document).ready(function() {
     jQuery(".select-committee #edit-follows-div ul.droptrue").bind("sortreceive", function(event, ui){
         jQuery(ui.item).addClass('can-subscribe');
         //console.log(ui.item);
-        jQuery(ui.item).click(follows_subscribe_click);
+        setTimeout(function(){ jQuery(ui.item).bind('click', follows_subscribe_click); }, 1);
     });
 
     //remove behaviour from item that is removed from the follow section
