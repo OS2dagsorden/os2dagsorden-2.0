@@ -124,7 +124,7 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
       }
     }
   }
-  
+
   ksort($additional_descriptions);
   ksort($additional_descriptions_with_att);
 
@@ -132,7 +132,6 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
     echo '<div class="controls-right">';
   }
   foreach ($additional_descriptions as $add_desc){
-    echo '<div class="controls-right">';  
     //closed version additional - if not empty
     if ($user_can_see_closed_agendas){
       if (!empty($add_desc['closed'])){
