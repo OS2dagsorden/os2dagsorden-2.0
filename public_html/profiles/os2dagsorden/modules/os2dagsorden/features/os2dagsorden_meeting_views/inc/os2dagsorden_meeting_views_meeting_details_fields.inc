@@ -125,10 +125,12 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
     }
   }
   
-  
   ksort($additional_descriptions);
   ksort($additional_descriptions_with_att);
 
+  if (!empty($additional_descriptions)) {
+    echo '<div class="controls-right">';
+  }
   foreach ($additional_descriptions as $add_desc){
     echo '<div class="controls-right">';  
     //closed version additional - if not empty
@@ -143,12 +145,16 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
 	echo '<a target="_blank" href="' . file_create_url($add_desc['opened']['uri']) . 
 	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Tillægsdokument') .  '</a>';
     }
+  }
+  if (!empty($additional_descriptions)) {
     echo '</div>';
     echo '<div class="clearfix"></div>';
   }
 
-  foreach ($additional_descriptions_with_att as $add_desc){
+  if (!empty($additional_descriptions_with_att)) {
     echo '<div class="controls-right">';
+  }
+  foreach ($additional_descriptions_with_att as $add_desc){
     //closed version additional - if not empty
     if ($user_can_see_closed_agendas){
       if (!empty($add_desc['closed'])){
@@ -161,6 +167,8 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
       echo '<a target="_blank" href="' . file_create_url($add_desc['opened']['uri']) .
         '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_with_att_download_title_additional', 'Tillægsdokument med bilag') .  '</a>';
     }
+  }
+  if (!empty($additional_descriptions_with_att)) {
     echo '</div>';
     echo '<div class="clearfix"></div>';
   }
