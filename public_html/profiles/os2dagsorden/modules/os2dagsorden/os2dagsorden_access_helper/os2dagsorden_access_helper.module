@@ -1120,7 +1120,7 @@ function os2dagsorden_access_helper_node_presave($node) {
 
         $cName = taxonomy_term_load($committee_id)->name;
         $mName = check_plain($node->title);
-        $mDate = check_plain($node->field_os2web_meetings_date['und'][0]['value']);
+        $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
         $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
 
         //getting subject and body
