@@ -305,7 +305,7 @@ function os2dagsorden_theme_hide_menu_on_pages() {
     $pages = variable_get('os2dagsorden_collapse_menu_touch_pages', 'meetings/print');
     $pages = explode(PHP_EOL, $pages);
     foreach ($pages as $page) {
-      if (strcmp($page, current_path())) {
+      if (strcmp($page, current_path()) == 0) {
         drupal_add_js('hide_side_menu(false);', 'inline');
         break;
       }
