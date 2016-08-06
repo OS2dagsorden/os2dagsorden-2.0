@@ -34,10 +34,8 @@ function os2dagsorden_theme_preprocess_page(&$variables)
     } else {
       drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu_touch', true) . ');', 'inline');
     }
-    drupal_add_js('add_tablet_orientation_listener();', 'inline');
     drupal_add_js(array('os2dagsorden_settings' => array('body_font_size' => variable_get('os2dagsorden_body_text_size', '13'))), array('type' => 'setting'));
     drupal_add_js(array('os2dagsorden_settings' => array('title_font_size' => variable_get('os2dagsorden_title_text_size', '13'))), array('type' => 'setting'));
-
     drupal_add_js(array('os2dagsorden_settings' => array('sidepane_arrow_position' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'))), array('type' => 'setting'));
 
     os2dagsorden_theme_hide_menu_on_pages();
@@ -307,9 +305,10 @@ function os2dagsorden_theme_hide_menu_on_pages() {
     foreach ($pages as $page) {
       if (strcmp($page, current_path()) == 0) {
         drupal_add_js('hide_side_menu(false);', 'inline');
-        break;
+        return;
       }
     }
+    //no pages forcing menu to be hidden, can add orientation listener
+    drupal_add_js('add_tablet_orientation_listener();', 'inline');
   }
-
 }
