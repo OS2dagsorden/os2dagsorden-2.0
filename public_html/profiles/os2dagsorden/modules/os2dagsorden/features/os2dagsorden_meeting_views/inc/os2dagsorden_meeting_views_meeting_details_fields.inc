@@ -3,7 +3,6 @@
  * @file
  * Code for the OS2Web Meeting Views - meeting details view.
  */
- 
 /////////////////////////////////////////header START /////////////////////////////////////////
 function os2dagsorden_meeting_views_meeting_details_breadcrumb(){
   global $base_url;
@@ -40,7 +39,11 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
   echo '</div>';
 
   ///////////////////////descriptions full doc
-  echo '<div class="controls-right">';
+  echo '<div class="dropdown">';
+  echo '<button class="dropbtn" type="button" data-toggle="dropdown">Hent dokumenter &#9660;
+  <span class="caret"></span>
+  </button>';
+  echo '<div class="dropdown-content">';
   //closed version - if not empty
   $meeting = node_load($meeting_id);
   $user_can_see_closed_agendas = os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting->nid);
@@ -48,37 +51,37 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
   if ($user_can_see_closed_agendas){
     if (!empty($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri']) . 
-      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . ' (lukket)</a>';
+      '" class="btn-group">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . ' (lukket)</a>';
     }
   }
 
   //opened version - if not empty
   if (!empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) . 
-      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . '</a>';
+      '" class="btn-group">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . '</a>';
   }
-  echo '</div>';
-  echo '<div class="clearfix"></div>';
+  //echo '</div>';
+  //echo '<div class="clearfix"></div>';
   ///////////////////////descriptions full doc END
 
   ///////////////////////descriptions full doc with attachments
-  echo '<div class="controls-right">';
+  //echo '<div class="controls-right">';
   //closed version - if not empty
 
   if ($user_can_see_closed_agendas){
     if (!empty($meeting->field_os2web_meetings_att_doc_c['und'][0]['uri'])){
       echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_att_doc_c['und'][0]['uri']) .
-        '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_with_att_download_title', 'Samlet dokument med bilag') . ' (lukket)</a>';
+        '" class="btn-group">' . variable_get('os2dagsorden_meeting_description_with_att_download_title', 'Samlet dokument med bilag') . ' (lukket)</a>';
     }
   }
 
   //opened version - if not empty
   if (!empty($meeting->field_os2web_meetings_att_doc['und'][0]['uri'])){
     echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_att_doc['und'][0]['uri']) .
-      '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_with_att_download_title', 'Samlet dokument med bilag') . '</a>';
+      '" class="btn-group">' . variable_get('os2dagsorden_meeting_description_with_att_download_title', 'Samlet dokument med bilag') . '</a>';
   }
+  
   echo '</div>';
-  echo '<div class="clearfix"></div>';
   ///////////////////////descriptions full doc with attachments END
 
   ///////////////////////descriptions (additional)
@@ -143,8 +146,8 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
 	echo '<a target="_blank" href="' . file_create_url($add_desc['opened']['uri']) . 
 	'" class="form-submit">' . variable_get('os2dagsorden_meeting_description_download_title_additional', 'Tillægsdokument') .  '</a>';
     }
-    echo '</div>';
-    echo '<div class="clearfix"></div>';
+    //echo '</div>';
+    //echo '<div class="clearfix"></div>';
   }
 
   foreach ($additional_descriptions_with_att as $add_desc){
@@ -161,6 +164,7 @@ function os2dagsorden_meeting_views_meeting_details_description_download(){
       echo '<a target="_blank" href="' . file_create_url($add_desc['opened']['uri']) .
         '" class="form-submit">' . variable_get('os2dagsorden_meeting_description_with_att_download_title_additional', 'Tillægsdokument med bilag') .  '</a>';
     }
+    echo '</div>';
     echo '</div>';
     echo '<div class="clearfix"></div>';
   }
@@ -696,3 +700,4 @@ function os2dagsorden_meeting_views_meeting_details_fields_tilleags_dagsorden_he
   print '<h3>' . 'Tillægs ' . variable_get('os2dagsorden_title_meeting_agenda', 'Dagsorden:') . '</h3>';
 }
 /////////////////////////////////////////TILLAEGS DAGSORDEN fields START /////////////////////////////////////////
+?>
