@@ -369,6 +369,32 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
     asort($form['field_follows_committee_plus_tid']['#options']);
     asort($form['field_follows_committee_pp_tid']['#options']);
   }
+
+  if ($form_id == 'os2dagsorden_settings_settings_form'){
+    $form['#submit'][] = 'os2dagsorden_settings_guide_file_lock';
+  }
+}
+
+function os2dagsorden_settings_guide_file_lock ($form, &$form_state) {
+  if (isset($form_state['values']['quick_guide_upload_fid']) && !empty($form_state['values']['quick_guide_upload_fid'])) {
+    $fid = $form_state['values']['quick_guide_upload_fid'];
+    if (($file = file_load($fid)) && empty($file->status)) {
+      $file->status = FILE_STATUS_PERMANENT;
+      file_save($file);
+      if (!file_lock_is_locked($file)) {
+        // Only add one lock for every file.
+        file_usage_add($file, 'os2dagsorden_settings', 'module', FILE_LOCK_ID);
+      }
+    }
+  } else {
+    $result = db_select('file_usage', 'f')
+      ->fields('f', array('fid'))
+      ->condition('module', 'os2dagsorden_settings')
+      ->execute();
+    foreach ($result as $files) {
+      file_delete(file_load($files->fid), TRUE);
+    }
+  }
 }
 
 function os2dagsorden_settings_block_view_alter(&$data, $block){
