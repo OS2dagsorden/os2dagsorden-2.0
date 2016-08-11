@@ -82,6 +82,7 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points'] = variable_get('os2dagsorden_group_closed_bullet_points', 'false');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown'] = variable_get('os2dagsorden_meeting_description_download_dropdown', 'Hent dokumenter');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF');
 
