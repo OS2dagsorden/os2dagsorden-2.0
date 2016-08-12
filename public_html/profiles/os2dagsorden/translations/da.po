@@ -23415,7 +23415,7 @@ msgid "Full name:"
 msgstr "Fulde navn: "
 
 msgid "Is displayed in the top right corner."
-msgstr "Vises i øverste venstre hjørne. "
+msgstr "Navnet vises eks. ved deling af talepapirer."
 
 msgid "Calendar preferences:"
 msgstr "Kalender preferencer"
