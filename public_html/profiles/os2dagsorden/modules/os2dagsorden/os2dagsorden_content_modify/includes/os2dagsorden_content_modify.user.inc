@@ -325,7 +325,19 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     }
     $content .= '</ul>';
     $form['follows_plus_plus_div']['#markup'] = $content;
-
+    //printing arrow
+    $form['2']['#markup'] =
+    '</div><div style = "
+    height: 1px;">
+    <img src = ' . base_path() . 'profiles/os2dagsorden/themes/os2dagsorden_theme/img/noun_1.png
+    " style = "
+    width: 260px;
+    height: 70px;
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    margin: 25px 0 0 -100px;">
+    </div>';
     //printing available committees
     $com_list = "<ul id='available_committee' class='droptrue'>";
     asort($com_select);
