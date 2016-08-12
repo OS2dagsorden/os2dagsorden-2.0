@@ -1,16 +1,5 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
-#os2dagsorden-content-modify-user-edit-form > div > div > div.div_arrows_reverse\22{
-	height: 1px;
-}
-#os2dagsorden-content-modify-user-edit-form > div > div > div.div_arrows_reverse\22 > img{
-	width: 260px;
-    height: 70px;
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    margin: 25px 0 0 -100px;
-}
 #section-header{
     /* Fallback */
     background: #e7e7e7 url('../img/img_header_elipse.png') no-repeat bottom left;
@@ -1842,7 +1831,45 @@ a.annotator-wrapper {
   padding-left: 0;
   margin-left: 0;
 }
+/* -- arrows_reverse -- */
+#os2dagsorden-content-modify-user-edit-form > div > div > div.container{
+    overflow: hidden;
+    width: 100%
+}
+#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div{
+    white-space: nowrap
+}
+ #os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.select-committee.single{
+    width: 33%;
+    min-height: 300px;
+    display: inline-block;
+    float: left;
+}
+#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.div_arrows_reverse\22{
+    width: 33%;
+    min-height: 367px;
+    display: inline-block;
+    float: left;
+    margin: auto;
+    position: relative;
+}
+#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.div_arrows_reverse\22 > img{
+    width: 80%;
+    height: 80px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
 
+#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.available_committee{
+    min-height: 300px;
+    min-width: 33%;
+    display: inline-block;
+    float: left;
+}
 /* -- user_simple_edit drug&drop -- */
 
 .select-committee, .remove-committee {

@@ -125,7 +125,10 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   $single_or_batch_class = (sizeof($uids) == 1)? 'single' : 'batch';
 
   $form[] = array(
-    '#markup' => "<div class=\"select-committee {$single_or_batch_class}\">",
+    '#markup' => "
+  <div class='container'>
+     <div class='box'>
+        <div class=\"select-committee {$single_or_batch_class}\">",
   );
 
   $form['member_of_div'] = array(
@@ -349,7 +352,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       '#suffix' => '</div>'
     );
     $form[] = array(
-      '#markup' => "<div style='clear:both'></div>",
+      '#markup' => "</div></div><div style='clear:both'></div>",
     );
   }
 }
