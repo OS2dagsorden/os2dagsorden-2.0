@@ -126,8 +126,6 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
 
   $form[] = array(
     '#markup' => "
-  <div class='container'>
-     <div class='box'>
         <div class=\"select-committee {$single_or_batch_class}\">",
   );
 
@@ -328,13 +326,13 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     }
     $content .= '</ul>';
     $form['follows_plus_plus_div']['#markup'] = $content;
+
     //printing arrows reverse
-    $form['2']['#markup'] =
-    '</div>
-    <div class = div_arrows_reverse">
-    <img src = ' . base_path() . drupal_get_path('theme', 'os2dagsorden_theme') . '/img/img_arrows_reverse.png
-    "class = img_arrows_reverse">
-    </div>';
+    $form[]['#markup'] =
+      '<div class="arrows-reverse">
+      <img src = "' . base_path() . drupal_get_path('theme', 'os2dagsorden_theme') . '/img/img_arrows_reverse.png">
+      </div>';
+
     //printing available committees
     $com_list = "<ul id='available_committee' class='droptrue'>";
     asort($com_select);
@@ -352,7 +350,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       '#suffix' => '</div>'
     );
     $form[] = array(
-      '#markup' => "</div></div><div style='clear:both'></div>",
+      '#markup' => '<div style="clear:both"></div>',
     );
   }
 }

@@ -14,3 +14,12 @@
 .view-meetings-search .views-table td.views-field.views-field-php-3 {
   overflow: hidden;
 }
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+    display: none;
+}
+
+.available_committee {
+    float: right;
+}
+/* ---------------------------- arrows_reverse END ---------------------------- */

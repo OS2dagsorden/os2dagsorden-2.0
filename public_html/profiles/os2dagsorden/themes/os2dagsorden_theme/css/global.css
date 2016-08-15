@@ -1831,30 +1831,18 @@ a.annotator-wrapper {
   padding-left: 0;
   margin-left: 0;
 }
-/* -- arrows_reverse -- */
-#os2dagsorden-content-modify-user-edit-form > div > div > div.container{
-    overflow: hidden;
-    width: 100%
-}
-#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div{
-    white-space: nowrap
-}
- #os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.select-committee.single{
-    width: 33%;
-    min-height: 300px;
-    display: inline-block;
-    float: left;
-}
-#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.div_arrows_reverse\22{
-    width: 33%;
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+    display: none;/*displaying starting from default-normal*/
+    width: 250px;
     min-height: 367px;
-    display: inline-block;
     float: left;
     margin: auto;
     position: relative;
 }
-#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.div_arrows_reverse\22 > img{
-    width: 80%;
+
+.arrows-reverse > img{
+    width: 100%;
     height: 80px;
     margin: auto;
     position: absolute;
@@ -1864,12 +1852,8 @@ a.annotator-wrapper {
     right: 0;
 }
 
-#os2dagsorden-content-modify-user-edit-form > div > div > div.container > div > div.available_committee{
-    min-height: 300px;
-    min-width: 33%;
-    display: inline-block;
-    float: left;
-}
+/* ---------------------------- arrows_reverse END ---------------------------- */
+
 /* -- user_simple_edit drug&drop -- */
 
 .select-committee, .remove-committee {
@@ -1877,7 +1861,7 @@ a.annotator-wrapper {
     min-width: 250px;
 }
 .available_committee {
-    float: right;
+    float: left;
     overflow-y: scroll;
 }
 
@@ -1896,6 +1880,7 @@ ul.droptrue li {
     padding: 5px; 
     background: none;
     background-color: white;
+    max-width: 250px;
 }
 
 ul.droptrue li.can-subscribe {
