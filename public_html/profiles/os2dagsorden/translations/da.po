@@ -23420,6 +23420,18 @@ msgstr "Vises i øverste venstre hjørne. "
 msgid "Calendar preferences:"
 msgstr "Kalender preferencer"
 
+msgid "Organization:"
+msgstr "Organisation:"
+
+msgid "Forbidden catagories:"
+msgstr "Forbudte kategorier:"
+
+msgid "Which categories the user is FORBIDDEN to have access to"
+msgstr "De kategorier brugeren ikke må have adgang til"
+
+msgid "User can send to friend closed bullet points"
+msgstr "Brugeren må sende lukkede punkter til en ven"
+
 msgid "Which types of meetings should user see in the calendar"
 msgstr "Hvilken mødetype vil jeg se i min kalender"
 
