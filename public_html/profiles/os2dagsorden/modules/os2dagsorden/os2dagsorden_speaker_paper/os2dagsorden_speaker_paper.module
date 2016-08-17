@@ -94,3 +94,37 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
   //sort items alphabetically
   ksort($form);
 }
+
+/**
+ * Implements hook_form_alter
+ *
+ * multiple modifications to speaper paper create/edit form
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function os2dagsorden_speaker_paper_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'os2web_meetings_spaper_node_form'){
+    //setting title
+    drupal_set_title(t('Create speaker paper'));
+
+    //adding values into the body field, each time user is opening the speaker paper form, e.g.
+    // [..previous text..]
+    //admin, 03-08-2016:
+    global $user;
+    $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
+    $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
+
+    //modifying the shared with field, adding shared with user full name
+    foreach($form['field_os2web_meetings_sp_shared']['und']['#options'] as $uid => $user_login_name) {
+      if (intval($uid) > 0) {//eliminating all _none and 0 Anonym options
+        $share_with_user = user_load($uid);
+        $user_full_name = $share_with_user->field_user_full_name['und'][0]['value'];
+        if (!empty($user_full_name)) {
+          $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
+        }
+      }
+    }
+  }
+}
