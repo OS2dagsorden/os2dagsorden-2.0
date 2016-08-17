@@ -13,14 +13,33 @@
 module_load_include('inc', 'os2dagsorden_speaker_paper', '/includes/os2dagsorden_speaker_paper.util');
 
 /**
- * Hook to node_presave
- * The function will send (if has not been sent before) the email to the user, with which this speaker paper has been shared
+ * Hook to node_insert
+ * The function will send the email to the user, with which this speaker paper has been shared
  *
  * @param $node   mixed  meeting node to be saved
  *
  * @return $node meeting
  */
-function os2dagsorden_speaker_paper_node_presave($node) {
+function os2dagsorden_speaker_paper_node_insert($node) {
+  if ($node->type === 'os2web_meetings_spaper') {
+    if (isset($node->field_os2web_meetings_sp_shared['und'])){
+      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with){
+        $uid = $shared_with['target_id'];
+        _os2dagsorden_speaker_paper_send_message($uid, $node);
+      }
+    }
+  }
+}
+
+/**
+ * Hook to node_insert
+ * The function will send the email to the user (if it wasn't sent before), with which this speaker paper has been shared
+ *
+ * @param $node   mixed  meeting node to be saved
+ *
+ * @return $node meeting
+ */
+function os2dagsorden_speaker_paper_node_update($node) {
   if ($node->type === 'os2web_meetings_spaper') {
     if (isset($node->field_os2web_meetings_sp_shared['und'])){
       foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with){
