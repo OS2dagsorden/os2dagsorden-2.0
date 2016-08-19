@@ -115,21 +115,23 @@ function os2dagsorden_ad_integration_do_user_sync() {
                 $company = $results[$i]['physicaldeliveryofficename'][0];
 
                 //looping through memberof
-                foreach(($results[$i]['memberof']) as $memberof) {
-                  $memberof_parts = explode(',',$memberof);
-                  //creating nice array
-                  $keyed_memberof_parts = array();
-                  foreach($memberof_parts as $memberofpart) {
-                    $memberofpart_parts = explode('=',$memberofpart);
-                    $keyed_memberof_parts[$memberofpart_parts[0]][] = $memberofpart_parts[1];
-                  }
-                  //check is we have AD group names Talepapir inside OU
-                  if (is_array($keyed_memberof_parts['OU']) &&
-                    in_array('Talepapir', $keyed_memberof_parts['OU'])) {
-                    //if yes get the Talepapir group custom name
-                    $group_name = $keyed_memberof_parts['CN'][0];
+                if (isset($results[$i]['memberof'])) {
+                  foreach(($results[$i]['memberof']) as $memberof) {
+                    $memberof_parts = explode(',',$memberof);
+                    //creating nice array
+                    $keyed_memberof_parts = array();
+                    foreach($memberof_parts as $memberofpart) {
+                      $memberofpart_parts = explode('=',$memberofpart);
+                      $keyed_memberof_parts[$memberofpart_parts[0]][] = $memberofpart_parts[1];
+                    }
+                    //check is we have AD group names Talepapir inside OU
+                    if (is_array($keyed_memberof_parts['OU']) &&
+                      in_array('Talepapir', $keyed_memberof_parts['OU'])) {
+                      //if yes get the Talepapir group custom name
+                      $group_name = $keyed_memberof_parts['CN'][0];
 
-                    $term = os2dagsorden_access_helper_fetch_or_create_taxonomy_term($group_name, 'os2web_users_tax_sp_group');
+                      $term = os2dagsorden_access_helper_fetch_or_create_taxonomy_term($group_name, 'os2web_users_tax_sp_group');
+                    }
                   }
                 }
 
