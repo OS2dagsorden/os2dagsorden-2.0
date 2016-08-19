@@ -108,3 +108,19 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
     ))
     ->execute();
 }
+
+/**
+ * Functions that retus the uids of all the users that are part of the speaker paper group with that tid.
+ *
+ * @param $tid - speaker paper group tid
+ * @return array - array of user uids
+ */
+function _os2dagsorden_speaker_paper_fetch_group_users($tid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'user')
+    ->fieldCondition('field_user_sp_groups', 'tid', $tid, '=');
+  $result = $query->execute();
+  if (isset($result['user'])) {
+    return array_keys($result['user']);
+  }
+}

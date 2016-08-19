@@ -325,10 +325,18 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
     if ($user->uid == $sp->uid)
       return TRUE;
     else {
-      if (isset($sp->field_os2web_meetings_sp_shared['und'])){
-        foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
-          if (intval($shared_with['target_id'] == $user->uid))
+      //checking sharing with individuals
+      if (isset($sp->field_os2web_meetings_sp_shared['und'])) {
+        foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with) {
+          if (intval($shared_with['target_id'] == $user->uid)) {
             return TRUE;
+          }
+        }
+      }
+      //checking sharing with groups
+      if (isset($sp->field_os2web_meetings_sp_shar_gr['und'])) {
+        foreach ($sp->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
+          return in_array($shared_with_group['tid'], os2dagsorden_access_helper_get_user_sp_groups());
         }
       }
     }
@@ -508,6 +516,29 @@ function os2dagsorden_access_helper_get_user_follow_pp_committees($uid = null){
   if (!empty($user->field_follows_committee_pp)) { //is part of the committee
     foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
+    }
+  }
+
+  return $tids;
+}
+
+/**
+ * Functions returns the user speaker paper groups
+ *
+ * @param $uid - uid of the user, if empty, current user is used
+ *
+ * @return array speaker paper group tids
+ */
+function os2dagsorden_access_helper_get_user_sp_groups($uid = null) {
+  if (!$uid) {
+    $user = os2dagsorden_access_helper_get_user();
+  } else {
+    $user = user_load($uid);
+  }
+  $tids = array();
+  if (!empty($user->field_user_sp_groups)) { //is part of the committee
+    foreach ($user->field_user_sp_groups['und'] as $user_group_id) {
+      $tids[] = $user_group_id['tid'];
     }
   }
 
@@ -1436,3 +1467,34 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
     }
  }
  }
+
+/**
+ * Function that fetches the term, or if that fails creates one
+ *
+ * @param $name
+ * @param $vocabulary_name
+ *
+ * @return mixed|stdClass fetched or created term
+ */
+function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabulary_name) {
+  $terms = taxonomy_get_term_by_name($name, $vocabulary_name);
+  if (empty($terms)) {
+    $term = array_pop($terms);
+  }
+
+  //not found, create a new one
+  if (!$term) {
+    $vid = db_select('taxonomy_vocabulary', 'tv')
+      ->fields('tv', array('vid'))
+      ->condition('machine_name', $vocabulary_name)
+      ->execute()
+      ->fetchField();
+
+    $term = new stdClass();
+    $term->vid = $vid;
+    $term->name = $name;
+    taxonomy_term_save($term);
+  }
+  //return the fetched term or the one we have just created
+  return $term;
+}

@@ -23,9 +23,15 @@ module_load_include('inc', 'os2dagsorden_speaker_paper', '/includes/os2dagsorden
 function os2dagsorden_speaker_paper_node_insert($node) {
   if ($node->type === 'os2web_meetings_spaper') {
     if (isset($node->field_os2web_meetings_sp_shared['und'])){
-      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with){
+      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
         $uid = $shared_with['target_id'];
         _os2dagsorden_speaker_paper_send_message($uid, $node);
+      }
+      foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
+        $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
+        foreach($uids as $uid) {
+          _os2dagsorden_speaker_paper_send_message($uid, $node);
+        }
       }
     }
   }
@@ -42,10 +48,18 @@ function os2dagsorden_speaker_paper_node_insert($node) {
 function os2dagsorden_speaker_paper_node_update($node) {
   if ($node->type === 'os2web_meetings_spaper') {
     if (isset($node->field_os2web_meetings_sp_shared['und'])){
-      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with){
+      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
         $uid = $shared_with['target_id'];
         if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
           _os2dagsorden_speaker_paper_send_message($uid, $node);
+        }
+      }
+      foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
+        $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
+        foreach($uids as $uid) {
+          if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
+            _os2dagsorden_speaker_paper_send_message($uid, $node);
+          }
         }
       }
     }
