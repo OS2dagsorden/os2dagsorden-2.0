@@ -255,81 +255,6 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
     ),
   );
 
-  // Exported field: 'taxonomy_term-os2web_users_tax_sp_group-field_users'.
-  $fields['taxonomy_term-os2web_users_tax_sp_group-field_users'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '-1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_users',
-      'foreign keys' => array(
-        'uid' => array(
-          'columns' => array(
-            'uid' => 'uid',
-          ),
-          'table' => 'users',
-        ),
-      ),
-      'indexes' => array(
-        'uid' => array(
-          0 => 'uid',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'user_reference',
-      'settings' => array(
-        'referenceable_roles' => array(
-          2 => '2',
-        ),
-        'referenceable_status' => array(
-          0 => 0,
-          1 => 0,
-        ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
-      ),
-      'translatable' => '0',
-      'type' => 'user_reference',
-    ),
-    'field_instance' => array(
-      'bundle' => 'os2web_users_tax_sp_group',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'user_reference',
-          'settings' => array(),
-          'type' => 'user_reference_default',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'taxonomy_term',
-      'field_name' => 'field_users',
-      'label' => 'Users',
-      'required' => 0,
-      'settings' => array(
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 1,
-        'module' => 'user_reference',
-        'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'user_reference/autocomplete',
-          'size' => '60',
-        ),
-        'type' => 'user_reference_autocomplete',
-        'weight' => '1',
-      ),
-    ),
-  );
-
   // Exported field: 'user-user-field_follows_committee'.
   $fields['user-user-field_follows_committee'] = array(
     'field_config' => array(
@@ -1286,7 +1211,6 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   t('Organization');
   t('Speaker paper groups');
   t('User can send to friend closed bullet points');
-  t('Users');
   t('represents the committees the user is a part of');
 
   return $fields;
