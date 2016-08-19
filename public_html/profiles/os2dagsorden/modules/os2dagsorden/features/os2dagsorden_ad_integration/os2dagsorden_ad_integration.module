@@ -124,7 +124,8 @@ function os2dagsorden_ad_integration_do_user_sync() {
                     $keyed_memberof_parts[$memberofpart_parts[0]][] = $memberofpart_parts[1];
                   }
                   //check is we have AD group names Talepapir inside OU
-                  if (in_array('Talepapir', $keyed_memberof_parts['OU'])) {
+                  if (is_array($keyed_memberof_parts['OU']) &&
+                    in_array('Talepapir', $keyed_memberof_parts['OU'])) {
                     //if yes get the Talepapir group custom name
                     $group_name = $keyed_memberof_parts['CN'][0];
 

@@ -1478,7 +1478,7 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
  */
 function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabulary_name) {
   $terms = taxonomy_get_term_by_name($name, $vocabulary_name);
-  if (empty($terms)) {
+  if (!empty($terms)) {
     $term = array_pop($terms);
   }
 
