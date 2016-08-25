@@ -142,7 +142,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   );
   $form['follows_div'] = array(
     '#type' => 'item' ,
-    '#prefix' => '<label>' . t('Follows:') . '</label>',
+    '#prefix' => '<label>' . t('Follows:') . '</label><div class="note"> Notification på mail:</div>',
     '#markup' => '',
   );
   $form['follows_hidden'] = array(

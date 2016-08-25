@@ -1861,14 +1861,21 @@ ul.droptrue li {
 }
 
 ul.droptrue li.can-subscribe {
-    padding-left: 25px;
-    background-image: url('../img/icon_bell_mute.png');
+    background-image: url('../img/checkbox.png');
     background-repeat: no-repeat;
-    background-position:   5px 50%;
-    background-size: 16px;
+    background-position:   95% 50%;
+    background-size: 56px ;
 }
+
 
 ul.droptrue li.can-subscribe.subscribed {
-    background-image: url('../img/icon_bell.png');
+    background-image: url('../img/checkbox_checked.png');
 }
 
+label{
+    display: inline;
+}
+#os2dagsorden-content-modify-user-edit-form > div > div > div.select-committee.single > div.note{
+    display: inline;
+    float: right;
+}
