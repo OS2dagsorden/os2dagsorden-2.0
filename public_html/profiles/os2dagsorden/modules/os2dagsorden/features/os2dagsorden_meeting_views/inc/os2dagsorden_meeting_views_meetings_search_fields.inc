@@ -143,13 +143,6 @@ function os2dagsorden_meeting_views_meetings_search_fields_placering($meta_data)
       $bpa = node_load($bpa_id);
 
       $to_print = $bpa->title . ': [' . $bullet_point->title . ']';
-      if (os2dagsorden_access_helper_is_touch()){
-	if (mb_strlen($to_print) > 40)
-	  $to_print = mb_substr($to_print, 0, 37) . '...';
-      } else {
-	if (mb_strlen($to_print) > 60)
-	  $to_print = mb_substr($to_print, 0, 57) . '...';
-      }
     }
   }
   if (!empty($to_print)){

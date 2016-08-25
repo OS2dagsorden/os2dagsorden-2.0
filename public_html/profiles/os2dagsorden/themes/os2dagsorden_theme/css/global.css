@@ -122,6 +122,7 @@ body{
 /*Kommende møder i mine udvalg and Seneste 8 møder i alle udvalg tables*/
 .views-field-field-title-short{
   white-space: nowrap;
+  max-width: 200px;
 }
 
 /* Dagsordenspunkt item-list padding */
@@ -1192,13 +1193,17 @@ table.views-table tr td a:hover {
     border-top-width: 1px;
     border-bottom-width: 1px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table.views-table tr td .bilag a,
 table.views-table tr td .bilag a:hover {
     line-height: 20px;
     font-weight: normal;
-    padding-left: 35px;
+    padding-left: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 table.views-table tr td .bilag .hide_show_attachment_text{
     padding: 3px 10px;
@@ -1386,6 +1391,11 @@ table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
    
 }
 
+.ul-item-list-dagsordenspunkt li.non-bilag a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /*meeting details table end*/
 /* ---------------------------- Table Styles END---------------------------- */
 
@@ -1564,6 +1574,18 @@ a.annotator-wrapper {
 /* ---------------------------- Breadcrumbs START---------------------------- */
 .breadcrumb{
     padding-bottom: 15px;
+}
+
+.breadcrumb .breadcrumb-active {
+    display: inline-block;
+    max-width: 125px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: bottom;
+    top: 4px;
+    position: relative;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .breadcrumb .breadcrumb-active, .button-active {
