@@ -1832,15 +1832,30 @@ a.annotator-wrapper {
   margin-left: 0;
 }
 
-/* -- user_simple_edit drug&drop -- */
+/* -- user_simple_edit drag&drop -- */
 
 .select-committee, .remove-committee {
     float: left;
     min-width: 250px;
 }
+
 .available_committee {
     float: right;
+}
+
+#edit-available-committee {
     overflow-y: scroll;
+    background: #fff;
+}
+
+#edit-available-committee::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+#edit-available-committee::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.2);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 ul.droptrue{

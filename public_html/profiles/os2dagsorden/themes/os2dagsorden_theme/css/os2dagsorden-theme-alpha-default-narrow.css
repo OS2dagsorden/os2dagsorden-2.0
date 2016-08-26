@@ -14,3 +14,14 @@
 .view-meetings-search .views-table td.views-field.views-field-php-3 {
   overflow: hidden;
 }
+
+/* --------------------------- Drag and drop START -------------------------------*/
+#available_committee {
+    background:url(
+    data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKklEQVQYV2NkIAIwEqGGgXRFO3fu/A8z2d3dHW4AiknUU4TLE6Q7HJdJAOgfDApc6n+qAAAAAElFTkSuQmCC
+    ) repeat-y;
+    padding-right: 20px;
+    background-position: 98% top;
+    border-right: none;
+}
+/* --------------------------- Drag and drop END -------------------------------*/
