@@ -36,3 +36,6 @@ ul.droptrue li {
     max-width: 220px;
 }
 /* ---------------------------- arrows_reverse END ---------------------------- */
+.breadcrumb .breadcrumb-active {
+  min-width: 200px;
+}
