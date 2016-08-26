@@ -187,6 +187,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => 'Comma-separated list of committees ID which agenda and the summary (samlet dokument) is hidden to those without the rights',
     '#default_value' => variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting description download dropdown button'),
+    '#maxlength' => 200,
+    '#description' => t('Title of the meeting description download dropdown button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_download_dropdown', 'Hent dokumenter'),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Meeting description download button'),
@@ -1355,6 +1362,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_sager_group_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title']);
     variable_set('os2dagsorden_group_closed_bullet_points', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points']);
     variable_set('os2dagsorden_hidden_agenda_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee']);
+    variable_set('os2dagsorden_meeting_description_download_dropdown', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown']);
     variable_set('os2dagsorden_meeting_description_download_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title']);
     variable_set('os2dagsorden_meeting_description_download_title_additional', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional']);
 
