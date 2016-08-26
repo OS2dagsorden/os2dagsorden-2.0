@@ -1831,6 +1831,28 @@ a.annotator-wrapper {
   padding-left: 0;
   margin-left: 0;
 }
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+    display: none;/*displaying starting from default-normal*/
+    width: 250px;
+    min-height: 367px;
+    float: left;
+    margin: auto;
+    position: relative;
+}
+
+.arrows-reverse > img{
+    width: 100%;
+    height: 80px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/* ---------------------------- arrows_reverse END ---------------------------- */
 
 /* -- user_simple_edit drag&drop -- */
 
@@ -1839,11 +1861,8 @@ a.annotator-wrapper {
     min-width: 250px;
 }
 
-.available_committee {
-    float: right;
-}
-
 #edit-available-committee {
+    float: right;
     overflow-y: scroll;
     background: #fff;
 }
@@ -1873,6 +1892,7 @@ ul.droptrue li {
     padding: 5px; 
     background: none;
     background-color: white;
+    max-width: 250px;
 }
 
 ul.droptrue li.can-subscribe {

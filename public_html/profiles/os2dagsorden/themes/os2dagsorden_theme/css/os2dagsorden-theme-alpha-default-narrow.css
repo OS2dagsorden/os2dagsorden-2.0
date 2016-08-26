@@ -25,3 +25,12 @@
     border-right: none;
 }
 /* --------------------------- Drag and drop END -------------------------------*/
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+    display: none;
+}
+
+.available_committee {
+    float: right;
+}
+/* ---------------------------- arrows_reverse END ---------------------------- */

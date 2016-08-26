@@ -46,3 +46,16 @@ div.date-heading h3 a, div.date-heading h3 {
     padding-right: 0;
 }
 /* --------------------------- Drag and drop END -------------------------------*/
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+    width: 300px;
+}
+
+.arrows-reverse > img {
+    padding: 0 40px 0 10px;
+}
+
+ul.droptrue li {
+    max-width: 250px
+}
+/* ---------------------------- arrows_reverse END ---------------------------- */
