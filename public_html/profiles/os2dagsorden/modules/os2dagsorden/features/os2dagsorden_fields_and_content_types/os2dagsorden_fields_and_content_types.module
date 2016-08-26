@@ -1,8 +1,5 @@
 <?php
-/**
- * @file
- * Drupal needs this blank file.
- */
+include_once 'os2dagsorden_fields_and_content_types.features.inc';
 
 function os2dagsorden_fields_and_content_types_meeting_search_metadata($entity, $entity_type) {
   //extracting data from basic fields

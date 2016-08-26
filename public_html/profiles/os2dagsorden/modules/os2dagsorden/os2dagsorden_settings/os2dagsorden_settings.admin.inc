@@ -228,19 +228,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_print_pdf_show_commitee', FALSE),
       '#description' => t('This decides whether meetimg committee and date will be shown in bullet point title in PDF'),
   );
-  //speaker paper view
-  $form['os2dagsorden_speaker_paper_settings'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed'=>TRUE,
-    '#title' => t('Speaker paper settings'),
-  );
-  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Sharing speaker papers'),
-    '#description' => t('This decides whether speaker paper can be shared'),
-    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
-  );
 
   //expand or not expand bilag on bullet point expand
   //Meetig view settings
@@ -1175,6 +1162,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'),
     '#description' => t('Default position or equal height with meeting blocks.'),
   );
+  //sort items alphabetically
   ksort($form);
   return system_settings_form($form);
 }

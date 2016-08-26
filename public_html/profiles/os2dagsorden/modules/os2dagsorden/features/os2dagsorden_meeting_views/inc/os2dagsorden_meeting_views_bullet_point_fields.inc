@@ -379,7 +379,10 @@ function os2dagsorden_meeting_views_bullet_point_fields_create_new_speaker_paper
 function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id){
   if (variable_get('os2dagsorden_shared_speaker_paper', TRUE)){
     $sp = node_load($sp_id);
+    $shared_with_html = null;
+
     $shared_with_str = null;
+    $shared_with_group_str = null;
     if (isset($sp->field_os2web_meetings_sp_shared['und'])){
       foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
 	    $shared_with_user = user_load($shared_with['target_id']);
@@ -387,23 +390,28 @@ function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id){
         $shared_with_str .= ', ';
       }
     }
-    if ($shared_with_str)
-      $shared_with_str = t('Deles med: ') . substr($shared_with_str, 0, -2);
-    print $shared_with_str;
+    if (isset($sp->field_os2web_meetings_sp_shar_gr['und'])){
+      foreach ($sp->field_os2web_meetings_sp_shar_gr['und'] as $shared_with){
+        $shared_with_group = taxonomy_term_load($shared_with['tid']);
+        $shared_with_group_str .= $shared_with_group->name;
+        $shared_with_group_str .= ', ';
+      }
+    }
+    if ($shared_with_str) {
+      $shared_with_html = t('Deles med') . ': ' . substr($shared_with_str, 0, -2);
+    }
+    if ($shared_with_group_str) {
+      if ($shared_with_html) {
+        $shared_with_html .= '<br/>';
+      }
+      $shared_with_html .= t('Deles med grupper') . ': ' . substr($shared_with_group_str, 0, -2);
+    }
+
+    print $shared_with_html;
   }
 }
 
 function os2dagsorden_meeting_views_bullet_point_fields_filter($sp_id){
-  $sp = node_load($sp_id);
-  global $user;
-  if ($sp->uid == $user->uid)
-    return FALSE;
-  else if (variable_get('os2dagsorden_shared_speaker_paper', TRUE) && isset($sp->field_os2web_meetings_sp_shared['und'])){
-    foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with){
-	if ($shared_with['target_id'] == $user->uid)
-	  return FALSE;
-    }
-  }
-  return TRUE;
+  return !os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, variable_get('os2dagsorden_shared_speaker_paper', TRUE));
 }
 /////////////////////////////////////////SPEAKER PAPER END /////////////////////////////////////////

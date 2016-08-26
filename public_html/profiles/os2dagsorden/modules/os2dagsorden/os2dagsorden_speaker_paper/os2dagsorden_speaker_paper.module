@@ -1,0 +1,163 @@
+<?php
+/**
+ * os2dagsorden_speaker_paper
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package  OS2Dagsorden_Speaker_Paper
+ * @author   Stanislav Kutasevits <stan@bellcom.dk>
+ * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link     http://bellcom.dk
+ */
+module_load_include('inc', 'os2dagsorden_speaker_paper', '/includes/os2dagsorden_speaker_paper.util');
+
+/**
+ * Hook to node_insert
+ * The function will send the email to the user, with which this speaker paper has been shared
+ *
+ * @param $node   mixed  meeting node to be saved
+ *
+ * @return $node meeting
+ */
+function os2dagsorden_speaker_paper_node_insert($node) {
+  if ($node->type === 'os2web_meetings_spaper') {
+    if (isset($node->field_os2web_meetings_sp_shared['und'])){
+      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
+        $uid = $shared_with['target_id'];
+        _os2dagsorden_speaker_paper_send_message($uid, $node);
+      }
+      foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
+        $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
+        foreach($uids as $uid) {
+          _os2dagsorden_speaker_paper_send_message($uid, $node);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Hook to node_insert
+ * The function will send the email to the user (if it wasn't sent before), with which this speaker paper has been shared
+ *
+ * @param $node   mixed  meeting node to be saved
+ *
+ * @return $node meeting
+ */
+function os2dagsorden_speaker_paper_node_update($node) {
+  if ($node->type === 'os2web_meetings_spaper') {
+    if (isset($node->field_os2web_meetings_sp_shared['und'])){
+      foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
+        $uid = $shared_with['target_id'];
+        if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
+          _os2dagsorden_speaker_paper_send_message($uid, $node);
+        }
+      }
+      foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
+        $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
+        foreach($uids as $uid) {
+          if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
+            _os2dagsorden_speaker_paper_send_message($uid, $node);
+          }
+        }
+      }
+    }
+  }
+}
+
+function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alter(&$form, &$form_state, $form_id) {
+  $form['os2dagsorden_speaker_paper_settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed'=>TRUE,
+    '#title' => t('Speaker paper settings'),
+  );
+  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sharing speaker papers'),
+    '#description' => t('This decides whether speaker paper can be shared'),
+    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
+  );
+
+  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_speaper_paper_email_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Speaker paper sharing notification email subject',
+    '#description' => 'The email subject, which would be send to user with which the speaker paper has been shared',
+    '#default_value' => variable_get('os2dagsorden_speaper_paper_email_subject', '!author har delt talepapiret "!speaker_paper_name" med dig'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os2dagsorden_shared_speaker_paper"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_speaper_paper_email_body'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Speaker paper sharing notification email text',
+    '#description' => 'The email body, which would be send to user  with which the speaker paper has been shared',
+    '#default_value' => variable_get('os2dagsorden_speaper_paper_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
+      '!author har delt talepapiret "!speaker_paper_name" med dig' . PHP_EOL . 'Du kan læse/ændre dette talepapir her: !speaker_paper_link'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os2dagsorden_shared_speaker_paper"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_send_email_text_available_variables'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#value' => 'Can be used both in subject and body:<br/>
+    <b>!committe</b> - name of the committee<br/>
+    <b>!meeting_name</b> - title of the meeting<br/>
+    <b>!meeting_date</b> - date of the meeting<br/>
+    <b>!bullet_point_name</b> - title of the bullet point that speaker paper is created under<br/>
+    <b>!speaker_paper_name</b> - title of the created speaker paper<br/>
+    <b>!speaker_paper_link</b> - link to the created speaker paper<br/>
+    <b>!user</b> - name of the user that message is sent to<br/>
+    <b>!author</b> - name of the user that created speaker paper<br/>',
+    '#title' => t('Available variables'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os2dagsorden_shared_speaker_paper"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  //sort items alphabetically
+  ksort($form);
+}
+
+/**
+ * Implements hook_form_alter
+ *
+ * multiple modifications to speaper paper create/edit form
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function os2dagsorden_speaker_paper_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'os2web_meetings_spaper_node_form'){
+    //setting title
+    drupal_set_title(t('Create speaker paper'));
+
+    //adding values into the body field, each time user is opening the speaker paper form, e.g.
+    // [..previous text..]
+    //admin, 03-08-2016:
+    global $user;
+    $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
+    $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
+
+    //modifying the shared with field, adding shared with user full name
+    foreach($form['field_os2web_meetings_sp_shared']['und']['#options'] as $uid => $user_login_name) {
+      if (intval($uid) > 0) {//eliminating all _none and 0 Anonym options
+        $share_with_user = user_load($uid);
+        $user_full_name = $share_with_user->field_user_full_name['und'][0]['value'];
+        if (!empty($user_full_name)) {
+          $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
+        }
+      }
+    }
+  }
+}

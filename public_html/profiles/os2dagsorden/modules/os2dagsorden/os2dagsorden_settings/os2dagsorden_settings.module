@@ -356,13 +356,6 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 
-  if ($form_id == 'os2web_meetings_spaper_node_form'){
-    drupal_set_title(t('Create speaker paper'));
-    global $user;
-    $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
-    $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
-  }
-
   if ($form['#id'] == 'views-exposed-form-os2dagsorden-users-view-system-1') {
     asort($form['field_user_committee_tid']['#options']);
     asort($form['field_follows_committee_tid']['#options']);
