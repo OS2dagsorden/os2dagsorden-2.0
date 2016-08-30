@@ -103,7 +103,7 @@ jQuery(document).ready(function() {
         jQuery('#checkbox_' + ui.item.context.id ).removeClass('checkbox_follows');
         jQuery('#checkbox_' + ui.item.context.id).addClass('checkbox');
         jQuery(ui.item).find("input[type=checkbox]").removeAttr("checked");
-        //jQuery(ui.item).unbind('click');
+        jQuery('#checkbox_' + ui.item.context.id).unbind('click');
 
         //removing this element from subscribed
         var subscribed_elements = [];
