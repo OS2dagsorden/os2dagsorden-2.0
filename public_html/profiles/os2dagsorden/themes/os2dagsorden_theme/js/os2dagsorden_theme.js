@@ -53,8 +53,8 @@ function follows_subscribe_click(event) {
     if (jQuery('#follows_subscribed_hidden').val() != '') {
         subscribed_elements = jQuery('#follows_subscribed_hidden').val().split(',');
     }
-    var id_toggle = jQuery(event.target).attr('id');
 
+    var id_toggle = jQuery(event.target).attr('id').replace("checkbox_", "");
     if (subscribed_elements.indexOf(id_toggle) > -1) {
         //removing element 1 element
         subscribed_elements.splice(subscribed_elements.indexOf(id_toggle), 1);
@@ -86,19 +86,24 @@ jQuery(document).ready(function() {
     });
 
     //add click behaviour to existing items
-    jQuery(".select-committee #edit-follows-div ul.droptrue li").click(follows_subscribe_click);
 
+    jQuery(".select-committee #edit-follows-div ul.droptrue li input[type=checkbox]").click(follows_subscribe_click);
     //add behaviour to item that is added to the follow section
     jQuery(".select-committee #edit-follows-div ul.droptrue").bind("sortreceive", function(event, ui){
         jQuery(ui.item).addClass('can-subscribe');
+        jQuery('#checkbox_' + ui.item.context.id).addClass('follows');
         //console.log(ui.item);
-        jQuery(ui.item).click(follows_subscribe_click);
+        jQuery(ui.item).find("input[type=checkbox]").click(follows_subscribe_click);
     });
 
     //remove behaviour from item that is removed from the follow section
     jQuery(".select-committee.single #edit-follows-div ul.droptrue").bind("sortremove", function(event, ui){
         jQuery(ui.item).removeClass('can-subscribe subscribed');
-        jQuery(ui.item).unbind('click');
+        jQuery('#checkbox_' + ui.item.context.id ).removeClass('follows subscribed');
+        jQuery('#checkbox_' + ui.item.context.id ).removeClass('checkbox_follows');
+        jQuery('#checkbox_' + ui.item.context.id).addClass('checkbox');
+        jQuery(ui.item).find("input[type=checkbox]").removeAttr("checked");
+        //jQuery(ui.item).unbind('click');
 
         //removing this element from subscribed
         var subscribed_elements = [];

@@ -1861,21 +1861,34 @@ ul.droptrue li {
 }
 
 ul.droptrue li.can-subscribe {
-    background-image: url('../img/checkbox.png');
+    background-image: url('../img/icon-send-to-friend-bullet-point.png');
     background-repeat: no-repeat;
-    background-position:   95% 50%;
-    background-size: 56px ;
+    background-position:   88% 50%;
+    background-size: 15px ;
 }
-
 
 ul.droptrue li.can-subscribe.subscribed {
-    background-image: url('../img/checkbox_checked.png');
+    background-image: url('../img/icon-send-to-friend-bullet-point.png');
 }
 
-label{
+label.label_follows{
     display: inline;
 }
-#os2dagsorden-content-modify-user-edit-form > div > div > div.select-committee.single > div.note{
+
+div.note{
     display: inline;
     float: right;
 }
+
+.checkbox{
+    float: right;
+    display: none;
+}
+.checkbox_follows{
+    float: right;
+}
+.checkbox.follows{
+    float: right;
+    display: inline;
+}
+
