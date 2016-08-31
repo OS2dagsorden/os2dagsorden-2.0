@@ -14,3 +14,9 @@
 .view-meetings-search .views-table td.views-field.views-field-php-3 {
   overflow: hidden;
 }
+.block-views .view-user-logout-menu li div {
+    display: block;
+    margin-bottom: 10px;
+    float: right;
+ }
+

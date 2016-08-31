@@ -39,3 +39,6 @@ div.date-heading h3 a, div.date-heading h3 {
 .attachment_text_container .attachment_text_max_size .attachment-text, .attachment_text_container .attachment-text{
   max-width: none;
 }
+.block-views .view-user-logout-menu li div {
+    display: inline-block;
+}
