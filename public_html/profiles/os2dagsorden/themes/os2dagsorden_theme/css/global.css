@@ -32,12 +32,11 @@
     border-style: solid;
     border-width: 1px;
     color: #333333;
-    width: 225px;
+    width: 220px;
     font-size: 13px;
     text-transform: uppercase;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     margin-top: 4px;
-    margin-left: 5px;
     z-index: 1;
 }
 
@@ -59,7 +58,9 @@
 	color: black;
 }
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+    background-color: #dedede;
+}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -1168,10 +1169,6 @@ pager li.pager-first, .pager li.pager-previous.first {
   position: absolute;
   right: -7px;
   top: -41px;
-}
-
-.controls-right a {
-  margin-left: 5px;
 }
 
 /*----------------------------Omega globals override END----------------------------*/
