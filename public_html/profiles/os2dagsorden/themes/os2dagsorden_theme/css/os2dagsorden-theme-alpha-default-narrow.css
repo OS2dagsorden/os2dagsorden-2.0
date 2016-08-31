@@ -17,6 +17,8 @@
 .block-views .view-user-logout-menu li div {
     display: block;
     margin-bottom: 10px;
-    float: right;
- }
+}
 
+.block-views .view-user-logout-menu li div.right{
+  float: right; 
+}

@@ -41,4 +41,6 @@ div.date-heading h3 a, div.date-heading h3 {
 }
 .block-views .view-user-logout-menu li div {
     display: inline-block;
+    float: initial;
+    margin-left: 5px;
 }
