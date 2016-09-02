@@ -115,6 +115,7 @@ function os2dagsorden_ad_integration_do_user_sync() {
                 $company = $results[$i]['physicaldeliveryofficename'][0];
 
                 //looping through memberof
+                $term = null;
                 if (isset($results[$i]['memberof'])) {
                   foreach(($results[$i]['memberof']) as $memberof) {
                     $memberof_parts = explode(',',$memberof);
