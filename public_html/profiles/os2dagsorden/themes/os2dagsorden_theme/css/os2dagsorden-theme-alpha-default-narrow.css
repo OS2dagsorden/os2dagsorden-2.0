@@ -19,6 +19,6 @@
     margin-bottom: 10px;
 }
 
-.block-views .view-user-logout-menu li div.right{
-  float: right; 
+.block-views .view-user-logout-menu  .mobile-hide{
+  display: none;
 }
