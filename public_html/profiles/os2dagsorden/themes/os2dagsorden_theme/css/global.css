@@ -1501,6 +1501,11 @@ a.annotator-wrapper {
     pointer-events: none;
 }
 
+.annotator-touch-viewer li.annotator-visible .annotator-touch-controls {
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+}
+
 /* ---------------------------- Annotateit override END---------------------------- */
 
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
