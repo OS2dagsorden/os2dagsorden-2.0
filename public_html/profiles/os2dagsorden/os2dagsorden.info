@@ -33,7 +33,7 @@ dependencies[] = features
 dependencies[] = fe_block
 dependencies[] = computed_field
 dependencies[] = entityreference
-dependencies[] = autologout
+#dependencies[] = autologout
 dependencies[] = background_process
 dependencies[] = entity
 dependencies[] = job_scheduler
@@ -87,7 +87,7 @@ dependencies[] = os2dagsorden_speaker_paper
 dependencies[] = os2web_settings
 
 ; OS2Dagsorden Features
-dependencies[] = os2dagsorden_automated_logout_configuration
+#dependencies[] = os2dagsorden_automated_logout_configuration
 dependencies[] = os2dagsorden_blocks_positioning
 dependencies[] = os2dagsorden_front_page_feature
 dependencies[] = os2dagsorden_front_page_views
