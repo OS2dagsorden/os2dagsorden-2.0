@@ -11,8 +11,8 @@
  * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
  * @link     http://bellcom.dk
  */
-require drupal_get_path('module', 'os2web_print_send_to_friend') . '/includes/os2web_print_send_to_friend.inc';
-require drupal_get_path('module', 'os2web_print_send_to_friend') . '/handlers/database.inc';
+module_load_include('inc', 'os2web_print_send_to_friend', '/includes/os2web_print_send_to_friend');
+module_load_include('inc', 'os2web_print_send_to_friend', '/handlers/database');
 
 /**
  * Implementation of hook_menu().
