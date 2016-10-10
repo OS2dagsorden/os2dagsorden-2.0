@@ -932,6 +932,7 @@ function os2dasorden_admin_suite_just_code () {
       var_dump($tillaegmeeting);
   }
   }
+  }
 
   function os2dasorden_admin_suite_update_ldap_users() {
     $ldap_servers = ldap_servers_get_servers(NULL, 'enabled');
