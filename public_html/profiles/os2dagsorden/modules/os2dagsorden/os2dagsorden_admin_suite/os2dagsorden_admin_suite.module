@@ -7,61 +7,61 @@
  */
 function os2dagsorden_admin_suite_menu() {
     $items = array();
-    
+
     $items['os2dagsorden/admin_suite/update_files_path'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_update_files_path',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/set_bullet_point_number'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_set_bullet_point_number',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/update_meeting_status'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_update_meeting_status',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/force_meeting_description_converting'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_force_meeting_description_converting',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/delete_converted_files'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_delete_converted_files',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/delete_extra_files'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_delete_extra_files',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/delete_unused_files'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_delete_unused_files',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/calc_damaged_meetings'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_calculate_damaged_meetings',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/resave_all_meetings'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_resaved_all_meetings',
         'access arguments' => array('administer os2web'),
     );
-    
+
     $items['os2dagsorden/admin_suite/update_meetings_sysid'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_update_meetings_sysid',
@@ -84,30 +84,30 @@ function os2dagsorden_admin_suite_menu() {
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_add_meeting_files',
         'access arguments' => array('administer os2web'),
-        
+
     );
      $items['os2dagsorden/admin_suite/update_meetings_type'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_update_meetings_type',
         'access arguments' => array('administer os2web'),
-        
+
     );
-     
+
     $items['os2dagsorden/admin_suite/user_remove_org_meetings_category'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_user_remove_org_meetings_category',
         'access arguments' => array('administer os2web'),
-        
+
     );
-    
+
      $items['os2dagsorden/admin_suite/user_can_send_closed_bp/%'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dagsorden_admin_suite_user_forbid_send_closed_bp',
         'access arguments' => array('administer os2web'),
          'page arguments' => array(3)
-        
+
     );
-    
+
     $items['os2dagsorden/admin_suite/reschedule_adlib'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dasorden_admin_suite_reschedule_file_adlib',
@@ -120,20 +120,25 @@ function os2dagsorden_admin_suite_menu() {
         'access arguments' => array('administer os2web'),
     );
 
+    $items['os2dagsorden/admin_suite/update_ldap_users'] = array(
+        'type' => MENU_CALLBACK,
+        'page callback' => 'os2dasorden_admin_suite_update_ldap_users',
+        'access arguments' => array('administer os2web'),
+    );
 
     $items['os2dagsorden/admin_suite/just_code'] = array(
         'type' => MENU_CALLBACK,
         'page callback' => 'os2dasorden_admin_suite_just_code',
         'access arguments' => array('administer os2web'),
     );
-	
+
     return $items;
 }
 
 function os2dasorden_admin_suite_add_committee_to_users(){
     $query = new EntityFieldQuery();
     $result = $query->entityCondition('entity_type', 'user')
-       ->execute(); 
+       ->execute();
     $users = user_load_multiple(array_keys($result['user']));
 
     //$add_to_user = array("cksi", "jmhr", "ldkl", "anmc", "pst",	"joth");
@@ -169,7 +174,7 @@ function os2dasorden_admin_suite_add_committee_to_users(){
  function os2dagsorden_admin_suite_user_remove_org_meetings_category(){
     $query = new EntityFieldQuery();
     $result = $query->entityCondition('entity_type', 'user')
-       ->execute(); 
+       ->execute();
     $users = user_load_multiple(array_keys($result['user']));
     $new_com_id = 521;
     $old_com_ids = array(543);
@@ -237,13 +242,13 @@ function os2dasorden_admin_suite_add_committee_to_users(){
 	}
     }
  }
- 
+
 function os2dagsorden_admin_suite_update_meetings_sysid(){
   $meetings = os2web_esdh_provider_invoke('mm', 'get_import_list');
   foreach ($meetings as $meeting_id){
     //print_r($meeting_id);
     $meeting_versions = os2web_esdh_provider_invoke('mm', 'import_meeting', $meeting_id);
-    foreach ($meeting_versions as $meeting_version){      
+    foreach ($meeting_versions as $meeting_version){
       //trying to get meeting from id
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -291,10 +296,10 @@ function os2dagsorden_admin_suite_update_meetings_sysid(){
       }
       //if (!empty($node->field_meeting_sysid['und'][0]))//break if already filled
 	//continue;
-	  
+
       //setting sysid
       $node->field_meeting_sysid['und'][0]['value'] = $meeting_version['meeting_id'];
-      
+
       $contains_acadre_version = FALSE;
       //updating acadre versions
       if (isset($node->field_meeting_acadre_version['und'])){
@@ -304,19 +309,19 @@ function os2dagsorden_admin_suite_update_meetings_sysid(){
 	  if (strcmp($field['value'], $meeting_version['acadre_version']) == 0){
 	    $contains_acadre_version = TRUE;
 	    break;
-	  } 
-	} 
+	  }
+	}
       }
-      
+
       if (!$contains_acadre_version){
 	$node->field_meeting_acadre_version['und'][]['value'] = $meeting_version['acadre_version'];
       }
-	
+
       print_r("Found nid: " . $node->nid);
       print_r("<br/>");
       //print_r($node);
       print_r("<br/>");
-      
+
       node_save($node);
     }
   }
@@ -334,7 +339,7 @@ function os2dagsorden_admin_suite_resaved_all_meetings(){
   $query->entityCondition('entity_type', 'node')
     ->propertyCondition('type', array('os2web_meetings_meeting'))
     ->fieldCondition('field_os2web_meetings_committee', 'tid', $old_com_ids, 'IN');
-  
+
   $result = $query->execute();
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
@@ -350,7 +355,7 @@ function os2dagsorden_admin_suite_resaved_all_meetings(){
 	//node_save($meeting);
     }
   }
-      
+
 }
 
 function os2dagsorden_admin_suite_calculate_damaged_meetings(){
@@ -358,9 +363,9 @@ function os2dagsorden_admin_suite_calculate_damaged_meetings(){
   $query->entityCondition('entity_type', 'node')
       ->propertyCondition('type', array('os2web_meetings_meeting'))
       ->fieldCondition('field_meeting_acadre_id', 'value', '', '!=');
-      
+
   $result = $query->execute();
-  
+
   if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     foreach ($nids as $nid){
@@ -389,19 +394,19 @@ function os2dagsorden_admin_suite_delete_converted_files(){
     if (preg_match("/^Files/i",$dir)){
       print_r($dir . "<br/>");
       $files = scandir($acadre_dir . '/' . $dir);
-      
+
       $not_pdf_files = array();
       $pdf_files = array();
       foreach ($files as $file){
 	if ($file === '.' || $file === '..') continue;
-	
+
 	if (!preg_match("/\.xml$/i",$file) && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
 	  $not_pdf_files[] = $file;
 	} else if (preg_match("/\.pdf$/i",$file)){
 	  $pdf_files[] = $file;
 	}
       }
-      
+
       //going through not pdf files, to decide which to delete
       $files_to_delete = array();
       foreach ($not_pdf_files as $not_pdf_file){
@@ -411,7 +416,7 @@ function os2dagsorden_admin_suite_delete_converted_files(){
 	    $files_to_delete[] = $not_pdf_file;
 	}
       }
-      
+
       //deleting file
       foreach ($files_to_delete as $file){
 	unlink($acadre_dir . '/' . $dir . '/' . $file);
@@ -438,27 +443,27 @@ function os2dagsorden_admin_suite_delete_converted_files(){
   */
 function os2dagsorden_admin_suite_delete_extra_files(){
     $to_delete = array();
-    
-    $results = db_query("SELECT * FROM file_managed WHERE filename LIKE '%.doc' 
-		    OR filename like '%.docx' 
-		    OR filename like '%.xls' 
-		    OR filename like '%.xlsx' 
-		    OR filename like '%.ppt' 
-		    OR filename like '%.pptx' 
-		    OR filename like '%.tif' 
-		    OR filename like '%.msg' 
-		    OR filename like '%.jpg'  
-		    OR filename like '%.rtf' 
-		    OR filename like '%.docm' 
-		    OR filename like '%.mpp' 
-		    OR filename like '%.tiff' 
+
+    $results = db_query("SELECT * FROM file_managed WHERE filename LIKE '%.doc'
+		    OR filename like '%.docx'
+		    OR filename like '%.xls'
+		    OR filename like '%.xlsx'
+		    OR filename like '%.ppt'
+		    OR filename like '%.pptx'
+		    OR filename like '%.tif'
+		    OR filename like '%.msg'
+		    OR filename like '%.jpg'
+		    OR filename like '%.rtf'
+		    OR filename like '%.docm'
+		    OR filename like '%.mpp'
+		    OR filename like '%.tiff'
 		    OR filename like '%.txt'
 		    OR filename like '%.pdf'");
-		    
+
     while ($file = $results->fetchAssoc()){
       print_r($file);
       print_r("<br/>");
-      
+
       //checking bullet point
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -467,7 +472,7 @@ function os2dagsorden_admin_suite_delete_extra_files(){
       if (isset($bpa['node'])) {
 	  continue;
       }
-      
+
       //checking meeting description closed
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -476,7 +481,7 @@ function os2dagsorden_admin_suite_delete_extra_files(){
       if (isset($meeting['node'])) {
 	  continue;
       }
-      
+
       //checking meeting description opened
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
@@ -485,7 +490,7 @@ function os2dagsorden_admin_suite_delete_extra_files(){
       if (isset($meeting['node'])) {
 	  continue;
       }
-      
+
       //not used anywhere
       $to_delete[] = $file;
     }
@@ -517,11 +522,11 @@ function os2dagsorden_admin_suite_delete_unused_files(){
       if (preg_match("/^Files/i",$dir)){
 	print_r($dir . "<br/>");
 	$files = scandir($acadre_dir . '/' . $dir);
-	
+
 	$not_pdf_files = array();
 	foreach ($files as $file){
 	  if ($file === '.' || $file === '..') continue;
-	  
+
 	  if (!preg_match("/\.xml$/i",$file)){// && !preg_match("/\.html$/i",$file) && !preg_match("/\.pdf$/i",$file)){//not xml, pdf or html
 	    $not_pdf_files[] = $file;
 	  }
@@ -534,7 +539,7 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	    $files_to_delete[] = $not_pdf_file;
 	  }
 	}
-     
+
 	//deleting file
         if (isset($files_to_delete) && !empty($files_to_delete)){
            $count++;
@@ -543,7 +548,7 @@ function os2dagsorden_admin_suite_delete_unused_files(){
 	}
         }
         /*
-        
+
 	print_r('not pdf files: ');
 	print_r($not_pdf_files);
 	print_r("<br/>");
@@ -579,7 +584,7 @@ function os2dagsorden_admin_suite_force_meeting_description_converting(){
 	  os2dagsorden_adlib_api_convert_to_pdf($file['fid'], $node->nid);
 	}
 	print_r("<br/><br/>");
-      } 
+      }
       if (isset($node->field_os2web_meetings_full_doc_c[$node->language][0])){
 	$file = $node->field_os2web_meetings_full_doc_c[$node->language][0];
 	$ext = explode('.', $file['filename']);
@@ -609,14 +614,14 @@ function os2dagsorden_admin_suite_update_meeting_status(){
 	print_r($version['committee_id']);
 	print_r("<br/>");
       }
-      
+
       $last_ver = end($versions);
-      
+
       //trying to get meeting from id
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
 	  ->fieldCondition('field_meeting_acadre_id', 'value', $meeting['id'], '=');
-	  
+
       $result = $query->execute();
       if (isset($result['node'])) {
 	  $nids = array_keys($result['node']);
@@ -659,9 +664,9 @@ function os2dagsorden_admin_suite_update_meeting_status(){
 	      continue;
 	  }
       }
-      
+
       $node->field_meeting_acadre_id[LANGUAGE_NONE][0]['value'] = $meeting['id'];
-      
+
       if (strcmp($type, 'Dagsorden') == 0){//is dagsorden
 	if (os2dagsorden_access_helper_meeting_fully_converted($node))//everything is converted
 	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Dagsorden+');
@@ -674,11 +679,11 @@ function os2dagsorden_admin_suite_update_meeting_status(){
 	else
 	  os2dagsorden_access_helper_set_meeting_status_and_save($node, 'Referat');
       }
-	
+
       print_r('DONE: nid[' . $node->nid . '] meeting id[' . $meeting['id'] . '] - ' . $node->field_os2web_meetings_type['und'][0]['value']);
       print_r("<br/>");
       print_r("<br/>");
-    }    
+    }
 }
 
 /**
@@ -692,10 +697,10 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
 		->propertyCondition('type', array('os2web_meetings_bullet'))
 		//->fieldCondition('field_os2web_meetings_bul_case', 'value', '')
 		->range(0,1000);
-		
+
     $result = $query->execute();
-    
-    
+
+
     if (isset($result['node'])) {
       $nids = array_keys($result['node']);
       foreach ($nids as $nid){
@@ -715,8 +720,8 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
 	    print('CASE NR: ' . $case_nr);
 	    print("<br/>");
 	    $new_title = mb_substr($title, 0, $pos_of_1_brac-1) . mb_substr($title, $pos_of_2_brac+1);
-	    print('NEW TITLE: ' . $new_title); 
-	    
+	    print('NEW TITLE: ' . $new_title);
+
 	    $bullet_point->title = $new_title;
 	    $bullet_point->field_os2web_meetings_bul_case['und'][0]['value'] = $case_nr;
 	    //if (isset($case_nr) && !empty($case_nr))
@@ -724,11 +729,11 @@ function os2dagsorden_admin_suite_set_bullet_point_number(){
 	}
       }
     }
-	
+
 }
 
 /**
-  * Updates the all the files (and the notes they are attached to: either meeting or bullet point attachment) 
+  * Updates the all the files (and the notes they are attached to: either meeting or bullet point attachment)
   * which have url set as 'public://acadre/Files_...' to 'private:///Files...'
   *
   * @return none
@@ -739,21 +744,21 @@ function os2dagsorden_admin_suite_update_files_path(){
     //add check of path
     print_r($file);
     print_r("<br/>");
-    
+
     $public = 'public://acadre';
     $private = 'private://';
-    
+
     //bullet_point_attachment
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
 		->propertyCondition('type', array('os2web_meetings_bullet_attach'))
 		->fieldCondition('field_os2web_meetings_bpa_file', 'fid', $file->fid, '=');
     $result = $query->execute();
-	
+
     if (isset($result['node'])) {
 	 $nids = array_keys($result['node']);
 	 $bullet_point_attachment = reset(entity_load('node', $nids));
-		 
+
 	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
 	    $file->uri = str_replace($public,$private,$file->uri);
 	    file_save($file);
@@ -763,7 +768,7 @@ function os2dagsorden_admin_suite_update_files_path(){
 	    continue;
 	 }
     }
-        
+
     //meeting - opened
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -773,7 +778,7 @@ function os2dagsorden_admin_suite_update_files_path(){
     if (isset($result['node'])) {
 	 $nids = array_keys($result['node']);
 	 $meeting = reset(entity_load('node', $nids));
-		 
+
 	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
 	    $file->uri = str_replace($public,$private,$file->uri);
 	    file_save($file);
@@ -783,7 +788,7 @@ function os2dagsorden_admin_suite_update_files_path(){
 	    continue;
 	 }
     }
-    
+
     //meeting - opened
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -793,7 +798,7 @@ function os2dagsorden_admin_suite_update_files_path(){
     if (isset($result['node'])) {
 	 $nids = array_keys($result['node']);
 	 $meeting = reset(entity_load('node', $nids));
-	 
+
 	 if (os2dagsorden_admin_suite_starts_with($file->uri, $public)){
 	    $file->uri = str_replace($public,$private,$file->uri);
 	    file_save($file);
@@ -833,10 +838,10 @@ function os2dagsorden_admin_suite_add_meeting_files(){
     $agenda['pub_id'] = (int) str_replace('Publication', '', $xml_file->name);
     $agenda['uri'] = $xml_file->uri;
     $agenda['pdf_uri'] = dirname($agenda['uri']) .  "/Publication" . $agenda['pub_id'] . ".pdf";
-   
-    
+
+
    if (is_file(drupal_realpath($agenda['uri']))&& file_exists(drupal_realpath($agenda['pdf_uri']))) {
-       $manifest = simplexml_load_string(file_get_contents(drupal_realpath($agenda['uri'])), 'SimpleXMLElement', LIBXML_NOCDATA); 
+       $manifest = simplexml_load_string(file_get_contents(drupal_realpath($agenda['uri'])), 'SimpleXMLElement', LIBXML_NOCDATA);
        if (is_object($manifest)) {
            $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
            $committee_name = $manifest->xpath("Agendas/Agenda/Committee/Name");
@@ -844,29 +849,29 @@ function os2dagsorden_admin_suite_add_meeting_files(){
            $agenda['committee'] = (string) $committee_name[0];
            // Run check to see if meeting is already imported.
       // System ID is the same on all meetings.
-       
+
           $query = new EntityFieldQuery();
           $result = $query->entityCondition('entity_type', 'node')
         ->propertyCondition('type', 'os2web_meetings_meeting')
         ->fieldCondition('field_os2web_meetings_system_id', 'value', $agenda['sys_id'], '=')
         ->execute();
-          
+
       if (isset($result['node'])) {
         $nid = array_shift($result['node'])->nid;
         $meeting = node_load($nid);
         if (empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])){
-           
+
            if (FALSE !== ($file = _os2web_esdh_provider_import_file(array('uri' => $agenda['pdf_uri'], 'title' => $agenda['committee'])))) {
-                
+
                $meeting->field_os2web_meetings_full_doc[LANGUAGE_NONE][0] = (array) $file;
                 $meeting = node_submit($meeting);
                  node_save($meeting);
             }
-        }  
+        }
       }
     }
   }
-      
+
  }
 }
 function os2dagsorden_admin_suite_update_meetings_type(){
@@ -875,7 +880,7 @@ function os2dagsorden_admin_suite_update_meetings_type(){
         if (os2dagsorden_access_helper_meeting_fully_converted($node)){
 	    if (strcmp($node->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0){
                   $node->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
-            }    
+            }
 	    else if (strcmp($node->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0){
                   $node->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
             }
@@ -914,21 +919,53 @@ function os2dasorden_admin_suite_reschedule_file_adlib(){
 }
 
 function os2dasorden_admin_suite_just_code () {
-  
+
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
             ->fieldCondition('field_os2web_meetings_addendum', 'nid', 271674, '=');
    $result = $query->execute();
   if (isset($result['node'])) {
     $possible_meetings = array_keys($result['node']);
-  
+
   foreach ($possible_meetings  as $tillaeg){
       $tillaegmeeting=node_load($tillaeg);
       var_dump($tillaegmeeting);
   }
   }
-  
-}
+  }
+
+  function os2dasorden_admin_suite_update_ldap_users() {
+    $ldap_servers = ldap_servers_get_servers(NULL, 'enabled');
+    // Get first server.
+    $ldap_server = current($ldap_servers);
+    // Run a search.
+
+    $filters = variable_get('os2dagsorden_ad_integration_user_sync_filter', '');
+    $attr = explode(',', variable_get('os2dagsorden_ad_integration_user_sync_attr', ''));
+    $dn_str = 'OU=syddjurs,DC=intern,DC=syddjurs,DC=dk';
+    $dn_str = 'CN=Lillian Steiniche,OU=Direktion,OU=syddjurs,DC=intern,DC=syddjurs,DC=dk ';
+
+    $results = $ldap_server->search($dn_str, $filters, $attr);
+
+    for ($i = 0; $i < $results["count"]; $i++) {
+      $name = $results[$i]['mailnickname'][0];
+      $mail = $results[$i]['mail'][0];
+      if (!empty($results[$i]['displayname'][0]))
+        $full_name = $results[$i]['displayname'][0];
+      else
+        $full_name = $full_name = $results[$i]['name'][0];
+      if (!empty($mail) && !empty($name) && $name != "admin") {
+        if ($u = user_load_by_name($name)) {
+          if ($u->field_user_full_name['und'][0]['value'] != $full_name) {
+            $u->field_user_full_name['und'][0]['value'] = $full_name;
+            user_save($u);
+            echo 'updated user ' . $name . '\n';
+          }
+        }
+      }
+    }
+
+  }
 
 function os2dagsorden_admin_suite_user_forbid_send_closed_bp($val) {
     if (!isset($val))
@@ -938,18 +975,18 @@ function os2dagsorden_admin_suite_user_forbid_send_closed_bp($val) {
                     ->propertyCondition('status', 1)
                     ->fieldCondition('field_user_can_send_closed_bp', 'value', $val, '!=')
                     ->range(0,500)
-                    ->execute(); 
+                    ->execute();
     $users = user_load_multiple(array_keys($result['user']));
-    
+
     foreach($users as $user){
         if (empty($user->name))
-            continue;        
+            continue;
         if ($user->field_user_can_send_closed_bp['und'][0]['value']!=$val) {
-            $user->field_user_can_send_closed_bp['und'][0]['value']=$val;       
+            $user->field_user_can_send_closed_bp['und'][0]['value']=$val;
         user_save($user);
         print_r($user->name);
         print_r ('<br/>');
-        }   
+        }
     }
     print_r ('done');
 }
