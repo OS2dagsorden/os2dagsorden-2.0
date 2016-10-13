@@ -12,7 +12,7 @@
 * @link     http://bellcom.dk
 */
 
-//include_once('os2dagsorden_settings.features.inc');
+include_once 'os2dagsorden_settings.features.inc';
 
 /**
  * Implementation of hook_menu()
