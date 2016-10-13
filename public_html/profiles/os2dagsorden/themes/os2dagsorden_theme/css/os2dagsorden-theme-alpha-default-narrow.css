@@ -34,3 +34,13 @@
     float: right;
 }
 /* ---------------------------- arrows_reverse END ---------------------------- */
+
+.block-views .view-user-logout-menu li div {
+    display: block;
+    margin-bottom: 10px;
+
+}
+
+.block-views .view-user-logout-menu li div.right{
+  float: right; 
+}

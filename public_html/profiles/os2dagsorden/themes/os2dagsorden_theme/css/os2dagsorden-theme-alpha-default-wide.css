@@ -62,3 +62,11 @@ ul.droptrue li {
 .breadcrumb .breadcrumb-active {
   max-width: 300px;
 }
+.block-views .view-user-logout-menu li div {
+    display: inline-block;
+}
+.block-views .view-user-logout-menu li div {
+     display: inline-block;
+     float: initial;
+     margin-left: 5px;
+}    
