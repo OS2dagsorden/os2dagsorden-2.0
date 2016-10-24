@@ -1113,7 +1113,7 @@ function os2web_esdh_provider_filter_html_tags($data) {
       $data = str_replace($match, $filtred_data, $data);
     }
   } 
-  
+
   //remove all a tags with attribute Name="Acadre..    
   while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
     $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
@@ -1149,14 +1149,21 @@ function _os2web_esdh_provider_remove_img_tags($data){
 
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
     $content = '';
+    $url_strip_count = variable_get('os2dagsorden_url_strip_count');
     if(!is_array($tags)) {
-        $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+        if((isset($tags)) && (!empty($tags))) {
+            $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+        }
         if(end($tags) == '') array_pop($tags);
     }
     foreach($tags as $tag) {
-        if ($stripContent)
-             $content = '(.+</'.$tag.'[^>]*>|)';
-         $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
+        if ($stripContent){
+            $content = '(.+</' . $tag . '[^>]*>|)';
+        }
+        if((isset($tag)) && (!empty($tag))){
+           $str = preg_replace('#</?' . $tag . '[^>]*>'.$content.'#is', '', $str);
+        }
     }
+    $str = preg_replace('/(<a.+?>)(.{0,'.$url_strip_count.'}).+(<\/a>)/is', '$1$2...$3', $str);
     return $str;
 }
