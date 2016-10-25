@@ -598,7 +598,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#field_suffix' => 'Days',
     '#size' => 10,
     '#description' => 'If meeting is not older than the set amount of day, notification is sent. <br/>Otherwise notification process is skipped',
-
+    '#default_value' => variable_get('os2dagsorden_send_timespan_of_notification', 10),
   );
 
   $form['os2dagsorden_meeting_import']['os2dagsorden_add_type_prefix'] = array(
@@ -650,7 +650,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
      '#default_value' => variable_get('os2dagsorden_url_strip_count', '20'),
      '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
    );
-
 
     //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {

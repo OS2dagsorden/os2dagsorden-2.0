@@ -696,9 +696,7 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
 /**
  * Todo, add docblock.
  */
-
 function _acadre_esdh_mm_improve_body_html($data) {
-
   $data = _acadre_esdh_mm_remove_empty_tags($data);
  // if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
   // foreach ($uri[0] as $file) {
@@ -738,8 +736,6 @@ function _acadre_esdh_mm_improve_body_html($data) {
          }
       }
    }
-
-
    return $data;
 }
 function _acadre_esdh_mm_remove_empty_tags($data) {

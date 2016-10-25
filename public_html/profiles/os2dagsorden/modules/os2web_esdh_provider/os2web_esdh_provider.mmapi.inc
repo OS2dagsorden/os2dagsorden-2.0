@@ -1112,8 +1112,7 @@ function os2web_esdh_provider_filter_html_tags($data) {
       $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
       $data = str_replace($match, $filtred_data, $data);
     }
-  } 
-
+  }
   //remove all a tags with attribute Name="Acadre..    
   while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
     $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
