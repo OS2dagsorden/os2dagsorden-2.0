@@ -1148,7 +1148,6 @@ function _os2web_esdh_provider_remove_img_tags($data){
 
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
     $content = '';
-    $url_strip_count = variable_get('os2dagsorden_url_strip_count');
     if(!is_array($tags)) {
         if((isset($tags)) && (!empty($tags))) {
             $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
@@ -1163,6 +1162,5 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
            $str = preg_replace('#</?' . $tag . '[^>]*>'.$content.'#is', '', $str);
         }
     }
-    $str = preg_replace('/(<a.+?>)(.{0,'.$url_strip_count.'}).+(<\/a>)/is', '$1$2...$3', $str);
     return $str;
 }
