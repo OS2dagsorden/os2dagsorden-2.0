@@ -187,6 +187,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => 'Comma-separated list of committees ID which agenda and the summary (samlet dokument) is hidden to those without the rights',
     '#default_value' => variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting description download dropdown button'),
+    '#maxlength' => 200,
+    '#description' => t('Title of the meeting description download dropdown button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_download_dropdown', 'Hent dokumenter'),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Meeting description download button'),
@@ -227,19 +234,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#title' => t('Show committee and meeting date in bullet point title'),
       '#default_value' => variable_get('os2dagsorden_print_pdf_show_commitee', FALSE),
       '#description' => t('This decides whether meetimg committee and date will be shown in bullet point title in PDF'),
-  );
-  //speaker paper view
-  $form['os2dagsorden_speaker_paper_settings'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed'=>TRUE,
-    '#title' => t('Speaker paper settings'),
-  );
-  $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Sharing speaker papers'),
-    '#description' => t('This decides whether speaker paper can be shared'),
-    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
   );
 
   //expand or not expand bilag on bullet point expand
@@ -1175,6 +1169,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'),
     '#description' => t('Default position or equal height with meeting blocks.'),
   );
+  //sort items alphabetically
   ksort($form);
   return system_settings_form($form);
 }
@@ -1367,6 +1362,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_sager_group_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title']);
     variable_set('os2dagsorden_group_closed_bullet_points', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points']);
     variable_set('os2dagsorden_hidden_agenda_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee']);
+    variable_set('os2dagsorden_meeting_description_download_dropdown', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown']);
     variable_set('os2dagsorden_meeting_description_download_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title']);
     variable_set('os2dagsorden_meeting_description_download_title_additional', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional']);
 

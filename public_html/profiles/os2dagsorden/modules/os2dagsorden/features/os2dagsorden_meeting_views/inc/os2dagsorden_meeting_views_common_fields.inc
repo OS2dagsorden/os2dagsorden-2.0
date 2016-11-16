@@ -52,19 +52,10 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   else 
     $title = $data->_field_data['nid']['entity']->title;
 
-  $title_length = variable_get('os2dagsorden_meetings_views_last_8_meeting_title_len', 25);
-  if ($title_length == 0) {
-    //is touch and the title is long enough to add ...
-    if (os2dagsorden_access_helper_is_touch() && mb_strlen($title) > 25) {
-      echo mb_substr($title, 0, 22) . '...';
-    } else {
-      echo $title;
-    }
-  } else if (mb_strlen($title) > $title_length) {
-    echo mb_substr($title, 0, $title_length) . '...';
-  } else {
-    echo $title;
-  }
+  os2dagsorden_meeting_views_common_meeting_has_sp($data->_field_data['nid']['entity']->nid);
+  os2dagsorden_meeting_views_common_meeting_has_notes($data->_field_data['nid']['entity']->nid);
+
+  echo $title;
 }
 
 function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
@@ -82,12 +73,7 @@ function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     if ($meeting_committee) {
 
       $location = taxonomy_term_load($meeting_committee[0]["tid"])->name;
-      if (variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25) == 0)
-         print $location;
-      else if (mb_strlen($location) > variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25))
-        print mb_substr($location, 0, variable_get('os2dagsorden_meetings_views_last_8_meeting_location_len', 25)) . '...';
-      else
-        print $location;
+      print $location;
     }
     else {
       print '';

@@ -23415,10 +23415,22 @@ msgid "Full name:"
 msgstr "Fulde navn: "
 
 msgid "Is displayed in the top right corner."
-msgstr "Vises i øverste venstre hjørne. "
+msgstr "Navnet vises eks. ved deling af talepapirer."
 
 msgid "Calendar preferences:"
-msgstr "Kalender preferencer"
+msgstr "Kalendervisning:"
+
+msgid "Organization:"
+msgstr "Organisation:"
+
+msgid "Forbidden categories:"
+msgstr "Forbudte kategorier:"
+
+msgid "Which categories the user is FORBIDDEN to have access to"
+msgstr "De kategorier brugeren ikke må have adgang til"
+
+msgid "User can send to friend closed bullet points"
+msgstr "Brugeren må sende lukkede punkter til en ven"
 
 msgid "Which types of meetings should user see in the calendar"
 msgstr "Hvilken mødetype vil jeg se i min kalender"
@@ -38373,4 +38385,3 @@ msgstr "Gem"
 #: /os2dagsorden/os2dagsorden-2.0/public_html/admin/structure/views/view/os2dagsorden_users_view_widget/preview/os2dagsorden_user_view_widget/ajax
 msgid "@current of @max"
 msgstr "@current af @max"
-

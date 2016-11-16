@@ -1,0 +1,4 @@
+name = OS2Dagsorden Speaker Paper
+description = Various functionality related with speaker paper
+core = 7.x
+package = OS2Dagsorden

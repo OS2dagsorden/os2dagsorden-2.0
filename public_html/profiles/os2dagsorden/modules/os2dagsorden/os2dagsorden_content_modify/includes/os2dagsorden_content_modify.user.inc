@@ -81,15 +81,8 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
     $form['user_roles']['administrator++']['#disabled']  = TRUE;
   }
 
-  if (!os2dagsorden_access_helper_is_touch()){
-    //render drag and drop functionality
-    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, array($uid));
-
-    //render drag and drop remove committees functionality
-  } else {
-    //fallback to default controls
-    _os2dagsorden_content_modify_render_default_controls($form, array($uid));
-  }
+  //DAGS-349 - enabling drag and drop for touch devices
+  _os2dagsorden_content_modify_render_drag_and_drop_controls($form, array($uid));
 
   //loading common user fields
   if ($uid) {
@@ -112,8 +105,8 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
 }
 
 /**
- * Fills forms with drag and drop controls for manipulating users committees (member of/follows/follows+/follows++ and all committees)
- * suitable for non-touch devices.
+ * Fills forms with drag and drop controls for manipulating users committees (member of/follows/follows+/follows++ and all committees).
+ *
  * If uids is not null, the drag and drops controls will be prefilled with right values.
  * In case uids contains more than one id (batch edit), then only the committees shared amount all users will be prefilled into the boxes.
  *
@@ -125,7 +118,8 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   $single_or_batch_class = (sizeof($uids) == 1)? 'single' : 'batch';
 
   $form[] = array(
-    '#markup' => "<div class=\"select-committee {$single_or_batch_class}\">",
+    '#markup' => "
+        <div class=\"select-committee {$single_or_batch_class}\">",
   );
 
   $form['member_of_div'] = array(
@@ -326,6 +320,12 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     $content .= '</ul>';
     $form['follows_plus_plus_div']['#markup'] = $content;
 
+    //printing arrows reverse
+    $form[]['#markup'] =
+      '<div class="arrows-reverse">
+      <img src = "' . base_path() . drupal_get_path('theme', 'os2dagsorden_theme') . '/img/img_arrows_reverse.png">
+      </div>';
+
     //printing available committees
     $com_list = "<ul id='available_committee' class='droptrue'>";
     asort($com_select);
@@ -343,155 +343,8 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
       '#suffix' => '</div>'
     );
     $form[] = array(
-      '#markup' => "<div style='clear:both'></div>",
+      '#markup' => '<div style="clear:both"></div>',
     );
-  }
-}
-
-/**
- * Fills forms with simplistic checkbox-based controls for manipulating users committees (member of/follows/follows+/follows++ and all committees)
- * suitable for touch devices.
- *
- * If uids is not null, the controls will be prefilled with right values.
- * In case uids contains more than one id (batch edit), then only the committees shared amount all users will be prefilled.
- *
- *
- * @param $form mixed form
- * @param $uids array array of uid
- */
-function _os2dagsorden_content_modify_render_default_controls(&$form, $uids) {
-  $com_terms = os2dagsorden_settings_get_active_committees();
-  $com_select = array();
-
-  foreach ($com_terms as $com_term) {
-    // Display term short name if possible.
-    if ($short_name = field_get_items('taxonomy_term', $com_term, 'field_os2web_meetings_com_shname')) {
-      $term_name = $short_name[0]['value'];
-    }
-    else {
-      $term_name = $com_term->name;
-    }
-    $com_select[$com_term->tid] = $term_name;
-  }
-  asort($com_select);
-
-  $form['member_of'] = array(
-    '#access' => user_access('administer users'),
-    '#type' => 'select',
-    '#title' => t('Member of:'),
-    '#options' => $com_select,
-    '#multiple' => TRUE,
-    '#size' => 10,
-  );
-
-
-  $form['follows'] = array(
-    '#type' => 'select',
-    '#title' => t('Follows:'),
-    '#options' => $com_select,
-    '#multiple' => TRUE,
-    '#size' => 10,
-  );
-
-  $form['follows_plus'] = array(
-    '#access' => user_access('administer users'),
-    '#type' => 'select',
-    '#title' => t('Follows+:'),
-    '#options' => $com_select,
-    '#multiple' => TRUE,
-    '#size' => 10,
-  );
-
-  $form['follows_plus_plus'] = array(
-    '#access' => user_access('administer users'),
-    '#type' => 'select',
-    '#title' => t('Follows++:'),
-    '#options' => $com_select,
-    '#multiple' => TRUE,
-    '#size' => 10,
-  );
-
-  $form['remove_committees'] = array(
-    '#access' => user_access('administer users'),
-    '#type' => 'select',
-    '#title' => t('Remove committees:'),
-    '#options' => $com_select,
-    '#multiple' => TRUE,
-    '#size' => 10,
-  );
-
-  if ($uids) {
-    $shared_member_of = array();
-    $shared_follows = array();
-    $shared_follows_plus = array();
-    $shared_follows_plus_plus = array();
-
-    //gathering shared committees
-    foreach ($uids as $uid) {
-      $user = user_load($uid);
-      //member of
-      if (field_get_items('user', $user, 'field_user_committee')) {
-        $user_member_of_field = field_get_items('user', $user, 'field_user_committee');
-        $user_member_of_field = os2dagsorden_content_modify_asort($user_member_of_field);
-        foreach ($user_member_of_field as $member_of){
-          $shared_member_of[$member_of['tid']]++;
-        }
-      }
-
-      //follows
-      if (field_get_items('user', $user, 'field_follows_committee')) {
-        $user_follows_field = field_get_items('user', $user, 'field_follows_committee');
-        $user_follows_field = os2dagsorden_content_modify_asort($user_follows_field);
-        foreach ($user_follows_field as $follows){
-          $shared_follows[$follows['tid']]++;
-        }
-      }
-
-      //follows plus
-      if (field_get_items('user', $user, 'field_follows_committee_plus')) {
-        $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_plus');
-        $user_follows_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_field);
-        foreach ($user_follows_plus_field as $follows_plus){
-          $shared_follows_plus[$follows_plus['tid']]++;
-        }
-      }
-
-      //follows plus plus
-      if (field_get_items('user', $user, 'field_follows_committee_pp')){
-        $user_follows_plus_field = field_get_items('user', $user, 'field_follows_committee_pp');
-        $user_follows_plus_field = os2dagsorden_content_modify_asort($user_follows_plus_field);
-        foreach ($user_follows_plus_field as $follows_plus){
-          $shared_follows_plus_plus[$follows_plus['tid']]++;
-        }
-      }
-    }
-
-    //filling the default values
-    $size = count($uids);
-    foreach ($shared_member_of as $k => $t) {
-      if ($t != $size) {
-        unset($shared_member_of[$k]);
-      }
-    }
-    foreach ($shared_follows as $k => $t) {
-      if ($t != $size) {
-        unset($shared_follows[$k]);
-      }
-    }
-    foreach ($shared_follows_plus as $k => $t) {
-      if ($t != $size) {
-        unset($shared_follows_plus[$k]);
-      }
-    }
-    foreach ($shared_follows_plus_plus as $k => $t) {
-      if ($t != $size) {
-        unset($shared_follows_plus_plus[$k]);
-      }
-    }
-    $form['member_of']['#default_value'] = array_keys($shared_member_of);
-    $form['follows']['#default_value'] = array_keys($shared_follows);
-    $form['follows_plus']['#default_value'] = array_keys($shared_follows_plus);
-    $form['follows_plus_plus']['#default_value'] = array_keys($shared_follows_plus_plus);
   }
 }
 
@@ -566,13 +419,12 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
 
   //input extraction
   extract($input);
-  if (!os2dagsorden_access_helper_is_touch()){
-    $follows = explode(',', $follows_hidden);
-    $follows_subscribed = explode(',', $follows_subscribed_hidden);
-    $member_of = explode(',', $member_of_hidden);
-    $follows_plus = explode(',', $follows_plus_hidden);
-    $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
-  }
+
+  $follows = explode(',', $follows_hidden);
+  $follows_subscribed = explode(',', $follows_subscribed_hidden);
+  $member_of = explode(',', $member_of_hidden);
+  $follows_plus = explode(',', $follows_plus_hidden);
+  $follows_plus_plus = explode(',', $follows_plus_plus_hidden);
 
   $user = user_load($form_state['values']['uid']);
   $user->field_user_full_name['und'][0]['value'] = $full_name;
@@ -588,14 +440,12 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
     }
   }
 
-  if (!os2dagsorden_access_helper_is_touch()){
-    //unsetting follows subscribed committees only on desktop devices
-    $user->field_follows_committee_subsc['und'] = array();
-    if ($follows_subscribed) {
-      foreach ($follows_subscribed as $tid) {
-        if (!empty($tid))
-          $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
-      }
+  //unsetting follows subscribed committees only on desktop devices
+  $user->field_follows_committee_subsc['und'] = array();
+  if ($follows_subscribed) {
+    foreach ($follows_subscribed as $tid) {
+      if (!empty($tid))
+        $user->field_follows_committee_subsc['und'][]['tid'] = $tid;
     }
   }
 

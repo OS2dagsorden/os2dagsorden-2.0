@@ -141,37 +141,31 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
   $body .= "</body></html>";
 
   $from = variable_get('system_mail');
-  $message = array(
-    'id' => 'send_to_friend_',
-    'to' => $to_email,
+  $params = array(
     'subject' => $subject,
     'body' => $body,
-    'headers' => array(
-      'MIME-Version' => '1.0',
-      'From' => $from,
-      'Sender' => $from,
-      'Return-Path' => $from,
-      'Content-Type' => 'text/html;charset=utf-8',
-    ),
+    'params' => array (
+      'attachments' => os2web_print_send_to_friend_print_bullet_point_attachments($bullet_point_id)
+    )
   );
-  $message['params']['attachments'] = os2web_print_send_to_friend_print_bullet_point_attachments($bullet_point_id);
-
-  $system = drupal_mail_system("os2web_print_send_to_friend", "");
-
-  // The format function must be called before calling the mail function.
-  //$message = $system->format($message);
-
-  $system->mail($message);
+  var_dump($params['params']['attachments']);
+  drupal_mail('os2web_print_send_to_friend', 'send_to_friend_', $to_email, language_default(), $params, $from);
+  //$system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;
   if (module_exists('os2dagsorden_logging'))
     os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was sent to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO, 
       array('uid' => $user->uid, 
         'text' => check_plain(trim($_POST['message'])),
-        
-        
-       ));
+      ));
  // watchdog('Send to friend', 'Bullet point %title (%uri) was send to %to', array( '%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO);
 }
+
+
+function os2web_print_send_to_friend_mail($key, &$message, $params) {
+   $message['subject'] = $params['subject'];
+   $message['body'][] = $params['body'];
+   $message['params']['attachments']=  $params['params']['attachments'];
+ }
 
 /**
  * Prepares the pring version of meeting and all its bullet point and bullet point attachments.

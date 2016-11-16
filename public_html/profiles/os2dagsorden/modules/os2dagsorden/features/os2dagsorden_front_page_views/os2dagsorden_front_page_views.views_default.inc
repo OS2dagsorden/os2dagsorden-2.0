@@ -252,6 +252,7 @@ os2dagsorden_front_page_views_user_follows_committees_help_text();
   $handler->display->display_options['fields']['field_user_full_name']['table'] = 'field_data_field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['field'] = 'field_user_full_name';
   $handler->display->display_options['fields']['field_user_full_name']['label'] = '';
+  $handler->display->display_options['fields']['field_user_full_name']['exclude'] = TRUE;
   $handler->display->display_options['fields']['field_user_full_name']['element_class'] = 'user-logout-textbox';
   $handler->display->display_options['fields']['field_user_full_name']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_user_full_name']['type'] = 'text_trimmed';
@@ -276,6 +277,7 @@ os2dagsorden_front_page_views_user_follows_committees_help_text();
   $handler->display->display_options['fields']['php_2']['table'] = 'views';
   $handler->display->display_options['fields']['php_2']['field'] = 'php';
   $handler->display->display_options['fields']['php_2']['label'] = '';
+  $handler->display->display_options['fields']['php_2']['exclude'] = TRUE;
   $handler->display->display_options['fields']['php_2']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php_2']['element_wrapper_type'] = 'span';
   $handler->display->display_options['fields']['php_2']['use_php_setup'] = 0;
@@ -290,6 +292,7 @@ os2dagsorden_settings_get_quide_link();
   $handler->display->display_options['fields']['php_1']['field'] = 'php';
   $handler->display->display_options['fields']['php_1']['ui_name'] = 'Settings button (PHP)';
   $handler->display->display_options['fields']['php_1']['label'] = '';
+  $handler->display->display_options['fields']['php_1']['exclude'] = TRUE;
   $handler->display->display_options['fields']['php_1']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['php_1']['use_php_setup'] = 0;
   $handler->display->display_options['fields']['php_1']['php_output'] = '<?php
@@ -297,6 +300,37 @@ os2dagsorden_front_page_views_fields_settings();
 ?>';
   $handler->display->display_options['fields']['php_1']['use_php_click_sortable'] = '0';
   $handler->display->display_options['fields']['php_1']['php_click_sortable'] = '';
+  /* Felt: Log off button (PHP) */
+  $handler->display->display_options['fields']['php']['id'] = 'php';
+  $handler->display->display_options['fields']['php']['table'] = 'views';
+  $handler->display->display_options['fields']['php']['field'] = 'php';
+  $handler->display->display_options['fields']['php']['ui_name'] = 'Log off button (PHP)';
+  $handler->display->display_options['fields']['php']['label'] = '';
+  $handler->display->display_options['fields']['php']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['php']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['php']['use_php_setup'] = 0;
+  $handler->display->display_options['fields']['php']['php_output'] = '<?php
+os2dagsorden_front_page_views_fields_text_log_off();
+?>';
+  $handler->display->display_options['fields']['php']['use_php_click_sortable'] = '0';
+  $handler->display->display_options['fields']['php']['php_click_sortable'] = '';
+  /* Felt: block 1 (name and help) */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['ui_name'] = 'block 1 (name and help)';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<span class ="user-logout-textbox">[field_user_full_name]</span> [php_2]';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['nothing']['element_default_classes'] = FALSE;
+  /* Felt: block2 (settings and logout) */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['ui_name'] = 'block2 (settings and logout)';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '[php_1] [php]';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
   /* Filter criterion: Bruger: Aktiv */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'users';
@@ -323,6 +357,8 @@ os2dagsorden_front_page_views_fields_settings();
     t('Asc'),
     t('Desc'),
     t('Log af'),
+    t('<span class ="user-logout-textbox">[field_user_full_name]</span> [php_2]'),
+    t('[php_1] [php]'),
     t('Block'),
   );
   $export['user_logout_menu'] = $view;

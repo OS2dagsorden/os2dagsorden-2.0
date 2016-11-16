@@ -12,7 +12,7 @@
 * @link     http://bellcom.dk
 */
 
-//include_once('os2dagsorden_settings.features.inc');
+include_once 'os2dagsorden_settings.features.inc';
 
 /**
  * Implementation of hook_menu()
@@ -82,6 +82,7 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points'] = variable_get('os2dagsorden_group_closed_bullet_points', 'false');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown'] = variable_get('os2dagsorden_meeting_description_download_dropdown', 'Hent dokumenter');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional'] = variable_get('os2dagsorden_meeting_description_download_title_additional', 'Hent tillægsdokument i PDF');
 
@@ -354,13 +355,6 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
         $form['field_os2web_meetings_committee_tid']['#empty_option'] = array('All' => 'Alle');
         $form['field_os2web_meetings_committee_tid']['#options'] = $com_pos_list;
     }
-  }
-
-  if ($form_id == 'os2web_meetings_spaper_node_form'){
-    drupal_set_title(t('Create speaker paper'));
-    global $user;
-    $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
-    $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
   }
 
   if ($form['#id'] == 'views-exposed-form-os2dagsorden-users-view-system-1') {

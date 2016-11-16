@@ -331,6 +331,7 @@ class EntityReference_SelectionHandler_Generic_user extends EntityReference_Sele
       // database.
       $conditions = &$query->conditions();
       foreach ($conditions as $key => $condition) {
+		 if (isset($conditions['name'])) {
         if ($condition['field'] == 'users.name') {
           // Remove the condition.
           unset($conditions[$key]);
@@ -354,7 +355,7 @@ class EntityReference_SelectionHandler_Generic_user extends EntityReference_Sele
           );
           $query->condition($or);
         }
-      }
+      }}
     }
   }
 }

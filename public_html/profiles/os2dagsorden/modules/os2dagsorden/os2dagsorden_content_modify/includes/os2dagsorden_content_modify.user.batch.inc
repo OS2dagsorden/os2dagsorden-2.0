@@ -85,11 +85,11 @@ function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_con
   );
 
   $form[] = array(
-    '#markup' => '</div >', //<div class="select-committee">
+    '#markup' => "</div>", //<div class="select-committee">
   );
 
   $form[] = array(
-    '#markup' => "<div style='clear:both'></div>",
+    '#markup' => '<div style="clear:both"></div>',
   );
 }
 
