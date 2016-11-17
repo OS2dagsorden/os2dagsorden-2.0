@@ -158,6 +158,8 @@ function os2dagsorden_speaker_paper_form_alter(&$form, &$form_state, $form_id) {
           $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
         }
       }
+      else
+        unset($form['field_os2web_meetings_sp_shared']['und']['#options'][$uid]);
     }
   }
 }
