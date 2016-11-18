@@ -153,13 +153,19 @@ function os2dagsorden_speaker_paper_form_alter(&$form, &$form_state, $form_id) {
     foreach($form['field_os2web_meetings_sp_shared']['und']['#options'] as $uid => $user_login_name) {
       if (intval($uid) > 0) {//eliminating all _none and 0 Anonym options
         $share_with_user = user_load($uid);
-        $user_full_name = $share_with_user->field_user_full_name['und'][0]['value'];
-        if (!empty($user_full_name)) {
-          $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
+
+        if (!$share_with_user->status) {
+          //removing disabled users
+          unset($form['field_os2web_meetings_sp_shared']['und']['#options'][$uid]);
+        } else {
+          $user_full_name = $share_with_user->field_user_full_name['und'][0]['value'];
+          if (!empty($user_full_name)) {
+            $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
+          }
         }
-      }
-      else
+      } else {
         unset($form['field_os2web_meetings_sp_shared']['und']['#options'][$uid]);
+      }
     }
   }
 }
