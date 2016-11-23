@@ -364,6 +364,48 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $node = node_submit($node);
    
     $node->created = $meeting['creation_date'];
+      if($node->status == 0){//if unpublished
+
+        $target_email=variable_get('os2dagsorden_meeting_unpublished_state_emails');
+        $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
+        $status = $node->field_os2web_meetings_type['und'][0]['value'];
+        $cName = taxonomy_term_load($committee_id)->name;
+        $mName = check_plain($node->title);
+        $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
+        $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
+
+        $subject_template = variable_get('os2dagsorden_meeting_unpublished_state_subject');
+        $body_template = variable_get('os2dagsorden_meeting_unpublished_state_body');
+
+        //composing search/replace
+        $search = array('!committee', '!meeting_name', '!meeting_date', '!meeting_type', PHP_EOL);
+        $replace = array($cName, $mName, $mDate, $published_item, '<br/>');
+
+        //making replacements
+        $subject = str_replace($search, $replace, $subject_template);
+        $subject = ucfirst($subject);
+        $body = str_replace($search, $replace, $body_template);
+        $body = ucfirst($body);
+
+        $from = variable_get('system_mail');
+        $message = array(
+            'to' => $target_email,
+            'subject' => $subject,
+            'body' => $body,
+            'headers' => array(
+                'MIME-Version' => '1.0',
+                'From' => $from,
+                'Sender' => $from,
+                'Return-Path' => $from,
+                'Content-Type' => 'text/html;charset=utf-8',
+            ),
+        );
+        $system = drupal_mail_system("os2dagsorden_access_helper_node_save", "");
+
+        // The format function must be called before calling the mail function.
+        //$message = $system->format($message);
+        $system->mail($message);
+      }
     node_save($node);
      $nid = $node->nid;
     watchdog('acadre MM', '[XML_ID: !id] Agenda %aid is imported into node %nid .', array(
