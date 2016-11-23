@@ -364,7 +364,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $node = node_submit($node);
    
     $node->created = $meeting['creation_date'];
-      if($node->status == 0){//if unpublished
+    $unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
+
+      if($unpublished_status == 1){//if unpublished
+        $node->status=0;
 
         $target_email=variable_get('os2dagsorden_meeting_unpublished_state_emails');
         $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];

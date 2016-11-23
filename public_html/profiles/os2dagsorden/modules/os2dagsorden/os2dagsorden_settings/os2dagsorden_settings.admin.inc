@@ -434,6 +434,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
         '#collapsed' => TRUE,
         '#title' => t('Meeting in unpublished state'),
     );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meetings_unpublished_status'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Meeting in unpublished status'),
+        '#description' => t('Meetings are to be imported in an unpublished status.'),
+        '#default_value' => variable_get('os2dagsorden_meetings_unpublished_status', ''),
+    );
     $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_emails'] = array(
         '#type' => 'textfield',
         '#title' => t('To'),
