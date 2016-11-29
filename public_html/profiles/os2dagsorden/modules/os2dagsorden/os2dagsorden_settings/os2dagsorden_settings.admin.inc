@@ -651,7 +651,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
      '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
    );
 
-    //PDF conversion settings
+  //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {
     $form['os2dagsorden_file_import'] = array(
       '#type' => 'fieldset',

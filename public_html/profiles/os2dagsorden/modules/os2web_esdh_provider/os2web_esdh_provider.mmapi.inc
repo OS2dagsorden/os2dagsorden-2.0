@@ -1147,20 +1147,17 @@ function _os2web_esdh_provider_remove_img_tags($data){
 }
 
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
-    $content = '';
-    if(!is_array($tags)) {
-        if((isset($tags)) && (!empty($tags))) {
-            $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
-        }
-        if(end($tags) == '') array_pop($tags);
+  $content = '';
+  if (!is_array($tags)) {
+    $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+    if (end($tags) == '')
+      array_pop($tags);
+  }
+  foreach ($tags as $tag) {
+    if ($stripContent) {
+      $content = '(.+</' . $tag . '[^>]*>|)';
     }
-    foreach($tags as $tag) {
-        if ($stripContent){
-            $content = '(.+</' . $tag . '[^>]*>|)';
-        }
-        if((isset($tag)) && (!empty($tag))){
-           $str = preg_replace('#</?' . $tag . '[^>]*>'.$content.'#is', '', $str);
-        }
-    }
-    return $str;
+    $str = preg_replace('#</?' . $tag . '[^>]*>' . $content . '#is', '', $str);
+  }
+  return $str;
 }
