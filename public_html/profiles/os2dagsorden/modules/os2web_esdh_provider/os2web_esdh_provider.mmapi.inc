@@ -189,10 +189,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] No node was found, creating a new node', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_DEBUG);
       $node = new stdClass();
     }
-
+    $unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
     $node->type = "os2web_meetings_meeting";
     $node->language = LANGUAGE_NONE;
     $node->uid = 1;
+    //if unpublished
+    if ($unpublished_status == 1)
+      $node->status=0;
     node_object_prepare($node);
     if (strlen($meeting['title']) >= 255) {
       $node->title = mb_substr($meeting['title'], 0, 250) . '...';
@@ -364,11 +367,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $node = node_submit($node);
    
     $node->created = $meeting['creation_date'];
-    $unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
-
-    if($unpublished_status == 1){//if unpublished
-        $node->status=0;
-
+    node_save($node);
+    $nid = $node->nid;
+    if ($node->status == 0){//if unpublished
+        global $base_url;
         $target_email=variable_get('os2dagsorden_meeting_unpublished_state_emails', '');
         $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
         $status = $node->field_os2web_meetings_type['und'][0]['value'];
@@ -376,13 +378,15 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         $mName = check_plain($node->title);
         $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
         $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
+        $meeting_url = $base_url . '/meeting/' . $node->nid;
+        $mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
 
         $subject_template = variable_get('os2dagsorden_meeting_unpublished_state_subject');
         $body_template = variable_get('os2dagsorden_meeting_unpublished_state_body');
 
         //composing search/replace
-        $search = array('!committee', '!meeting_name', '!meeting_date', '!meeting_type', PHP_EOL);
-        $replace = array($cName, $mName, $mDate, $published_item, '<br/>');
+        $search = array('!committe', '!meeting_name', '!meeting_date', '!meeting_type', '!meeting_url', PHP_EOL);
+        $replace = array($cName, $mName, $mDate, $published_item, $mLink, '<br/>');
 
         //making replacements
         $subject = str_replace($search, $replace, $subject_template);
@@ -397,8 +401,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         );
         drupal_mail('os2web_esdh_provider', 'meeting_import_', $target_email, language_default(), $params, $from);
     }
-    node_save($node);
-    $nid = $node->nid;
     watchdog('acadre MM', '[XML_ID: !id] Agenda %aid is imported into node %nid .', array(
       '!id' => $meeting_id['id'],
       '%aid' => $meeting['meeting_sub_id'],

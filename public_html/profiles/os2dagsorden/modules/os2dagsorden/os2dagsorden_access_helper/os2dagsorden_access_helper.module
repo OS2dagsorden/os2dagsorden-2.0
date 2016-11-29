@@ -1073,7 +1073,7 @@ function os2dagsorden_access_helper_is_touch() {
  * @return $node meeting
  */
 function os2dagsorden_access_helper_node_presave($node) {
-  if ($node->type === 'os2web_meetings_meeting') {
+  if ($node->type === 'os2web_meetings_meeting' && $node->status == 1) {
     $status = $node->field_os2web_meetings_type['und'][0]['value'];
     if (strcasecmp($status, 'Dagsorden') == 0 || strcasecmp($status, 'Referat') == 0) {
       $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
@@ -1094,7 +1094,7 @@ function os2dagsorden_access_helper_node_presave($node) {
            }
          }
       }
-             
+
       $days_since_meeting_date = (time() - strtotime($node->field_os2web_meetings_date['und'][0]['value'])) / 60 / 60 / 24;
 
       if ($send_notification && $days_since_meeting_date < variable_get('os2dagsorden_send_timespan_of_notification', ACADRE_MM_DEFAULT_TIMESPAN_OF_NOTIFICATION)) {
@@ -1190,7 +1190,12 @@ function os2dagsorden_access_helper_node_presave($node) {
             $body = ucfirst($body);
 
             $from = variable_get('system_mail');
-            $message = array(
+            $params = array (
+              'subject' => $subject,
+              'body' => $body,
+            );
+            drupal_mail('os2dagsorden_access_helper', 'os2dagsorden_notification_email_', $user->mail, language_default(), $params, $from);
+           /* $message = array(
               'to' => $user->mail,
               'subject' => $subject,
               'body' => $body,
@@ -1207,7 +1212,8 @@ function os2dagsorden_access_helper_node_presave($node) {
             // The format function must be called before calling the mail function.
             //$message = $system->format($message);
             $system->mail($message);
-
+            *
+            */
             //setting the database entry about sent email
             db_insert('os2dagsorden_notification_emails')
               ->fields(array(
@@ -1509,4 +1515,9 @@ function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabu
   }
   //return the fetched term or the one we have just created
   return $term;
+}
+
+function os2dagsorden_access_helper_mail($key, &$message, $params) {
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['body'];
 }
