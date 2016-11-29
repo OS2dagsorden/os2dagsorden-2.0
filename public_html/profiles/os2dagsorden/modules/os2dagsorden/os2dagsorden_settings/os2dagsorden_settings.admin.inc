@@ -614,7 +614,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committe</b> - name of the committee<br/>
+    <b>!committee</b> - name of the committee<br/>
     <b>!meeting_name</b> - title of the meeting<br/>
     <b>!meeting_date</b> - date of the meeting<br/>
     <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>

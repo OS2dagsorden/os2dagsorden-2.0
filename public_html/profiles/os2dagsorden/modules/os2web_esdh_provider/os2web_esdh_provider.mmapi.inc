@@ -366,10 +366,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $node->created = $meeting['creation_date'];
     $unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
 
-      if($unpublished_status == 1){//if unpublished
+    if($unpublished_status == 1){//if unpublished
         $node->status=0;
 
-        $target_email=variable_get('os2dagsorden_meeting_unpublished_state_emails');
+        $target_email=variable_get('os2dagsorden_meeting_unpublished_state_emails', '');
         $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
         $status = $node->field_os2web_meetings_type['und'][0]['value'];
         $cName = taxonomy_term_load($committee_id)->name;
@@ -391,26 +391,14 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         $body = ucfirst($body);
 
         $from = variable_get('system_mail');
-        $message = array(
-            'to' => $target_email,
-            'subject' => $subject,
-            'body' => $body,
-            'headers' => array(
-                'MIME-Version' => '1.0',
-                'From' => $from,
-                'Sender' => $from,
-                'Return-Path' => $from,
-                'Content-Type' => 'text/html;charset=utf-8',
-            ),
+        $params = array(
+          'subject' => $subject,
+          'body' => $body,
         );
-        $system = drupal_mail_system("os2dagsorden_access_helper_node_save", "");
-
-        // The format function must be called before calling the mail function.
-        //$message = $system->format($message);
-        $system->mail($message);
-      }
+        drupal_mail('os2web_esdh_provider', 'meeting_import_', $target_email, language_default(), $params, $from);
+    }
     node_save($node);
-     $nid = $node->nid;
+    $nid = $node->nid;
     watchdog('acadre MM', '[XML_ID: !id] Agenda %aid is imported into node %nid .', array(
       '!id' => $meeting_id['id'],
       '%aid' => $meeting['meeting_sub_id'],
