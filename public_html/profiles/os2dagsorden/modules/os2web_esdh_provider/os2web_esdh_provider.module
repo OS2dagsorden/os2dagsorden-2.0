@@ -750,3 +750,8 @@ function _os2web_esdh_provider_send_fatalerrormail($message) {
   $mail_system = drupal_mail_system($my_module, $my_mail_token);
   return $mail_system->mail($message);
 }
+
+function os2web_esdh_provider_mail($key, &$message, $params) {
+  $message['subject'] = $params['subject'];
+  $message['body'][] = $params['body'];
+}
