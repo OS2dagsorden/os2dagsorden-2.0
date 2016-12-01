@@ -619,6 +619,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     <b>!meeting_name</b> - title of the meeting<br/>
     <b>!meeting_date</b> - date of the meeting<br/>
     <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
+    <b>!meeting_link</b> - link to the meeting<br/>
     <b>!user</b> - name of the user that message is sent to<br/>',
     '#title' => t('Available variables'),
   );

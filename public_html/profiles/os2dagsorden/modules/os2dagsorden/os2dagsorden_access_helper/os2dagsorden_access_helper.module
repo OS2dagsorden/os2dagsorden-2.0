@@ -1063,7 +1063,46 @@ function os2dagsorden_access_helper_is_touch() {
   return $isiPad;
 }
 
+/**
+ * Implement hook_node_insert() and hook_node_presave(), in order to define our
+ * own hook for saving a hearing.
+ *
+ * Defining 'hook_ktc_hearing_save()'.
+ */
 
+/**
+ * Implements hook_entity_insert().
+ */
+function os2dagsorden_access_helper_entity_insert($entity, $type) {
+  drupal_register_shutdown_function('_os2dagsorden_access_helper_trigger_hook', $entity, $type);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function os2dagsorden_access_helper_entity_update($entity, $type) {
+  drupal_register_shutdown_function('_os2dagsorden_access_helper_trigger_hook', $entity,  $type);
+}
+
+
+/**
+ * Handler for hearing updates.
+ */
+function _os2dagsorden_access_helper_trigger_hook($entity, $type) {
+  if ($type == 'node' && $entity->type == 'os2web_meetings_meeting') {
+    $meeting = $entity;
+
+    $modules = module_implements('node_save');
+
+    foreach ($modules as $module) {
+      $function = $module . '_node_save';
+      if (function_exists($function)) {
+        $function($meeting);
+      }
+    }
+
+  }
+}
 /**
  * Hook to node_presave
  * The function will delete the connection to the member object, as well as the role object itself.
@@ -1072,8 +1111,8 @@ function os2dagsorden_access_helper_is_touch() {
  *
  * @return $node meeting
  */
-function os2dagsorden_access_helper_node_presave($node) {
-  if ($node->type === 'os2web_meetings_meeting' && $node->status == 1) {
+function os2dagsorden_access_helper_node_save($node) {
+  if ($node->status == 1) {
     $status = $node->field_os2web_meetings_type['und'][0]['value'];
     if (strcasecmp($status, 'Dagsorden') == 0 || strcasecmp($status, 'Referat') == 0) {
       $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
@@ -1148,11 +1187,13 @@ function os2dagsorden_access_helper_node_presave($node) {
         if (isset($result['user'])) {
           $uids = array_merge($uids, array_keys($result['user']));
         }
-
+        global $base_url;
         $cName = taxonomy_term_load($committee_id)->name;
         $mName = check_plain($node->title);
         $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
         $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
+        $meeting_url = $base_url . '/meeting/' . $node->nid;
+        $mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
 
         //getting subject and body
         $subject_template = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
@@ -1180,8 +1221,8 @@ function os2dagsorden_access_helper_node_presave($node) {
             $uName = empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
 
             //composing search/replace
-            $search = array('!committee', '!meeting_name', '!meeting_date', '!meeting_type', '!user', PHP_EOL);
-            $replace = array($cName, $mName, $mDate, $published_item, $uName, '<br/>');
+            $search = array('!committee', '!meeting_name', '!meeting_date', '!meeting_type', '!user', '!meeting_link', PHP_EOL);
+            $replace = array($cName, $mName, $mDate, $published_item, $uName, $mLink, '<br/>');
 
             //making replacements
             $subject = str_replace($search, $replace, $subject_template);
