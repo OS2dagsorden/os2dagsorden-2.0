@@ -111,4 +111,4 @@ features[views_view][] = meeting_details
 features[views_view][] = meetings_search
 features[views_view][] = seneste_8_m_der_i_de_st_ende_politiske_udvalg_
 features[views_view][] = speaking_paper
-mtime = 1470227544
+mtime = 1480676621
