@@ -698,6 +698,8 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
  */
 function _acadre_esdh_mm_improve_body_html($data) {
   $data = _acadre_esdh_mm_remove_empty_tags($data);
+  $url_strip_count = variable_get('os2dagsorden_url_strip_count','20');
+  $data = preg_replace('/(<a.+?>)(.{0,'.$url_strip_count.'}).+(<\/a>)/is', '$1$2...$3', $data);
  // if (preg_match_all('#file:///[^"].*?"#', $data, $uri)) {
   // foreach ($uri[0] as $file) {
    $doc = new DOMDocument();
@@ -735,7 +737,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
                 $data = str_replace($file, $new_uri, $data);
          }
       }
-   } 
+   }
    return $data;
 }
 function _acadre_esdh_mm_remove_empty_tags($data) {

@@ -427,6 +427,48 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Default title text font size is 13 px. When you change the title text size, then please clear the cache to apply change'),
   );
 
+//Import meeting in unpublished state
+    $form['os2dagsorden_meeting_unpublished_state'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#title' => t('Meeting in unpublished state'),
+    );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meetings_unpublished_status'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Meeting in unpublished status'),
+        '#description' => t('Meetings are to be imported in an unpublished status.'),
+        '#default_value' => variable_get('os2dagsorden_meetings_unpublished_status', ''),
+    );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_emails'] = array(
+        '#type' => 'textfield',
+        '#title' => t('To'),
+        '#description' =>('Add emails'),
+        '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_emails', ''),
+    );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_subject'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Subject'),
+        '#description' =>('Add subject'),
+        '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_subject', ''),
+    );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_body'] = array(
+        '#type' => 'textarea',
+        '#description' =>('Add text'),
+        '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_body', ''),
+    );
+    $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_email_text_available_variables'] = array(
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#value' => 'Can be used both in subject and body:<br/>
+    <b>!committe</b> - name of the committee<br/>
+    <b>!meeting_name</b> - title of the meeting<br/>
+    <b>!meeting_date</b> - date of the meeting<br/>
+    <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>',
+        '#title' => t('Available variables'),
+    );
+
   //meeting search view settings
   $form['os2dagsorden_meeting_search_view_settings'] = array(
     '#type' => 'fieldset',
@@ -572,7 +614,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committe</b> - name of the committee<br/>
+    <b>!committee</b> - name of the committee<br/>
     <b>!meeting_name</b> - title of the meeting<br/>
     <b>!meeting_date</b> - date of the meeting<br/>
     <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
@@ -637,6 +679,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_tab_tag', '&nbsp;'),
     '#description' => t('Tag what should be put into the document instead of multiple &amp;nbsp; tags'),
   );
+   $form['os2dagsorden_meeting_import']['os2dagsorden_url_strip_count'] = array(
+     '#type' => 'textfield',
+     '#title' => t('Link (a href) limit: '),
+     '#maxlength' => 250,
+     '#default_value' => variable_get('os2dagsorden_url_strip_count', '20'),
+     '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
+   );
 
   //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {
