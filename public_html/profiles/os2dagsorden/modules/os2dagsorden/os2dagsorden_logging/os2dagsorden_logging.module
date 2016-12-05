@@ -162,4 +162,4 @@ function os2dagsorden_logging_database_log_clear() {
     case 'list':
       return array('os2dagsorden_logging_cron' => t('Remove expired log messages and flood control events'));
   }
-}
+} 

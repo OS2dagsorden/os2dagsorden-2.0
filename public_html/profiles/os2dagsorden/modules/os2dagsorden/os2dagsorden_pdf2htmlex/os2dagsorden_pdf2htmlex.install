@@ -58,3 +58,38 @@ function os2dagsorden_pdf2htmlex_schema() {
     );
     return $schema;
 }
+
+/**
+ * Implements hook_requirements().
+ */
+function os2dagsorden_pdf2htmlex_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+  if(!shell_exec('which pdf2htmlEX'))
+    $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
+      'title' => $t('OS2Dagsorden pdf2htmlEX '),
+      'value' => $t('Not installed'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('pdf2htmlEX application is not installed' )
+     );
+  $pdf2html_rendering_path = drupal_realpath(variable_get('pdf2html_rendering_path'));
+  if (empty($pdf2html_rendering_path))
+    $requirements['os2dagsorden_pdf2htmlex_rendering_dir_missing'] = array(
+      'title' => $t('OS2Dagsorden pdf2htmlEX'),
+      'value' => $t('Directory for files rendering'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('Path for HTML files to be rendered is missing')
+  );
+  else
+  if (!(is_dir($pdf2html_rendering_path) && is_writable($pdf2html_rendering_path)))
+    $requirements['os2dagsorden_pdf2htmlex_rendering_dir'] = array(
+      'title' => $t('OS2Dagsorden pdf2htmlEX'),
+      'value' => $t('Directory for files rendering'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('Directory for files rendering  ' . variable_get('pdf2html_rendering_path') . ' is not exists or not writable')
+  );
+
+  return $requirements;
+}
