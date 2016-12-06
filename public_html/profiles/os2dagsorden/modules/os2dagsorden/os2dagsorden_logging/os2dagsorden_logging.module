@@ -163,3 +163,28 @@ function os2dagsorden_logging_database_log_clear() {
       return array('os2dagsorden_logging_cron' => t('Remove expired log messages and flood control events'));
   }
 } 
+
+/**
+ * Implements hook_requirements().
+ */
+function os2dagsorden_logging_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+   $channel_info = monolog_channel_info_load_all();
+   foreach ($channel_info as $channel_name => $info) {
+     $profile_info = (monolog_profile_load($info['default profile']));
+     foreach ($profile_info->options['handlers']  as $handler_name => $options){
+         if ($handler_name == 'rotating_file_handler' && !(is_dir(drupal_realpath(dirname($options['filepath']))) && is_writable(drupal_realpath(dirname($options['filepath']))))) {
+           $requirements['os2dagsorden_logging_log_dir_' . $channel_name] = array(
+             'title' => $t('OS2Dagsorden Logging'),
+             'value' => $t('Log file directory'),
+             'severity' => REQUIREMENT_ERROR,
+             'description' => t('Channel: ' .$channel_name . ' Directory for  log files <b>' . dirname($options['filepath']) . '</b> is not exists or not writable.')
+          );
+        }
+      }
+    }
+  return $requirements;
+}

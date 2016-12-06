@@ -66,7 +66,7 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
   if ($phase !== 'runtime') {
     return array();
   }
-   $t = get_t();
+  $t = get_t();
   if(!shell_exec('which pdf2htmlEX'))
     $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
       'title' => $t('OS2Dagsorden pdf2htmlEX '),
