@@ -3060,8 +3060,8 @@ os2dagsorden_meeting_views_last_8_meetings_fields_meeting_location($row->nid);
   $handler->display->display_options['filters']['field_os2web_meetings_date_value']['table'] = 'field_data_field_os2web_meetings_date';
   $handler->display->display_options['filters']['field_os2web_meetings_date_value']['field'] = 'field_os2web_meetings_date_value';
   $handler->display->display_options['filters']['field_os2web_meetings_date_value']['operator'] = '<';
-  $handler->display->display_options['filters']['field_os2web_meetings_date_value']['default_date'] = 'tomorrow';
   /* Filter criterion: Indhold: Tillæg til (field_os2web_meetings_addendum) */
+  $handler->display->display_options['filters']['field_os2web_meetings_date_value']['default_date'] = 'yesterday 23:59';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['id'] = 'field_os2web_meetings_addendum_nid';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['table'] = 'field_data_field_os2web_meetings_addendum';
   $handler->display->display_options['filters']['field_os2web_meetings_addendum_nid']['field'] = 'field_os2web_meetings_addendum_nid';
