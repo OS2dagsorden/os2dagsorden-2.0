@@ -114,7 +114,7 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
  * @param $form mixed the form
  * @param $uids array array of uid
  */
-function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids) { 
+function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uids) {
   $single_or_batch_class = (sizeof($uids) == 1)? 'single' : 'batch';
 
   $form[] = array(
@@ -136,7 +136,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
   );
   $form['follows_div'] = array(
     '#type' => 'item' ,
-    '#prefix' => '<label>' . t('Follows:') . '</label>',
+    '#prefix' => '<label class="label_follows">' . t('Follows:') . '</label><div class="note">Notifikationer på mail:</div>',
     '#markup' => '',
   );
   $form['follows_hidden'] = array(
@@ -272,7 +272,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($shared_member_of as $tid => $count) {
       if ($count == count($uids)) {
         $form['member_of_hidden']['#value'] .= $tid . ',';
-        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}<input id='checkbox_$tid' type='checkbox' class='checkbox'></li>";
       }
     }
     $content .= '</ul>';
@@ -290,9 +290,14 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
           if (count($uids) == $shared_follows_subscribed[$tid]) {
             $subscribed_class .= ' subscribed';
             $form['follows_subscribed_hidden']['#value'] .= $tid . ',';
+            $check_id = $tid;
           }
         //}
-        $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}</li>";
+        if ($check_id == $tid){
+          $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}<input id='checkbox_$tid' type='checkbox' class='checkbox_follows' checked='checked' ></li>";
+        }else{
+          $content .= "<li id='{$tid}' class='ui-state-default {$subscribed_class}'>{$com_select[$tid]}<input id='checkbox_$tid' type='checkbox' class='checkbox_follows'></li>";
+        }
       }
     }
     $content .= '</ul>';
@@ -303,7 +308,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($shared_follows_plus as $tid => $count) {
       if ($count == count($uids)) {
         $form['follows_plus_hidden']['#value'] .= $tid . ',';
-        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}<input id='checkbox_$tid' type='checkbox' class='checkbox></li>";
       }
     }
     $content .= '</ul>';
@@ -314,7 +319,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($shared_follows_plus_plus as $tid => $count) {
       if ($count == count($uids)) {
         $form['follows_plus_plus_hidden']['#value'] .= $tid . ',';
-        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}</li>";
+        $content .= "<li id='{$tid}' class='ui-state-default'>{$com_select[$tid]}<input id='checkbox_$tid' type='checkbox' class='checkbox'></li>";
       }
     }
     $content .= '</ul>';
@@ -332,7 +337,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     foreach ($com_select as $tid=>$com_term) {
       //if the committee actually available?
       if ($shared_all_user_committee[$tid] < count($uids)) {
-        $com_list  .= "<li id='{$tid}' class='ui-state-default'>{$com_term}</li>";
+        $com_list  .= "<li id='{$tid}' class='ui-state-default'>{$com_term}<input id='checkbox_$tid'  type='checkbox' class='checkbox'></li>";
       }
     }
     $com_list .= "</ul>";
