@@ -1065,9 +1065,9 @@ function os2dagsorden_access_helper_is_touch() {
 
 /**
  * Implement hook_node_insert() and hook_node_presave(), in order to define our
- * own hook for saving a hearing.
+ * own hook for saving a meeting.
  *
- * Defining 'hook_ktc_hearing_save()'.
+ * Defining 'hook_node_save()'.
  */
 
 /**
@@ -1086,7 +1086,7 @@ function os2dagsorden_access_helper_entity_update($entity, $type) {
 
 
 /**
- * Handler for hearing updates.
+ * Handler for meeting updates.
  */
 function _os2dagsorden_access_helper_trigger_hook($entity, $type) {
   if ($type == 'node' && $entity->type == 'os2web_meetings_meeting') {
