@@ -192,46 +192,54 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   $headers = array(
     //array('data' => t('')),
     'Title' => array('data' => t('Title')),
-    'User' => array('data' => t('User'), 'field' => 'u.name'),
-    'Date' => array('data' => t('Date'), 'field' => 'timestamp', 'sort' => 'desc'));
+    //'User' => array('data' => t('User'), 'field' => 'u.name'),
+   // 'Date' => array('data' => t('Date'), 'field' => 'timestamp', 'sort' => 'desc'));
+    'Views' => array('data' => t('Views count'), 'field' => 'views_count', 'sort' => 'desc'));
 
   $query = db_select('os2dagsorden_statistics_content_tracker', 't');
   $query->innerJoin('users', 'u', 't.uid = u.uid');
   $query->innerJoin('node', 'n', 't.nid = n.nid');
-  $query->fields('t', array('url', "uid", 'timestamp', 'nid'));
-  $query->fields('u', array('name'));
-
+  $query->fields('t', array('url',/* "uid", 'timestamp',*/ 'nid'));  
+  //$query->fields('u', array('name'));
+    
   $search_params = array();
   if (!empty($_GET['title'])) {
     $search_params['title'] = $_GET['title'];
-    $query->condition('n.title', '%' . $search_params['title'] . '%', 'like');
+    $query->condition('n.title', '%' . $search_params['title'] . '%', 'like');    
   }
   if (!empty($_GET['user'])) {
     $search_params['user'] = $_GET['user'];
-    $query->condition('u.name', $search_params['user'], '=');
+    $query->condition('u.name', $search_params['user'], '=');   
   }
-  if (!empty($_GET['committes'])) {
+  if (!empty($_GET['committes']) && $_GET['committes'] != 'all') {
     $search_params['committes'] = $_GET['committes'];
     $query->condition('t.committee', $search_params['committes'], '=');
   } else
     $search_params['committes'] = 'all';
-  if (!empty($_GET['meetings'])) {
+  
+  if (!empty($_GET['meetings']) && $_GET['meetings'] != 'all') {
     $search_params['meetings'] = $_GET['meetings'];
     $query->condition('t.url', '%/' . $search_params['meetings'] . '%', 'like');
   } else
-    $search_params['meetings'] = 'all';
-  if (!empty($_GET['bullet_points'])) {
+     $search_params['meetings'] = 'all';
+  
+  if (!empty($_GET['bullet_points']) && $_GET['bullet_points'] != 'all') {
     $search_params['bullet_points'] = $_GET['bullet_points'];
     $query->condition('t.url', '%/' . $search_params['bullet_points'] . '%', 'like');
   }
+  
   if (!empty($_GET['date_from'])) {
     $search_params['date_from'] = strtotime(str_replace('/', '-', $_GET['date_from']));
     $query->condition('t.timestamp', $search_params['date_from'], '>=');
   }
+  
   if (!empty($_GET['date_to'])) {
     $search_params['date_to'] = strtotime(str_replace('/', '-', $_GET['date_to']));
     $query->condition('t.timestamp', $search_params['date_from'], '>=');
+    dpm('here6');
   }
+  $query->addExpression('count(t.nid)', 'views_count');
+  $query->groupBy('t.nid');
   $query->extend('TableSort') // Add table sort extender.
     ->orderByHeader($headers);
   $pager = $query->extend('PagerDefault')
@@ -244,8 +252,9 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   foreach ($result as $key => $row) {
     $title = _os2dagsorden_statistics_get_full_title($row->url);
     $options[$key] = array('Title' => l($title, $row->url),
-      'User' => $row->name == "" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid),
-      "Date" => date('d-m-Y H:i:s', $row->timestamp)
+     //'User' => $row->name == "" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid),
+     // "Date" => date('d-m-Y H:i:s', $row->timestamp)
+     'Views' => $row->views_count
     );
   }
 
