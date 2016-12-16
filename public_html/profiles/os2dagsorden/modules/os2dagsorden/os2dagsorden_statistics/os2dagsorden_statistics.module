@@ -235,8 +235,7 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   
   if (!empty($_GET['date_to'])) {
     $search_params['date_to'] = strtotime(str_replace('/', '-', $_GET['date_to']));
-    $query->condition('t.timestamp', $search_params['date_from'], '>=');
-    dpm('here6');
+    $query->condition('t.timestamp', $search_params['date_from'], '>=');    
   }
   $query->addExpression('count(t.nid)', 'views_count');
   $query->groupBy('t.nid');
