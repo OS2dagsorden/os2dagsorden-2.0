@@ -88,9 +88,15 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         );
 
         $form[] = array(
-            '#markup' => '<table class="print-meetings-form"><tr><td>'
+            '#markup' => '<div class="block_table_portrait"><h1 class="block_table_portrait_text">"This is text for table in vertical mode"</h1>',
+        );
+        $form[] = array(
+            '#markup' => "</div>",
         );
 
+        $form[] = array(
+            '#markup' => '<table class="print-meetings-form"><tr><td>'
+        );
 	
         $form['submit_1_half'] = array(
             '#type' => 'submit',
