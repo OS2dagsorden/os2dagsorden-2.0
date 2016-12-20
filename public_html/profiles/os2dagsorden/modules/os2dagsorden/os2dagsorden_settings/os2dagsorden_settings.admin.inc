@@ -427,7 +427,21 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Default title text font size is 13 px. When you change the title text size, then please clear the cache to apply change'),
   );
 
-//Import meeting in unpublished state
+  //This is text for table in vertical mode
+  $form['os2dagsorden_table_vertical_mode'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Text for table in vertical mode'),
+  );
+  $form['os2dagsorden_table_vertical_mode']['os2dagsorden_table_vertical_mode_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Add text for table in vertical mode'),
+    '#description' => ('Add text'),
+    '#default_value' => variable_get('os2dagsorden_table_vertical_mode_text', 'This is text for table in vertical mode'),
+  );
+
+  //Import meeting in unpublished state
   $form['os2dagsorden_meeting_unpublished_state'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,

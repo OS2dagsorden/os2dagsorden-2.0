@@ -87,9 +87,11 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
             '#markup' => '<div class="view-display-id-page">',
         );
 
+        $block_table_portrait_text = variable_get('os2dagsorden_table_vertical_mode_text');
         $form[] = array(
-            '#markup' => '<div class="block_table_portrait"><h1 class="block_table_portrait_text">"This is text for table in vertical mode"</h1>',
+            '#markup' => '<div class="block_table_portrait"><h1 class="block_table_portrait_text">' . $block_table_portrait_text . '</h1>',
         );
+
         $form[] = array(
             '#markup' => "</div>",
         );
