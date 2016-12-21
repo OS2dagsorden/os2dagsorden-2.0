@@ -1154,6 +1154,7 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
         if(end($tags) == '') array_pop($tags);
     }
     foreach($tags as $tag) {
+        if (empty($tag)) continue;
         if ($stripContent)
              $content = '(.+</'.$tag.'[^>]*>|)';
          $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
