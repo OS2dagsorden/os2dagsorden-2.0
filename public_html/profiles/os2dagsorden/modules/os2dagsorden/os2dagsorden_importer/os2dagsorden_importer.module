@@ -1090,3 +1090,54 @@ function _os2dagsorden_importer_unpublish_meeting($xml_data) {
         node_save($node);
     }
 }
+/**
+ * Implements hook_requirements().
+ */
+function os2dagsorden_importer_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetings_url')))
+      $requirements['os2dagsorden_importer_meetings_url'] = array(
+          'title' => $t('OS2Dagsorden importer webservice.'),
+          'value' => $t('Not accessible'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')))
+      );
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetinggroups_url')))
+      $requirements['os2dagsorden_importer_meetinggroups_url'] = array(
+          'title' => $t('OS2Dagsorden importer webservice.'),
+          'value' => $t('Not accessible'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('Webservice %variable is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')))
+      );
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_acadregroups_url')))
+      $requirements['os2dagsorden_importer_acadregroups_url'] = array(
+          'title' => $t('OS2Dagsorden importer webservice.'),
+          'value' => $t('Not accessible'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('Webservice  %variable is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')) )
+      );
+  }
+  return $requirements;
+}
+/*
+ * check if webservice URL is avaible
+ */
+function _os2dagsorden_importer_webservice_url_exists($url=NULL) {
+  if($url == NULL) return false;
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $data = curl_exec($ch);
+  $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
+  if($httpcode>=200 && $httpcode<300){
+    return true;
+  } else {
+    return false;
+  }
+}

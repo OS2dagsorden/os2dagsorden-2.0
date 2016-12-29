@@ -41,6 +41,14 @@ function os2web_esdh_provider_requirements($phase) {
     'severity' => $severity,
     'description' => $desc,
   );
+  $meeting_path = drupal_realpath(variable_get('os2web_meetings_path'));
+  if (!(is_dir($meeting_path) && is_writable($meeting_path)))
+    $requirements['os2web_esdh_import_dir'] = array(
+      'title' => $t('OS2Web ESDH integration.'),
+      'value' => $t('Import directories'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('OS2Web meeting import dir %variable is not exists or not writable', array('%variable' => variable_get('os2web_meetings_path')))
+  );
   return $requirements;
 }
 
