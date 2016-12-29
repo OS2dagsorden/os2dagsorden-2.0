@@ -1104,21 +1104,21 @@ function os2dagsorden_importer_requirements($phase) {
           'title' => $t('OS2Dagsorden importer webservice.'),
           'value' => $t('Not accessible'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('Webservice ' . variable_get('os2dagsorden_pws_v_meetings_url') . ' is not accessible' )
+          'description' => t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')))
       );
     if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetinggroups_url')))
       $requirements['os2dagsorden_importer_meetinggroups_url'] = array(
           'title' => $t('OS2Dagsorden importer webservice.'),
           'value' => $t('Not accessible'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('Webservice ' . variable_get('os2dagsorden_pws_v_meetinggroups_url') . ' is not accessible' )
+          'description' => t('Webservice %variable is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')))
       );
     if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_acadregroups_url')))
       $requirements['os2dagsorden_importer_acadregroups_url'] = array(
           'title' => $t('OS2Dagsorden importer webservice.'),
           'value' => $t('Not accessible'),
           'severity' => REQUIREMENT_ERROR,
-          'description' => t('Webservice ' . variable_get('os2dagsorden_pws_v_acadregroups_url') . ' is not accessible' )
+          'description' => t('Webservice  %variable is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')) )
       );
   }
   return $requirements;

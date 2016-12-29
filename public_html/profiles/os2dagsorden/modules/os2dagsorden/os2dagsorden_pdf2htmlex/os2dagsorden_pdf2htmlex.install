@@ -67,7 +67,7 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
     return array();
   }
   $t = get_t();
-  if(!shell_exec('which pdf2htmlEX'))
+  if(shell_exec(variable_get('os2dagsorden_pdf2htmlex_path')) === NULL)
     $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
       'title' => $t('OS2Dagsorden pdf2htmlEX '),
       'value' => $t('Not installed'),
@@ -88,7 +88,7 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
       'title' => $t('OS2Dagsorden pdf2htmlEX'),
       'value' => $t('Directory for files rendering'),
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('Directory for files rendering  ' . variable_get('pdf2html_rendering_path') . ' is not exists or not writable')
+      'description' => t('Directory for files rendering  %variable is not exists or not writable' , array('%variable' => variable_get('pdf2html_rendering_path')))
   );
 
   return $requirements;

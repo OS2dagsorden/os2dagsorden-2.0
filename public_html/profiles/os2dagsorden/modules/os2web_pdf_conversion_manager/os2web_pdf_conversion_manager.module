@@ -649,7 +649,7 @@ function os2web_pdf_conversion_manager_requirements($phase) {
         'title' => $t('OS2Web PDF conversion manager'),
         'value' => $t('Not installed'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t($app . ' application is not installed (' .$desc . ')' )
+        'description' => t('%app application is not installed (%desc)' , array('%app' => $app, '%desc' => $desc))
      );
    }
  //get soffice version

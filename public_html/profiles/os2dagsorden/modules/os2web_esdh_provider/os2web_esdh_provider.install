@@ -47,7 +47,7 @@ function os2web_esdh_provider_requirements($phase) {
       'title' => $t('OS2Web ESDH integration.'),
       'value' => $t('Import directories'),
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('OS2Web meeting import dir ' . variable_get('os2web_meetings_path') . ' is not exists or not writable')
+      'description' => t('OS2Web meeting import dir %variable is not exists or not writable', array('%variable' => variable_get('os2web_meetings_path')))
   );
   return $requirements;
 }
