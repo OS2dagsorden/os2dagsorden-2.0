@@ -427,20 +427,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Default title text font size is 13 px. When you change the title text size, then please clear the cache to apply change'),
   );
 
-  //This is text for table in vertical mode
-  $form['os2dagsorden_table_vertical_mode'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#title' => t('Text for table in vertical mode'),
-  );
-  $form['os2dagsorden_table_vertical_mode']['os2dagsorden_table_vertical_mode_text'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Add text for table in vertical mode'),
-    '#description' => ('Add text'),
-    '#default_value' => variable_get('os2dagsorden_table_vertical_mode_text', 'This is text for table in vertical mode'),
-  );
-
   //Import meeting in unpublished state
   $form['os2dagsorden_meeting_unpublished_state'] = array(
     '#type' => 'fieldset',
@@ -1047,6 +1033,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#default_value' => variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.'),
       '#title' => t('User follows help text'),
   );
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_replacement_block_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Print meeting calendar block text (asking person to turn his/her device horizontally)'),
+    '#default_value' => variable_get('os2dagsorden_calendar_replacement_block_text', 'Venligst vende din iPad horisontalt'),
+  );
 
   $form['os2dagsorden_terminology_placeholder'] = array(
       '#type' => 'fieldset',
@@ -1516,6 +1507,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_calendar_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text']);
     variable_set('os2dagsorden_user_committees_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text']);
     variable_set('os2dagsorden_user_follows_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text']);
+    variable_set('os2dagsorden_calendar_replacement_block_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_replacement_block_text']);
 
     variable_set('os2dagsorden_title_general_mine_indstillinger', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_mine_indstillinger']);
     variable_set('os2dagsorden_title_general_log_off', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_log_off']);
