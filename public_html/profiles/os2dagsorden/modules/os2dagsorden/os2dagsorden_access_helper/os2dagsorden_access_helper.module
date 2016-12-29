@@ -358,7 +358,6 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
   if (!$user->uid) {
     return FALSE;
   }
-
   if (!is_object($meeting)){
     $meeting = node_load($meeting);
   }
@@ -371,7 +370,7 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
   //checking category
   $committee = taxonomy_term_load($committee_tid);
   $access_granted = FALSE;
-
+  
   if (isset($committee->field_os2web_meetings_com_cat['und'])){
     $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
     if (isset($user->field_user_meetings_category['und'])){
@@ -565,7 +564,7 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
 
   $hidden_agendas = explode(',', variable_get('os2dagsorden_hidden_agenda_committee'));
   $in_hidden_list = FALSE;
-  if($meeting->status == 0 && !_os2dagsorden_os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $user_ent->uid))
+  if($meeting->status == 0 && !_os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $user_ent->uid))
     return FALSE;
   if (strpos(strtolower($meeting->field_os2web_meetings_type['und'][0]['value']), "dagsorden") !== FALSE) {
     if (isset($committee->field_os2web_meetings_com_subid['und'])) {
@@ -1389,7 +1388,6 @@ function os2dagsorden_access_helper_check_user_can_download_bullet_point_attachm
  */
 function os2dagsorden_access_helper_node_access($node, $op, $account){
   // If Supervisor, do not allow to edit their own node.
-
   if ($node->type == 'os2web_meetings_spaper') {
     if ($op == 'update' || $op == 'read') {
       if (os2dagsorden_access_helper_check_user_can_see_speaker_paper($node->nid, variable_get('os2dagsorden_shared_speaker_paper', TRUE)))
@@ -1397,10 +1395,14 @@ function os2dagsorden_access_helper_node_access($node, $op, $account){
       else return NODE_ACCESS_DENY;
     }
   } else if ($node->type == 'os2web_meetings_meeting') {
-    if ($op == 'read' || in_array('administrator++', $account->roles)){
-     if (os2dagsorden_access_helper_check_user_can_see_meeting($node))
+     $meeting_committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
+     $meeting_type = $node->field_os2web_meetings_type['und'][0]['value'];
+     if($node->status == 0 && _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $account->uid))
       return NODE_ACCESS_ALLOW;
-    else return NODE_ACCESS_DENY;
+     if ($op == 'read' || in_array('administrator++', $account->roles)){
+      if (os2dagsorden_access_helper_check_user_can_see_meeting($node))
+        return NODE_ACCESS_ALLOW;
+      else return NODE_ACCESS_DENY;
     }
   } else if ($node->type == 'os2web_meetings_bullet' ) {
      if ($op == 'read' || in_array('administrator++', $account->roles)){
@@ -1565,7 +1567,7 @@ function os2dagsorden_access_helper_mail($key, &$message, $params) {
   $message['body'][] = $params['body'];
 }
 
-function _os2dagsorden_os2dagsorden_access_helper_check_user_is_committee_admin( $meeting_type, $tid, $uid) {
+function _os2dagsorden_access_helper_check_user_is_committee_admin( $meeting_type, $tid, $uid) {
     if ($uid == 1)
       return TRUE;
     if (isset($tid)){
@@ -1575,7 +1577,7 @@ function _os2dagsorden_os2dagsorden_access_helper_check_user_is_committee_admin(
   else
     $committee_admins =  field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_ref_ad');
 
-  if (isset($committee_admins)) {
+  if (isset($committee_admins) && !empty($committee_admins)) {
     foreach($committee_admins as $key => $user){
       if ($user['uid'] == $uid){
         return TRUE;

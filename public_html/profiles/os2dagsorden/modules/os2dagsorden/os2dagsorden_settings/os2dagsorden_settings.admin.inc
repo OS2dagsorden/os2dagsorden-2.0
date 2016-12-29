@@ -432,9 +432,9 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#title' => t('Meeting in unpublished state'),
+    '#title' => t('Meeting in unpublished state notification'),
   );
-  $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meetings_unpublished_status'] = array(
+  /*$form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meetings_unpublished_status'] = array(
     '#type' => 'checkbox',
     '#title' => t('Meeting in unpublished status'),
     '#description' => t('Meetings are to be imported in an unpublished status.'),
@@ -445,7 +445,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#title' => t('To'),
     '#description' => ('Add emails'),
     '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_emails', ''),
-  );
+  );*/
   $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
@@ -454,6 +454,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_body'] = array(
     '#type' => 'textarea',
+    '#title' => t('Message'),
     '#description' => ('Add text'),
     '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_body', ''),
   );
