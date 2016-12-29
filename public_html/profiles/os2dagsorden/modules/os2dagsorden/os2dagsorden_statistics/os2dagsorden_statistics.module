@@ -450,7 +450,8 @@ function _os2dagsorden_statistics_get_all_commitees($vocabulary) {
   if (!empty($result['taxonomy_term'])) {
     $terms = taxonomy_term_load_multiple(array_keys($result['taxonomy_term']));
     foreach ($terms as $term) {
-      $terms_list[$term->tid] = $term->name;
+      if (isset($term->field_os2web_meetings_com_active['und']) && $term->field_os2web_meetings_com_active['und'][0]['value'])
+        $terms_list[$term->tid] = $term->name;
     }
   }
   return $terms_list;
