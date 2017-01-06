@@ -591,7 +591,6 @@ function os2dagsorden_admin_views_unpublished_meetings_form($form, $form_state) 
 
   $dagsorden_committes = _os2dagsorden_admin_views_get_committees_user_is_admin ($user->uid, 'dagsorden');
   $referat_committes = _os2dagsorden_admin_views_get_committees_user_is_admin ($user->uid, 'referat');
-
   $headers = array(
     'Title' => array('data' => t('Title')),
     'Date' => array('data' => t('Updated'), 'field' => 'updated', 'sort' => 'desc'));
@@ -600,14 +599,14 @@ $query = db_select('node', 'n');
 $query->join('field_data_field_os2web_meetings_committee', 'c', 'c.entity_id=n.nid');
 $query->join('field_data_field_os2web_meetings_type', 't', 't.entity_id=n.nid');
 if ($referat_committes && $dagsorden_committes) {
-$dagsorden_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', 'Dagsorden', '=');
-$referat_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', 'Referat', '=');
+$dagsorden_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Dagsorden', 'Dagsorden_plus'), 'IN');
+$referat_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Referat','Referat_plus') , 'IN');
 $full_condition = db_or()->condition($referat_meetings)->condition($dagsorden_meetings);
 }
 else if ($dagsorden_committes)
-  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', 'Dagsorden', '=');
+  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Dagsorden', 'Dagsorden_plus'), 'IN');
 else if ($referat_committes)
-  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', 'Referat', '=');
+  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Referat','Referat_plus') , 'IN');
 $result = $query
   ->fields('n', array('nid', 'title', 'changed'))
   ->fields('c', array( 'field_os2web_meetings_committee_tid'))
