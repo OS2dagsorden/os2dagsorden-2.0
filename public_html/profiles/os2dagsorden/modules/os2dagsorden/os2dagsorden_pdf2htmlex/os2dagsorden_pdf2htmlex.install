@@ -67,13 +67,19 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
     return array();
   }
   $t = get_t();
-  if(shell_exec(variable_get('os2dagsorden_pdf2htmlex_path')) === NULL)
-    $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
-      'title' => $t('OS2Dagsorden pdf2htmlEX '),
-      'value' => $t('Not installed'),
-      'severity' => REQUIREMENT_ERROR,
-      'description' => t('pdf2htmlEX application is not installed' )
-     );
+  $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
+    'title' => $t('OS2Dagsorden pdf2htmlEX ')
+  );
+  if(shell_exec(variable_get('os2dagsorden_pdf2htmlex_path')) === NULL) {
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('Not installed');
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_ERROR;
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['description'] = t('pdf2htmlEX application is not installed' );
+  }
+  else {
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('pdf2htmlEX application is installed');
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_OK;
+
+  }
   $pdf2html_rendering_path = drupal_realpath(variable_get('pdf2html_rendering_path'));
   if (empty($pdf2html_rendering_path))
     $requirements['os2dagsorden_pdf2htmlex_rendering_dir_missing'] = array(
@@ -82,14 +88,20 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
       'severity' => REQUIREMENT_ERROR,
       'description' => t('Path for HTML files to be rendered is missing')
   );
-  else
-  if (!(is_dir($pdf2html_rendering_path) && is_writable($pdf2html_rendering_path)))
+  else {
+   if (!(is_dir($pdf2html_rendering_path) && is_writable($pdf2html_rendering_path)))
     $requirements['os2dagsorden_pdf2htmlex_rendering_dir'] = array(
       'title' => $t('OS2Dagsorden pdf2htmlEX'),
       'value' => $t('Directory for files rendering'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('Directory for files rendering  %variable is not exists or not writable' , array('%variable' => variable_get('pdf2html_rendering_path')))
-  );
-
+    );
+  else
+    $requirements['os2dagsorden_pdf2htmlex_rendering_dir'] = array(
+      'title' => $t('OS2Dagsorden pdf2htmlEX'),
+      'value' => $t('Directory for files rendering is  exists and writable'),
+      'severity' => REQUIREMENT_OK
+    );
+  }
   return $requirements;
 }

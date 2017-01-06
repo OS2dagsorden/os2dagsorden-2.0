@@ -25,23 +25,3 @@ function os2dagsorden_settings_uninstall() {
   variable_del('os2dagsorden_annotator_port_nr');
   variable_del('os2dagsorden_pdf2htmlex_path ');
 }
-
-function os2dagsorden_settings_requirements($phase){
-    $requirements = array();
-    $t = get_t();
-
-    if (module_exists('os2dagsorden_pdf2htmlex')) {
-        if ($phase != 'install') {
-            $exec = shell_exec(variable_get('os2dagsorden_pdf2htmlex_path', "") . ' --version 2>&1');
-            $requirements['os2dagsorden_settings'] = array(
-                'title' => $t('pdf2htmlEX path'),
-                'value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
-                'severity' => (strpos($exec, 'version') !== false) ? REQUIREMENT_OK : REQUIREMENT_ERROR,
-            );
-            if (strpos($exec, 'version') === false) {
-                $requirements['os2dagsorden_settings']['description'] = $t('Specified pdf2htmlEX path is not correct. Please check pdf2htmlEX path in OS2dagsorner setup page.');
-            }
-        }
-    }
-    return $requirements;
-}

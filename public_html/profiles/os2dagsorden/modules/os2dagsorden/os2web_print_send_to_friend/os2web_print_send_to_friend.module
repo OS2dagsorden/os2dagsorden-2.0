@@ -283,13 +283,19 @@ function os2web_print_send_to_friend_requirements($phase) {
        'severity' => REQUIREMENT_ERROR,
        'description' => t('SMTP module is not exists')
      );
-   else if (variable_get('smtp_on', '0') == 0)
-     $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
-       'title' => $t('OS2Web Print or Send to Friend'),
-       'value' => $t('SMTP module'),
-       'severity' => REQUIREMENT_ERROR,
-       'description' => t('SMTP module is not active')
-     );
-   
+   else 
+     if (variable_get('smtp_on', '0') == 0)
+      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+        'title' => $t('OS2Web Print or Send to Friend'),
+        'value' => $t('SMTP module'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('SMTP module is not active')
+      );
+     else 
+      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+        'title' => $t('OS2Web Print or Send to Friend'),
+        'value' => $t('SMTP module is active'),
+        'severity' => REQUIREMENT_OK
+      );
   return $requirements;
 }

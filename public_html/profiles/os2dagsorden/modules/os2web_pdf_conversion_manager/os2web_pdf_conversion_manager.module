@@ -641,7 +641,7 @@ function os2web_pdf_conversion_manager_requirements($phase) {
     'soffice' => 'Use libre or oo to convert any type to PDF',
     'ImageMagick' => 'Convert multipaged .tiff files to PDF'
   );
-  $soffice_version =  '4.3.3.2';
+  $req_version =  '4.3.3.2';
    $t = get_t();
    foreach ($required_apps as $app => $desc){
     if (!shell_exec('which ' . $app))
@@ -653,14 +653,32 @@ function os2web_pdf_conversion_manager_requirements($phase) {
      );
    }
  //get soffice version
-  preg_match('/(\d+\.)(\d+\.)(\*|\d+).?(\*|\d+)/', shell_exec('soffice --version'), $version);
-  if (version_compare($version[0],'4.3.3.2') == -1)
-    $requirements['os2web_pdf_conversion_manager_soffice_ver'] = array(
-       'title' => $t('OS2Web PDF conversion manager'),
-       'value' => $t('soffice version'),
-       'severity' => REQUIREMENT_WARNING,
-       'description' => t('Update soffice version up to 4.3.3.2 or higher')
-     );
-
+  $soffice_version = shell_exec('soffice --version');
+  preg_match('/(\d+\.)(\d+\.)(\*|\d+).?(\*|\d+)/', $soffice_version, $version);  
+  $requirements['os2web_pdf_conversion_manager_soffice_ver'] = array(
+    'title' => $t('OS2Web PDF conversion manager'),
+    'value' => $t('soffice version')
+  );
+  if (version_compare($version[0], $req_version) == -1) {
+    $requirements['os2web_pdf_conversion_manager_soffice_ver']['severity'] = REQUIREMENT_WARNING;
+    $requirements['os2web_pdf_conversion_manager_soffice_ver']['description'] = t('Update soffice version up to %req_ver or higher', array('%req_ver' => $req_version));
+  }
+  else {
+    $requirements['os2web_pdf_conversion_manager_soffice_ver']['severity'] = REQUIREMENT_OK;
+    $requirements['os2web_pdf_conversion_manager_soffice_ver']['value'] = t('Soffice version %ver', array('%ver' => $soffice_version));
+  }  
+  $os2web_convertion_dir = drupal_realpath(variable_get('os2web_convertion_dir'));  
+  $requirements['os2web_convertion_dir'] = array(
+    'title' => $t('OS2Web PDF conversion manager'),
+    'value' => $t('Directory to send the files for converting')
+  );
+  if (!(is_dir($os2web_convertion_dir) && is_writable($os2web_convertion_dir))){
+    $requirements['os2web_convertion_dir']['severity'] = REQUIREMENT_ERROR;
+    $requirements['os2web_convertion_dir']['description'] = t('Os2web convert directory %variable is not exists or not writable', array('%variable' => variable_get('os2web_convertion_dir')));
+  }
+  else {
+    $requirements['os2web_convertion_dir']['severity'] = REQUIREMENT_OK;
+    $requirements['os2web_convertion_dir']['value'] = t('Directory to send the files for converting is exists and writable');
+  }
   return $requirements;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * os2dagsorden_importer
+ * os2dagsorden_acadre_service_importer
  *
  * PHP version 5
  *
@@ -27,7 +27,7 @@ function os2dagsorden_acadre_service_importer_menu() {
         'access arguments' => array('administer os2web'),
         'type' => MENU_CALLBACK,
     );
-    
+
     return $items;
 }
 
@@ -52,7 +52,7 @@ function os2dagsorden_acadre_service_importer_import_committees(){
 
     curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
     $committees_raw = curl_exec($url);
-    
+
     if($committees_raw !== False){
         $committees = new SimpleXMLElement($committees_raw);
         _os2dagsorden_acadre_service_importer_process_committees($committees);
@@ -73,4 +73,77 @@ function os2dagsorden_acadre_service_importer_import_meetings() {
         $meetings = new SimpleXMLElement($meetings_raw);
         _os2dagsorden_acadre_service_importer_process_meetings($meetings);
     }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function os2dagsorden_acadre_service_importer_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+
+    $requirements['os2dagsorden_acadre_service_importer_meetings_url'] = array(
+      'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetings_url'))) {
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')));
+    }
+    else {
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_acadre_service_importer_meetings_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')));
+    }
+
+    $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url'] = array(
+          'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetinggroups_url'))){
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')));
+    }
+    else {
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_acadre_service_importer_meetinggroups_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')));
+    }
+
+    $requirements['os2dagsorden_acadre_service_importer_acadregroups_url'] = array(
+       'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_acadregroups_url')))
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')));
+    }
+    else {
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_acadre_service_importer_acadregroups_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')));
+    }
+  return $requirements;
+}
+
+/*
+ * check if webservice URL is avaible
+ */
+function _os2dagsorden_acadre_service_importer_webservice_url_exists($url=NULL) {
+  if($url == NULL) return false;
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $data = curl_exec($ch);
+  $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
+  if($httpcode>=200 && $httpcode<300){
+    return true;
+  } else {
+    return false;
+  }
 }

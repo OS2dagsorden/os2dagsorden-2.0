@@ -176,16 +176,23 @@ function os2dagsorden_logging_requirements($phase) {
    foreach ($channel_info as $channel_name => $info) {
      $profile_info = (monolog_profile_load($info['default profile']));
      foreach ($profile_info->options['handlers']  as $handler_name => $options){
-         if ($handler_name == 'rotating_file_handler' && !(is_dir(drupal_realpath(dirname($options['filepath']))) && is_writable(drupal_realpath(dirname($options['filepath']))))) {
-           $requirements['os2dagsorden_logging_log_dir_' . $channel_name] = array(
-             'title' => $t('OS2Dagsorden Logging'),
-             'value' => $t('Log file directory'),
-             'severity' => REQUIREMENT_ERROR,
-             'description' => t('Channel: %channel. Directory for log files <b>%path</b> is not exists or not writable.',
-               array('%channel' => $channel_name, '%path' => dirname($options['filepath'])))
-          );
+       if ($handler_name == 'rotating_file_handler') {
+        $requirements['os2dagsorden_logging_log_dir_' . $channel_name] = array(
+         'title' => $t('OS2Dagsorden Logging'),
+         'value' => $t('Log file directory')
+        );
+        if (!(is_dir(drupal_realpath(dirname($options['filepath']))) && is_writable(drupal_realpath(dirname($options['filepath']))))) {
+          $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['severity'] = REQUIREMENT_ERROR;
+          $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['description'] = t('Channel: %channel. Directory for log files <b>%path</b> is not exists or not writable.',
+            array('%channel' => $channel_name, '%path' => dirname($options['filepath'])));
         }
-      }
-    }
+        else {
+          $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['severity'] = REQUIREMENT_OK;
+          $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['description'] = t('Channel: %channel. Directory for log files <b>%path</b> is  exists and writable.',
+            array('%channel' => $channel_name, '%path' => dirname($options['filepath'])));
+        }        
+       }
+     }
+   }
   return $requirements;
 }
