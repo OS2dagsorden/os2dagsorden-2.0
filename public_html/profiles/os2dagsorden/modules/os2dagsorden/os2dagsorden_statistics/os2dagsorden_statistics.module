@@ -46,6 +46,13 @@ function os2dagsorden_statistics_menu() {
     'access arguments' => array('administer os2web'),
     'type' => MENU_LOCAL_TASK,
   );
+  $items['admin/statistik/content_views/%/%/%'] = array(
+    'title' => 'Content views statistics',
+    'description' => 'Statistic of content views',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2dagsorden_statistics_content_views_node_statistic_form', 3, 4, 5),
+    'access arguments' => array('administer os2web'),
+  );
   return $items;
 }
 
@@ -199,50 +206,50 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   $query = db_select('os2dagsorden_statistics_content_tracker', 't');
   $query->innerJoin('users', 'u', 't.uid = u.uid');
   $query->innerJoin('node', 'n', 't.nid = n.nid');
-  $query->fields('t', array('url',/* "uid", 'timestamp',*/ 'nid'));  
+  $query->fields('t', array('url',/* "uid", 'timestamp',*/ 'nid'));
   //$query->fields('u', array('name'));
-    
+
   $search_params = array();
   if (!empty($_GET['title'])) {
     $search_params['title'] = $_GET['title'];
-    $query->condition('n.title', '%' . $search_params['title'] . '%', 'like');    
+    $query->condition('n.title', '%' . $search_params['title'] . '%', 'like');
   }
   if (!empty($_GET['user'])) {
     $search_params['user'] = $_GET['user'];
-    $query->condition('u.name', $search_params['user'], '=');   
+    $query->condition('u.name', $search_params['user'], '=');
   }
   if (!empty($_GET['committes']) && $_GET['committes'] != 'all') {
     $search_params['committes'] = $_GET['committes'];
     $query->condition('t.committee', $search_params['committes'], '=');
   } else
     $search_params['committes'] = 'all';
-  
+
   if (!empty($_GET['meetings']) && $_GET['meetings'] != 'all') {
     $search_params['meetings'] = $_GET['meetings'];
     $query->condition('t.url', '%/' . $search_params['meetings'] . '%', 'like');
   } else
      $search_params['meetings'] = 'all';
-  
+
   if (!empty($_GET['bullet_points']) && $_GET['bullet_points'] != 'all') {
     $search_params['bullet_points'] = $_GET['bullet_points'];
     $query->condition('t.url', '%/' . $search_params['bullet_points'] . '%', 'like');
   }
-  
+
   if (!empty($_GET['date_from'])) {
     $search_params['date_from'] = strtotime(str_replace('/', '-', $_GET['date_from']));
     $query->condition('t.timestamp', $search_params['date_from'], '>=');
   }
-  
+
   if (!empty($_GET['date_to'])) {
     $search_params['date_to'] = strtotime(str_replace('/', '-', $_GET['date_to']));
-    $query->condition('t.timestamp', $search_params['date_from'], '>=');    
+    $query->condition('t.timestamp', $search_params['date_from'], '>=');
   }
   $query->addExpression('count(t.nid)', 'views_count');
   $query->groupBy('t.nid');
   $query->extend('TableSort') // Add table sort extender.
     ->orderByHeader($headers);
   $pager = $query->extend('PagerDefault')
-    ->limit(10);
+    ->limit(100);
 
   $result = $pager->execute()
     ->fetchAll();
@@ -250,10 +257,13 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   $options = array();
   foreach ($result as $key => $row) {
     $title = _os2dagsorden_statistics_get_full_title($row->url);
+    $link = 'admin/statistik/content_views/' . $row->nid;
+    $link .= isset($search_params['date_from']) ?  '/' . str_replace('/', '-', $_GET['date_from']) : '/all';
+    $link .= isset($search_params['date_to']) ?  '/' . str_replace('/', '-', $_GET['date_to']) : '/all';
     $options[$key] = array('Title' => l($title, $row->url),
      //'User' => $row->name == "" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid),
      // "Date" => date('d-m-Y H:i:s', $row->timestamp)
-     'Views' => $row->views_count
+     'Views' => l($row->views_count, $link)
     );
   }
 
@@ -314,7 +324,7 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
     '#default_value' => $search_params['user'],
   );
   $form['search']['date'] = array(
-    '#type' => 'fieldset',    
+    '#type' => 'fieldset',
     '#collapsible' => FALSE,
   );
 
@@ -406,7 +416,7 @@ function _os2dagsorden_statistics_get_meetings_by_commitee($commitee) {
 
   if (isset($result['node'])) {
     $meetings_items_nids = array_keys($result['node']);
-    $meetings_items = entity_load('node', $meetings_items_nids);    
+    $meetings_items = entity_load('node', $meetings_items_nids);
     foreach ($meetings_items as $nid => $node)
       $meetings[$nid] = $node->title;
   }
@@ -420,7 +430,7 @@ function os2dagsorden_statistics_ajax_display_dropdown_bullet_points_callback($f
 }
 /*
  * @param $meeting_nid
- *  
+ *
  * return all bullet_points of meeting
  */
 function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
@@ -428,7 +438,7 @@ function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
   if ($meeting_nid == 'all' || !isset($meeting_nid))
     return $bullet_points_list;
   $meeting = node_load($meeting_nid);
-  $bullet_points = field_get_items('node', $meeting, 'field_os2web_meetings_bullets');  
+  $bullet_points = field_get_items('node', $meeting, 'field_os2web_meetings_bullets');
   foreach ($bullet_points as $value) {
     $bullet_points_list[$value['target_id']] = _os2dagsorden_statistics_get_node_title($value['target_id']);
   }
@@ -436,7 +446,7 @@ function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
 }
 /*
  * @param string $vocabulary taxomony vocabulary name
- *  
+ *
  * return terms
  */
 function _os2dagsorden_statistics_get_all_commitees($vocabulary) {
@@ -455,4 +465,94 @@ function _os2dagsorden_statistics_get_all_commitees($vocabulary) {
     }
   }
   return $terms_list;
+}
+
+function os2dagsorden_statistics_content_views_node_statistic_form($form, $form_state, $nid, $date_from, $date_to){
+  drupal_set_title(t('Udvidet statistik på brug af OS2dagsorden'));
+  $headers = array(
+    'Title' => array('data' => t('Title')),
+    'User' => array('data' => t('User'), 'field' => 'u.name'),
+    'Views' => array('data' => t('Views count'), 'field' => 'views_count', 'sort' => 'desc'));
+
+  $form['search'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Search'),
+  );
+  $search_params = array();
+
+  $query = db_select('os2dagsorden_statistics_content_tracker', 't');
+  $query->innerJoin('users', 'u', 't.uid = u.uid');
+  $query->innerJoin('node', 'n', 't.nid = n.nid');
+  $query->fields('t', array('url', "uid", /*'timestamp',*/ 'nid'));
+  $query->fields('u', array('name'));
+  $query->addExpression('count(t.nid)', 'views_count');
+  $query->groupBy('t.uid');
+  if ($date_from != 'all') {
+    $query->condition('t.timestamp', strtotime($date_from), '>=');
+  }
+
+  if ($date_to != 'all') {
+   $query->condition('t.timestamp', strtotime($date_to), '<=');
+  }
+  $query->condition('t.nid', $nid, '=');
+  $query->extend('TableSort') // Add table sort extender.
+    ->orderByHeader($headers);
+  $pager = $query->extend('PagerDefault')
+    ->limit(100);
+
+  $result = $pager->execute()
+    ->fetchAll();
+
+  $options = array();
+  foreach ($result as $key => $row) {
+    $title = _os2dagsorden_statistics_get_full_title($row->url);
+    $options[$key] = array('Title' => l($title, $row->url),
+      'User' => $row->name == "" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid),
+      'Views' => $row->views_count
+    );
+  }
+
+  $form['search']['nid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>  $nid
+  );
+  $form['search']['date_from'] = array(
+    '#type' => 'date_popup',
+    '#title' => t('From'),
+    '#date_format' => 'd/m/Y',
+    '#date_year_range' => '-2:+0',
+    '#default_value' =>  isset($date_from) && strtotime($date_from) ? date("Y-m-d", strtotime($date_from)) : ""
+  );
+  $form['search']['date_to'] = array(
+    '#type' => 'date_popup',
+    '#title' => t('To'),
+    '#date_format' => 'd/m/Y',
+    '#date_year_range' => '-2:+0',
+    '#default_value' => isset($date_to) && strtotime($date_to) ? date("Y-m-d", strtotime($date_to)) : "",
+  );
+  $form['search']['search_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Search'),
+  );
+  $form['rows'] = array(
+    '#type' => 'tableselect',
+    '#header' => $headers,
+    '#options' => $options,
+    '#attributes' => array('class' => array('sort-table')),
+    '#empty' => t('No content.'),
+  );
+
+  $form['pager'] = array('#theme' => 'pager');
+  return $form;
+}
+
+/**
+ * Form Submit method.
+ */
+function os2dagsorden_statistics_content_views_node_statistic_form_submit($form, &$form_state) {
+  $values = $form_state['input'];
+  $date_from = isset($values['date_from']['date']) && !empty($values['date_from']['date']) ? str_replace('/', '-', $values['date_from']['date']) : 'all';
+  $date_to = isset($values['date_to']['date']) && !empty($values['date_to']['date']) ? str_replace('/', '-', $values['date_to']['date']) : 'all';
+
+  drupal_goto('admin/statistik/content_views/' . $values['nid'] . '/' . $date_from . '/' . $date_to);
 }
