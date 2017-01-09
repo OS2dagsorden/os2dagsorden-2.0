@@ -70,10 +70,16 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
   $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
     'title' => $t('OS2Dagsorden pdf2htmlEX ')
   );
-  if(shell_exec(variable_get('os2dagsorden_pdf2htmlex_path')) === NULL) {
+  $pdf2htmlEX2_path = shell_exec('which pdf2htmlEX');
+  if(!isset($pdf2htmlEX2_path)) {
     $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('Not installed');
     $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_ERROR;
     $requirements['os2dagsorden_pdf2htmlex_app_installed']['description'] = t('pdf2htmlEX application is not installed' );
+  }
+  elseif (trim($pdf2htmlEX2_path) != trim(variable_get('os2dagsorden_pdf2htmlex_path'))) {
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('Wrong path');
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_ERROR;
+    $requirements['os2dagsorden_pdf2htmlex_app_installed']['description'] = t('pdf2htmlEX application path is not correct' );
   }
   else {
     $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('pdf2htmlEX application is installed');
