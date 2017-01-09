@@ -173,9 +173,9 @@ function os2dagsorden_statistics_content_statistics_by_year($year = null) {
  *
  * Gathers statistics for content accesses.
  */
-function os2dagsorden_statistics_exit() {
+function os2dagsorden_statistics_page_build(&$page) {
   global $user;
-  $url = parse_url($_SERVER['HTTP_REFERER']);
+  $url = parse_url($_SERVER['REQUEST_URI']);
   if (preg_match('#^/meeting#', $url['path']) === 1) {
     $path_parts = explode('/', $url['path']);
     $meeting = node_load($path_parts[2]);
@@ -183,7 +183,7 @@ function os2dagsorden_statistics_exit() {
     $committee = field_get_items('node', $meeting, 'field_os2web_meetings_committee');
     db_insert('os2dagsorden_statistics_content_tracker')
       ->fields(array(
-        'url' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+        'url' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
         'uid' => $user->uid,
         'nid' => $nid,
         'committee' => $committee[0]['tid'],
@@ -199,15 +199,16 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   $headers = array(
     //array('data' => t('')),
     'Title' => array('data' => t('Title')),
-    //'User' => array('data' => t('User'), 'field' => 'u.name'),
+    'Committee' => array('data' => t('Committee'), 'field' => 'name'),
    // 'Date' => array('data' => t('Date'), 'field' => 'timestamp', 'sort' => 'desc'));
     'Views' => array('data' => t('Views count'), 'field' => 'views_count', 'sort' => 'desc'));
 
   $query = db_select('os2dagsorden_statistics_content_tracker', 't');
   $query->innerJoin('users', 'u', 't.uid = u.uid');
   $query->innerJoin('node', 'n', 't.nid = n.nid');
-  $query->fields('t', array('url',/* "uid", 'timestamp',*/ 'nid'));
-  //$query->fields('u', array('name'));
+  $query->innerJoin('taxonomy_term_data',  'tt', 't.committee =  tt.tid');
+  $query->fields('t', array('url', /* "uid", 'timestamp',*/ 'nid'));
+  $query->fields('tt', array('name'));
 
   $search_params = array();
   if (!empty($_GET['title'])) {
@@ -234,15 +235,22 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
     $search_params['bullet_points'] = $_GET['bullet_points'];
     $query->condition('t.url', '%/' . $search_params['bullet_points'] . '%', 'like');
   }
+  else
+     $search_params['bullet_points'] = 'all';
+
+  if (!empty($_GET['bpa']) && $_GET['bpa'] != 'all') {
+    $search_params['bpa'] = $_GET['bpa'];
+    $query->condition('t.url', '%/' . $search_params['bpa'] . '%', 'like');
+  }
 
   if (!empty($_GET['date_from'])) {
-    $search_params['date_from'] = strtotime(str_replace('/', '-', $_GET['date_from']));
+    $search_params['date_from'] = strtotime(str_replace('/', '-', $_GET['date_from']) . '00:00:00');
     $query->condition('t.timestamp', $search_params['date_from'], '>=');
   }
 
   if (!empty($_GET['date_to'])) {
-    $search_params['date_to'] = strtotime(str_replace('/', '-', $_GET['date_to']));
-    $query->condition('t.timestamp', $search_params['date_from'], '>=');
+    $search_params['date_to'] = strtotime(str_replace('/', '-', $_GET['date_to']) . '23:59:59');
+    $query->condition('t.timestamp', $search_params['date_to'], '<=');
   }
   $query->addExpression('count(t.nid)', 'views_count');
   $query->groupBy('t.nid');
@@ -261,7 +269,7 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
     $link .= isset($search_params['date_from']) ?  '/' . str_replace('/', '-', $_GET['date_from']) : '/all';
     $link .= isset($search_params['date_to']) ?  '/' . str_replace('/', '-', $_GET['date_to']) : '/all';
     $options[$key] = array('Title' => l($title, $row->url),
-     //'User' => $row->name == "" ? "Anonymous (not verified)" : l($row->name, '/user/' . $row->uid),
+     'Committee' => $row->name,
      // "Date" => date('d-m-Y H:i:s', $row->timestamp)
      'Views' => l($row->views_count, $link)
     );
@@ -278,6 +286,7 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   $committes = _os2dagsorden_statistics_get_all_commitees('os2web_meetings_tax_committee');
   $selected_committee = isset($form_state['values']['committes']) ? $form_state['values']['committes'] : $search_params['committes'];
   $selected_meeting = isset($form_state['values']['meetings']) ? $form_state['values']['meetings'] : $search_params['meetings'];
+  $selected_bp = isset($form_state['values']['bullet_points']) ? $form_state['values']['bullet_points'] : $search_params['bullet_points'];
   $form['search']['committes'] = array(
     '#type' => 'select',
     '#title' => t('Committes'),
@@ -308,6 +317,18 @@ function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
     '#suffix' => '</div>',
     '#options' => _os2dagsorden_statistics_get_bullet_points($selected_meeting),
     '#default_value' => isset($form_state['values']['bullet_points']) ? $form_state['values']['bullet_points'] : $search_params['bullet_points'],
+    '#ajax' => array(
+      'callback' => 'os2dagsorden_statistics_ajax_display_dropdown_bpa_callback',
+      'wrapper' => 'view-bpa-dropdown',
+    ),
+  );
+  $form['search']['bpa'] = array(
+    '#type' => 'select',
+    '#title' => t('Bullet Point Attachments'),
+    '#prefix' => '<div id="view-bpa-dropdown" class="form-item">',
+    '#suffix' => '</div>',
+    '#options' => _os2dagsorden_statistics_get_bpa($selected_bp),
+    '#default_value' => isset($form_state['values']['bpa']) ? $form_state['values']['bpa'] : $search_params['bpa'],
   );
   $form['search']['title'] = array(
     '#type' => 'textfield',
@@ -369,6 +390,7 @@ function os2dagsorden_statistics_content_views_search_form_submit($form, &$form_
     'user' => $values['user'],
     'meetings' => $values['meetings'],
     'bullet_points' => $values['bullet_points'],
+    'bpa' => $values['bpa'],
     'date_from' => $values['date_from']['date'],
     'date_to' => $values['date_to']['date']
   );
@@ -382,7 +404,8 @@ function os2dagsorden_statistics_content_views_search_form_submit($form, &$form_
 function _os2dagsorden_statistics_get_full_title($url) {
   $url_parts = parse_url($url);
   $path_parts = explode('/', $url_parts['path']);
-  $title = _os2dagsorden_statistics_get_node_title($path_parts[2]);
+  $meeting_date =  date('d/m/y', strtotime(_os2dagsorden_statistics_get_meeting_date($path_parts[2])));
+  $title = $meeting_date . ' ' . _os2dagsorden_statistics_get_node_title($path_parts[2]);
   if (isset($path_parts[4]))
     $title .= ' -> ' . _os2dagsorden_statistics_get_node_title($path_parts[4]);
   if (isset($path_parts[6]))
@@ -392,6 +415,10 @@ function _os2dagsorden_statistics_get_full_title($url) {
 
 function _os2dagsorden_statistics_get_node_title($nid) {
   return db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
+}
+
+function _os2dagsorden_statistics_get_meeting_date($nid) {
+  return db_query('SELECT  field_os2web_meetings_date_value FROM {field_revision_field_os2web_meetings_date} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
 }
 
 // Ajax Call
@@ -418,7 +445,7 @@ function _os2dagsorden_statistics_get_meetings_by_commitee($commitee) {
     $meetings_items_nids = array_keys($result['node']);
     $meetings_items = entity_load('node', $meetings_items_nids);
     foreach ($meetings_items as $nid => $node)
-      $meetings[$nid] = $node->title;
+      $meetings[$nid] = date('d/m/y', strtotime($node->field_os2web_meetings_date['und'][0]['value'])) . ' '. $node->title;
   }
   return $meetings;
 }
@@ -427,6 +454,12 @@ function os2dagsorden_statistics_ajax_display_dropdown_bullet_points_callback($f
   $meetings = $form_state['values']['meetings'];
   $form['search']['bullet_points']['#options'] = _os2dagsorden_statistics_get_bullet_points($meetings);
   return $form['search']['bullet_points'];
+}
+
+function os2dagsorden_statistics_ajax_display_dropdown_bpa_callback($form, $form_state) {
+  $bullet_point = $form_state['values']['bullet_points'];
+  $form['search']['bpa']['#options'] = _os2dagsorden_statistics_get_bpa($bullet_point );
+  return $form['search']['bpa'];
 }
 /*
  * @param $meeting_nid
@@ -443,6 +476,22 @@ function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
     $bullet_points_list[$value['target_id']] = _os2dagsorden_statistics_get_node_title($value['target_id']);
   }
   return $bullet_points_list;
+}
+/*
+ * @param $meeting_nid
+ *
+ * return all bpa of bullet_poin
+ */
+function _os2dagsorden_statistics_get_bpa($bullet_point_nid) {
+  $bpa_list = array('all' => t('All'));
+  if ($bullet_point_nid == 'all' || !isset($bullet_point_nid))
+    return $bpa_list;
+  $bullet_point = node_load($bullet_point_nid);
+  $bpa = field_get_items('node', $bullet_point, 'field_os2web_meetings_attach');
+  foreach ($bpa as $value) {
+    $bpa_list[$value['target_id']] = _os2dagsorden_statistics_get_node_title($value['target_id']);
+  }
+  return $bpa_list;
 }
 /*
  * @param string $vocabulary taxomony vocabulary name
@@ -479,7 +528,6 @@ function os2dagsorden_statistics_content_views_node_statistic_form($form, $form_
     '#title' => t('Search'),
   );
   $search_params = array();
-
   $query = db_select('os2dagsorden_statistics_content_tracker', 't');
   $query->innerJoin('users', 'u', 't.uid = u.uid');
   $query->innerJoin('node', 'n', 't.nid = n.nid');
@@ -488,11 +536,11 @@ function os2dagsorden_statistics_content_views_node_statistic_form($form, $form_
   $query->addExpression('count(t.nid)', 'views_count');
   $query->groupBy('t.uid');
   if ($date_from != 'all') {
-    $query->condition('t.timestamp', strtotime($date_from), '>=');
+    $query->condition('t.timestamp', strtotime($date_from . '00:00:00'), '>=');
   }
 
   if ($date_to != 'all') {
-   $query->condition('t.timestamp', strtotime($date_to), '<=');
+   $query->condition('t.timestamp', strtotime($date_to . '23:59:59'), '<=');
   }
   $query->condition('t.nid', $nid, '=');
   $query->extend('TableSort') // Add table sort extender.
