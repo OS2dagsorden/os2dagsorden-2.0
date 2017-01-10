@@ -404,8 +404,8 @@ function os2dagsorden_statistics_content_views_search_form_submit($form, &$form_
 function _os2dagsorden_statistics_get_full_title($url) {
   $url_parts = parse_url($url);
   $path_parts = explode('/', $url_parts['path']);
-  $meeting_date =  date('d/m/y', strtotime(_os2dagsorden_statistics_get_meeting_date($path_parts[2])));
-  $title = $meeting_date . ' ' . _os2dagsorden_statistics_get_node_title($path_parts[2]);
+  $meeting_date =  date('d/m/y H:i', strtotime(_os2dagsorden_statistics_get_meeting_date($path_parts[2])));
+  $title = _os2dagsorden_statistics_get_node_title($path_parts[2]) . ' ' . $meeting_date;
   if (isset($path_parts[4]))
     $title .= ' -> ' . _os2dagsorden_statistics_get_node_title($path_parts[4]);
   if (isset($path_parts[6]))
@@ -445,7 +445,7 @@ function _os2dagsorden_statistics_get_meetings_by_commitee($commitee) {
     $meetings_items_nids = array_keys($result['node']);
     $meetings_items = entity_load('node', $meetings_items_nids);
     foreach ($meetings_items as $nid => $node)
-      $meetings[$nid] = date('d/m/y', strtotime($node->field_os2web_meetings_date['und'][0]['value'])) . ' '. $node->title;
+      $meetings[$nid] = $node->title . ' ' . date('d/m/y H:i', strtotime($node->field_os2web_meetings_date['und'][0]['value']));
   }
   return $meetings;
 }
