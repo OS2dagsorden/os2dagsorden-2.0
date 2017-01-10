@@ -67,25 +67,23 @@ function os2dagsorden_pdf2htmlex_requirements($phase) {
     return array();
   }
   $t = get_t();
-  $requirements['os2dagsorden_pdf2htmlex_app_installed'] = array(
-    'title' => $t('OS2Dagsorden pdf2htmlEX ')
-  );
-  $pdf2htmlEX2_path = shell_exec('which pdf2htmlEX');
-  if(!isset($pdf2htmlEX2_path)) {
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('Not installed');
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_ERROR;
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['description'] = t('pdf2htmlEX application is not installed' );
-  }
-  elseif (trim($pdf2htmlEX2_path) != trim(variable_get('os2dagsorden_pdf2htmlex_path'))) {
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('Wrong path');
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_ERROR;
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['description'] = t('pdf2htmlEX application path is not correct' );
-  }
-  else {
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['value'] = $t('pdf2htmlEX application is installed');
-    $requirements['os2dagsorden_pdf2htmlex_app_installed']['severity'] = REQUIREMENT_OK;
 
+  $exec = shell_exec(variable_get('os2dagsorden_pdf2htmlex_path', "") . ' --version 2>&1');
+  preg_match('/(\d+\.)(\d+)(\.d+)?(\.d+)?/', $exec, $version);
+  $requirements['os2dagsorden_pdf2htmlex_app'] = array(
+      'title' => $t('OS2Dagsorden pdf2htmlEX'),
+  );
+  $pdf2htmlex_version = array_shift($version);
+  if (version_compare($pdf2htmlex_version, MIN_PDF2HTMLEX_VERSION) == -1) {
+     $requirements['os2dagsorden_pdf2htmlex_app']['severity'] = REQUIREMENT_ERROR;
+     $requirements['os2dagsorden_pdf2htmlex_app']['description'] = t('Update pdf2htmlex version up to %req_ver or higher', array('%req_ver' => MIN_PDF2HTMLEX_VERSION));
+
+   }
+  else {
+    $requirements['os2dagsorden_pdf2htmlex_app']['severity'] = REQUIREMENT_OK;
+    $requirements['os2dagsorden_pdf2htmlex_app']['value'] = t('Pdf2htmlex version %ver', array('%ver' => $pdf2htmlex_version));
   }
+
   $pdf2html_rendering_path = drupal_realpath(variable_get('pdf2html_rendering_path'));
   if (empty($pdf2html_rendering_path))
     $requirements['os2dagsorden_pdf2htmlex_rendering_dir_missing'] = array(

@@ -14,7 +14,8 @@
 define('DEFAULT_PDF_HTML_ZOOM', 1.25); // default zoom for convertion
 define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/')); // default zoom for convertion
 define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);//number of files to handle at once
-
+define('MIN_PDF2HTMLEX_VERSION', '0.6'); //min pdf2htmlex version
+ 
 // to delete
 function os2dagsorden_pdf2htmlex_menu() {
     $items = array();
