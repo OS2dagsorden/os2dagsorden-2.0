@@ -176,7 +176,7 @@ function os2dagsorden_statistics_content_statistics_by_year($year = null) {
 function os2dagsorden_statistics_page_build(&$page) {
   global $user;
   $url = parse_url($_SERVER['REQUEST_URI']);
-  if (preg_match('#^/meeting#', $url['path']) === 1) {
+  if (preg_match('#^/meeting/#', $url['path']) === 1) {
     $path_parts = explode('/', $url['path']);
     $meeting = node_load($path_parts[2]);
     $nid = array_pop($path_parts);
