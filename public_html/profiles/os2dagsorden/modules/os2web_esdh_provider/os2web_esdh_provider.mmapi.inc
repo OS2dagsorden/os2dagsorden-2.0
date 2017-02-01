@@ -1176,8 +1176,9 @@ function _os2web_esdh_provider_remove_img_tags($data){
   for ($i = 0; $i < count($imgTags[0]); $i++) {
     // get the source string
      preg_match('/src="([^"]+)/i',$imgTags[0][$i], $imgage);
+  
+     $file_headers = @get_headers(array_pop($imgage));
 
-     $file_headers = @get_headers($imgage[0]);
      if($file_headers=== FALSE or $file_headers[0] == 'HTTP/1.0 404 Not Found')       {
          $data = str_replace($imgTags[0][$i], "",  $data);
      }
@@ -1195,6 +1196,7 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
   }
   foreach ($tags as $tag) {
     if ($stripContent) {
+      if (empty($tag)) continue;
       $content = '(.+</' . $tag . '[^>]*>|)';
     }
     $str = preg_replace('#</?' . $tag . '[^>]*>' . $content . '#is', '', $str);
