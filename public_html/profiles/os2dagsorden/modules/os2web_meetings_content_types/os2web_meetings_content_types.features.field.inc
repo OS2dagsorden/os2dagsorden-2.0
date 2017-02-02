@@ -2054,6 +2054,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'active' => 1,
         'module' => 'options',
         'settings' => array(
+          'apply_chosen' => '',
           'autocomplete_deluxe_path' => 'autocomplete_deluxe/taxonomy',
           'content_taxonomy_autocomplete_new_terms' => 'allow',
           'content_taxonomy_opt_groups' => FALSE,
@@ -2629,6 +2630,7 @@ function os2web_meetings_content_types_field_default_fields() {
         'active' => 1,
         'module' => 'options',
         'settings' => array(
+          'apply_chosen' => '',
           'autocomplete_deluxe_path' => 'autocomplete_deluxe/taxonomy',
           'content_taxonomy_autocomplete_new_terms' => 'allow',
           'content_taxonomy_opt_groups' => FALSE,
@@ -3284,7 +3286,7 @@ function os2web_meetings_content_types_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '0',
+          'weight' => 0,
         ),
         'teaser' => array(
           'label' => 'hidden',
@@ -3378,7 +3380,7 @@ function os2web_meetings_content_types_field_default_fields() {
             'link' => FALSE,
           ),
           'type' => 'entityreference_label',
-          'weight' => '1',
+          'weight' => 1,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -3718,6 +3720,88 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_dag_ad'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_dag_ad'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '-1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_dag_ad',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(
+        'uid' => array(
+          'columns' => array(
+            'uid' => 'uid',
+          ),
+          'table' => 'users',
+        ),
+      ),
+      'indexes' => array(
+        'uid' => array(
+          0 => 'uid',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'user_reference',
+      'settings' => array(
+        'referenceable_roles' => array(
+          2 => 0,
+          3 => '3',
+          4 => '4',
+          5 => 0,
+          6 => '6',
+        ),
+        'referenceable_status' => array(
+          0 => 0,
+          1 => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'user_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'user_reference',
+          'settings' => array(),
+          'type' => 'user_reference_default',
+          'weight' => 13,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_dag_ad',
+      'label' => 'Dagsorden admins',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'user_reference',
+        'settings' => array(
+          'autocomplete_match' => 'contains',
+          'autocomplete_path' => 'user_reference/autocomplete',
+          'size' => '60',
+        ),
+        'type' => 'user_reference_autocomplete',
+        'weight' => '11',
+      ),
+    ),
+  );
+
   // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_import'.
   $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_import'] = array(
     'field_config' => array(
@@ -3780,6 +3864,88 @@ function os2web_meetings_content_types_field_default_fields() {
         ),
         'type' => 'options_onoff',
         'weight' => '3',
+      ),
+    ),
+  );
+
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_ref_ad'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_ref_ad'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '-1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_ref_ad',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(
+        'uid' => array(
+          'columns' => array(
+            'uid' => 'uid',
+          ),
+          'table' => 'users',
+        ),
+      ),
+      'indexes' => array(
+        'uid' => array(
+          0 => 'uid',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'user_reference',
+      'settings' => array(
+        'referenceable_roles' => array(
+          2 => 0,
+          3 => '3',
+          4 => '4',
+          5 => 0,
+          6 => '6',
+        ),
+        'referenceable_status' => array(
+          0 => 0,
+          1 => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'user_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'user_reference',
+          'settings' => array(),
+          'type' => 'user_reference_default',
+          'weight' => 14,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_ref_ad',
+      'label' => 'Referat admins',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'user_reference',
+        'settings' => array(
+          'autocomplete_match' => 'contains',
+          'autocomplete_path' => 'user_reference/autocomplete',
+          'size' => '60',
+        ),
+        'type' => 'user_reference_autocomplete',
+        'weight' => '12',
       ),
     ),
   );
@@ -3903,6 +4069,72 @@ function os2web_meetings_content_types_field_default_fields() {
     ),
   );
 
+  // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_unpub'.
+  $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_com_unpub'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_os2web_meetings_com_unpub',
+      'field_permissions' => array(
+        'type' => '0',
+      ),
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => '',
+          1 => 'Import as unpublished',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'os2web_meetings_tax_committee',
+      'default_value' => array(
+        0 => array(
+          'value' => 0,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 12,
+        ),
+      ),
+      'entity_type' => 'taxonomy_term',
+      'field_name' => 'field_os2web_meetings_com_unpub',
+      'label' => 'Import as unpublished',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 0,
+        ),
+        'type' => 'options_onoff',
+        'weight' => '10',
+      ),
+    ),
+  );
+
   // Exported field: 'taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_commiteeid'.
   $fields['taxonomy_term-os2web_meetings_tax_committee-field_os2web_meetings_commiteeid'] = array(
     'field_config' => array(
@@ -3978,6 +4210,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Comments');
   t('Committee');
   t('Committee Sub ID');
+  t('Dagsorden admins');
   t('Date');
   t('Enclosures');
   t('File');
@@ -3989,6 +4222,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('HTML File Page Amount');
   t('ID');
   t('Import');
+  t('Import as unpublished');
   t('Lokation');
   t('Meeting ID');
   t('Meeting sub ID');
@@ -4002,6 +4236,7 @@ function os2web_meetings_content_types_field_default_fields() {
   t('Ref Attachment');
   t('Ref Bullet point');
   t('Ref Bullet points');
+  t('Referat admins');
   t('Regular');
   t('Search meta data');
   t('Status');

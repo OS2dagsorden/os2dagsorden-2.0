@@ -1,0 +1,82 @@
+<?php
+/**
+ * @file
+ * Implements install hooks
+ */
+
+function os2dagsorden_statistics_schema() {
+  $schema['os2dagsorden_statistics_content_tracker'] = array(
+    'description' => 'Stores content access information for statistics.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique log ID.',
+      ),      
+      'url' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => 'Referrer URI.',
+      ),      
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'User {users}.uid that visited the page.',
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Node ID.',
+      ),  
+      'committee' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'Commitee ID.',
+      ),     
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp of when the page was visited.',
+      ),
+    ),
+    'indexes' => array(
+      'accesslog_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+    ),
+    'primary key' => array('id'),
+    'foreign keys' => array(
+      'visitor' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Creates the db table
+ */
+function os2dagsorden_statistics_update_7001() {
+  $schema = os2dagsorden_statistics_schema();
+  $table = $schema['os2dagsorden_statistics_content_tracker'];
+  db_create_table('os2dagsorden_statistics_content_tracker', $table);
+}
+
+/**
+ * Creates the db table
+ */
+function os2dagsorden_statistics_update_7002() {
+  $schema = os2dagsorden_statistics_schema();
+  $table = $schema['os2dagsorden_statistics_content_tracker'];
+  db_drop_table('os2dagsorden_statistics_content_tracker');
+  db_create_table('os2dagsorden_statistics_content_tracker', $table);
+}

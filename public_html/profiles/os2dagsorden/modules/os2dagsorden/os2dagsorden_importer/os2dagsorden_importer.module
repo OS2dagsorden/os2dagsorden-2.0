@@ -33,7 +33,7 @@ function os2dagsorden_importer_menu() {
         'position' => 'left',
         'weight' => -200,
     );
-   
+
     return $items;
 }
 
@@ -90,8 +90,8 @@ function os2dagsorden_importer_cronapi($op, $job = NULL) {
  */
 function os2dagsorden_importer_cron() {
 
-    os2dagsorden_importer_import_committees();   
-    os2dagsorden_importer_import_meetings();    
+    os2dagsorden_importer_import_committees();
+    os2dagsorden_importer_import_meetings();
     os2dagsorden_importer_import_user_committees();
 }
 /**
@@ -101,8 +101,8 @@ function os2dagsorden_importer_cron() {
  */
 
 function os2dagsorden_importer_import_user_committees_improved(){
-  $userCommittees=  os2dagsorden_importer_load_user_committees_from_xml(); 
-  _os2dagsorden_importer_process_user_committees_improved($userCommittees);  
+  $userCommittees=  os2dagsorden_importer_load_user_committees_from_xml();
+  _os2dagsorden_importer_process_user_committees_improved($userCommittees);
 }
 
 /**
@@ -111,7 +111,7 @@ function os2dagsorden_importer_import_user_committees_improved(){
  * @return none
  */
 function os2dagsorden_importer_import_user_committees() {
-  $userCommittees = os2dagsorden_importer_load_user_committees_from_xml(); 
+  $userCommittees = os2dagsorden_importer_load_user_committees_from_xml();
   _os2dagsorden_importer_process_user_committees($userCommittees);
 }
 
@@ -203,13 +203,13 @@ function os2dagsorden_importer_import_meetings() {
 
 function _os2dagsorden_importer_process_user_committees($xml_file){
   if ($xml_file) {
-    _os2dagsorden_importer_process_user_committees_update($xml_file);  
+    _os2dagsorden_importer_process_user_committees_update($xml_file);
   }
 }
 
 function _os2dagsorden_importer_process_user_committees_improved($xml_file){
   if ($xml_file) {
-    _os2dagsorden_importer_process_user_committees_update($xml_file);  
+    _os2dagsorden_importer_process_user_committees_update($xml_file);
     _os2dagsorden_importer_process_user_committees_delete($xml_file);
   }
 }
@@ -251,7 +251,7 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
 
         //getting user
         $user = '';
-        //trying to get user from "Is member of" association 
+        //trying to get user from "Is member of" association
         if ($xml_data['member_id'] != 0) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'user')
@@ -268,7 +268,7 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
             }
         }
 
-        //trying to get user from "Follows" association 
+        //trying to get user from "Follows" association
         if ($xml_data['follower_id'] != 0) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'user')
@@ -279,13 +279,13 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                 $uids = array_keys($result['user']);
                 $user = reset(entity_load('user', $uids));
             }
-            
+
             if (empty($user)) {
                 $user = user_load_by_name($xml_data['follower_initials']);
             }
         }
 
-        //trying to get user from "Follows+" association 
+        //trying to get user from "Follows+" association
         if ($xml_data['follower_plus_id'] != 0) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'user')
@@ -301,8 +301,8 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                 $user = user_load_by_name($xml_data['follower_plus_initials']);
             }
         }
-        
-        //trying to get user from "Follows++" association 
+
+        //trying to get user from "Follows++" association
         if ($xml_data['follower_plus_plus_id'] != 0) {
             $query = new EntityFieldQuery();
             $query->entityCondition('entity_type', 'user')
@@ -318,11 +318,11 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                 $user = user_load_by_name($xml_data['follower_plus_plus_initials']);
             }
         }
-                  
+
         //if the entry is not deleted
         if ($xml_data['deactivated'] == 0) {
 
-            //create committee 
+            //create committee
             if ($xml_data['committee_id'] != 0) {
                 $com_term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
 
@@ -363,7 +363,7 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                         _os2dagsorden_importer_set_user_fullname($user, $xml_data['follower_plus_name']);
                     }
                 }
-                
+
                  if (!empty($xml_data['follower_plus_plus_name'])) {
                     if (strcmp($user->field_user_full_name['und'][0]['value'], $xml_data['follower_plus_plus_name']) != 0) {
                         _os2dagsorden_importer_set_user_fullname($user, $xml_data['follower_plus_plus_name']);
@@ -394,7 +394,7 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
                         //unset follows committee PLUS
                         _os2dagsorden_importer_unset_user_follows_committee_plus($com_tid, $user);
                     }
-                    
+
                     if ($xml_data['follower_plus_plus_id'] != 0 && !empty($user)) {
                         //unset follows committee PLUS
                         _os2dagsorden_importer_unset_user_follows_committee_plus_plus($com_tid, $user);
@@ -408,7 +408,7 @@ function _os2dagsorden_importer_process_user_committees_update($xml_file) {
 /**
  * Helper function. Processes the user committees xml file.
  * Checks all the SOFD rights and delete those, that are not found in the SOFD system any longer.
- * 
+ *
  *  @param mixed $xml_file xml file
  *
  * @return none
@@ -426,68 +426,68 @@ function _os2dagsorden_importer_process_user_committees_delete($xml_file){
     $userFollowerPlusPlusCommittees = Array();
     $userMemberOfCommittees = Array();
     $userSystemID = Array();
-    
+
     //user MemberOf Committee
     $result=$xml_file->xpath('//Row[MemberInitials="' . $user->name . '"]');
     //var_dump($result);
     foreach($result as $xml_data){
       $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));
       $com_term = _os2dagsorden_importer_get_committee_by_id((int) array_shift($xml_data->xpath('GroupID')));
-       if (isset($com_term)) 
-        $userMemberOfCommittees[] = $com_term->tid; 
-    
+       if (isset($com_term))
+        $userMemberOfCommittees[] = $com_term->tid;
+
     }
     //user Follower Committee
     $result=$xml_file->xpath('//Row[FollowerInitials="'.$user->name.'"]');
     foreach($result as $xml_data){
-      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));  
+      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));
       $com_term = _os2dagsorden_importer_get_committee_by_id((int) array_shift($xml_data->xpath('GroupID')));
-       if (isset($com_term)) 
+       if (isset($com_term))
         $userFollowerCommittees[] = $com_term->tid;
     }
     //user Follower Plus Committee
     $result=$xml_file->xpath('//Row[FollowerPlusInitials="'.$user->name.'"]');
     foreach($result as $xml_data){
-      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));  
+      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));
       $com_term = _os2dagsorden_importer_get_committee_by_id((int) array_shift($xml_data->xpath('GroupID')));
-       if (isset($com_term)) 
+       if (isset($com_term))
         $userFollowerPlusCommittees[] = $com_term->tid;
     }
     //user Follower PlusPlus Committee
     $result=$xml_file->xpath('//Row[FollowerPlusPlusInitials="'.$user->name.'"]');
     foreach($result as $xml_data){
-      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));  
+      $userSystemID[] = (int) array_shift($xml_data->xpath('SystemID'));
       $com_term = _os2dagsorden_importer_get_committee_by_id((int) array_shift($xml_data->xpath('GroupID')));
-       if (isset($com_term)) 
+       if (isset($com_term))
         $userFollowerPlusPlusCommittees[] = $com_term->tid;
     }
    if (isset($full_user->field_user_committee['und'])) {
-   foreach ($full_user->field_user_committee['und'] as $com) { 
+   foreach ($full_user->field_user_committee['und'] as $com) {
     if (!in_array($com['tid'], $userMemberOfCommittees)){
      //unset is part of
-      _os2dagsorden_importer_unset_committee_from_user($com['tid'], $full_user); }       
+      _os2dagsorden_importer_unset_committee_from_user($com['tid'], $full_user); }
     }
    }
   if (isset($full_user->field_follows_committee['und'])) {
-   foreach ($full_user->field_follows_committee['und'] as $com) {  
+   foreach ($full_user->field_follows_committee['und'] as $com) {
     if (!in_array($com['tid'], $userFollowerCommittees)){
      //unset is part of
-     _os2dagsorden_importer_unset_user_follows_committee($com['tid'], $full_user); 
+     _os2dagsorden_importer_unset_user_follows_committee($com['tid'], $full_user);
     }
    }
   }
    if (isset($full_user->field_follows_committee_plus['und'])) {
-   foreach ($full_user->field_follows_committee_plus['und'] as $com) {        
+   foreach ($full_user->field_follows_committee_plus['und'] as $com) {
     if (!in_array($com['tid'], $userFollowerPlusCommittees))
      //unset is part of
-     _os2dagsorden_importer_unset_user_follows_committee_plus($com['tid'], $full_user);        
+     _os2dagsorden_importer_unset_user_follows_committee_plus($com['tid'], $full_user);
     }
    }
    if (isset($full_user->field_follows_committee_pp['und'])) {
-   foreach ($full_user->field_follows_committee_pp['und'] as $com) {        
+   foreach ($full_user->field_follows_committee_pp['und'] as $com) {
     if (!in_array($com['tid'], $userFollowerPlusPlusCommittees))
      //unset is part of
-     _os2dagsorden_importer_unset_user_follows_committee_plus_plus($com['tid'], $full_user);        
+     _os2dagsorden_importer_unset_user_follows_committee_plus_plus($com['tid'], $full_user);
     }
    }
  }
@@ -496,7 +496,7 @@ function _os2dagsorden_importer_process_user_committees_delete($xml_file){
 /**
  * Helper function. Will update user's full name field
  *
- * @param mixed  $user user object  
+ * @param mixed  $user user object
  * @param string $name new name
  *
  * @return none
@@ -509,7 +509,7 @@ function _os2dagsorden_importer_set_user_fullname($user, $name) {
 /**
  * Helper function. Will update user's meetings category
  *
- * @param mixed  $user user object  
+ * @param mixed  $user user object
  * @param string $category meeting category
  *
  * @return none
@@ -546,7 +546,7 @@ function _os2dagsorden_importer_get_committee_by_id($com_id){
             ->fieldCondition('field_os2web_meetings_commiteeid', 'value', intval($com_id), '=');
 
     $result = $query->execute();
-    if (isset($result['taxonomy_term'])) {   
+    if (isset($result['taxonomy_term'])) {
         $tids = array_keys($result['taxonomy_term']);
         $tid = reset($tids);
         $term = taxonomy_term_load($tid);
@@ -567,19 +567,19 @@ function _os2dagsorden_importer_get_committee_by_subid($com_subid){
             ->condition('machine_name', 'os2web_meetings_tax_committee')
             ->execute()
             ->fetchField();
-	    
+
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'taxonomy_term')
             ->propertyCondition('vid', $vid)
             ->fieldCondition('field_os2web_meetings_com_subid', 'value', intval($com_subid), '=');
-	    
+
     $result = $query->execute();
-    if (isset($result['taxonomy_term'])) {   
+    if (isset($result['taxonomy_term'])) {
         $tids = array_keys($result['taxonomy_term']);
         $tid = reset($tids);
         $term = taxonomy_term_load($tid);
         return $term;
-    }    
+    }
 }
 
 /**
@@ -592,7 +592,7 @@ function _os2dagsorden_importer_get_committee_by_subid($com_subid){
 function _os2dagsorden_importer_create_committee($xml_data) {
     //getting committee by ID
     $term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
-    
+
     //no success, getting committee by subid
     if (!isset($term)){
 	print_r('here');
@@ -600,12 +600,12 @@ function _os2dagsorden_importer_create_committee($xml_data) {
         if ($term)
 	  $term->field_os2web_meetings_commiteeid['und'][0]['value'] = $xml_data['committee_id'];
     }
-	
+
     //no success, creating new committee
     if (!isset($term)){
 	$vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
-            ->condition('machine_name', 'os2web_meetings_tax_committee') 
+            ->condition('machine_name', 'os2web_meetings_tax_committee')
             ->execute()
             ->fetchField();
         $term = new stdClass();
@@ -631,7 +631,7 @@ function _os2dagsorden_importer_create_committee($xml_data) {
 	      break;
 	    }
 	}
-	
+
         $contains = FALSE;
         if (isset($term->field_os2web_meetings_com_subid['und'])) {
             foreach ($term->field_os2web_meetings_com_subid['und'] as $id_raw) {
@@ -645,7 +645,7 @@ function _os2dagsorden_importer_create_committee($xml_data) {
             $term->field_os2web_meetings_com_subid['und'][]['value'] = $xml_data['acadre_id'];
         }
     }
-    
+
     if ($can_be_imported){
       taxonomy_term_save($term);
       return $term->tid;
@@ -704,7 +704,7 @@ function _os2dagsorden_importer_unset_committee_from_user($tid, $user){
         }
     }
 
-   
+
     $edit = array(
 	'field_user_committee' => $user_committees,
     );
@@ -945,10 +945,10 @@ function _os2dagsorden_importer_process_meetings($xml_file) {
             if (!empty($xml_data['meeting_end_time'])){//end time
 		$xml_data['meeting_end_date'] = substr_replace($xml_data['meeting_start_date'], $xml_data['meeting_end_time'], 11);
             }
-    
+
 	    $term = _os2dagsorden_importer_get_committee_by_id($xml_data['committee_id']);
-	    
-	    
+
+
             if (isset($term))
 	      _os2dagsorden_importer_create_meeting($xml_data, $term->tid);
         }
@@ -991,7 +991,7 @@ function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
         if (isset($result['node'])) {
             $nids = array_keys($result['node']);
             $node = reset(entity_load('node', $nids));
-            
+
             //sofd id is missing, fill it for future use
 	    $node->field_os2web_meetings_sofd_id['und'][0]['value'] = intval($xml_data['meeting_id']);
 	    node_submit($node);
@@ -1006,56 +1006,56 @@ function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
             node_object_prepare($node);
         }
     }
-    
+
     //avoiding reimports, or value overriding
     if (!empty($node->field_os2web_meetings_system_id['und']['0']['value']) && $node->field_os2web_meetings_system_id['und']['0']['value'] != 0) {
-	
-	
+
+
 	//updating meetings category
 	if (strcmp($node->field_os2web_meetings_category[$node->language][0]['value'], strtolower($xml_data['meeting_category'])) != 0){
 	  $node->field_os2web_meetings_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
 	}
-	
+
 	//if meeting is to be cancelled, but is not cancelled yet, then cancell it.
 	if ($xml_data['cancelled'] == 1 && strcmp($node->field_os2web_meetings_type[$node->language][0]['value'],'Aflyst') != 0){
-	    $node->field_os2web_meetings_type['und'][0]['value'] = "Aflyst";	  
+	    $node->field_os2web_meetings_type['und'][0]['value'] = "Aflyst";
 	} //if meeting is changed, but is not marked as changed then mark is as changed
 	else if ($xml_data['changed'] == 1 && strcmp($node->field_os2web_meetings_type[$node->language][0]['value'],'Planlagt') == 0){
 	    $node->field_os2web_meetings_type['und'][0]['value'] = "Ændret";
 	}
-	
+
 	node_submit($node);
 	node_save($node);
-	
+
 	return $node;
     }
 
     $node->title = $xml_data['title'];
     if (!empty($xml_data['title_short'])){
 	$node->field_os2web_meetings_abbr[$node->language][0]['value'] = $xml_data['title_short'];
-    }     
+    }
     else {
         $node->field_os2web_meetings_abbr[$node->language][0]['value'] = $xml_data['title'];
     }
 
-    $node->field_os2web_meetings_sofd_id[$node->language][0]['value'] = $xml_data['meeting_id']; 
+    $node->field_os2web_meetings_sofd_id[$node->language][0]['value'] = $xml_data['meeting_id'];
     $node->field_os2web_meetings_system_id[$node->language][0]['value'] = '0';
-    
+
 
     if (!empty($xml_data['meeting_start_date'])) {
         $node->field_os2web_meetings_date[$node->language][0]['value'] = $xml_data['meeting_start_date'];
     }
-    
+
     if (!empty($xml_data['meeting_end_date'])) {
 	$node->field_os2web_meetings_date[$node->language][0]['value2'] = $xml_data['meeting_end_date'];
     } else {//to represent that there is no end date
 	$node->field_os2web_meetings_date[$node->language][0]['value2'] = $xml_data['meeting_start_date'];
     }
-    
+
     $node->field_os2web_meetings_category[$node->language][0]['value'] = strtolower($xml_data['meeting_category']);
 
     $node->field_os2web_meetings_committee[$node->language][0]['tid'] = $tid;
-    
+
     if ($xml_data['cancelled'] == 1){
 	$node->field_os2web_meetings_type['und'][0]['value'] = "Aflyst";
     } else if ($xml_data['changed'] == 1){
@@ -1064,7 +1064,7 @@ function _os2dagsorden_importer_create_meeting($xml_data, $tid) {
     else {
 	$node->field_os2web_meetings_type['und'][0]['value'] = "Planlagt";
     }
-    
+
     node_submit($node);
     node_save($node);
 }
@@ -1089,4 +1089,75 @@ function _os2dagsorden_importer_unpublish_meeting($xml_data) {
         node_unpublish_action($node);
         node_save($node);
     }
+}
+/**
+ * Implements hook_requirements().
+ */
+function os2dagsorden_importer_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+  if (!variable_get('os2dagsorden_pws_use_local_copy')) {
+
+    $requirements['os2dagsorden_importer_meetings_url'] = array(
+      'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetings_url'))) {
+      $requirements['os2dagsorden_importer_meetings_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_importer_meetings_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_importer_meetings_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')));
+    }
+    else {
+      $requirements['os2dagsorden_importer_meetings_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_importer_meetings_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_importer_meetings_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetings_url')));
+    }
+
+    $requirements['os2dagsorden_importer_meetinggroups_url'] = array(
+          'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_meetinggroups_url'))){
+      $requirements['os2dagsorden_importer_meetinggroups_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_importer_meetinggroups_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_importer_meetinggroups_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')));
+    }
+    else {
+      $requirements['os2dagsorden_importer_meetinggroups_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_importer_meetinggroups_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_importer_meetinggroups_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_meetinggroups_url')));
+    }
+
+    $requirements['os2dagsorden_importer_acadregroups_url'] = array(
+       'title' => $t('OS2Dagsorden importer webservice.')
+    );
+    if(!_os2dagsorden_importer_webservice_url_exists(variable_get('os2dagsorden_pws_v_acadregroups_url')))
+      $requirements['os2dagsorden_importer_acadregroups_url']['value'] = $t('Not accessible');
+      $requirements['os2dagsorden_importer_acadregroups_url']['severity'] = REQUIREMENT_ERROR;
+      $requirements['os2dagsorden_importer_acadregroups_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')));
+    }
+    else {
+      $requirements['os2dagsorden_importer_acadregroups_url']['value'] = $t('Webservice accessible');
+      $requirements['os2dagsorden_importer_acadregroups_url']['severity'] = REQUIREMENT_OK;
+      $requirements['os2dagsorden_importer_acadregroups_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_pws_v_acadregroups_url')));
+    }
+  return $requirements;
+}
+/*
+ * check if webservice URL is avaible
+ */
+function _os2dagsorden_importer_webservice_url_exists($url=NULL) {
+  if($url == NULL) return false;
+  $ch = curl_init($url);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $data = curl_exec($ch);
+  $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  curl_close($ch);
+  if($httpcode>=200 && $httpcode<300){
+    return true;
+  } else {
+    return false;
+  }
 }

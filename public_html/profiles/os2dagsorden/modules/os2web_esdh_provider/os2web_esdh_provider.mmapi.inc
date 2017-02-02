@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file implements the importing functions 
+ * This file implements the importing functions
  * of the MM functionality and depends on a
  * plugin to do the actual filereads
  */
@@ -16,7 +16,7 @@ $PROCESSING_BP = 0;
  *
  * @param int $size
  *   Size in bytes
- * 
+ *
  * @return string
  *   Pretty size
  */
@@ -164,7 +164,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
           $republish = TRUE;
           $reason = 'NEW REFERAT VERSION';
       }
-     
+
       // Republish.
       if ($republish) {
         watchdog('acadre MM', '[XML_ID: !id] Republishing into !nid. Reason: !reason', array('!id' => $PROCESSING_MEETING_ID, '!nid' => $nid, '!reason' => $reason), WATCHDOG_INFO);
@@ -189,10 +189,13 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] No node was found, creating a new node', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_DEBUG);
       $node = new stdClass();
     }
-
+    //$unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
     $node->type = "os2web_meetings_meeting";
     $node->language = LANGUAGE_NONE;
     $node->uid = 1;
+    //if unpublished
+    //if ($unpublished_status == 1)
+
     node_object_prepare($node);
     if (strlen($meeting['title']) >= 255) {
       $node->title = mb_substr($meeting['title'], 0, 250) . '...';
@@ -271,7 +274,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       if (module_exists('os2dagsorden_esdh_provider')) {
         $committee_term = osdagsorden_esdh_provider_import_or_return_committee($meeting['committee_id'], $meeting['committee']);
       } else {
-        $committee_term = _acadre_esdh_import_term($meeting['committee'], 'os2web_meetings_tax_committee'); 
+        $committee_term = _acadre_esdh_import_term($meeting['committee'], 'os2web_meetings_tax_committee');
       }
     }
     $node->field_os2web_meetings_committee[LANGUAGE_NONE][0]['tid'] = $committee_term->tid;
@@ -286,6 +289,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] Meetings location: !term_name (TID: !tid)',
         array('!id' => $PROCESSING_MEETING_ID, '!term_name' => $location_term->name, '!tid' => $location_term->tid), WATCHDOG_DEBUG);
     }
+
+     $node->status=_os2web_esdh_provider_get_meeting_publish_status($committee_term->tid);
 
     //adding description
     if (!empty($meeting['full_doc'])){
@@ -362,10 +367,45 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
     // Save the meeting node.
     $node = node_submit($node);
-   
+
     $node->created = $meeting['creation_date'];
     node_save($node);
-     $nid = $node->nid;
+    $nid = $node->nid;
+    if ($node->status == 0){//if unpublished
+        global $base_url;
+        //variable_get('os2dagsorden_meeting_unpublished_state_emails', '');
+        $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
+        $status = $node->field_os2web_meetings_type['und'][0]['value'];
+        $target_email = _os2web_esdh_provider_meeting_unpublished_state_emails($committee_id, $status);
+        if (!empty($target_email)) {
+          $cName = taxonomy_term_load($committee_id)->name;
+          $mName = check_plain($node->title);
+          $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
+          $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
+          $meeting_url = $base_url . '/meeting/' . $node->nid;
+          $mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
+
+          $subject_template = variable_get('os2dagsorden_meeting_unpublished_state_subject');
+          $body_template = variable_get('os2dagsorden_meeting_unpublished_state_body');
+
+          //composing search/replace
+          $search = array('!committe', '!meeting_name', '!meeting_date', '!meeting_type', '!meeting_url', PHP_EOL);
+          $replace = array($cName, $mName, $mDate, $published_item, $mLink, '<br/>');
+
+          //making replacements
+          $subject = str_replace($search, $replace, $subject_template);
+          $subject = ucfirst($subject);
+          $body = str_replace($search, $replace, $body_template);
+          $body = ucfirst($body);
+
+          $from = variable_get('system_mail');
+          $params = array(
+            'subject' => $subject,
+            'body' => $body,
+          );
+          drupal_mail('os2web_esdh_provider', 'meeting_import_', $target_email, language_default(), $params, $from);
+        }
+    }
     watchdog('acadre MM', '[XML_ID: !id] Agenda %aid is imported into node %nid .', array(
       '!id' => $meeting_id['id'],
       '%aid' => $meeting['meeting_sub_id'],
@@ -450,7 +490,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
       $node->field_os2web_meetings_qbrickref[LANGUAGE_NONE][0]['id'] = $item['movie_id'];
       $node->field_os2web_meetings_qbrickref[LANGUAGE_NONE][0]['seek'] = $item["chapter"];
     }
-    
+
     watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] BP access: !access',
       array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!access' => $item['access']), WATCHDOG_DEBUG);
 
@@ -516,7 +556,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
         }
       }
     }
-   
+
     if (!$node) {
       watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] [BPA: !bpa] Creating new BPA node',
         array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!bpa' => $bullet['sysid']), WATCHDOG_DEBUG);
@@ -1112,9 +1152,8 @@ function os2web_esdh_provider_filter_html_tags($data) {
       $filtred_data = preg_replace('#style="(.*?)"#is', "", $match);
       $data = str_replace($match, $filtred_data, $data);
     }
-  } 
-  
-  //remove all a tags with attribute Name="Acadre..    
+  }
+  //remove all a tags with attribute Name="Acadre..
   while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
     $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
     $data = str_replace($aTags[0], $str, $data);
@@ -1125,39 +1164,68 @@ function os2web_esdh_provider_filter_html_tags($data) {
 
   //remove all img tags that link missing files
   $data = _os2web_esdh_provider_remove_img_tags($data);
-  //replace all <p></p> and <p>&nbsp;</p> tags with <br />  
+  //replace all <p></p> and <p>&nbsp;</p> tags with <br />
   $data = preg_replace('#(<p>((<span>)*?)(|&nbsp;)((<\/span>)*?)<\/p>\s*)+#i', '<br />', $data);
-  //replace multiple &nbsp; tags with...  
+  //replace multiple &nbsp; tags with...
   $data = preg_replace('/(\x{00A0}|&nbsp;){2,}/u', variable_get('os2dagsorden_tab_tag', '&nbsp;'), $data);
    return $data;
 }
 
 function _os2web_esdh_provider_remove_img_tags($data){
-  preg_match_all('/<img[^>]+>/i',$data, $imgTags); 
+  preg_match_all('/<img[^>]+>/i',$data, $imgTags);
   for ($i = 0; $i < count($imgTags[0]); $i++) {
     // get the source string
      preg_match('/src="([^"]+)/i',$imgTags[0][$i], $imgage);
   
      $file_headers = @get_headers(array_pop($imgage));
+
      if($file_headers=== FALSE or $file_headers[0] == 'HTTP/1.0 404 Not Found')       {
          $data = str_replace($imgTags[0][$i], "",  $data);
-     }  
+     }
    }
-  
+
   return $data;
 }
 
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
-    $content = '';
-    if(!is_array($tags)) {
-        $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
-        if(end($tags) == '') array_pop($tags);
+  $content = '';
+  if (!is_array($tags)) {
+    $tags = (strpos($str, '>') !== false ? explode('>', str_replace('<', '', $tags)) : array($tags));
+    if (end($tags) == '')
+      array_pop($tags);
+  }
+  foreach ($tags as $tag) {
+    if ($stripContent) {
+      if (empty($tag)) continue;
+      $content = '(.+</' . $tag . '[^>]*>|)';
     }
-    foreach($tags as $tag) {
-        if (empty($tag)) continue;
-        if ($stripContent)
-             $content = '(.+</'.$tag.'[^>]*>|)';
-         $str = preg_replace('#</?'.$tag.'[^>]*>'.$content.'#is', '', $str);
+    $str = preg_replace('#</?' . $tag . '[^>]*>' . $content . '#is', '', $str);
+  }
+  return $str;
+}
+/*
+ * return meeting import status by commitee
+ */
+function _os2web_esdh_provider_get_meeting_publish_status($tid) {
+  $term = taxonomy_term_load($tid);
+  if (isset($term->field_os2web_meetings_com_unpub['und'][0]['value']) && $term->field_os2web_meetings_com_unpub['und'][0]['value'] == 1)
+    return 0;
+  else
+    return 1;
+}
+
+function _os2web_esdh_provider_meeting_unpublished_state_emails($tid, $meeting_type) {
+  $emails = array();
+  $term = taxonomy_term_load($tid);
+  if (strcasecmp($meeting_type, 'Dagsorden') == 0)
+    $committee_admin =  $term->field_os2web_meetings_com_dag_ad;
+  else
+    $committee_admin =  $term->field_os2web_meetings_com_ref_ad;
+  if (isset($committee_admin['und'])) {
+    foreach($committee_admin['und'] as $key => $uid){
+      $user = user_load($uid['uid']);
+      $emails[] = $user->mail;
     }
-    return $str;
+  }
+  return implode(', ', $emails);
 }

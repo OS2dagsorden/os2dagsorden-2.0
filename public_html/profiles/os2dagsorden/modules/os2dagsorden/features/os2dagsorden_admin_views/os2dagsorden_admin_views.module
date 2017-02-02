@@ -25,6 +25,15 @@ function os2dagsorden_admin_views_menu() {
    'position' => 'right',
    'weight' => 150,
  );
+ $items['admin/content/unpublished'] = array(
+   'title' => 'OS2Dagsorden unpublished meetings',
+   'access callback' => 'os2dagsorden_admin_views_user_is_committee_admin',
+   'page callback' => 'drupal_get_form',
+   'page arguments' => array('os2dagsorden_admin_views_unpublished_meetings_form'),
+   'type' => MENU_LOCAL_TASK,
+   'position' => 'right',
+   'weight' => 150,
+ );
  return $items;
 }
 
@@ -48,7 +57,7 @@ function os2dagsorden_admin_views_form_taxonomy_overview_terms_alter(&$form, &$f
 function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
   if ($form['#id'] == 'views-exposed-form-os2dagsorden-users-view-system-1') {
     drupal_add_js(drupal_get_path('module', 'os2dagsorden_admin_views') . '/js/os2dagsorden_admin_views_users.js');
-   
+
 // $vocabulary = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
     $terms = os2dagsorden_settings_get_active_committees();
     $options = array();
@@ -57,7 +66,7 @@ function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
       $options[$key] = $value->name;
     asort($options);
     $options=array_replace_recursive(array("All" => t("- Any -")), $options );
-        
+
     $field = array ('commitee' =>  array(
       '#type' => 'select',
       '#options' => $options,
@@ -69,12 +78,12 @@ function os2dagsorden_admin_views_form_alter(&$form, $form_state, $form_id) {
     ));
     $form = _os2dagsorden_admin_views_array_push_after($form, $field, 'field_user_organization_value');
     $form['#info'] = _os2dagsorden_admin_views_array_push_after($form['#info'], $filter, "filter-field_user_organization_value");
-     
+
   }
-  
+
 }
 
-function os2dagsorden_admin_views_query_alter(&$view, &$query){ 
+function os2dagsorden_admin_views_query_alter(&$view, &$query){
   if (isset($view->alterMetaData['view'])) {
     if ($view->alterMetaData['view']->name == 'os2dagsorden_users_view') {
        if (isset($_POST['commitee']) && $_POST['commitee']!= 'All'){
@@ -94,7 +103,7 @@ function os2dagsorden_admin_views_query_alter(&$view, &$query){
     }
 
   }
-  
+
 }
 
 
@@ -131,19 +140,19 @@ function _os2dagsorden_admin_views_array_push_after($src,$in,$pos){
 
   $old_sub_ids = array();
   $new_sub_ids = array();
-   
+
   $old_term = taxonomy_term_load($form_state['values']['tid']);
   foreach ($form_state['values']['field_os2web_meetings_com_subid']['und']as $key => $id) {
      if (is_array($id) && isset($id['value']) && !empty($id['value']))
        $new_sub_ids[] = $id['value'];
   }
-  
+
   foreach ($old_term->field_os2web_meetings_com_subid['und'] as $key => $id)
      $old_sub_ids[] = $id['value'];
 
   $ids_to_add = array_diff($new_sub_ids, $old_sub_ids);
   $ids_to_delete = array_diff($old_sub_ids, $new_sub_ids);
-  
+
   foreach ($ids_to_delete as $id) {
     $children_terms = taxonomy_get_children($form_state['values']['tid'], $vid);
     foreach ($children_terms as $children_term) {
@@ -156,7 +165,7 @@ function _os2dagsorden_admin_views_array_push_after($src,$in,$pos){
        }
      }
     }
-    
+
     $is_second_level_term = taxonomy_get_parents($old_term->tid);
     if ( $is_second_level_term )  {
          foreach ($is_second_level_term as $parent_term) {
@@ -172,7 +181,7 @@ function _os2dagsorden_admin_views_array_push_after($src,$in,$pos){
       header("Location:" . $GLOBALS['base_url'] . "/" . $_GET['destination']);
       drupal_set_message(t('Can\'t add a child element to the term of the second level ("' . $old_term->name . '")'), 'warning');
       drupal_exit();
-    } 
+    }
     else {
       foreach ($ids_to_add as $id) {
         $new_children_term = _os2dagsorden_access_helper_get_committee_by_subid_and_name($id);
@@ -196,7 +205,6 @@ function os2dagsorden_admin_views_theme() {
 }
 
 function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
- 
   $form = $variables['form'];
   $page_increment = $form['#page_increment'];
   $page_entries = $form['#page_entries'];
@@ -208,8 +216,9 @@ function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
         array('data' => t('Weight'), 'field' => 'weight'),
         array('data' => t('Operations')),
         array('data' => t('Active'), 'field' => 'a.field_os2web_meetings_com_active_value'),
-        array('data' => t('Import'), 'field' => 'i.field_os2web_meetings_com_import_value'));
-   
+        array('data' => t('Import'), 'field' => 'i.field_os2web_meetings_com_import_value'),
+        array('data' => t('Import status'), 'field' => 'i.ffield_os2web_meetings_com_unpub_value'));
+
     // Add drag and drop if parent fields are present in the form.
   if ($form['#parent_fields']) {
     drupal_add_tabledrag('taxonomy', 'match', 'parent', 'term-parent', 'term-parent', 'term-id', FALSE);
@@ -230,9 +239,9 @@ function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
          $term = &$form[$key];
         $term_full = taxonomy_term_load($term['#term']['tid']);
         $term_full->key = $key;
-        //print_r($term_full); 
+        //print_r($term_full);
         if (isset($my_terms_list[$term['#term']['parent']]))
-        $my_terms_list[$term['#term']['parent']]['children'][$term['#term']['tid']] = (array) $term_full;    
+        $my_terms_list[$term['#term']['parent']]['children'][$term['#term']['tid']] = (array) $term_full;
             else
         $my_terms_list[$term['#term']['tid']] = (array) $term_full;
      }
@@ -246,19 +255,19 @@ function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
            $my_terms_list[$key]['children']=$child_term['children'];
         }
     }
-    
+
 
     foreach ($my_terms_list as $full_term) {
         $term = &$form[$full_term['key']];
         $rows[$full_term['key']] = _os2dagsorden_admin_views_render_row($term, $form);
         if (isset($full_term['children'])){
           foreach($full_term['children'] as $child_term){
-            $term = &$form[$child_term['key']];        
+            $term = &$form[$child_term['key']];
         $rows[$child_term['key']] =  _os2dagsorden_admin_views_render_row($term, $form);
             }
         }
     }
-    
+
     // Add necessary classes to rows.
     $row_position = 0;
     foreach ($rows as $key => $row) {
@@ -296,7 +305,7 @@ function theme_os2dagsorden_admin_views_taxonomy_overview_terms($variables) {
         ));
     }
 
-  
+
     $output = '<div><a href="/os2dagsorden/committee/export">Export committee terms to XML file</a></div>';
 
     $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'taxonomy')));
@@ -351,18 +360,18 @@ function os2dagsorden_admin_views_submit_taxomony(&$form, &$form_state) {
 
                     if (!empty($old_parent_terms)) {
                         $parent_term_tid = array_keys($old_parent_terms);
-                        $form_state['values'][$key]["parent"] = $parent_term_tid[0];                        
+                        $form_state['values'][$key]["parent"] = $parent_term_tid[0];
                     } else {
-                        $form_state['values'][$key]["parent"] = "0";                        
+                        $form_state['values'][$key]["parent"] = "0";
                     }
                     drupal_set_message(t('Can\'t add a child element to the term of the second level ("' . $term->name . '")'), 'warning');
                    continue;
                 }
-                
+
                /* if (is_array($term->field_os2web_meetings_com_subid['und'])) {
                    $parent_term = taxonomy_term_load($value["parent"]);
                    foreach ($term->field_os2web_meetings_com_subid['und'] as $id) {
-                     if ($term->field_os2web_meetings_com_import['und'][0]['value']==1)  
+                     if ($term->field_os2web_meetings_com_import['und'][0]['value']==1)
                        os2dagsorden_esdh_provider_committee_add_subid($parent_term, $id['value']);
                    }
                }*/
@@ -519,13 +528,13 @@ function _os2dagsorden_admin_views_sort_terms($a, $b) {
             else
                 return strcasecmp($b['field_os2web_meetings_com_import']['und'][0]['value'], $a['field_os2web_meetings_com_import']['und'][0]['value']);
         }
-    }  
-    else {
-      return strcasecmp($a['name'], $b['name']); 
     }
-        
+    else {
+      return strcasecmp($a['name'], $b['name']);
+    }
+
  }
-  
+
 function _os2dagsorden_admin_views_render_row(&$term, $form)   {
     $term_full = taxonomy_term_load($term['#term']['tid']);
 
@@ -537,7 +546,7 @@ function _os2dagsorden_admin_views_render_row(&$term, $form)   {
 
         $row = array();
         $row[] = (isset($term['#term']['depth']) && $term['#term']['depth'] > 0 ? theme('indentation', array('size' => $term['#term']['depth'])) : '') . drupal_render($term['view']);
-       
+
         if ($form['#parent_fields']) {
             $form['#parent_fields'];
             $term['tid']['#attributes']['class'] = array('term-id');
@@ -548,14 +557,129 @@ function _os2dagsorden_admin_views_render_row(&$term, $form)   {
             }
             $row[0] .= drupal_render($term['parent']) . drupal_render($term['tid']) . drupal_render($term['depth']);
         }
-  
+
         $term['weight']['#attributes']['class'] = array('term-weight');
         $row[] = drupal_render($term['weight']);
 
         $row[] = drupal_render($term['edit']);
         $row[] = ($term_full->field_os2web_meetings_com_active['und'][0]['value']) ? '<b>' . t('Active') . '</b>' : t('Inactive');
         $row[] = ($term_full->field_os2web_meetings_com_import['und'][0]['value']) ? '<b>' . t('Import') . '</b>' : t('Don\'t import');
-        
+        $row[] = ($term_full->field_os2web_meetings_com_unpub['und'][0]['value']) ? '<b>' . t('Unpublished') . '</b>' : t('Published');
+
         $row = array('data' => $row);
         return $row;
-}      
+}
+
+function os2dagsorden_admin_views_unpublished_meetings_form($form, $form_state) {
+  global $user;
+  $form['actions_fieldset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Actions'),
+    '#attributes' => array('class' => array('container-inline'))
+  );
+   $form['actions_fieldset']['action'] = array(
+       '#type' => 'select',
+       '#options' => array(
+         '0' => t('-Choose an operation-'),
+         'node_publish_action' => t('Publish'),
+       )
+   );
+   $form['actions_fieldset']['search_submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Execute'),
+  );
+
+  $dagsorden_committes = _os2dagsorden_admin_views_get_committees_user_is_admin ($user->uid, 'dagsorden');
+  $referat_committes = _os2dagsorden_admin_views_get_committees_user_is_admin ($user->uid, 'referat');
+  $headers = array(
+    'Title' => array('data' => t('Title')),
+    'Date' => array('data' => t('Updated'), 'field' => 'updated', 'sort' => 'desc'));
+$full_condition = '';
+$query = db_select('node', 'n');
+$query->join('field_data_field_os2web_meetings_committee', 'c', 'c.entity_id=n.nid');
+$query->join('field_data_field_os2web_meetings_type', 't', 't.entity_id=n.nid');
+if ($referat_committes && $dagsorden_committes) {
+$dagsorden_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Dagsorden', 'Dagsorden_plus'), 'IN');
+$referat_meetings = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Referat','Referat_plus') , 'IN');
+$full_condition = db_or()->condition($referat_meetings)->condition($dagsorden_meetings);
+}
+else if ($dagsorden_committes)
+  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $dagsorden_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Dagsorden', 'Dagsorden_plus'), 'IN');
+else if ($referat_committes)
+  $full_condition = db_and()->condition('field_os2web_meetings_committee_tid', $referat_committes, 'IN')->condition('field_os2web_meetings_type_value', array('Referat','Referat_plus') , 'IN');
+$result = $query
+  ->fields('n', array('nid', 'title', 'changed'))
+  ->fields('c', array( 'field_os2web_meetings_committee_tid'))
+  ->condition('type', 'os2web_meetings_meeting')
+  ->condition('status', 0)
+  ->condition($full_condition)
+  ->orderBy('changed', 'DESC')
+  ->execute();
+$options = array();
+while ($meeting = $result->fetchAssoc()){
+  $options[$meeting['nid']] = array ('Title' => l($meeting['title'], 'meeting/' . $meeting['nid']),
+    'Date' => date('d-m-Y H:i:s', $meeting['changed'])
+    );
+}
+$form['meetings'] = array(
+    '#type' => 'tableselect',
+    '#header' => $headers,
+    '#options' => $options,
+    '#attributes' => array('class' => array('sort-table')),
+    '#empty' => t('No content.'),
+  );
+
+  $form['pager'] = array('#theme' => 'pager');
+
+  return $form;
+}
+
+function os2dagsorden_admin_views_unpublished_meetings_form_submit($form, &$form_state) {
+  $meetings = $form_state['input']['meetings'];
+  $action = $form_state['input']['action'];
+  if ($action == 'node_publish_action'){
+  $batch = array(
+    'title' => 'Meetings publish',
+    'operations' => array(),
+    'init_message' => t('Scanner filer'),
+  );
+
+  foreach ($meetings as $nid) {
+        $batch['operations'][] = array(
+          '_os2dagsorden_admin_views_meeting_publish',
+          array($nid));
+    }
+    batch_set($batch);
+  }
+}
+
+function _os2dagsorden_admin_views_meeting_publish($nid){
+  $node = node_load($nid);
+  $node->status = 1;
+  node_save($node);
+}
+
+function _os2dagsorden_admin_views_get_committees_user_is_admin($uid, $meeting_type){
+  if ($meeting_type == 'dagsorden')
+    $query = db_select('field_data_field_os2web_meetings_com_dag_ad', 'd')
+    ->fields('d', array('entity_id'))
+    ->condition('d.field_os2web_meetings_com_dag_ad_uid ', $uid, '=');
+  else
+    $query = db_select('field_data_field_os2web_meetings_com_ref_ad', 'r')
+    ->fields('r', array('entity_id'))
+    ->condition('r.field_os2web_meetings_com_ref_ad_uid ', $uid, '=');
+  $committes = $query->execute()
+    ->fetchAllAssoc('entity_id');
+  if ($committes)
+      return array_keys($committes);
+  else
+    return FALSE;
+}
+
+function os2dagsorden_admin_views_user_is_committee_admin() {
+  global $user;
+    if (_os2dagsorden_admin_views_get_committees_user_is_admin($user->uid, 'dagsorden') || _os2dagsorden_admin_views_get_committees_user_is_admin ($user->uid, 'referat'))
+    return TRUE;
+
+    return FALSE;
+}

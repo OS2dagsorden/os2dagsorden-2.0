@@ -1,0 +1,15 @@
+#os2dagsorden-statistics-content-views-search-form .form-inline .form-item {
+    display: inline-block;
+    padding: 0 5px;
+}
+#os2dagsorden-statistics-content-views-search-form .form-inline .form-item .form-select{
+    min-width: 150px;
+}
+#os2dagsorden-statistics-content-views-search-form .form-inline .container-inline-date {
+    display: inline-block;
+
+}
+#os2dagsorden-statistics-content-views-search-form .form-inline  .form-submit {
+    clear: both;
+    display: block;
+}

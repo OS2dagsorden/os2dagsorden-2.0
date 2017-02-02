@@ -384,7 +384,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_collapse_menu_touch_pages', 'meetings/print'),
     '#description' => t('List the pages where the side menu will be hidden by default (overruling the settings).<br/>Each page on new line'),
   );
-  
+
   $form['os2dagsorden_frontpage_layout']['os2dagsorden_show_search_block_title'] = array(
     '#type' => 'radios',
     '#title' => t('Show/Hide search block title'),
@@ -425,6 +425,50 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#field_suffix' => ' px',
     '#default_value' => variable_get('os2dagsorden_title_text_size', '13'),
     '#description' => t('Default title text font size is 13 px. When you change the title text size, then please clear the cache to apply change'),
+  );
+
+  //Import meeting in unpublished state
+  $form['os2dagsorden_meeting_unpublished_state'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#title' => t('Meeting in unpublished state notification'),
+  );
+  /*$form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meetings_unpublished_status'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Meeting in unpublished status'),
+    '#description' => t('Meetings are to be imported in an unpublished status.'),
+    '#default_value' => variable_get('os2dagsorden_meetings_unpublished_status', ''),
+  );
+  $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_emails'] = array(
+    '#type' => 'textfield',
+    '#title' => t('To'),
+    '#description' => ('Add emails'),
+    '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_emails', ''),
+  );*/
+  $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#description' => ('Add subject'),
+    '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_subject', ''),
+  );
+  $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Message'),
+    '#description' => ('Add text'),
+    '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_body', ''),
+  );
+  $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_email_text_available_variables'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#value' => 'Can be used both in subject and body:<br/>
+    <b>!committe</b> - name of the committee<br/>
+    <b>!meeting_name</b> - title of the meeting<br/>
+    <b>!meeting_date</b> - date of the meeting<br/>
+    <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
+    <b>!meeting_url</b> - link to the meeting',
+    '#title' => t('Available variables'),
   );
 
   //meeting search view settings
@@ -572,10 +616,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committe</b> - name of the committee<br/>
+    <b>!committee</b> - name of the committee<br/>
     <b>!meeting_name</b> - title of the meeting<br/>
     <b>!meeting_date</b> - date of the meeting<br/>
     <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
+    <b>!meeting_link</b> - link to the meeting<br/>
     <b>!user</b> - name of the user that message is sent to<br/>',
     '#title' => t('Available variables'),
   );
@@ -637,6 +682,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_tab_tag', '&nbsp;'),
     '#description' => t('Tag what should be put into the document instead of multiple &amp;nbsp; tags'),
   );
+   $form['os2dagsorden_meeting_import']['os2dagsorden_url_strip_count'] = array(
+     '#type' => 'textfield',
+     '#title' => t('Link (a href) limit: '),
+     '#maxlength' => 250,
+     '#default_value' => variable_get('os2dagsorden_url_strip_count', '20'),
+     '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
+   );
 
   //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {
@@ -981,6 +1033,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       '#rows' => 2,
       '#default_value' => variable_get('os2dagsorden_user_follows_help_text', 'Her kan du se de udvalg du er sat op til at følge. Følger betyder at du kun kan se åbne punkter og Følger+ betyder at du også kan se lukkede punkter. Ret henvendelse til Direktionssekretariatet hvis du mener det skal ændres.'),
       '#title' => t('User follows help text'),
+  );
+  $form['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_replacement_block_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Print meeting calendar block text (asking person to turn his/her device horizontally)'),
+    '#default_value' => variable_get('os2dagsorden_calendar_replacement_block_text', 'Venligst vende din iPad horisontalt'),
   );
 
   $form['os2dagsorden_terminology_placeholder'] = array(
@@ -1451,6 +1508,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_calendar_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_help_text']);
     variable_set('os2dagsorden_user_committees_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_committees_help_text']);
     variable_set('os2dagsorden_user_follows_help_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_user_follows_help_text']);
+    variable_set('os2dagsorden_calendar_replacement_block_text', $setting_array['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_replacement_block_text']);
 
     variable_set('os2dagsorden_title_general_mine_indstillinger', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_mine_indstillinger']);
     variable_set('os2dagsorden_title_general_log_off', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_general_placeholder']['os2dagsorden_title_general_log_off']);

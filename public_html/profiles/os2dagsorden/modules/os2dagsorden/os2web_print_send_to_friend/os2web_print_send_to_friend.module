@@ -267,3 +267,35 @@ function os2web_print_send_to_friend_log_filter_form_submit($form, &$form_state)
     $form_state['rebuild'] = TRUE;
   }
 }
+
+/**
+ * Implements hook_requirements().
+ */
+function os2web_print_send_to_friend_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return array();
+  }
+   $t = get_t();
+   if (!module_exists('smtp'))
+     $requirements['os2web_print_send_to_friend_smtp_module'] = array(
+       'title' => $t('OS2Web Print or Send to Friend'),
+       'value' => $t('SMTP module'),
+       'severity' => REQUIREMENT_ERROR,
+       'description' => t('SMTP module is not exists')
+     );
+   else 
+     if (variable_get('smtp_on', '0') == 0)
+      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+        'title' => $t('OS2Web Print or Send to Friend'),
+        'value' => $t('SMTP module'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('SMTP module is not active')
+      );
+     else 
+      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+        'title' => $t('OS2Web Print or Send to Friend'),
+        'value' => $t('SMTP module is active'),
+        'severity' => REQUIREMENT_OK
+      );
+  return $requirements;
+}
