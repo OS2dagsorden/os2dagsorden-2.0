@@ -1037,7 +1037,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_help_text_placeholder']['os2dagsorden_calendar_replacement_block_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Print meeting calendar block text (asking person to turn his/her device horizontally)'),
-    '#default_value' => variable_get('os2dagsorden_calendar_replacement_block_text', 'Venligst vende din iPad horisontalt'),
+    '#default_value' => variable_get('os2dagsorden_calendar_replacement_block_text', 'Vend venligst din iPad horisontalt'),
   );
 
   $form['os2dagsorden_terminology_placeholder'] = array(
