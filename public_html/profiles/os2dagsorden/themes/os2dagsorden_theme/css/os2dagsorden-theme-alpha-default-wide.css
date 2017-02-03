@@ -58,6 +58,10 @@ div.date-heading h3 a, div.date-heading h3 {
 ul.droptrue li {
     max-width: 250px
 }
+
+ul.droptrue li.can-subscribe span {
+    max-width: 190px;
+}
 /* ---------------------------- arrows_reverse END ---------------------------- */
 .breadcrumb .breadcrumb-active {
   max-width: 300px;
