@@ -108,7 +108,7 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'weight' => '-19',
       ),
       'os2dagsorden_theme_ballerup' => array(
-        'region' => 'sidebar_second',
+        'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ballerup',
         'weight' => '-19',
