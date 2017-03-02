@@ -38,7 +38,7 @@ function os2dagsorden_fields_and_content_types_meeting_search_metadata($entity, 
 
           $text = '';
           if (isset($bullet_point_attachment->field_os2web_meetings_bpa_body['und'])){
-            $text = str_replace("\r\n", " ", strip_tags($bullet_point_attachment->field_os2web_meetings_bpa_body['und'][0]['safe_value']));
+            $text = str_replace("\r\n", " ", strip_tags($bullet_point_attachment->field_os2web_meetings_bpa_body['und'][0]['value']));
             $text = str_replace("\n\r", " ", $text);
             $text = str_replace("\n", " ", $text);
             $text = str_replace("\r", " ", $text);
