@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * os2dagsorden_settings1.features.filter.inc
+ * os2dagsorden_settings.features.filter.inc
  */
 
 /**

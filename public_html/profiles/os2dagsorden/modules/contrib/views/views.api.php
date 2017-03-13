@@ -143,7 +143,7 @@
  * responsible for building the query. Instead, they are objects that are used
  * to display the view or make other modifications.
  *
- * There are 10 types of plugins in Views:
+ * There are several types of plugins in Views:
  * - Display: Display plugins are responsible for controlling *where* a view
  *   lives; that is, how they are being exposed to other parts of Drupal. Page
  *   and block are the most common displays, as well as the ubiquitous 'master'
@@ -431,7 +431,7 @@ function hook_views_data() {
       'label' => t('Published'),
       // This setting is used by the boolean filter handler, as possible option.
       'type' => 'yes-no',
-      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statment.
+      // use boolean_field = 1 instead of boolean_field <> 0 in WHERE statement.
       'use equal' => TRUE,
     ),
     'sort' => array(
@@ -482,13 +482,15 @@ function hook_views_data_alter(&$data) {
   $data['users']['example_field'] = array(
     'title' => t('Example field'),
     'help' => t('Some example content that references a user'),
-    'handler' => 'hook_handlers_field_example_field',
+    'field' => array(
+      'handler' => 'modulename_handler_field_example_field',
+    ),
   );
 
   // This example changes the handler of the node title field.
   // In this handler you could do stuff, like preview of the node when clicking
   // the node title.
-  $data['node']['title']['handler'] = 'modulename_handlers_field_node_title';
+  $data['node']['title']['field']['handler'] = 'modulename_handler_field_node_title';
 
   // This example adds a relationship to table {foo}, so that 'foo' views can
   // add this table using a relationship. Because we don't want to write over
@@ -511,6 +513,80 @@ function hook_views_data_alter(&$data) {
   // Note that the $data array is not returned – it is modified by reference.
 }
 
+/**
+ * Override the default data for a Field API field.
+ *
+ * Field module's implementation of hook_views_data() invokes this for each
+ * field in the module that defines the field type (as declared in the field
+ * array). It is not invoked in other modules.
+ *
+ * If no hook implementation exists, hook_views_data() falls back to
+ * field_views_field_default_views_data().
+ *
+ * @see field_views_data()
+ * @see hook_field_views_data_alter()
+ * @see hook_field_views_data_views_data_alter()
+ *
+ * @param $field
+ *  A field definition array, as returned by field_info_fields().
+ *
+ * @return
+ *  An array of views data, in the same format as the return value of
+ *  hook_views_data().
+ */
+function hook_field_views_data($field) {
+
+}
+
+/**
+ * Alter the views data for a single Field API field.
+ *
+ * This is called even if there is no hook_field_views_data() implementation for
+ * the field, and therefore may be used to alter the default data that
+ * field_views_field_default_views_data() supplies for the field.
+ *
+ * @param $result
+ *  An array of views table data provided for a single field. This has the same
+ *  format as the return value of hook_views_data().
+ * @param $field
+ *  A field definition array, as returned by field_info_fields().
+ * @param $module
+ *  The module that defines the field type.
+ *
+ * @see field_views_data()
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_views_data_alter()
+ */
+function hook_field_views_data_alter(&$result, $field, $module) {
+
+}
+
+/**
+ * Alter the views data on a per field basis.
+ *
+ * Field module's implementation of hook_views_data_alter() invokes this for
+ * each field in the module that defines the field type (as declared in the
+ * field array). It is not invoked in other modules.
+ *
+ * Unlike hook_field_views_data_alter(), this operates on the whole of the views
+ * data. This allows a field module to add data that concerns its fields to
+ * other tables, which would not yet be defined at the point when
+ * hook_field_views_data() and hook_field_views_data_alter() are invoked. For
+ * example, entityreference adds reverse relationships on the tables for the
+ * entities which are referenced by entityreference fields.
+ *
+ * (Note: this is weirdly named so as not to conflict with
+ * hook_field_views_data_alter().)
+ *
+ * @see hook_field_views_data()
+ * @see hook_field_views_data_alter()
+ * @see field_views_data_alter()
+ */
+function hook_field_views_data_views_data_alter(&$data, $field) {
+  $field_name = $field['field_name'];
+  $data_key = 'field_data_' . $field_name;
+  // Views data for this field is in $data[$data_key]
+}
 
 /**
  * Describes plugins defined by the module.
@@ -526,7 +602,7 @@ function hook_views_data_alter(&$data) {
  *   must be one of row, display, display_extender, style, argument default,
  *   argument validator, access, query, cache, pager, exposed_form or
  *   localization. The plugin name should be prefixed with your module name.
- *   The value for each entry is an associateive array that may contain the
+ *   The value for each entry is an associative array that may contain the
  *   following entries:
  *   - Used by all plugin types:
  *     - title (required): The name of the plugin, as shown in Views. Wrap in
@@ -647,7 +723,7 @@ function hook_views_plugins_alter(&$plugins) {
  *   - path: (optional) If includes are stored somewhere other than within the
  *     root module directory, specify its path here.
  *   - template path: (optional) A path where the module has stored it's views
- *     template files. When you have specificed this key views automatically
+ *     template files. When you have specified this key views automatically
  *     uses the template files for the views. You can use the same naming
  *     conventions like for normal views template files.
  */
@@ -663,10 +739,10 @@ function hook_views_api() {
  * This hook allows modules to provide their own views which can either be used
  * as-is or as a "starter" for users to build from.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be
- * auto-loaded. MODULENAME.views.inc must be in the directory specified by the
- * 'path' key returned by MODULENAME_views_api(), or the same directory as the
- * .module file, if 'path' is unspecified.
+ * This hook should be placed in MODULENAME.views_default.inc and it will be
+ * auto-loaded. MODULENAME.views_default.inc must be in the directory specified
+ * by the 'path' key returned by MODULENAME_views_api(), or the same directory
+ * as the .module file, if 'path' is unspecified.
  *
  * The $view->disabled boolean flag indicates whether the View should be
  * enabled (FALSE) or disabled (TRUE) by default.
@@ -783,7 +859,7 @@ function hook_views_default_views_alter(&$views) {
  *   The View being executed.
  * @return
  *   An array with keys being the strings to replace, and the values the strings
- *   to replace them with. The strings to replace are ofted surrounded with
+ *   to replace them with. The strings to replace are often surrounded with
  *   '***', as illustrated in the example implementation.
  */
 function hook_views_query_substitutions($view) {
@@ -834,7 +910,7 @@ function hook_views_pre_view(&$view, &$display_id, &$args) {
     user_access('administer site configuration') &&
     $display_id == 'public_display'
   ) {
-    $display_id = 'private_display';
+    $view->set_display('private_display');
   }
 }
 
@@ -848,7 +924,7 @@ function hook_views_pre_view(&$view, &$display_id, &$args) {
  *   The view object about to be processed.
  */
 function hook_views_pre_build(&$view) {
-  // Because of some unexplicable business logic, we should remove all
+  // Because of some inexplicable business logic, we should remove all
   // attachments from all views on Mondays.
   // (This alter could be done later in the execution process as well.)
   if (date('D') == 'Mon') {
@@ -999,7 +1075,7 @@ function hook_views_query_alter(&$view, &$query) {
     // Traverse through the 'where' part of the query.
     foreach ($query->where as &$condition_group) {
       foreach ($condition_group['conditions'] as &$condition) {
-        // If this is the part of the query filtering on title, chang the
+        // If this is the part of the query filtering on title, change the
         // condition to filter on node ID.
         if ($condition['field'] == 'node.title') {
           $condition = array(
@@ -1077,8 +1153,8 @@ function hook_views_ajax_data_alter(&$commands, $view) {
   // Replace Views' method for scrolling to the top of the element with your
   // custom scrolling method.
   foreach ($commands as &$command) {
-    if ($command['method'] == 'viewsScrollTop') {
-      $command['method'] .= 'myScrollTop';
+    if ($command['command'] == 'viewsScrollTop') {
+      $command['command'] .= 'myScrollTop';
     }
   }
 }
@@ -1093,6 +1169,32 @@ function hook_views_ajax_data_alter(&$commands, $view) {
  */
 function hook_views_invalidate_cache() {
   cache_clear_all('views:*', 'cache_mymodule', TRUE);
+}
+
+/**
+ * Allow modules to alter a view prior to being saved.
+ */
+function hook_views_view_presave($view) {
+  // Do some adjustments to the view. Handle with care.
+  if (mymodule_check_view($view)) {
+    mymodule_do_some_voodoo($view);
+  }
+}
+
+/**
+ * Allow modules to respond to a view being saved.
+ */
+function hook_views_view_save($view) {
+  // Make a watchdog entry.
+  watchdog('views', 'The view @name was deleted by @user at @time', array('@name' => $view->name, '@user' => $GLOBALS['user']->name, '@time' => format_date(time())));
+}
+
+/**
+ * Allow modules to respond to a view being deleted or reverted.
+ */
+function hook_views_view_delete($view) {
+  // Make a watchdog entry.
+  watchdog('views', 'The view @name was deleted by @user at @time', array('@name' => $view->name, '@user' => $GLOBALS['user']->name, '@time' => format_date(time())));
 }
 
 /**

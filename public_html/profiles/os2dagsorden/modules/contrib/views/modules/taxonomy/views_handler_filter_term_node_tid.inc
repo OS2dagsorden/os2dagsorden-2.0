@@ -98,15 +98,12 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     if ($this->options['type'] == 'textfield') {
       $default = '';
       if ($this->value) {
-        $result = db_select('taxonomy_term_data', 'td')
-          ->fields('td')
-          ->condition('td.tid', $this->value)
-          ->execute();
-        foreach ($result as $term) {
+        $result = taxonomy_term_load_multiple($this->value);
+        foreach ($result as $entity_term) {
           if ($default) {
             $default .= ', ';
           }
-          $default .= $term->name;
+          $default .= entity_label('taxonomy_term', $entity_term);
         }
       }
 
@@ -122,13 +119,14 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     }
     else {
       if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = taxonomy_get_tree($vocabulary->vid);
+        $tree = taxonomy_get_tree($vocabulary->vid, 0, NULL, TRUE);
         $options = array();
 
         if ($tree) {
+          // Translation system needs full entity objects, so we have access to label.
           foreach ($tree as $term) {
             $choice = new stdClass();
-            $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
+            $choice->option = array($term->tid => str_repeat('-', $term->depth) . entity_label('taxonomy_term', $term));
             $options[] = $choice;
           }
         }
@@ -147,8 +145,14 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
           $query->condition('tv.machine_name', $vocabulary->machine_name);
         }
         $result = $query->execute();
+
+        $tids = array();
         foreach ($result as $term) {
-          $options[$term->tid] = $term->name;
+          $tids[] = $term->tid;
+        }
+        $entities = taxonomy_term_load_multiple($tids);
+        foreach ($entities as $entity_term) {
+          $options[$entity_term->tid] = entity_label('taxonomy_term', $entity_term);
         }
       }
 
@@ -202,6 +206,9 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     if (empty($form_state['exposed'])) {
       // Retain the helper option
       $this->helper->options_form($form, $form_state);
+
+      // Show help text if not exposed to end users.
+      $form['value']['#description'] = t('Leave blank for all. Otherwise, the first selected term will be the default instead of "Any".');
     }
   }
 
@@ -224,10 +231,23 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
       return TRUE;
     }
 
+    // We need to know the operator, which is normally set in
+    // views_handler_filter::accept_exposed_input(), before we actually call
+    // the parent version of ourselves.
+    if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']) && isset($input[$this->options['expose']['operator_id']])) {
+      $this->operator = $input[$this->options['expose']['operator_id']];
+    }
+
     // If view is an attachment and is inheriting exposed filters, then assume
     // exposed input has already been validated
     if (!empty($this->view->is_attachment) && $this->view->display_handler->uses_exposed()) {
       $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
+    }
+
+    // If we're checking for EMPTY or NOT, we don't need any input, and we can
+    // say that our input conditions are met by just having the right operator.
+    if ($this->operator == 'empty' || $this->operator == 'not empty') {
+      return TRUE;
     }
 
     // If it's non-required and there's no value don't bother filtering.
@@ -238,7 +258,7 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
     $rc = parent::accept_exposed_input($input);
     if ($rc) {
       // If we have previously validated input, override.
-      if (isset($this->validated_exposed_input)) {
+      if (!$this->is_a_group() && isset($this->validated_exposed_input)) {
         $this->value = $this->validated_exposed_input;
       }
     }
@@ -347,12 +367,9 @@ class views_handler_filter_term_node_tid extends views_handler_filter_many_to_on
 
     if ($this->value) {
       $this->value = array_filter($this->value);
-      $result = db_select('taxonomy_term_data', 'td')
-        ->fields('td')
-        ->condition('td.tid', $this->value)
-        ->execute();
-      foreach ($result as $term) {
-        $this->value_options[$term->tid] = $term->name;
+      $result = taxonomy_term_load_multiple($this->value);
+      foreach ($result as $entity_term) {
+        $this->value_options[$entity_term->tid] = entity_label('taxonomy_term', $entity_term);
       }
     }
     return parent::admin_summary();
