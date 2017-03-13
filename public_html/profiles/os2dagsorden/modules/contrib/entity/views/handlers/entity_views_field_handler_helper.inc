@@ -18,7 +18,7 @@ class EntityFieldHandlerHelper {
    * Provide appropriate default options for a handler.
    */
   public static function option_definition($handler) {
-    if (entity_property_list_extract_type($handler->definition['type'])) {
+    if (isset($handler->definition['type']) && entity_property_list_extract_type($handler->definition['type'])) {
       $options['list']['contains']['mode'] = array('default' => 'collapse');
       $options['list']['contains']['separator'] = array('default' => ', ');
       $options['list']['contains']['type'] = array('default' => 'ul');
@@ -32,7 +32,7 @@ class EntityFieldHandlerHelper {
    * Provide an appropriate default option form for a handler.
    */
   public static function options_form($handler, &$form, &$form_state) {
-    if (entity_property_list_extract_type($handler->definition['type'])) {
+    if (isset($handler->definition['type']) && entity_property_list_extract_type($handler->definition['type'])) {
       $form['list']['mode'] = array(
         '#type' => 'select',
         '#title' => t('List handling'),
@@ -196,8 +196,14 @@ class EntityFieldHandlerHelper {
     if ($handler->relationship) {
       $current_handler = $handler;
       $view = $current_handler->view;
-      while (!empty($current_handler->relationship) && !empty($view->relationship[$current_handler->relationship])) {
-        $current_handler = $view->relationship[$current_handler->relationship];
+      $relationships = array();
+      // Collect all relationships, keyed by alias.
+      foreach ($view->relationship as $key => $relationship) {
+        $key = $relationship->alias ? $relationship->alias : $key;
+        $relationships[$key] = $relationship;
+      }
+      while (!empty($current_handler->relationship) && !empty($relationships[$current_handler->relationship])) {
+        $current_handler = $relationships[$current_handler->relationship];
         $return = $current_handler->real_field . ($return ? ":$return" : '');
       }
     }
@@ -337,7 +343,7 @@ class EntityFieldHandlerHelper {
             $values->_entity_properties[$selector] = $wrapper->value();
           }
           else {
-            $values->_entity_properties[$selector] = isset($wrapper->$field) ? $wrapper->$field->value(array('identifier' => TRUE)) : $default;
+            $values->_entity_properties[$selector] = isset($wrapper->$field) ? $wrapper->$field->value(array('identifier' => TRUE, 'sanitize' => TRUE)) : $default;
           }
         }
         catch (EntityMetadataWrapperException $e) {

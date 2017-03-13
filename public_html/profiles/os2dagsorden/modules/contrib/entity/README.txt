@@ -11,7 +11,15 @@ entity CRUD controller, which helps simplifying the creation of new entity types
 This is an API module. You only need to enable it if a module depends on it or
 you are interested in using it for development.
 
-This README is for interested developers. If you are not interested in
+Advanced usage:
+---------------
+You can optimize cache clearing performance by setting the variable
+'entity_rebuild_on_flush' to FALSE. This skips rebuilding of feature
+components and exported entities during cache flushing. Instead, it is triggered
+by the features module only; e.g., when features are reverted.
+
+
+The README below is for interested developers. If you are not interested in
 developing, you may stop reading now.
 
 --------------------------------------------------------------------------------
@@ -27,7 +35,8 @@ developing, you may stop reading now.
     itself.
 
   * Thus the module provides API functions like entity_save(), entity_create(),
-    entity_delete(), entity_view() and entity_access() among others.
+    entity_delete(), entity_revision_delete(), entity_view() and entity_access()
+    among others.
     entity_load(), entity_label() and entity_uri() are already provided by
     Drupal core.
 
@@ -48,17 +57,16 @@ developing, you may stop reading now.
    "Entity" class is provided. In particular, it is useful to extend this class
    in order to easily customize the entity type, e.g. saving.
 
- * The controller supports fieldable entities, however it does not yet support
-   revisions. There is also a controller which supports implementing exportable
-   entities.
+ * The controller supports fieldable entities and revisions. There is also a
+   controller which supports implementing exportable entities.
 
  * The Entity CRUD API helps with providing additional module integration too,
    e.g. exportable entities are automatically integrated with the Features
    module. These module integrations are implemented in separate controller
    classes, which may be overridden and deactivated on their own.
 
- * There is also an optional ui controller class, which assits with providing an
-   administrative UI for managing entities of a certain type.
+ * There is also an optional ui controller class, which assists with providing
+   an administrative UI for managing entities of a certain type.
 
  * For more details check out the documentation in the drupal.org handbook
    http://drupal.org/node/878804 as well as the API documentation, i.e.
