@@ -25,7 +25,7 @@
  * @param mixed &$variables variables
  * @return none
  */
-function os2dagsorden_theme_preprocess_page(&$variables) 
+function os2dagsorden_theme_preprocess_page(&$variables)
 {   drupal_add_library('system', 'ui.draggable');
     drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/jquery.ui.touch-punch.min.js');
     drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/os2dagsorden_theme.js');

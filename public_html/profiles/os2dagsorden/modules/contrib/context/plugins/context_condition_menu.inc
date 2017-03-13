@@ -14,7 +14,7 @@ class context_condition_menu extends context_condition {
       foreach ($menus as $key => $name) {
         $id = explode(':', $key);
         if ($id[1] == '0') {
-          $root_menus[$id[0]] = check_plain($name);
+          $root_menus[$id[0]] = $name;
         }
         else {
           $link = menu_link_load($id[1]);
@@ -41,8 +41,10 @@ class context_condition_menu extends context_condition {
    */
   function condition_form($context) {
     $form = parent::condition_form($context);
+    $menu_count = count($form['#options'], COUNT_RECURSIVE);
     $form['#type'] = 'select';
     $form['#multiple'] = TRUE;
+    $form['#attributes'] = array('size' => $menu_count > 20 ? 20 : $menu_count);
     return $form;
   }
 
