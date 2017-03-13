@@ -50,6 +50,7 @@ $servers['ldapauthor1']['search_results']['(member=cn=jkool,ou=guest accounts,dc
  */
 $servers['ldapauthor1']['users']['cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'jdoe@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jdoe', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -58,6 +59,7 @@ $servers['ldapauthor1']['users']['cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversi
 
 $servers['ldapauthor1']['users']['cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'jkool@guests.myuniversity.edu', 'count' => 1),
     'mailcode' => array( 0 => '17', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jkool', 'count' => 1),
@@ -68,6 +70,7 @@ $servers['ldapauthor1']['users']['cn=jkool,ou=guest accounts,dc=ad,dc=myuniversi
 // duplicate of previous with escaped commas in cn.
 $servers['ldapauthor1']['users']['cn=Flintstone\, Wilma,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=Flintstone\, Wilma,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=Flintstone\, Wilma,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'wilmaf@guests.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'wilmaf', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -81,6 +84,7 @@ $servers['ldapauthor1']['users']['cn=Flintstone\, Wilma,ou=guest accounts,dc=ad,
 // duplicate of previous with quoted cn.
 $servers['ldapauthor1']['users']['cn=Rubble\, Barney,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=Rubble\, Barney,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=Rubble\, Barney,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'barneyr@guests.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'barneyr', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -94,6 +98,7 @@ $servers['ldapauthor1']['users']['cn=Rubble\, Barney,ou=guest accounts,dc=ad,dc=
 
 $servers['ldapauthor1']['users']['cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'unkool@nowhere.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jkool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -102,6 +107,7 @@ $servers['ldapauthor1']['users']['cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu
 
 $servers['ldapauthor1']['users']['cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'verykool@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'verykool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -117,6 +123,7 @@ $servers['ldapauthor1']['users']['cn=verykool,ou=special guests,ou=guest account
 
 $servers['ldapauthor1']['users']['cn=newkool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=newkool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=newkool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'newkool@guests.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'newkool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -125,6 +132,7 @@ $servers['ldapauthor1']['users']['cn=newkool,ou=special guests,ou=guest accounts
 
 $servers['ldapauthor1']['users']['cn=joeprogrammer,ou=it,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=joeprogrammer,ou=it,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=joeprogrammer,ou=it,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'joeprogrammer@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'joeprogrammer', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -147,27 +155,32 @@ $servers['ldapauthor1']['users']['cn=joeprogrammer,ou=it,dc=ad,dc=myuniversity,d
  */
 $servers['ldapauthor1']['groups']['cn=sysadmins,ou=it,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=sysadmins,ou=it,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=sysadmins,ou=it,dc=ad,dc=myuniversity,dc=edu'),
     'memberOf' => array( 0 => 'cn=it,ou=it,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
   );
 
 $servers['ldapauthor1']['groups']['cn=developers,ou=it,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=developers,ou=it,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=developers,ou=it,dc=ad,dc=myuniversity,dc=edu'),
     'memberOf' => array( 0 => 'cn=it,ou=it,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
   );
 
 $servers['ldapauthor1']['groups']['cn=it,ou=it,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=it,ou=it,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=it,ou=it,dc=ad,dc=myuniversity,dc=edu'),
     'memberOf' => array( 0 => 'cn=staff,ou=people,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'memberOf' => array( 0 => 'cn=sysadmins,ou=it,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),  // bogus recursion to test bogus recursion
   );
 
 $servers['ldapauthor1']['groups']['cn=staff,ou=people,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=staff,ou=people,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=staff,ou=people,dc=ad,dc=myuniversity,dc=edu'),
     'memberOf' => array( 0 => 'cn=people,ou=it,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
   );
 
 $servers['ldapauthor1']['groups']['cn=people,ou=it,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=people,ou=it,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=people,ou=it,dc=ad,dc=myuniversity,dc=edu'),
     'memberOf' => array('count' => 0),
   );
 
@@ -227,6 +240,7 @@ $servers['ldapauthor1']['search_results']['(|((dn=cn=staff,ou=people,dc=ad,dc=my
  */
 $servers['ldapauthor1']['users']['cn=service-account,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=service-account,dc=ad,dc=myuniversity,dc=edu',
+        'distinguishedname' => array( 0 => 'cn=people,cn=groups,dc=ad,dc=myuniversity,dc=edu'),
     'mail' => array( 0 => 'service-account@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'service-account', 'count' => 1),
     'memberOf' => array(

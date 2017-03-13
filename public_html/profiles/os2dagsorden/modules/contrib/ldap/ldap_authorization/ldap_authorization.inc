@@ -472,8 +472,8 @@ function _ldap_authorization_ldap_authorization_maps_alter(&$user, &$user_ldap_e
   $derive_from_entry_authorizations = array();
   if ($consumer_conf->deriveFromEntry) {
     if ($consumer_conf->deriveFromEntryAttrMatchingUserAttrUndefined) {
-      // this condition will be removed in the 7.x-2.x branch,  its here to avoid breaking 7.x-1.x sites
-      // that use this somewhat flawed approach successfully.  see: http://drupal.org/node/1412076
+      // this condition is needed for ldaps that don't have an attribute containing the dn
+      // see: http://drupal.org/node/1412076 and http://drupal.org/node/1066608
       foreach ($consumer_conf->deriveFromEntryEntries as $branch) {
         $filter = '(' . $consumer_conf->deriveFromEntryMembershipAttr . '=' . $user_ldap_entry['dn'] . ')';
         $entries = $ldap_server->search($branch, $filter, array('cn'));
@@ -482,6 +482,7 @@ function _ldap_authorization_ldap_authorization_maps_alter(&$user, &$user_ldap_e
           $entries = $ldap_server->search($branch, $filter, array('cn'));
         }
         if ($entries !== FALSE) {
+          unset($entries['count']);
           foreach ($entries as $entry) {
             if (isset($entry['cn'])) {
               $authorization_id = $entry['cn'][0];
@@ -495,7 +496,7 @@ function _ldap_authorization_ldap_authorization_maps_alter(&$user, &$user_ldap_e
       }
     }
     elseif (isset($user_ldap_entry[$consumer_conf->deriveFromEntryAttrMatchingUserAttr]) ||
-      isset($user_ldap_entry['attr'][$consumer_conf->deriveFromEntryAttrMatchingUserAttr])) {
+      isset($user_ldap_entry['attr'][ldap_server_massage_text($consumer_conf->deriveFromEntryAttrMatchingUserAttr, 'attr_name', LDAP_SERVER_MASSAGE_QUERY_ARRAY)])) {
       // $derive_from_entries_entries, $derive_from_entry_attr, $derive_from_entry_user_ldap_attr, $user_ldap_entry, $nested = FALSE
       $derive_from_entry_authorizations = $ldap_server->deriveFromEntryGroups(
         $consumer_conf->deriveFromEntryEntries,
@@ -505,6 +506,7 @@ function _ldap_authorization_ldap_authorization_maps_alter(&$user, &$user_ldap_e
         $user_ldap_entry,
         $consumer_conf->deriveFromEntryNested
       );
+      //  deriveFromEntryGroups($entries, $entries_attr
       if (count($derive_from_entry_authorizations)) {
         foreach ($derive_from_entry_authorizations as $i => $authorization) {
           if ($consumer_conf->deriveFromEntryUseFirstAttr) {

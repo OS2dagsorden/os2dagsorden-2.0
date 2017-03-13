@@ -140,19 +140,16 @@ class LdapAuthorizationConsumerDrupalRole extends LdapAuthorizationConsumerAbstr
         WATCHDOG_ERROR);
         return FALSE;
     }
-    //debug($user->roles);
     $new_roles = $user->roles + array($this->getDrupalRoleByName($role_name) => $role_name);
     $user_edit = array('roles' => $new_roles);
 
-    //debug($new_roles);
-    //debug($user_edit);
     if ($this->detailedWatchdogLog) {
       watchdog('ldap_authorization', 'grantSingleAuthorization in drupal rold' . print_r($user, TRUE), array(), WATCHDOG_DEBUG);
     }
 
     $account = user_load($user->uid);
     $user = user_save($account, $user_edit);
-    $result = ($user && !is_null($user->roles[$this->getDrupalRoleByName($role_name)]));
+    $result = ($user && isset($user->roles[$this->drupalRolesByName[drupal_strtolower($role_name)]]));
 
     if ($this->detailedWatchdogLog) {
       watchdog('ldap_authorization', 'LdapAuthorizationConsumerDrupalRole.grantSingleAuthorization()
@@ -171,7 +168,7 @@ class LdapAuthorizationConsumerDrupalRole extends LdapAuthorizationConsumerAbstr
 
   public function validateAuthorizationMappingTarget($map_to, $form_values = NULL, $clear_cache = FALSE) {
     $has_form_values = is_array($form_values);
-    $message_type = NULL;
+	  $message_type = NULL;
     $message_text = NULL;
     $normalized = $this->normalizeMappings(array($map_to));
     $tokens = array('!map_to' => $map_to);
@@ -180,7 +177,6 @@ class LdapAuthorizationConsumerDrupalRole extends LdapAuthorizationConsumerAbstr
     if (is_array($normalized) && isset($normalized[0][1]) && $normalized[0][1] !== FALSE ) {
       $available_authorization_ids = $this->availableConsumerIDs($clear_cache);
       $available_authorization_ids = array_map('drupal_strtolower', $available_authorization_ids);
-      // debug($available_authorization_ids); debug($normalized[0]);
       $pass = (in_array(drupal_strtolower($normalized[0]), $available_authorization_ids));
     }
 
@@ -205,9 +201,8 @@ class LdapAuthorizationConsumerDrupalRole extends LdapAuthorizationConsumerAbstr
         $message_text .= t('Since automatic Drupal role creation is disabled, an existing role must be mapped to.  Either enable role creation or map to an existing role.');
       }
     }
-
-    return array($message_type, $message_text);
-  }
+		return array($message_type, $message_text);
+	}
 
   private function getDrupalRoleByName($role_name) {
   	$role_name_lowercase = drupal_strtolower($role_name);

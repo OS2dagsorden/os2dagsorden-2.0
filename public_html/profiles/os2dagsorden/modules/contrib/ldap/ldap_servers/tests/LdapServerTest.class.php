@@ -134,7 +134,7 @@ class LdapServerTest extends LdapServer {
    *   An array of matching entries->attributes, or FALSE if the search is empty.
    */
   function search($base_dn = NULL, $filter, $attributes = array(), $attrsonly = 0, $sizelimit = 0, $timelimit = 0, $deref = LDAP_DEREF_NEVER, $scope = LDAP_SCOPE_SUBTREE) {
-
+    //debug("feaux_server_filter=$filter");
     $filter = trim(str_replace(array("\n", "  "),array('',''), $filter)); // for test matching simplicity remove line breaks and tab spacing
    // debug("filter=$filter");
    // debug('search');  debug("base_dn: $base_dn"); debug("filter:<pre>$filter</pre>");
@@ -159,6 +159,9 @@ class LdapServerTest extends LdapServer {
     $filter = strtolower(trim($filter,"()"));
 
     list($filter_attribute, $filter_value) = explode('=', $filter);
+    if (strtolower($filter_attribute) == 'dn') { // don't allow filtering on dn.  filters should use distinguishedName
+      continue;
+    }
   //  $filter_value = ldap_pear_unescape_filter_value($filter_value);
     // need to perform feaux ldap search here with data in
     $results = array();
@@ -171,11 +174,12 @@ class LdapServerTest extends LdapServer {
         $user_data_lcase['attr'][drupal_strtolower($attr)] = $values;
       }
 
-      $dn = strtolower($dn);
+      
       // if not in basedn, skip
       // eg. basedn ou=campus accounts,dc=ad,dc=myuniversity,dc=edu
       // should be leftmost string in:
       // cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu
+      $dn = strtolower($dn);
       $pos = stripos($dn, $base_dn);
       if ($pos === FALSE || strcasecmp($base_dn, substr($dn, 0, $pos + 1)) == FALSE) {
         if ($my_debug2) {debug("dn=$dn not in base_dn=$base_dn");}
@@ -206,7 +210,7 @@ class LdapServerTest extends LdapServer {
 
 
       // loop through all attributes, if any don't match continue
-      $user_data_lcase['attr']['dn'] = $dn;
+      $user_data_lcase['attr']['distinguishedname'] = $dn;
       if ($attributes) {
         $selected_user_data = array();
         foreach ($attributes as $i => $attr_name) {
@@ -246,8 +250,8 @@ class LdapServerTest extends LdapServer {
       }
 
       // loop through all attributes, if any don't match continue
-      $group_data['attr']['dn'] = $dn;
-      $group_data['distinguishedname'] = $dn;
+     // $group_data['attr']['distinguishedname'] = $dn;
+     // $group_data['distinguishedname'] = $dn;
 
       if ($attributes) {
         $selected_group_data = array();

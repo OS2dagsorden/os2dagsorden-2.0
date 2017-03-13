@@ -74,6 +74,7 @@ $test_data['servers']['ldapauthen1']['search_results']['member=cn=jkool,ou=guest
  */
 $test_data['servers']['ldapauthen1']['users']['cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=jdoe,ou=campus accounts,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'mail' => array( 0 => 'jdoe@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jdoe', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -82,6 +83,7 @@ $test_data['servers']['ldapauthen1']['users']['cn=jdoe,ou=campus accounts,dc=ad,
 
 $test_data['servers']['ldapauthen1']['users']['cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=jkool,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'mail' => array( 0 => 'jkool@guests.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jkool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -90,6 +92,7 @@ $test_data['servers']['ldapauthen1']['users']['cn=jkool,ou=guest accounts,dc=ad,
 
 $test_data['servers']['ldapauthen1']['users']['cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=unkool,ou=lost,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'mail' => array( 0 => 'unkool@nowhere.myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'jkool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -98,6 +101,7 @@ $test_data['servers']['ldapauthen1']['users']['cn=unkool,ou=lost,dc=ad,dc=myuniv
 
 $test_data['servers']['ldapauthen1']['users']['cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'mail' => array( 0 => 'verykool@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'verykool', 'count' => 1),
     'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -114,6 +118,7 @@ $test_data['servers']['ldapauthen1']['users']['cn=verykool,ou=special guests,ou=
  */
 $test_data['servers']['ldapauthen1']['users']['cn=service-account,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
     'dn' => 'cn=service-account,dc=ad,dc=myuniversity,dc=edu',
+    'distinguishedname' => array( 0 => 'cn=service-account,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
     'mail' => array( 0 => 'service-account@myuniversity.edu', 'count' => 1),
     'sAMAccountName' => array( 0 => 'service-account', 'count' => 1),
     'memberOf' => array(

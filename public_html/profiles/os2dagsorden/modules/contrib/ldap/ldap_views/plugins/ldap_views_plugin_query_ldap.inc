@@ -257,6 +257,9 @@ class ldap_views_plugin_query_ldap extends views_plugin_query {
         $entry['jpegphoto'][0] = "<img src='data:image/jpeg;base64,".base64_encode($entry['jpegphoto'][0])."' alt='photo' />";
       }
       foreach ($view->field as $field) {
+        if (! isset($field_alias[$field->field_alias])) {
+          continue;
+        }
         $alias = $field_alias[$field->field_alias];
         if (is_array($entry) && array_key_exists($alias, $entry)) {
           if (is_array($entry[$alias])) {
@@ -298,7 +301,6 @@ class ldap_views_plugin_query_ldap extends views_plugin_query {
         }
       }
       $params[] = &$entries;
-      call_user_func_array('array_multisort', $params);
       // Some LDAP setups output a 'count' variable first in the array, which changes the array size;
       // temporarily remove it, sort the arrays, and then put it back.
       if (array_key_exists('count', $entries)) {
@@ -317,6 +319,9 @@ class ldap_views_plugin_query_ldap extends views_plugin_query {
       $row = array();
       $entry = &$entries[$offset + $i];
       foreach ($view->field as $field) {
+        if (! isset($field_alias[$field->field_alias])) {
+          continue;
+        }
         if (array_key_exists($field_alias[$field->field_alias], $entry)) {
           $row[$field->field_alias] = $entry[$field_alias[$field->field_alias]];
         }
