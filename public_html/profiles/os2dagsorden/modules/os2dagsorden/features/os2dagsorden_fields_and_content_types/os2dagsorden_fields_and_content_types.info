@@ -44,4 +44,4 @@ features[variable][] = chosen_no_results_text
 features[variable][] = chosen_placeholder_text_multiple
 features[variable][] = chosen_placeholder_text_single
 features[variable][] = chosen_search_contains
-mtime = 1471611527
+mtime = 1479284149

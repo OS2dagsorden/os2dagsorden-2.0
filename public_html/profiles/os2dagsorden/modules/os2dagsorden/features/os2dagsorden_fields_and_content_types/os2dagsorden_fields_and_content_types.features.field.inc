@@ -140,7 +140,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_os2web_meetings_sp_shar_gr',
-      'label' => 'Deles med grupper',
+      'label' => 'Deles med groupper',
       'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
@@ -234,12 +234,10 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'options',
+        'module' => 'entityreference',
         'settings' => array(
           'allow_duplicates' => 0,
-          'apply_chosen' => '',
           'close_modal' => 1,
-          'content_taxonomy_opt_groups' => FALSE,
           'match_operator' => 'CONTAINS',
           'pass_argument' => 1,
           'pass_arguments' => '',
@@ -249,7 +247,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
           'view' => 'os2dagsorden_users_view_widget|os2dagsorden_user_view_widget',
           'view_mode' => 'os2dagsorden_users_select',
         ),
-        'type' => 'options_select',
+        'type' => 'entityreference_autocomplete',
         'weight' => '-2',
       ),
     ),
@@ -1198,7 +1196,7 @@ function os2dagsorden_fields_and_content_types_field_default_fields() {
   // Included for use with string extractors like potx.
   t('Comname');
   t('Deles med');
-  t('Deles med grupper');
+  t('Deles med groupper');
   t('Follows committees');
   t('Follows committees subscribed');
   t('Follows committees+');

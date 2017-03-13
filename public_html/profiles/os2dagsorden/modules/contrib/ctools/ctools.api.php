@@ -199,7 +199,71 @@ function hook_ctools_render_alter(&$info, &$page, &$context) {
  * or categories or to rename content on specific sites.
  */
 function hook_ctools_content_subtype_alter($subtype, $plugin) {
-  $subtype['render last'] = TRUE;
+  // Force a particular subtype of a particular plugin to render last.
+  if ($plugin['module'] == 'some_plugin_module' && $plugin['name'] == 'some_plugin_name' && $subtype['subtype_id'] == 'my_subtype_id') {
+    $subtype['render last'] = TRUE;
+  }
+}
+
+/**
+ * Alter the definition of an entity context plugin.
+ *
+ * @param array $plugin
+ *   An associative array defining a plugin.
+ * @param array $entity
+ *   The entity info array of a specific entity type.
+ * @param string $plugin_id
+ *   The plugin ID, in the format NAME:KEY.
+ */
+function hook_ctools_entity_context_alter(&$plugin, &$entity, $plugin_id) {
+  ctools_include('context');
+  switch ($plugin_id) {
+    case 'entity_id:taxonomy_term':
+      $plugin['no ui'] = TRUE;
+    case 'entity:user':
+      $plugin = ctools_get_context('user');
+      unset($plugin['no ui']);
+      unset($plugin['no required context ui']);
+      break;
+  }
+}
+
+/**
+ * Alter the definition of entity context plugins.
+ *
+ * @param array $plugins
+ *   An associative array of plugin definitions, keyed by plugin ID.
+ *
+ * @see hook_ctools_entity_context_alter()
+ */
+function hook_ctools_entity_contexts_alter(&$plugins) {
+  $plugins['entity_id:taxonomy_term']['no ui'] = TRUE;
+}
+
+/**
+ * Change cleanstring settings.
+ *
+ * @param array $settings
+ *   An associative array of cleanstring settings.
+ *
+ * @see ctools_cleanstring()
+ */
+function hook_ctools_cleanstring_alter(&$settings) {
+  // Convert all strings to lower case.
+  $settings['lower case'] = TRUE;
+}
+
+/**
+ * Change cleanstring settings for a specific clean ID.
+ *
+ * @param array $settings
+ *   An associative array of cleanstring settings.
+ *
+ * @see ctools_cleanstring()
+ */
+function hook_ctools_cleanstring_CLEAN_ID_alter(&$settings) {
+  // Convert all strings to lower case.
+  $settings['lower case'] = TRUE;
 }
 
 /**
