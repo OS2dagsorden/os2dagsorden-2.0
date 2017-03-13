@@ -919,19 +919,10 @@ function os2dasorden_admin_suite_reschedule_file_adlib(){
 }
 
 function os2dasorden_admin_suite_just_code () {
+  $node = node_load(2804);
+  dpm($node->field_os2web_meetings_bpa_body['und'][0]['safe_value']);
+return 'here';
 
-  $query = new EntityFieldQuery();
-  $query->entityCondition('entity_type', 'node')
-            ->fieldCondition('field_os2web_meetings_addendum', 'nid', 271674, '=');
-   $result = $query->execute();
-  if (isset($result['node'])) {
-    $possible_meetings = array_keys($result['node']);
-
-  foreach ($possible_meetings  as $tillaeg){
-      $tillaegmeeting=node_load($tillaeg);
-      var_dump($tillaegmeeting);
-  }
-  }
   }
 
   function os2dasorden_admin_suite_update_ldap_users() {
