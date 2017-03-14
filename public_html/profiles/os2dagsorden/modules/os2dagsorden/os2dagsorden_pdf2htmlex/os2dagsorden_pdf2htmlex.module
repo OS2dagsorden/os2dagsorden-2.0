@@ -15,8 +15,12 @@ define('DEFAULT_PDF_HTML_ZOOM', 1.25); // default zoom for convertion
 define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/')); // default zoom for convertion
 define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);//number of files to handle at once
 define('MIN_PDF2HTMLEX_VERSION', '0.6'); //min pdf2htmlex version
- 
-// to delete
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
 function os2dagsorden_pdf2htmlex_menu() {
     $items = array();
     $items['os2dagsorden/run_pdf_html'] = array(
@@ -35,6 +39,11 @@ function os2dagsorden_pdf2htmlex_menu() {
   return $items;
 }
 
+/**
+ * Report page
+ *
+ * @return mixed
+ */
 function os2dagsorden_pdf2htmlex_report(){
   /*
    * PROGRESS:
@@ -104,6 +113,11 @@ function os2dagsorden_pdf2htmlex_report(){
   return $content;
 }
 
+/**
+ * Starts the convertsion and prints the debug info, userful for quick debugging.
+ *
+ * @return string
+ */
 function os2dagsorden_pdf2htmlex_do_convert(){
     global $debug_info;
     os2dagsorden_pdf2htmlex_cron();
@@ -146,12 +160,20 @@ function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
   }
 }
 
+/**
+ * Implement hook_cronapi.
+ *
+ * @param $op
+ * @param null $job
+ * @return array
+ */
 function os2dagsorden_pdf2htmlex_cronapi($op, $job = NULL) {
   switch ($op) {
     case 'list':
       return array('os2dagsorden_pdf2htmlex_cron' => t('Converts PDF files to HTML'));
   }
 }
+
 /**
  * Cron implementation.
  * Goes through the entries in database table, converts the new records,
@@ -344,7 +366,7 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
 
     //check if already convered
     if(!file_exists($path)){
-	setlocale(LC_CTYPE, "en_DK.UTF-8");//TODO: one has to know the exact locale of the system, otherwise uncomment the lines
+	setlocale(LC_CTYPE, "en_DK.UTF-8");//one has to know the exact locale of the system, otherwise uncomment the lines
 	$shell_file_path_real = escapeshellarg($file_path_real);
 	$shell_dest_dir_real = escapeshellarg($dest_dir_real);
       //$shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";

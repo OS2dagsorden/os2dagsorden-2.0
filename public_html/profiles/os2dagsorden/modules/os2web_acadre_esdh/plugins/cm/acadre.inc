@@ -65,7 +65,6 @@ function ops2web_acadre_esdh_available() {
  * @return array
  *   Document structure
  *
- * @TODO: Rework into generic datatypes for return value
  */
 function ops2web_acadre_esdh_get_document($doc_id) {
   $pws = _ops2web_acadre_esdh_get_pws_instance();

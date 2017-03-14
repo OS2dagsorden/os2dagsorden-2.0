@@ -36,6 +36,11 @@ function os2dagsorden_logging_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_watchdog().
+ *
+ * @param array $log_entry
+ */
 function os2dagsorden_logging_watchdog(array $log_entry) {
   try {
   

@@ -16,6 +16,11 @@ define('OS2WEB_CONVERTION_DIR','public://os2convert');
 define('OS2WEB_COPIED_FILETYPE','doc,docx,xls,xlsx');
 define('MIN_SOFFICE_VERSION', '4.3.3.2');
 
+/**
+ * Implements hook_menu()
+ *
+ * @return array
+ */
 function os2web_pdf_conversion_manager_menu() {
     $items = array();
     $items['os2web/run_file_manager'] = array(
@@ -39,14 +44,19 @@ function os2web_pdf_conversion_manager_menu() {
     return $items;
 }
 
+/**
+ * Callback to call PDF conversion manager cron
+ */
 function os2web_pdf_conversion_manager_file_manager() {
     global $debug_info;
 
     os2web_pdf_conversion_manager_cron();
-
     drupal_goto('admin/config/os2web/pdf_converter');
 }
 
+/**
+ * Callback function to remove outdated entries from os2web_pdf_conversion_manager_files
+ */
 function os2web_pdf_conversion_manager_remove_outdated() {
     $result = db_select('os2web_pdf_conversion_manager_files', 'c')
         ->fields('c')
@@ -67,6 +77,11 @@ function os2web_pdf_conversion_manager_remove_outdated() {
     drupal_goto('admin/config/os2web/pdf_converter');
 }
 
+/**
+ * Callback to the settings page
+ *
+ * @return string
+ */
 function os2web_pdf_convertion_manager_setting_page(){
     if (isset($_GET['reset'])) {
         if (is_numeric($_GET['reset'])) {
@@ -104,6 +119,13 @@ function os2web_pdf_convertion_manager_setting_page(){
     return render(drupal_get_form('os2web_pdf_conversion_manager_pdf_converter_form')) . render($content);
 }
 
+/**
+ * PDF conversion manager settings form
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
     //avoiding duplication of settings. If os2dagsorden_settings module is present and enabled - the settings will be presented there
     $form['os2dagsorden_file_import'] = array(
@@ -144,6 +166,13 @@ function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
     return system_settings_form($form);
 }
 
+/**
+ * Implements hook_cronapi
+ *
+ * @param $op
+ * @param null $job
+ * @return array
+ */
 function os2web_pdf_conversion_manager_cronapi($op, $job = NULL) {
   switch ($op) {
     case 'list':
@@ -177,6 +206,12 @@ function os2web_pdf_conversion_manager_cron() {
 
     drupal_set_message('OS2Web PDF converter has been successfully run');
 }
+
+/**
+ * Manages MSG conversion
+ *
+ * @param $convertion_dir_path
+ */
 function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  $converted_files = Array();
  if ($msg_files = glob($convertion_dir_path . '/*.msg_attachments')) {
@@ -232,7 +267,12 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
  }
  }
 
- function _os2web_pdf_conversion_manager_manage_pdf($convertion_dir_path){
+/**
+ * Manages PDF convertsion.
+ *
+ * @param $convertion_dir_path
+ */
+function _os2web_pdf_conversion_manager_manage_pdf($convertion_dir_path){
   $converted_files = Array();
   if ($pdf_files = glob($convertion_dir_path . '/*.{pdf, PDF}', GLOB_BRACE)) {
    foreach ($pdf_files as $file) {
@@ -280,6 +320,13 @@ function _os2web_pdf_conversion_manager_manage_msg($convertion_dir_path){
   }
  }
 }
+
+/**
+ * Copies the file to conversion directory.
+ * Also schedules the file conversion by adding entiry into os2web_pdf_conversion_manager_files table.
+ *
+ * @param $fid
+ */
 function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
   $convertion_dir_path = drupal_realpath(variable_get('os2web_convertion_dir', OS2WEB_CONVERTION_DIR));
   if (file_exists($convertion_dir_path)===FALSE) {
@@ -323,7 +370,11 @@ function _os2web_pdf_conversion_manager_copy_file_to_convertion_dir($fid) {
   }
 }
 
-
+/**
+ * Check if the file with similar name (case insensitive) exists in the provided location.
+ * @param $filename
+ * @return bool
+ */
 function _os2web_pdf_conversion_manager_similar_file_exists($filename) {
     if (file_exists($filename)) {
         return $filename;
@@ -338,6 +389,7 @@ function _os2web_pdf_conversion_manager_similar_file_exists($filename) {
     }
     return FALSE;
 }
+
 function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $html_file){
     if (!file_exists($html_file)) return FALSE;
     $original_path_parts = pathinfo($original_file);
@@ -388,6 +440,15 @@ function _os2web_pdf_conversion_manager_update_msg_bpa($fid, $original_file, $ht
     watchdog('os2web pdf conversion_manager:', 'Can\'t copy  to %uri.', array('%uri' => $dest), WATCHDOG_WARNING);
     return FALSE;
 }
+
+/**
+ * Function that updated the managed file entry in the database.
+ *
+ * @param $fid
+ * @param $original_file
+ * @param $pdf_file
+ * @return bool
+ */
 function _os2web_pdf_conversion_manager_update_managed_file($fid, $original_file, $pdf_file) {
     $original_path_parts = pathinfo($original_file);
     $dest = drupal_realpath($original_path_parts['dirname']) . '/' . $original_path_parts['filename'] . '.pdf';
@@ -420,6 +481,14 @@ function _os2web_pdf_conversion_manager_update_managed_file($fid, $original_file
    return FALSE;
 }
 
+/**
+ * Function that uploads the converted file to drupal and updates the corresponding fields to use the new file
+ *
+ * @param $fid
+ * @param $msg_file_uri
+ * @param $pdf_file
+ * @return bool
+ */
 function _os2web_pdf_conversion_manager_import_attachments_file($fid, $msg_file_uri, $pdf_file){
     $original_path_parts = pathinfo($msg_file_uri);
     $dest = drupal_realpath($original_path_parts['dirname'] . '/' . basename($pdf_file));
@@ -543,6 +612,12 @@ function _os2web_pdf_conversion_manager_import_file($file_meta) {
 
   return $file;
 }
+
+/**
+ * Callback to check if the meeting type must be changes to dagsorden+/referat+.
+ *
+ * @param $node
+ */
 function _os2web_pdf_conversion_manager_set_status_published_plus($node){
       //getting corresponding bullet point
     $query = new EntityFieldQuery();
@@ -598,7 +673,7 @@ function os2web_pdf_conversion_manager_file_delete($file){
  * Implements hook_watchdog().
  */
 function os2web_pdf_conversion_manager_watchdog($log_entry) {
-    if ($log_entry['severity']==1){//TODO: set the priority
+    if ($log_entry['severity']==1){
         // Set up the mail body.
 
         $from = variable_get('site_mail', '');

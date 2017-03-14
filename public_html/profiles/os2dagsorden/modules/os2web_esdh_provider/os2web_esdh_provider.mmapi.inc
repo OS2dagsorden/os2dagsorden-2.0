@@ -826,8 +826,6 @@ function _acadre_esdh_import_term($term_name, $vocab) {
 
   err_debug('Start import term');
 
-  // TODO: Process members of the committee.
-  // FIXME: MAke vocab name configurable.
   $vid = db_select('taxonomy_vocabulary', 'tv')
     ->fields('tv', array('vid'))
     ->condition('machine_name', $vocab)

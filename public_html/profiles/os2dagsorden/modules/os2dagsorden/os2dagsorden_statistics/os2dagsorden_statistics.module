@@ -56,26 +56,32 @@ function os2dagsorden_statistics_menu() {
   return $items;
 }
 
-function os2dagsorden_statistics_page() {
-  $output = "<h3>User statistics</h3>";
-  return $output;
-}
-
+/**
+ * User statistics page output
+ *
+ * @return string
+ */
 function os2dagsorden_statistics_user_statistics_page() {
-  $output = "<h3>User statistics</h3>";
+  $output = "<h3>" . t('User statistics') . "</h3>";
 
   $result = db_query('select  YEAR(FROM_UNIXTIME(login_timestamp)) as Year, count(*) as login from login_tracker group by  YEAR(FROM_UNIXTIME(login_timestamp))');
   if ($result) {
     foreach ($result as $row) {
       $items[] = l($row->Year . ' (' . $row->login . ') ', '/admin/statistik/login_tracker/' . $row->Year);
-    };
+    }
     $output .= theme_item_list(array('items' => $items, 'type' => 'ul', 'attributes' => array()));
   }
   return $output;
 }
 
+/**
+ * User statistics page output by year
+ *
+ * @param null $year
+ * @return string
+ */
 function os2dagsorden_statistics_user_statistics_by_year($year = null) {
-  $output = "<h3>User statistics by $year year</h3>";
+  $output = "<h3>" . t('User statistics by @year year', array('@year' => $year)) . "</h3>";
   $headers = array(
     array('data' => t('UID'), 'field' => 'uid'),
     array('data' => t('Username'), 'field' => 'name'),
@@ -111,6 +117,11 @@ function os2dagsorden_statistics_user_statistics_by_year($year = null) {
   return $output;
 }
 
+/**
+ * Content statistics page output
+ *
+ * @return string
+ */
 function os2dagsorden_statistics_content_statistics_page() {
   $output = "<h1>Opgørelse over antal dagsordner og referater der er importeret til OS2dagsorden fordelt på antal år</h1>";
   $output .= '<div style="margin-top: 20px">
@@ -193,6 +204,13 @@ function os2dagsorden_statistics_page_build(&$page) {
   }
 }
 
+/**
+ * Search form for content statistics
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2dagsorden_statistics_content_views_search_form($form, $form_state) {
   drupal_add_css(drupal_get_path('module', 'os2dagsorden_statistics').'/css/os2dagsorden_statistics.css');
   drupal_set_title(t('Udvidet statistik på brug af OS2dagsorden'));
@@ -397,10 +415,12 @@ function os2dagsorden_statistics_content_views_search_form_submit($form, &$form_
   drupal_goto('admin/statistik/content_views', array('query' => $query));
 }
 
-/*
+/**
  * Return title in format meeting->bullet_point->bpa
+ *
+ * @param $url
+ * @return string
  */
-
 function _os2dagsorden_statistics_get_full_title($url) {
   $url_parts = parse_url($url);
   $path_parts = explode('/', $url_parts['path']);
@@ -413,21 +433,71 @@ function _os2dagsorden_statistics_get_full_title($url) {
   return $title;
 }
 
+/**
+ * Helper function to get title based on node id
+ *
+ * @param $nid
+ * @return mixed
+ */
 function _os2dagsorden_statistics_get_node_title($nid) {
   return db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
 }
 
+/**
+ * Helper function to get meeting date based on node id
+ *
+ * @param $nid
+ * @return mixed
+ */
 function _os2dagsorden_statistics_get_meeting_date($nid) {
   return db_query('SELECT  field_os2web_meetings_date_value FROM {field_revision_field_os2web_meetings_date} WHERE entity_id = :nid', array(':nid' => $nid))->fetchField();
 }
 
-// Ajax Call
+/**
+ * Ajax callback to load meetings based on selected committee
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2dagsorden_statistics_ajax_display_dropdown_meetings_callback($form, $form_state) {
   $commitee = $form_state['values']['committes'];
   $form['search']['meetings']['#options'] = _os2dagsorden_statistics_get_meetings_by_commitee($commitee);
   return $form['search']['meetings'];
 }
 
+/**
+ * Ajax callback to load bulletpoint based on selected meeting
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function os2dagsorden_statistics_ajax_display_dropdown_bullet_points_callback($form, $form_state) {
+  $meetings = $form_state['values']['meetings'];
+  $form['search']['bullet_points']['#options'] = _os2dagsorden_statistics_get_bullet_points($meetings);
+  return $form['search']['bullet_points'];
+}
+
+/**
+ * Ajax callback to load BPA based on selected bullet point
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function os2dagsorden_statistics_ajax_display_dropdown_bpa_callback($form, $form_state) {
+  $bullet_point = $form_state['values']['bullet_points'];
+  $form['search']['bpa']['#options'] = _os2dagsorden_statistics_get_bpa($bullet_point );
+  return $form['search']['bpa'];
+}
+
+/**
+ * Returns list of meetings based on provided committee term
+ *
+ * @param $commitee
+ * @return array
+ */
 function _os2dagsorden_statistics_get_meetings_by_commitee($commitee) {
   $meetings = array('all' => t('All'));
   if ($commitee == 'all')
@@ -450,21 +520,11 @@ function _os2dagsorden_statistics_get_meetings_by_commitee($commitee) {
   return $meetings;
 }
 
-function os2dagsorden_statistics_ajax_display_dropdown_bullet_points_callback($form, $form_state) {
-  $meetings = $form_state['values']['meetings'];
-  $form['search']['bullet_points']['#options'] = _os2dagsorden_statistics_get_bullet_points($meetings);
-  return $form['search']['bullet_points'];
-}
-
-function os2dagsorden_statistics_ajax_display_dropdown_bpa_callback($form, $form_state) {
-  $bullet_point = $form_state['values']['bullet_points'];
-  $form['search']['bpa']['#options'] = _os2dagsorden_statistics_get_bpa($bullet_point );
-  return $form['search']['bpa'];
-}
-/*
- * @param $meeting_nid
+/**
+ * Return all bullet_points of meeting
  *
- * return all bullet_points of meeting
+ * @param $meeting_nid
+ * @return array
  */
 function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
   $bullet_points_list = array('all' => t('All'));
@@ -477,10 +537,12 @@ function _os2dagsorden_statistics_get_bullet_points($meeting_nid) {
   }
   return $bullet_points_list;
 }
-/*
- * @param $meeting_nid
+
+/**
+ * Return all bpa of bullet point
  *
- * return all bpa of bullet_poin
+ * @param $bullet_point_nid
+ * @return array
  */
 function _os2dagsorden_statistics_get_bpa($bullet_point_nid) {
   $bpa_list = array('all' => t('All'));
@@ -493,10 +555,12 @@ function _os2dagsorden_statistics_get_bpa($bullet_point_nid) {
   }
   return $bpa_list;
 }
-/*
- * @param string $vocabulary taxomony vocabulary name
+
+/**
+ * Returns list of committees that are active
  *
- * return terms
+ * @param $vocabulary
+ * @return array
  */
 function _os2dagsorden_statistics_get_all_commitees($vocabulary) {
   $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary);
@@ -516,6 +580,16 @@ function _os2dagsorden_statistics_get_all_commitees($vocabulary) {
   return $terms_list;
 }
 
+/**
+ * Advanced statistics for node view
+ *
+ * @param $form
+ * @param $form_state
+ * @param $nid
+ * @param $date_from
+ * @param $date_to
+ * @return mixed
+ */
 function os2dagsorden_statistics_content_views_node_statistic_form($form, $form_state, $nid, $date_from, $date_to){
   drupal_set_title(t('Udvidet statistik på brug af OS2dagsorden'));
   $headers = array(
@@ -596,6 +670,9 @@ function os2dagsorden_statistics_content_views_node_statistic_form($form, $form_
 
 /**
  * Form Submit method.
+ *
+ * @param $form
+ * @param $form_state
  */
 function os2dagsorden_statistics_content_views_node_statistic_form_submit($form, &$form_state) {
   $values = $form_state['input'];

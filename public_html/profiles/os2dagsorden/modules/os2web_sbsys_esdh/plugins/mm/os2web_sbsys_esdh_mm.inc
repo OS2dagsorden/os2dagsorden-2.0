@@ -460,7 +460,6 @@ function _os2web_sbsys_esdh_similar_file_exists($filename) {
 
 /**
  * This function will set up the addenum connections for meetings.
- * @TODO: Rid this of drupal specific code.
  */
 function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
   if (!lock_acquire(__FUNCTION__)) {
