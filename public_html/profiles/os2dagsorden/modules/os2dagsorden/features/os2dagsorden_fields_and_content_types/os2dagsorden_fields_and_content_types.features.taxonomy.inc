@@ -13,9 +13,9 @@ function os2dagsorden_fields_and_content_types_taxonomy_default_vocabularies() {
       'name' => 'Speaker paper user groups',
       'machine_name' => 'os2web_users_tax_sp_group',
       'description' => '',
-      'hierarchy' => '0',
+      'hierarchy' => 0,
       'module' => 'taxonomy',
-      'weight' => '0',
+      'weight' => 0,
     ),
   );
 }
