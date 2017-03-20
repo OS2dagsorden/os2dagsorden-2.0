@@ -17,14 +17,17 @@ function os2dagsorden_meetings_calendar_view_breadcrumb(){
 /////////////////////////////////////////common START /////////////////////////////////////////
 function os2dagsorden_meetings_calendar_view_fields_title($data){
   $title = '';
- // if (variable_get('os2dagsorden_use_abbr', TRUE) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
- //   $title = $data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
- // else 
-    $title = $data->_field_data['nid']['entity']->title;
+  $title = $data->_field_data['nid']['entity']->title;
 
- // $meeting_category = substr(strtoupper($data->_field_data['nid']['entity']->field_os2web_meetings_category['und'][0]['value']), 0, 1);
+  if (variable_get('os2dagsorden_meeting_view_calendar_short_name',FALSE)) {
+    $committee = $data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity'];
+    if ($committee->field_os2web_meetings_com_shname && is_array($committee->field_os2web_meetings_com_shname['und'])) {
+      $title .= ' ' . $committee->field_os2web_meetings_com_shname['und'][0]['value'];
+    }
+  }
+
   $meeting_category = substr(strtoupper($data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity']->field_os2web_meetings_com_cat['und'][0]['value']), 0, 1);
-  
+
   if (variable_get('os2dagsorden_show_meeting_category', 'true')  === 'true')
     echo '<font style="color:#' . $data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity']->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . '['. $meeting_category . '] ' . $title . '</font>';
   else

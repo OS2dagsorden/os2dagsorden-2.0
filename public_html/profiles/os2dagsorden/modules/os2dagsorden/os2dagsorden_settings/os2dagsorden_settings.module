@@ -196,7 +196,9 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_closed_agenda'] = variable_get('os2dagsorden_title_meeting_closed_agenda', 'Lukket Dagsorden:');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_committee'] = variable_get('os2dagsorden_title_meeting_committee', 'Udvalg');
     $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_new_speaker_paper'] = variable_get('os2dagsorden_title_meeting_new_speaker_paper', 'Nyt talepapir');
-    
+
+    $setting_array['os2dagsorden_meeting_view_calendar_settings']['os2dagsorden_meeting_view_calendar_short_name'] = variable_get('os2dagsorden_meeting_view_calendar_short_name');
+
     print os2dagsorden_settings_write_ini_file($setting_array, TRUE);
     print $content;
 }

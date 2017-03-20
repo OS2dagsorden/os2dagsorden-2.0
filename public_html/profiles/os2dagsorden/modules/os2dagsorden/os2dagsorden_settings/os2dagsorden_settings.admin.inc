@@ -1226,6 +1226,20 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_right_sidebar_arrow_position_radios', 'classic'),
     '#description' => t('Default position or equal height with meeting blocks.'),
   );
+
+  //meeting calendar view settings
+  $form['os2dagsorden_meeting_view_calendar_settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed'=>TRUE,
+    '#title' => t('Meeting view calendar settings'),
+  );
+  $form['os2dagsorden_meeting_view_calendar_settings']['os2dagsorden_meeting_view_calendar_short_name'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Add committee short name next to the meeting name'),
+    '#description' => t('This decides whether a committee short name will be printed along with the meeting name in the calendar view'),
+    '#default_value' => variable_get('os2dagsorden_meeting_view_calendar_short_name',FALSE),
+  );
   //sort items alphabetically
   ksort($form);
   return system_settings_form($form);
@@ -1537,5 +1551,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_title_meeting_closed_agenda', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_closed_agenda']);
     variable_set('os2dagsorden_title_meeting_committee', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_committee']);
     variable_set('os2dagsorden_title_meeting_new_speaker_paper', $setting_array['os2dagsorden_terminology_placeholder']['os2dagsorden_terminology_meeting_placeholder']['os2dagsorden_title_meeting_new_speaker_paper']);
+
+    variable_set('os2dagsorden_meeting_view_calendar_short_name', $setting_array['os2dagsorden_meeting_view_calendar_settings']['os2dagsorden_meeting_view_calendar_short_name']);
   }
 }
