@@ -1236,8 +1236,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_view_calendar_settings']['os2dagsorden_meeting_view_calendar_short_name'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Add committee short name next to the meeting name'),
-    '#description' => t('This decides whether a committee short name will be printed along with the meeting name in the calendar view'),
+    '#title' => t('Use committee short instead of the meeting name'),
+    '#description' => t('This decides whether a committee short name will used instead of meeting name in the calendar view'),
     '#default_value' => variable_get('os2dagsorden_meeting_view_calendar_short_name',FALSE),
   );
   //sort items alphabetically

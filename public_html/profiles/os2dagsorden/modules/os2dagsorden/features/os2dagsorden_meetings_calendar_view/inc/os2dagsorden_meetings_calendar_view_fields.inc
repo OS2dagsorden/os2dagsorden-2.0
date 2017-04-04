@@ -16,13 +16,12 @@ function os2dagsorden_meetings_calendar_view_breadcrumb(){
 
 /////////////////////////////////////////common START /////////////////////////////////////////
 function os2dagsorden_meetings_calendar_view_fields_title($data){
-  $title = '';
   $title = $data->_field_data['nid']['entity']->title;
 
   if (variable_get('os2dagsorden_meeting_view_calendar_short_name',FALSE)) {
     $committee = $data->_field_data['taxonomy_term_data_field_data_field_os2web_meetings_committe']['entity'];
     if ($committee->field_os2web_meetings_com_shname && is_array($committee->field_os2web_meetings_com_shname['und'])) {
-      $title .= ' ' . $committee->field_os2web_meetings_com_shname['und'][0]['value'];
+      $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'];
     }
   }
 
