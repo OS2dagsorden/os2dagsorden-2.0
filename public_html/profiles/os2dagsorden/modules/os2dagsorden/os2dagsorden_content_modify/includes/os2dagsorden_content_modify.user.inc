@@ -552,6 +552,12 @@ function os2dagsorden_content_modify_user_submit($form, $form_state) {
   drupal_set_message(t('Dine ændringer er blevet gemt'));
 }
 
+/**
+ * Sorting terms alphabetically based on field_os2web_meetings_com_shname
+ *
+ * @param array $term_list
+ * @return array
+ */
 function os2dagsorden_content_modify_asort($term_list = array()) {
   $new_array = array();
   $return_array = array();

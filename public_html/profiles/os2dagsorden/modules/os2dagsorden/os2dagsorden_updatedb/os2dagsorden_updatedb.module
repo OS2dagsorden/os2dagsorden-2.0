@@ -7,6 +7,11 @@
 require_once DRUPAL_ROOT . '/includes/update.inc';
 include_once DRUPAL_ROOT . '/includes/install.inc';
 
+/**
+ * Implements hook_menu().
+ *
+ * @return mixed
+ */
 function os2dagsorden_updatedb_menu() {
   $items['admin/updatedb'] = array(
     'title' => 'OS2dagsorden update DB',
@@ -20,6 +25,13 @@ function os2dagsorden_updatedb_menu() {
   return $items;
 }
 
+/**
+ * Setting form
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2dagsorden_updatedb_setting_form($form, $form_state) {
   $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
   $info = drupal_parse_info_file($info_path);
@@ -55,6 +67,13 @@ function os2dagsorden_updatedb_setting_form($form, $form_state) {
   return system_settings_form($form);
 }
 
+/**
+ * Check if system requires any updates
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function os2dagsorden_updatedb_check($form, &$form_state) {
   if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
     form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
@@ -119,6 +138,13 @@ function os2dagsorden_updatedb_check($form, &$form_state) {
 
 }
 
+/**
+ * Runs all the pending updates
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2dagsorden_updatedb_run($form, &$form_state) {
   if ($form_state['values']['os2dagsorden_update_version'] == 'no version') {
     form_set_error('os2dagsorden_update_version', t('OS2dagsorden update version : no version defined.'));
@@ -146,8 +172,14 @@ function os2dagsorden_updatedb_run($form, &$form_state) {
     drupal_set_message(t('All updated.'), 'status');
   }
   return $form;
-
 }
+
+/**
+ * Helper function to get the module type
+ *
+ * @param $module
+ * @return mixed
+ */
 function os2dagsorden_updatedb_get_module_type($module) {
   $record = db_select('system', 's')
     ->fields('s', array('filename'))
@@ -157,6 +189,7 @@ function os2dagsorden_updatedb_get_module_type($module) {
   $contrib = explode('/', $record['filename']);
   return $contrib[3];
 }
+
 /**
  * Test - setting os2dagsorden version to 1.0.
  */

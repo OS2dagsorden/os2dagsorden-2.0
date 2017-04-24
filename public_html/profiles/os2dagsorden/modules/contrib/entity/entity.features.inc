@@ -7,6 +7,12 @@
 
 /**
  * Returns the configured entity features controller.
+ *
+ * @param string $type
+ *   The entity type to get the controller for.
+ *
+ * @return EntityDefaultFeaturesController
+ *   The configured entity features controller.
  */
 function entity_features_get_controller($type) {
   $static = &drupal_static(__FUNCTION__);
@@ -85,6 +91,7 @@ class EntityDefaultFeaturesController {
           $fields = field_info_instances($this->info['bundle of'], $entity->{$this->bundleKey});
           foreach ($fields as $name => $field) {
             $pipe['field'][] = "{$field['entity_type']}-{$field['bundle']}-{$field['field_name']}";
+            $pipe['field_instance'][] = "{$field['entity_type']}-{$field['bundle']}-{$field['field_name']}";
           }
         }
       }
@@ -125,9 +132,7 @@ class EntityDefaultFeaturesController {
    */
   function revert($module = NULL) {
     if ($defaults = features_get_default($this->type, $module)) {
-      foreach ($defaults as $name => $entity) {
-        entity_delete($this->type, $name);
-      }
+      entity_delete_multiple($this->type, array_keys($defaults));
     }
   }
 }
@@ -146,13 +151,21 @@ function entity_features_api() {
 }
 
 /**
+ * Implements hook_features_export_options().
+ *
  * Features component callback.
  */
-function entity_features_export_options($entity_type) {
+function entity_features_export_options($a1, $a2 = NULL) {
+  // Due to a change in the Features API the first parameter might be a feature
+  // object or an entity type, depending on the Features version. This check is
+  // for backwards compatibility.
+  $entity_type = is_string($a1) ? $a1 : $a2;
   return entity_features_get_controller($entity_type)->export_options();
 }
 
 /**
+ * Implements hook_features_export().
+ *
  * Features component callback.
  */
 function entity_features_export($data, &$export, $module_name = '', $entity_type) {
@@ -160,6 +173,8 @@ function entity_features_export($data, &$export, $module_name = '', $entity_type
 }
 
 /**
+ * Implements hook_features_export_render().
+ *
  * Features component callback.
  */
 function entity_features_export_render($module, $data, $export = NULL, $entity_type) {
@@ -167,8 +182,23 @@ function entity_features_export_render($module, $data, $export = NULL, $entity_t
 }
 
 /**
+ * Implements hook_features_revert().
+ *
  * Features component callback.
  */
 function entity_features_revert($module = NULL, $entity_type) {
   return entity_features_get_controller($entity_type)->revert($module);
+}
+
+/**
+ * Implements hook_features_post_restore().
+ *
+ * Rebuild all defaults when a features rebuild is triggered - even the ones not
+ * handled by features itself.
+ */
+function entity_features_post_restore($op, $items = array()) {
+  if ($op == 'rebuild') {
+    // Use features rebuild to rebuild the features independent exports too.
+    entity_defaults_rebuild();
+  }
 }

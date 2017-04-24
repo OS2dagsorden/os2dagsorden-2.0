@@ -22,7 +22,7 @@ class context_export_ui extends ctools_export_ui {
   function list_render(&$form_state) {
     $table = array(
       'header' => $this->list_table_header(),
-      'rows' => $this->rows, 
+      'rows' => $this->rows,
       'attributes' => array(
         'class' => array('context-admin'),
         'id' => 'ctools-export-ui-list-items',
@@ -73,6 +73,7 @@ class context_export_ui extends ctools_export_ui {
     if (!empty($this->plugin['form']['submit'])) {
       $this->plugin['form']['submit']($form, $form_state);
     }
+    context_invalidate_cache();
   }
 
   /**
@@ -103,17 +104,17 @@ class context_export_ui extends ctools_export_ui {
  * @param $form_state
  *   Form state array
  */
-function context_ui_form(&$form, &$form_state) {  
+function context_ui_form(&$form, &$form_state) {
   $conditions = array_keys(context_conditions());
   sort($conditions);
   $reactions = array_keys(context_reactions());
   sort($reactions);
-    
+
   $context = $form_state['item'];
   if (!empty($form_state['input'])) {
     $context = _context_ui_rebuild_from_input($context, $form_state['input'], $conditions, $reactions);
   }
-  
+
   $form['#base'] = 'context_ui_form';
   $form['#theme'] = 'context_ui_form';
 
@@ -130,7 +131,7 @@ function context_ui_form(&$form, &$form_state) {
     '#required' => FALSE,
     '#maxlength' => 255,
     '#default_value' => isset($context->tag) ? $context->tag : '',
-    '#description' => t('Example: <code>theme</code>') .'<br/>'. t('A tag to group this context with others.'),
+    '#description' => t('Example: <code>theme</code>') . '<br/>' . t('A tag to group this context with others.'),
   );
 
   $form['info']['description'] = array(
@@ -154,11 +155,11 @@ function context_ui_form(&$form, &$form_state) {
   $form['conditions'] = array(
     '#theme' => 'context_ui_plugins',
     '#title' => t('Conditions'),
-    '#description' => t('Trigger the activation of this context'),
+    '#description' => t('Trigger the activation of this context.'),
     '#tree' => TRUE,
     'selector' => array(
       '#type' => 'select',
-      '#options' => array(0 => '<'. t('Add a condition') .'>'),
+      '#options' => array(0 => '<' . t('Add a condition') . '>'),
       '#default_value' => 0,
     ),
     'state' => array(
@@ -184,11 +185,11 @@ function context_ui_form(&$form, &$form_state) {
   $form['reactions'] = array(
     '#theme' => 'context_ui_plugins',
     '#title' => t('Reactions'),
-    '#description' => t('Actions to take when this context is active'),
+    '#description' => t('Actions to take when this context is active.'),
     '#tree' => TRUE,
     'selector' => array(
       '#type' => 'select',
-      '#options' => array(0 => '<'. t('Add a reaction') .'>'),
+      '#options' => array(0 => '<' . t('Add a reaction') . '>'),
       '#default_value' => 0,
     ),
     'state' => array(
@@ -224,7 +225,7 @@ function context_ui_form(&$form, &$form_state) {
  *   A context object
  */
 function _context_ui_rebuild_from_input($context, $input, $conditions, $reactions) {
-  $condition_defaults = array();  
+  $condition_defaults = array();
   foreach ($conditions as $condition) {
     if ($plugin = context_get_plugin('condition', $condition)) {
       $condition_defaults[$condition] = array(
@@ -234,7 +235,7 @@ function _context_ui_rebuild_from_input($context, $input, $conditions, $reaction
     }
   }
   $input['conditions']['plugins'] = array_merge($condition_defaults, $input['conditions']['plugins']);
-  
+
   $reaction_defaults = array();
   foreach ($reactions as $reaction) {
     if ($plugin = context_get_plugin('reaction', $reaction)) {
@@ -318,7 +319,9 @@ function context_ui_edit_name_validate($element, &$form_state) {
   }
 
   // Check for name collision
-  if (@$form_state['item']->export_ui_allow_overwrite === 0 && $exists = ctools_export_crud_load($plugin['schema'], $element['#value'])) {
-    form_error($element, t('A @plugin with this name already exists. Please choose another name or delete the existing item before creating a new one.', array('@plugin' => $plugin['title singular'])));
+  if ($form_state['op'] != 'edit') {
+    if (empty($form_state['item']->export_ui_allow_overwrite) && $exists = ctools_export_crud_load($plugin['schema'], $element['#value'])) {
+      form_error($element, t('A @plugin with this name already exists. Please choose another name or delete the existing item before creating a new one.', array('@plugin' => $plugin['title singular'])));
+    }
   }
 }

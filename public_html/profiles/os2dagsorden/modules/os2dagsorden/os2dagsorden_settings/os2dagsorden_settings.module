@@ -51,7 +51,7 @@ function os2dagsorden_settings_menu() {
        'page callback' => 'os2dagsorden_settings_committee_autocomplete_callback',
       'page arguments' => array(2),
       'access arguments' => array('use autocomplete'),
-    'type' => MENU_CALLBACK,  
+      'type' => MENU_CALLBACK,
     );
 
     $items['os2dagsorden/export_settings'] = array(
@@ -63,6 +63,9 @@ function os2dagsorden_settings_menu() {
     return $items;
 }
 
+/**
+ * Exports all settings to a single file. Useful when settings need to be copied to another installation
+ */
 function os2dagsorden_settings_export_to_file(){
     header("Content-type: text/plain");
     header("Content-Disposition:attachment;filename=os2dagsorden_settings.settings");
@@ -226,6 +229,11 @@ function os2dagsorden_settings_flush_calendar_preferences(){
     drupal_goto('admin/config');
 }
 
+/**
+ * Helper function for committee autocomplete
+ *
+ * @param string $string
+ */
 function os2dagsorden_settings_committee_autocomplete_callback($string = '') {
     $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
@@ -242,8 +250,12 @@ function os2dagsorden_settings_committee_autocomplete_callback($string = '') {
     drupal_json_output($terms);
 }
 
+/**
+ * Implement hook_views_pre_render().
+ *
+ * @param $view
+ */
 function os2dagsorden_settings_views_pre_render(&$view) {
-    //print_r($view->name . ' ');
   if ($view->name == 'user_committee') {
     $view->build_info['title'] = variable_get('os2dagsorden_title_frontpage_member_of', 'Medlem af');
   } if ($view->name == 'user_follow_committees') {
@@ -251,6 +263,13 @@ function os2dagsorden_settings_views_pre_render(&$view) {
   }
 }
 
+/**
+ * Implements hook_views_pre_view().
+ *
+ * @param $view
+ * @param $display_id
+ * @param $args
+ */
 function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
   if ($view->name == 'seneste_8_m_der_i_de_st_ende_politiske_udvalg_'){
     $view->display_handler->options['fields']['field_os2web_meetings_type']['label'] = variable_get('os2dagsorden_title_meeting_status', 'Status');
@@ -306,6 +325,13 @@ function os2dagsorden_settings_views_pre_view(&$view, &$display_id, &$args) {
   }
 }
 
+/**
+ * Helper function, which creates ini file based on the provided associative array
+ *
+ * @param $assoc_arr
+ * @param bool $has_sections
+ * @return string
+ */
 function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
     $content = "";
     if ($has_sections){ 
@@ -337,6 +363,13 @@ function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
     return $content;
 }
 
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
 function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
   if($form['#id'] == 'views-exposed-form-meetings-search-page') {
     if (empty($_GET['from_date']))  {
@@ -372,6 +405,11 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+/**
+ * Form submit function that adds/removes quick guide file from/to file usage table.
+ * @param $form
+ * @param $form_state
+ */
 function os2dagsorden_settings_guide_file_lock ($form, &$form_state) {
   if (isset($form_state['values']['quick_guide_upload_fid']) && !empty($form_state['values']['quick_guide_upload_fid'])) {
     $fid = $form_state['values']['quick_guide_upload_fid'];
@@ -394,6 +432,12 @@ function os2dagsorden_settings_guide_file_lock ($form, &$form_state) {
   }
 }
 
+/**
+ * Implements hook_block_view_alter().
+ *
+ * @param $data
+ * @param $block
+ */
 function os2dagsorden_settings_block_view_alter(&$data, $block){
     switch ($block->delta) {
 	case '-exp-meetings_search-page':
@@ -422,6 +466,11 @@ function os2dagsorden_settings_block_view_alter(&$data, $block){
     }
 }
 
+/**
+ * Helper function that retuns a list of active committees
+ *
+ * @return array
+ */
 function os2dagsorden_settings_get_active_committees(){
     $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
@@ -442,6 +491,11 @@ function os2dagsorden_settings_get_active_committees(){
     return $active_committees;
 }
 
+/**
+ * Helper functions that returns the subid of the committees that are set to be imported.
+ *
+ * @return array
+ */
 function os2dagsorden_settings_get_import_committees_sub_id(){
     $vid = db_select('taxonomy_vocabulary', 'tv')
             ->fields('tv', array('vid'))
@@ -465,6 +519,10 @@ function os2dagsorden_settings_get_import_committees_sub_id(){
 
     return $ids;
 }
+
+/**
+ * Function that prints links to quick guide document
+ */
 function os2dagsorden_settings_get_quide_link() {
   $fid = variable_get('quick_guide_upload_fid', '');
   if ($fid && is_numeric($fid)) {

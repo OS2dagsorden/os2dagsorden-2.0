@@ -1,0 +1,13 @@
+diff --git a/public_html/profiles/os2dagsorden/modules/contrib/prepopulate/prepopulate.module b/public_html/profiles/os2dagsorden/modules/contrib/prepopulate/prepopulate.module
+index d024385..b21a713 100644
+--- a/public_html/profiles/os2dagsorden/modules/contrib/prepopulate/prepopulate.module
++++ b/public_html/profiles/os2dagsorden/modules/contrib/prepopulate/prepopulate.module
+@@ -56,7 +56,7 @@ function _prepopulate_request_walk(&$form, &$request_slice) {
+   $limited_types = array(
+     'actions',
+     'button',
+-    'container',
++//    'container',
+     'token',
+     'value',
+     'hidden',

@@ -11,6 +11,12 @@
  * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
  * @link     http://bellcom.dk
  */
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
 function os2dagsorden_annotator_notes_migrate_menu() {
     $items = array();
     $items['os2dagsorden/notes/export'] = array(
@@ -35,6 +41,13 @@ function os2dagsorden_annotator_notes_migrate_menu() {
     return $items;
 }
 
+/**
+ * Notes migrate export/import form
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
 function os2dagsorden_annotator_notes_migrate_form($form, $form_state) {
     $form['os2dagsorden_notes_migrate'] ['export'] = array(
         '#type' => 'fieldset',
@@ -67,8 +80,10 @@ function os2dagsorden_annotator_notes_migrate_form($form, $form_state) {
     return system_settings_form($form);
 }
 
+/**
+ * Returns the XML with all exported notes
+ */
 function os2dagsorden_annotator_notes_migrate_export() {
-
     $result = db_select('os2dagsorden_annotator_notes', 'notes')
             ->fields('notes')
             ->execute();
@@ -102,9 +117,13 @@ function os2dagsorden_annotator_notes_migrate_export() {
     echo $xml->asXML();
 }
 
+/**
+ * Form submit callback to import the note as XML file
+ *
+ * @param $form
+ * @param $form_state
+ */
 function os2dagsorden_annotator_notes_migrate_import($form, &$form_state) {
-
-
     $data = simplexml_load_file(drupal_realpath(variable_get('os2dagsorden_notes_file', 'public://os2dagsorden_notes/notes.xml')));
     if (is_object($data)) {
         $items_xml = $data->xpath("meeting");
@@ -197,6 +216,14 @@ function os2dagsorden_annotator_notes_migrate_import($form, &$form_state) {
     drupal_set_message(t('Notes imported succesefully'), 'status');
 }
 
+/**
+ * Helper function to format notes as XML.
+ *
+ * @param $data
+ * @param string $rootNodeName
+ * @param null $xml
+ * @return null|SimpleXMLElement
+ */
 function os2dagsorden_annotator_notes_migrate_create_xml($data, $rootNodeName = 'data', $xml = null) {
     if ($xml == null) {
         $xml = simplexml_load_string("<?xml version='1.0' encoding='utf-8'?><$rootNodeName />");
@@ -220,5 +247,3 @@ function os2dagsorden_annotator_notes_migrate_create_xml($data, $rootNodeName = 
     }
     return $xml;
 }
-
-?>

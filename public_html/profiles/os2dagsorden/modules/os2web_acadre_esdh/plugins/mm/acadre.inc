@@ -543,7 +543,6 @@ function _os2web_acadre_esdh_similar_file_exists($filename) {
 
 /**
  * This function will set up the addendum connections for meetings.
- * @TODO: Rid this of drupal specific code.
  */
 function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
   if (!lock_acquire(__FUNCTION__)) {
@@ -576,7 +575,6 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
   field_attach_load('node', $nodes, FIELD_LOAD_CURRENT, array('field_id' => $fields['field_os2web_meetings_full_doc']['field_id']));
   field_attach_load('node', $nodes, FIELD_LOAD_CURRENT, array('field_id' => $fields['field_os2web_meetings_full_doc_c']['field_id']));
 
-  // TODO jakob@ringsted
   // Should the sub_id or system_id be used in SORT
   // to determine dagsorden/tillæg
 
@@ -694,7 +692,10 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
 }
 
 /**
- * Todo, add docblock.
+ * Improve the body HTML by stripping long URLs and substituting img references,
+ *
+ * @param $data
+ * @return mixed
  */
 function _acadre_esdh_mm_improve_body_html($data) {
   $data = _acadre_esdh_mm_remove_empty_tags($data);
@@ -740,6 +741,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
    }
    return $data;
 }
+
 function _acadre_esdh_mm_remove_empty_tags($data) {
 do
 {
@@ -752,6 +754,7 @@ do
 return $data;
 
 }
+
 function _get_value_from_xml($xml_raw, $convert_to = 'string'){
   if ($convert_to == 'string')
     return trim((string) array_shift($xml_raw));

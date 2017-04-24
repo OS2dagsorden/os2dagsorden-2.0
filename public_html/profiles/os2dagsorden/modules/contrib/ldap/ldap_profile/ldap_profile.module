@@ -83,24 +83,26 @@ function ldap_profile_user_login(&$edit, $account) {
 
   module_load_include('functions.inc', 'ldap_servers');
 
-  if (is_array($account->data) && array_key_exists("ldap_authentication", $account->data)) {
-    $authdata = $account->data["ldap_authentication"];
-    if (array_key_exists('init', $authdata)) {
-      $authinit = $authdata['init'];
-      if (isset($servers[$authinit['sid']])) {
-        $server = $servers[$authinit['sid']];
-        $ldapuser = TRUE;
-        if (array_key_exists('dn', $authinit)) {
-          $dn = $authinit['dn'];
-        }
-      }
-    }
-  }
-
-  if (!$authuser || !$ldapuser || $dn == "") {
+  if (empty($account) || !$authuser) {
     return;
   }
+  
+  $ldapuser = ldap_servers_get_user_ldap_data($account);
+  if (empty($ldapuser) || empty($ldapuser['dn'])) {
+    return;
+  }
+  
+  $dn = $ldapuser['dn'];
 
+  
+  if (is_array($account->data) && array_key_exists("ldap_authentication", $account->data) && isset($account->data["ldap_authentication"]['init']['sid'])) {
+    $sid = $account->data["ldap_authentication"]['init']['sid'];
+    $server = $servers[$sid];
+  }
+  else {
+    return;
+  }
+  
   $ldapfields = array();
   $dnLookups = array();
   $mapping = ldap_profile_get_mapping();
@@ -181,6 +183,12 @@ function ldap_profile_user_login(&$edit, $account) {
     }
   }
   if (count($changes) > 0) {
+    // preload the previously created account as the original
+    // this is to prevent a cycling condition with entitycache.module 
+    // which will continue until memory is exhausted
+    // the new field changes are treated as updates in this case
+    // (Do not reset the cache until after the changes are saved)
+    $account->original = user_load($account->uid, FALSE);
     user_save($account, $changes);
   }
 

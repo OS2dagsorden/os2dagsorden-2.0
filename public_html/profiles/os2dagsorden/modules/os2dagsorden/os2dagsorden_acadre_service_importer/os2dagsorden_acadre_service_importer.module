@@ -31,12 +31,17 @@ function os2dagsorden_acadre_service_importer_menu() {
     return $items;
 }
 
+/**
+ * Callback to start import
+ */
 function os2dagsorden_acadre_service_importer_sync(){
-    //os2dagsorden_acadre_service_importer_import_committees();
+    os2dagsorden_acadre_service_importer_import_committees();
     os2dagsorden_acadre_service_importer_import_meetings();
-    print_r("done");
 }
 
+/**
+ * Implements hook_cron().
+ */
 function os2dagsorden_acadre_service_importer_cron(){
     os2dagsorden_acadre_service_importer_import_committees();
     os2dagsorden_acadre_service_importer_import_meetings();
@@ -118,7 +123,7 @@ function os2dagsorden_acadre_service_importer_requirements($phase) {
 }
 
 /*
- * check if webservice URL is avaible
+ * check if webservice URL is available
  */
 function _os2dagsorden_acadre_service_importer_webservice_url_exists($url=NULL) {
   if($url == NULL) return false;

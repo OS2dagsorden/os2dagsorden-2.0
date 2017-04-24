@@ -11,7 +11,15 @@
  * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
  * @link     http://bellcom.dk
  */
- 
+
+/**
+ * Generates form for meeting simple edit
+ *
+ * @param $form
+ * @param $form_state
+ * @param $meeting_id
+ * @return array|the
+ */
 function os2dagsorden_create_agenda_meeting_simple($form, $form_state, $meeting_id) {  
   $form[] = array(
     '#markup' => '<h1 class="title">' . t('Meeting') . '</h1>',
@@ -53,6 +61,13 @@ function os2dagsorden_create_agenda_meeting_simple($form, $form_state, $meeting_
   return $form;
 }
 
+/**
+ * Saves the meeting from the submitted form
+ *
+ * @param $form
+ * @param $form_state
+ * @return populated
+ */
 function os2dagsorden_create_agenda_save_meeting_simple($form, $form_state){
   $node = os2dagsorden_create_agenda_populate_meeting_general($form, $form_state);
   
@@ -64,6 +79,12 @@ function os2dagsorden_create_agenda_save_meeting_simple($form, $form_state){
   return $node;
 }
 
+/**
+ * Meeting simple form submit callback
+ *
+ * @param $form
+ * @param $form_state
+ */
 function os2dagsorden_create_agenda_meeting_simple_submit($form, &$form_state){
   $node = os2dagsorden_create_agenda_save_meeting_simple($form, $form_state);
   $start_date = $form_state['input']['start_date']['date'];

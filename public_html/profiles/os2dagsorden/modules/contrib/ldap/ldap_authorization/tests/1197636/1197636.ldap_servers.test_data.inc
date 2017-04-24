@@ -45,6 +45,7 @@ $servers['fake_server1']['search_results']['member=cn=verykool,ou=special guests
  */
 $servers['fake_server1']['users']['cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
   'dn' => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu',
+  'distinguishedname' => array( 0 => 'cn=verykool,ou=special guests,ou=guest accounts,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
   'mail' => array( 0 => 'verykool@myuniversity.edu', 'count' => 1),
   'sAMAccountName' => array( 0 => 'verykool', 'count' => 1),
   'password' => array( 0 => 'goodpwd', 'count' => 1),
@@ -59,6 +60,7 @@ $servers['fake_server1']['users']['cn=verykool,ou=special guests,ou=guest accoun
  */
 $servers['fake_server1']['users']['cn=service-account,dc=ad,dc=myuniversity,dc=edu']['attr'] = array(
   'dn' => 'cn=service-account,dc=ad,dc=myuniversity,dc=edu',
+  'distinguishedname' => array( 0 => 'cn=service-account,dc=ad,dc=myuniversity,dc=edu', 'count' => 1),
   'mail' => array( 0 => 'service-account@myuniversity.edu', 'count' => 1),
   'sAMAccountName' => array( 0 => 'service-account', 'count' => 1),
   'memberOf' => array(

@@ -155,7 +155,6 @@ function os2web_edoc_esdh_os2web_help($sections) {
 function os2web_edoc_esdh_help($path, $arg) {
   switch ($path) {
     case 'admin/help#os2web_edoc_esdh':
-      // TODO.
       return t('Se the OS2web documentation under "help" for details. If you don not have that please activate the OS2web Help module');
   }
 }

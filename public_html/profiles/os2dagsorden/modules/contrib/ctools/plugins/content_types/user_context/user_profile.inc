@@ -20,8 +20,8 @@ $plugin = array(
  * Render the user profile content type.
  */
 function ctools_user_profile_content_type_render($subtype, $conf, $panel_args, $context) {
-  $account = isset($context->data) ? clone($context->data) : NULL;
-  if (!$account || ($account->access == 0 && !user_access('administer users'))) {
+  $account = isset($context->data) ? clone $context->data : NULL;
+  if (!$account) {
     return NULL;
   }
 

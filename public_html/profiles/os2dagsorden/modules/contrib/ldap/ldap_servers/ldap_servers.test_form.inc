@@ -78,12 +78,14 @@ function ldap_servers_test_form($form, &$form_state, $op = NULL, $sid = NULL) {
     '#weight' => 100,
   );
 
+
   if (isset($_SESSION['ldap_server_test_data']) && count($_SESSION['ldap_server_test_data']) > 0) {
     $form['#suffix'] = theme('ldap_server_ldap_entry_table',
       array(
         'entry' => $_SESSION['ldap_server_test_data']['LDAP Entry']['attr'],
         'username' => $_SESSION['ldap_server_test_data']['username'],
       ));
+
     if (function_exists('dpm')) {
       $user_name =  $_SESSION['ldap_server_test_data']['username'];
       dpm("ldap full result array for: " . $user_name);
@@ -92,14 +94,17 @@ function ldap_servers_test_form($form, &$form_state, $op = NULL, $sid = NULL) {
       $user = user_load_by_name($user_name);
       dpm("drupal user object for: $user_name");
       dpm($user);
-      $user_entity = entity_load_single('user', $user->uid);
-      dpm("drupal user entity for: $user_name");
-      dpm($user_entity);
 
+      $user_entity = entity_load('user', array($user->uid));
+      if (count($user_entity) > 0) {
+        dpm("drupal user entity for: $user_name");
+        dpm($user_entity);
+      }
     }
 
     unset($_SESSION['ldap_server_test_data']);
   }
+
   return $form;
 }
 
@@ -120,6 +125,7 @@ function ldap_servers_test_form_validate($form, &$form_state) {
  * Submit hook for the LDAP server form.
  */
 function ldap_servers_test_form_submit($form, &$form_state) {
+
   $errors = FALSE;
   $values = $form_state['values'];
   $sid = $values['sid'];
@@ -149,7 +155,6 @@ function ldap_servers_test_form_submit($form, &$form_state) {
 
   // connect to ldap
   // $ldap_server = NULL;
-  drupal_set_message($bindpw);
   list($has_errors, $more_results) = ldap_servers_test_binding_credentials($ldap_server, $bindpw);
   $results = array_merge($results, $more_results);
   if ($ldap_server->bind_method ==  LDAP_SERVERS_BIND_METHOD_ANON_USER) {
@@ -187,9 +192,10 @@ function ldap_servers_test_form_submit($form, &$form_state) {
       'LDAP Entry' => $ldap_user,
     );
   }
-  $message =  theme_item_list(array('items' => $results, 'title' => t('Result Messages'), 'type' => 'ul', 'attributes' => array()));
+  $message = ''; // theme_item_list(array('items' => $results, 'title' => t('Result Messages'), 'type' => 'ul', 'attributes' => array()));
 
   drupal_set_message(t($message), ($has_errors) ? 'error' : 'status');
+
   $form_state['redirect'] = LDAP_SERVERS_MENU_BASE_PATH . "/servers/test/$sid";
 
 }
@@ -211,7 +217,7 @@ function ldap_servers_test_binding_credentials(&$ldap_server, $bindpw) {
   }
 
   if (!$errors) {
-    $bind_result = $ldap_server->bind($ldap_server->binddn, $bindpw);
+    $bind_result = $ldap_server->bind($ldap_server->binddn, $bindpw, FALSE);
     if ($bind_result == LDAP_SUCCESS) {
       $results[] =  t('Successfully bound to server');
     }

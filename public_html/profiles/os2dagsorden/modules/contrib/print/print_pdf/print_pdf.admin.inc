@@ -38,8 +38,8 @@ function print_pdf_settings() {
     $form['settings']['print_pdf_link_pos'] = array(
       '#type' => 'checkboxes',
       '#title' => t('PDF version link'),
-      '#default_value' => variable_get('print_pdf_link_pos', array(PRINT_PDF_LINK_POS_DEFAULT => PRINT_PDF_LINK_POS_DEFAULT)),
-      '#options' => array('link' => t('Links area'), 'corner' => t('Content corner'), 'block' => t('Block')),
+      '#default_value' => variable_get('print_pdf_link_pos', drupal_json_decode(PRINT_PDF_LINK_POS_DEFAULT)),
+      '#options' => array('link' => t('Links area'), 'corner' => t('Content corner'), 'block' => t('Block'), 'help' => t('Help area')),
       '#description' => t('Choose the location of the link(s) to the PDF version. The Links area is usually below the node content, whereas the Content corner is placed in the upper-right corner of the node content. Unselect all options to disable the link. Even if the link is disabled, you can still view the PDF version of a node by going to !path/nid where nid is the numeric id of the node.', array('!path' => PRINTPDF_PATH)),
     );
 
@@ -260,7 +260,7 @@ function print_pdf_settings() {
   else {
     $form['settings'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>' . t("No PDF generation tool found! Please dowload a supported PHP PDF generation tool. Check this module's INSTALL.txt for more details.") . '</p>',
+      '#markup' => '<p>' . t("No PDF generation tool found! Please download a supported PHP PDF generation tool. Check this module's INSTALL.txt for more details.") . '</p>',
     );
   }
 

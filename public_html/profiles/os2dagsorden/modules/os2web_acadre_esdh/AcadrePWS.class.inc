@@ -246,7 +246,6 @@ class AcadrePWS {
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
       }
       catch (SoapFault $exc) {
-        // TODO: Handle exception better...
         error_log("Var: \$exc = " . print_r($exc, 1));
         return FALSE;
       }

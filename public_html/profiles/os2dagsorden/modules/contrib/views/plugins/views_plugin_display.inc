@@ -53,7 +53,7 @@ class views_plugin_display extends views_plugin {
           $this->extender[$extender] = $plugin;
         }
         else {
-          vpr('Invalid display extender @extender', array('@handler' => $extender));
+          vpr('Invalid display extender @extender', array('@extender' => $extender));
         }
       }
     }
@@ -476,7 +476,7 @@ class views_plugin_display extends views_plugin {
           'display_description' => FALSE,
           'use_ajax' => TRUE,
           'hide_attachment_summary' => TRUE,
-          'hide_admin_links' => FALSE,
+          'hide_admin_links' => TRUE,
           'pager' => TRUE,
           'pager_options' => TRUE,
           'use_more' => TRUE,
@@ -739,7 +739,7 @@ class views_plugin_display extends views_plugin {
   function uses_link_display() { return !$this->has_path(); }
 
   /**
-   * Check to see if the display can put the exposed formin a block.
+   * Check to see if the display can put the exposed form in a block.
    *
    * By default, displays that do not have a path cannot disconnect
    * the exposed form and put it in a block, because the form has no
@@ -782,6 +782,10 @@ class views_plugin_display extends views_plugin {
     $display_id = $this->get_link_display();
     if ($display_id && !empty($this->view->display[$display_id]) && is_object($this->view->display[$display_id]->handler)) {
       return $this->view->display[$display_id]->handler->get_path();
+    }
+
+    if ($this->get_option('link_display') == 'custom_url' && $link_url = $this->get_option('link_url')) {
+      return $link_url;
     }
   }
 
@@ -914,7 +918,7 @@ class views_plugin_display extends views_plugin {
   /**
    * Get a full array of handlers for $type. This caches them.
    */
-  function get_handlers($type) {
+  function &get_handlers($type) {
     if (!isset($this->handlers[$type])) {
       $this->handlers[$type] = array();
       $types = views_object_types();
@@ -1146,7 +1150,7 @@ class views_plugin_display extends views_plugin {
       );
     }
 
-    $display_comment = check_plain(drupal_substr($this->get_option('display_comment'), 0, 10));
+    $display_comment = check_plain(views_ui_truncate($this->get_option('display_comment'), 80));
     $options['display_comment'] = array(
       'category' => 'other',
       'title' => t('Comment'),
@@ -1415,7 +1419,7 @@ class views_plugin_display extends views_plugin {
     }
     $form['#title'] = check_plain($this->display->display_title) . ': ';
 
-    // Set the 'section' to hilite on the form.
+    // Set the 'section' to highlight on the form.
     // If it's the item we're looking at is pulling from the default display,
     // reflect that. Don't use is_defaulted since we want it to show up even
     // on the default display.
@@ -1569,8 +1573,12 @@ class views_plugin_display extends views_plugin {
         $plugin = $this->get_plugin('access');
         $form['#title'] .= t('Access options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
-          $form['#help_module'] = $plugin->definition['module'];
+          if (!empty($plugin->definition['help topic'])) {
+            $form['#help_topic'] = $plugin->definition['help topic'];
+          }
+          if (!empty($plugin->definition['module'])) {
+            $form['#help_module'] = $plugin->definition['module'];
+          }
 
           $form['access_options'] = array(
             '#tree' => TRUE,
@@ -1611,8 +1619,12 @@ class views_plugin_display extends views_plugin {
         $plugin = $this->get_plugin('cache');
         $form['#title'] .= t('Caching options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
-          $form['#help_module'] = $plugin->definition['module'];
+          if (!empty($plugin->definition['help topic'])) {
+            $form['#help_topic'] = $plugin->definition['help topic'];
+          }
+          if (!empty($plugin->definition['module'])) {
+            $form['#help_module'] = $plugin->definition['module'];
+          }
 
           $form['cache_options'] = array(
             '#tree' => TRUE,
@@ -1631,11 +1643,10 @@ class views_plugin_display extends views_plugin {
         $form['#title'] .= t('Query options');
         $this->view->init_query();
         if ($this->view->query) {
-          if (isset($this->view->query->definition['help topic'])) {
+          if (!empty($this->view->query->definition['help topic'])) {
             $form['#help_topic'] = $this->view->query->definition['help topic'];
           }
-
-          if (isset($this->view->query->definition['module'])) {
+          if (!empty($this->view->query->definition['module'])) {
             $form['#help_module'] = $this->view->query->definition['module'];
           }
 
@@ -1730,8 +1741,10 @@ class views_plugin_display extends views_plugin {
         }
         $plugin = $this->get_plugin(empty($style) ? 'row' : 'style');
         if ($plugin) {
-          if (isset($plugin->definition['help topic'])) {
+          if (!empty($plugin->definition['help topic'])) {
             $form['#help_topic'] = $plugin->definition['help topic'];
+          }
+          if (!empty($plugin->definition['module'])) {
             $form['#help_module'] = $plugin->definition['module'];
           }
           $form[$form_state['section']] = array(
@@ -2113,7 +2126,12 @@ class views_plugin_display extends views_plugin {
         $plugin = $this->get_plugin('exposed_form');
         $form['#title'] .= t('Exposed form options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
+          if (!empty($plugin->definition['help topic'])) {
+            $form['#help_topic'] = $plugin->definition['help topic'];
+          }
+          if (!empty($plugin->definition['module'])) {
+            $form['#help_module'] = $plugin->definition['module'];
+          }
 
           $form['exposed_form_options'] = array(
             '#tree' => TRUE,
@@ -2136,7 +2154,7 @@ class views_plugin_display extends views_plugin {
           '#default_value' => $pager['type'],
         );
 
-        $pager_plugin = views_fetch_plugin_data('pager', $pager['type'], array($this->view->base_table));
+        $pager_plugin = views_fetch_plugin_data('pager', $pager['type']);
         if (!empty($pager_plugin['uses options'])) {
           $form['markup'] = array(
             '#prefix' => '<div class="form-item description">',
@@ -2150,7 +2168,12 @@ class views_plugin_display extends views_plugin {
         $plugin = $this->get_plugin('pager');
         $form['#title'] .= t('Pager options');
         if ($plugin) {
-          $form['#help_topic'] = $plugin->definition['help topic'];
+          if (!empty($plugin->definition['help topic'])) {
+            $form['#help_topic'] = $plugin->definition['help topic'];
+          }
+          if (!empty($plugin->definition['module'])) {
+            $form['#help_module'] = $plugin->definition['module'];
+          }
 
           $form['pager_options'] = array(
             '#tree' => TRUE,
@@ -2552,6 +2575,23 @@ class views_plugin_display extends views_plugin {
           $url_options['query'] = $this->view->exposed_raw_input;
         }
         $theme = views_theme_functions('views_more', $this->view, $this->display);
+
+        $parsed_url = drupal_parse_url($path);
+        // Preserve the query string from url.
+        if (!empty($parsed_url['query'])) {
+          if (!empty($url_options['query'])) {
+            $url_options['query'] = array_merge($parsed_url['query'], $url_options['query']);
+          }
+          else {
+            $url_options['query'] = $parsed_url['query'];
+          }
+          $path = $parsed_url['path'];
+        }
+        // Add fragment if applicable.
+        if (!empty($parsed_url['fragment'])) {
+          $url_options['fragment'] = $parsed_url['fragment'];
+        }
+
         $path = check_url(url($path, $url_options));
 
         return theme($theme, array('more_url' => $path, 'link_text' => check_plain($this->use_more_text()), 'view' => $this->view));

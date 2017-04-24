@@ -33,7 +33,7 @@ function os2dagsorden_esdh_provider_process_enclosure($enclosure, $file){
   if (isset($enclosure['sysid']))
     $node->field_os2web_meetings_bpa_id[$node->language][0]['value'] =  $enclosure['sysid'];
   $node->field_os2web_meetings_bpa_file[$node->language][] = (array) $file;
-  if (!$enclosure['access'])//TODO: Look here
+  if (!$enclosure['access'])
     $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 1;
   else
     $node->field_os2web_meetings_bpa_closed[$node->language][0]['value'] = 0;
@@ -331,6 +331,13 @@ function os2dagsorden_esdh_provider_find_and_reassign_additional_agenda_bullet($
   return null;
 }
 
+/**
+ * Remaps the notes from attachments that are going to be deleted to the new attachments.
+ * That is useful when the attachments are going to be substituted
+ *
+ * @param $attachments_to_delete_nids
+ * @param $existing_attachments_nids
+ */
 function os2dagsorden_esdh_provider_reassign_notes($attachments_to_delete_nids, $existing_attachments_nids){
   $attachments_to_delete = node_load_multiple($attachments_to_delete_nids);
   $existing_attachments = node_load_multiple($existing_attachments_nids);

@@ -8,7 +8,7 @@
 /**
  * Tests some general style plugin related functionality.
  */
-class ViewsPluginStyleTestCase extends ViewsSqlTest {
+class ViewsPluginStyleTestCase extends ViewsPluginStyleTestBase {
   public static function getInfo() {
     return array(
       'name' => 'Styles',
@@ -232,20 +232,6 @@ class ViewsPluginStyleTestCase extends ViewsSqlTest {
     }
   }
 
-
-  /**
-   * Stores a view output in the elements.
-   */
-  function storeViewPreview($output) {
-    $htmlDom = new DOMDocument();
-    @$htmlDom->loadHTML($output);
-    if ($htmlDom) {
-      // It's much easier to work with simplexml than DOM, luckily enough
-      // we can just simply import our DOM tree.
-      $this->elements = simplexml_import_dom($htmlDom);
-    }
-  }
-
   /**
    * Tests custom css classes.
    */
@@ -255,7 +241,7 @@ class ViewsPluginStyleTestCase extends ViewsSqlTest {
     // Setup some random css class.
     $view->init_display();
     $view->init_style();
-    $random_name = $this->randomName();
+    $random_name = drupal_html_class($this->randomName());
     $view->style_plugin->options['row_class'] = $random_name . " test-token-[name]";
 
     $rendered_output = $view->preview();
@@ -269,7 +255,7 @@ class ViewsPluginStyleTestCase extends ViewsSqlTest {
       $this->assertTrue(strpos($class, $random_name) !== FALSE, 'Take sure that a custom css class is added to the output.');
 
       // Check token replacement.
-      $name = $view->field['name']->get_value($view->result[$count]);
+      $name = drupal_html_class($view->field['name']->get_value($view->result[$count]));
       $this->assertTrue(strpos($class, "test-token-$name") !== FALSE, 'Take sure that a token in custom css class is replaced.');
 
       $count++;

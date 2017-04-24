@@ -83,6 +83,11 @@ function os2web_print_send_to_friend_monolog_channel_info() {
   return $channels;
 }
 
+/**
+ * Implements hook_monolog_handler_info().
+ *
+ * @return array
+ */
 function os2web_print_send_to_friend_monolog_handler_info() {
   $handlers = array();
 
@@ -95,9 +100,14 @@ function os2web_print_send_to_friend_monolog_handler_info() {
   return $handlers;
 }
 
-
-
-
+/**
+ * Function that logs sending to friend event
+ *
+ * @param $message
+ * @param array $variables
+ * @param $severity
+ * @param array $context
+ */
 function os2web_print_send_to_friend_add_to_log($message, $variables = array(), $severity, $context = array()) {
   try {
 
@@ -106,7 +116,6 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
     if (!function_exists('monolog')) {
       os2dagsorden_logging_bootstrap();
     }
-    ;
     $logger = monolog('os2web_send_to_friend_channel');
     $message = addslashes(strip_tags(format_string($message, $variables)));
     $level = os2dagsorden_logging_map_severity_level($severity);
@@ -119,6 +128,13 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
   }
 }
 
+/**
+ * Generates the filter form for sent to friend log values
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
+ */
 function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
   drupal_add_css(drupal_get_path('module', 'os2web_print_send_to_friend') . '/css/os2web_print_send_to_friend.css');
   drupal_add_library('system', 'ui.datepicker');   
@@ -126,7 +142,7 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
       array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
   $form = array();
   $form ['filter-fields'] = array(
-    '#type' => container,
+    '#type' => 'container',
     '#attributes'=> array(
       'class' => array(
         'filter-fields',
@@ -251,6 +267,12 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Clears form values
+ *
+ * @param $form
+ * @param $form_state
+ */
 function os2web_print_send_to_friend_log_filter_form_submit($form, &$form_state) {
   if ($form_state["values"]["op"] == 'Clear') {
     $form_state['values']['user'] = "";

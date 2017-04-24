@@ -927,6 +927,13 @@ function os2dagsorden_access_helper_logout() {
   drupal_goto();
 }
 
+/**
+ * Implement hook_cronapi().
+ *
+ * @param $op
+ * @param null $job
+ * @return array
+ */
 function os2dagsorden_access_helper_cronapi($op, $job = NULL) {
   switch ($op) {
     case 'list':
@@ -1065,13 +1072,6 @@ function os2dagsorden_access_helper_is_touch() {
 }
 
 /**
- * Implement hook_node_insert() and hook_node_presave(), in order to define our
- * own hook for saving a meeting.
- *
- * Defining 'hook_node_save()'.
- */
-
-/**
  * Implements hook_entity_insert().
  */
 function os2dagsorden_access_helper_entity_insert($entity, $type) {
@@ -1104,6 +1104,7 @@ function _os2dagsorden_access_helper_trigger_hook($entity, $type) {
 
   }
 }
+
 /**
  * Hook to node_presave
  * The function will delete the connection to the member object, as well as the role object itself.
@@ -1330,6 +1331,11 @@ function os2dagsorden_access_helper_show_byradet_menu() {
   return FALSE;
 }
 
+/**
+ * Helper function to return fully loaded current user
+ *
+ * @return mixed|null
+ */
 function os2dagsorden_access_helper_get_user() {
   global $user;
   if (!isset($GLOBALS['full_user']) && $user->uid) {
@@ -1342,6 +1348,13 @@ function os2dagsorden_access_helper_get_user() {
   return $GLOBALS['full_user'];
 }
 
+/**
+ * Implements hook_user_presave().
+ *
+ * @param $edit
+ * @param $account
+ * @param $category
+ */
 function os2dagsorden_access_helper_user_presave(&$edit, $account, $category){
   if ($account->is_new && variable_get('os2dagsorden_user_default_meeting_category')){
     $user_category= variable_get('os2dagsorden_user_default_meeting_category');
@@ -1351,6 +1364,12 @@ function os2dagsorden_access_helper_user_presave(&$edit, $account, $category){
   }
 }
 
+/**
+ * Check if user can download attachment file
+ *
+ * @param $fid
+ * @return bool|true
+ */
 function os2dagsorden_access_helper_check_user_can_download_bullet_point_attachment_file($fid){
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -1485,9 +1504,15 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
     return FALSE;
  }
 
- function os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bullet_point_id) {
-     $user_ent = os2dagsorden_access_helper_get_user();
-  global $user;
+/**
+ * Check if the user has permission to share a specific bullet point
+ *
+ * @param $meeting_id
+ * @param $bullet_point_id
+ * @return bool
+ */
+function os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bullet_point_id) {
+  $user_ent = os2dagsorden_access_helper_get_user();
 
   if (!$user_ent->uid) {
     return FALSE;
@@ -1510,14 +1535,15 @@ function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid
       return TRUE;
     }
     else {
-
-        if (intval($user_ent->field_user_can_send_closed_bp['und'][0]['value']) == 1)
-            return TRUE;
-        else
-            return FALSE;
+      if (intval($user_ent->field_user_can_send_closed_bp['und'][0]['value']) == 1) {
+        return TRUE;
+      }
+      else {
+        return FALSE;
+      }
     }
- }
- }
+  }
+}
 
 
 /**
@@ -1562,27 +1588,46 @@ function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabu
   return $term;
 }
 
+/**
+ * Implements hook_mail()
+ * @param $key
+ * @param $message
+ * @param $params
+ */
 function os2dagsorden_access_helper_mail($key, &$message, $params) {
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['body'];
 }
 
-function _os2dagsorden_access_helper_check_user_is_committee_admin( $meeting_type, $tid, $uid) {
-    if ($uid == 1)
-      return TRUE;
-    if (isset($tid)){
+/**
+ * Helper function to check if the user is admin of the certain committee
+ *
+ * @param $meeting_type
+ * @param $tid
+ * @param $uid
+ * @return bool
+ */
+function _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $tid, $uid) {
+  //always true for admin
+  if ($uid == 1) {
+    return TRUE;
+  }
+  if (isset($tid)) {
     $term = taxonomy_term_load($tid);
-   if (strcasecmp($meeting_type, 'Dagsorden') == 0)
-    $committee_admins = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_dag_ad');
-  else
-    $committee_admins =  field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_ref_ad');
+    if (strcasecmp($meeting_type, 'Dagsorden') == 0) {
+      $committee_admins = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_dag_ad');
+    }
+    else {
+      $committee_admins = field_get_items('taxonomy_term', $term, 'field_os2web_meetings_com_ref_ad');
+    }
 
-  if (isset($committee_admins) && !empty($committee_admins)) {
-    foreach($committee_admins as $key => $user){
-      if ($user['uid'] == $uid){
-        return TRUE;
+    if (isset($committee_admins) && !empty($committee_admins)) {
+      foreach ($committee_admins as $key => $user) {
+        if ($user['uid'] == $uid) {
+          return TRUE;
+        }
       }
     }
-    }}
-   return FALSE;
+  }
+  return FALSE;
 }

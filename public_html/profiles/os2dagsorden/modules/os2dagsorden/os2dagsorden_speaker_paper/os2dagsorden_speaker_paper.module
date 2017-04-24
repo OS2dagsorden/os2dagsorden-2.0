@@ -66,6 +66,13 @@ function os2dagsorden_speaker_paper_node_update($node) {
   }
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
 function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alter(&$form, &$form_state, $form_id) {
   $form['os2dagsorden_speaker_paper_settings'] = array(
     '#type' => 'fieldset',

@@ -32,8 +32,9 @@ function ldap_sso_menu() {
 function ldap_sso_user_logout($account) {
   $auth_conf = ldap_authentication_get_valid_conf();
   if ($auth_conf->seamlessLogin == 1) {
-    setcookie("seamless_login", 'do not auto login', time() + (int)$auth_conf->cookieExpire, base_path(), "");
-    $_SESSION['seamless_login'] = $_COOKIE['seamless_login'];
+    $cookie_string = 'do not auto login';
+    setcookie("seamless_login", $cookie_string, time() + (int)$auth_conf->cookieExpire, base_path(), "");
+    $_SESSION['seamless_login'] = $cookie_string;
   }
 }
 
@@ -64,6 +65,7 @@ function ldap_sso_boot() {
           // removed with http://drupal.org/node/1485118 patch
           //$ldap_sso_q = (!isset($_GET['q']) || $_GET['q'] == '') ? 'user' : $_GET['q'];
           //drupal_goto('user/login/sso', array('query' => array('destination' => rawurlencode($ldap_sso_q))));
+          drupal_bootstrap(DRUPAL_BOOTSTRAP_LANGUAGE); 
           drupal_goto('user/login/sso', array('query' => drupal_get_destination()));
         }
         else {

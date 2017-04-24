@@ -570,7 +570,8 @@ function os2web_esdh_provider_default_bullet() {
 }
 
 /**
- * Todo, add docblock here.
+ * Checks ESDH Meeting import status, ESDH case/document backend check, AdLib PDF Conversion
+ * @param $checks
  */
 function os2web_esdh_provider_prod_check_alter(&$checks) {
   $checks['os2web'] = array(
@@ -585,7 +586,10 @@ function os2web_esdh_provider_prod_check_alter(&$checks) {
 }
 
 /**
- * Todo, add docblock here.
+ * Checks the status of importer.
+ *
+ * @param string $caller
+ * @return mixed
  */
 function _os2web_esdh_provider_import_check($caller = 'internal') {
   $last_import = variable_get('os2web_esdh_provider_last_import', 0);
@@ -618,7 +622,10 @@ function _os2web_esdh_provider_import_check($caller = 'internal') {
 }
 
 /**
- * Todo, add docblock here.
+ * Checks the status of PWS service
+ *
+ * @param string $caller
+ * @return mixed
  */
 function _os2web_esdh_provider_pws_check($caller = 'internal') {
   $status = os2web_esdh_provider_has_api('cm');
@@ -643,7 +650,10 @@ function _os2web_esdh_provider_pws_check($caller = 'internal') {
 }
 
 /**
- * Todo, add docblock here.
+ * Checks the status of adlib service
+ *
+ * @param string $caller
+ * @return mixed
  */
 function _os2web_esdh_provider_adlib_check($caller = 'internal') {
   $status = FALSE;

@@ -1,4 +1,9 @@
-Issue #1632922 by brianV.  Schema fix for ldap query.
+Fixed fake ldap server in simpltests to never filter on dn=*.  See http://drupal.org/node/1066608
+Issue #1647950 by BobA.  Patch by BobA.  Ldap Profile issue.
+Issue #1650718 by alanrussian.  Patch by alanrussian.
+Issue #1661644 by thesaunterer.  Patch by by thesaunterer. Bad error message code throws warning.
+Issue #1623584 by alanrussian.  Patch by alanrussian.
+Issue #1634930 by boran.  Added hook alter to allow intervention in ldap authentication->allowUser method.
 Changes in ldap_authorization.inc to make logic clearer and set array keys in authorization lowercase.
 Fix for ldap servers caching issue when ctools enabled.  noticed the bug when building simpletests.  There is no issue for this.
 Issue #1371452.  Simpletest coverage for ldap servers add, update, delete and class property population.
