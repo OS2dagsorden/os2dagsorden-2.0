@@ -293,11 +293,9 @@ os2dagsorden_meeting_views_coming_meetings_fields_meeting_location($row->nid);
   $handler->display->display_options['pager']['type'] = 'mini';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
   $handler->display->display_options['pager']['options']['offset'] = '0';
-  $handler->display->display_options['pager']['options']['id'] = '1';
-  $handler->display->display_options['pager']['options']['tags']['first'] = '« første';
-  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ forrige';
-  $handler->display->display_options['pager']['options']['tags']['next'] = 'næste >';
-  $handler->display->display_options['pager']['options']['tags']['last'] = 'sidste »';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹‹';
+  $handler->display->display_options['pager']['options']['tags']['next'] = '››';
   $handler->display->display_options['block_description'] = 'coming_meetings_my_committee';
   $translatables['kommende_m_der_i_mine_udvalg'] = array(
     t('Master'),
@@ -329,6 +327,10 @@ os2dagsorden_meeting_views_coming_meetings_help_text();
     t('Udvalg'),
     t('[field_os2web_meetings_committee]'),
     t('Block'),
+    t('« first'),
+    t('‹‹'),
+    t('››'),
+    t('last »'),
     t('coming_meetings_my_committee'),
   );
   $export['kommende_m_der_i_mine_udvalg'] = $view;
@@ -2096,10 +2098,8 @@ os2dagsorden_meeting_views_meeting_details_fields_tilleags_dagsorden_header();
   $handler->display->display_options['pager']['options']['items_per_page'] = '15';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '2';
-  $handler->display->display_options['pager']['options']['tags']['first'] = '« første';
-  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹ forrige';
-  $handler->display->display_options['pager']['options']['tags']['next'] = 'næste >';
-  $handler->display->display_options['pager']['options']['tags']['last'] = 'sidste »';
+  $handler->display->display_options['pager']['options']['tags']['previous'] = '‹‹';
+  $handler->display->display_options['pager']['options']['tags']['next'] = '››';
   $handler->display->display_options['style_plugin'] = 'table';
   $handler->display->display_options['style_options']['columns'] = array(
     'nid' => 'nid',
@@ -2682,10 +2682,10 @@ os2dagsorden_meeting_views_meetings_search_fields_placering($meta_data);
     t('Items per page'),
     t('- All -'),
     t('Offset'),
-    t('« første'),
-    t('‹ forrige'),
-    t('næste >'),
-    t('sidste »'),
+    t('« first'),
+    t('‹‹'),
+    t('››'),
+    t('last »'),
     t('<?php
 os2dagsorden_meeting_views_meetings_search_help_text();
 ?>'),

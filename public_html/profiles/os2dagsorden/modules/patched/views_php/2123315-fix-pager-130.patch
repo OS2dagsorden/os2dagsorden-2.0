@@ -1,0 +1,16 @@
+diff --git a/views_php.module b/views_php.module
+index aee5971..3908548 100644
+--- a/views_php.module
++++ b/views_php.module
+@@ -148,3 +148,11 @@ function views_php_views_post_execute($view) {
+     $view->query->php_unwrap();
+   }
+ }
++
++/**
++ * Implements hook_views_post_build().
++ */
++function views_php_views_post_build($view) {
++  // Clear the limit and offset
++  $view->build_info['query']->range();
++}
