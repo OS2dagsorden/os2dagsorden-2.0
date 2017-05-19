@@ -177,7 +177,7 @@ function os2dagsorden_statistics_views_default_views() {
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
   $handler->display->display_options['header']['area']['content'] = '<div style="margin-top: 10px">
-<h2>Antal årlige dagsordener og referater</h2></div>';
+<h2>Antal publicerede dagsordner, referater og tillægsreferater</h2></div>';
   $handler->display->display_options['header']['area']['format'] = 'full_html';
   $handler->display->display_options['defaults']['footer'] = FALSE;
   /* Footer: Global: Text area */
@@ -233,7 +233,7 @@ function os2dagsorden_statistics_views_default_views() {
     t('Page'),
     t('Statistik - Indholdsstatistik'),
     t('<div style="margin-top: 10px">
-<h2>Antal årlige dagsordener og referater</h2></div>'),
+<h2>Antal publicerede dagsordner, referater og tillægsreferater</h2></div>'),
     t('<i>Antallet er angivet i parantes efter årstallet.</i>'),
   );
   $export['os2dagsorden_statistic_content'] = $view;
