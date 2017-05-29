@@ -59,10 +59,10 @@ function os2dagsorden_front_page_views_user_follows_committees_fields_print_comm
       print($com_term->name);
     }
     if ($com['field'] == 'c_plus') {
-      print('<b>++</b><br/>');
+      print('<b>+</b><br/>');
     }
     elseif ($com['field'] == 'c_pp') {
-      print('<b>+</b><br/>');
+      print('<b>++</b><br/>');
     }
     else {
       print('<br/>');
