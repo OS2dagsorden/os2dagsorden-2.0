@@ -53,20 +53,18 @@ function os2dagsorden_front_page_views_user_follows_committees_fields_print_comm
   foreach ($order_list as $com){
     $com_term = taxonomy_term_load($com['tid']);
     if (isset($com_term->field_os2web_meetings_com_shname['und'])){
-      print($com_term->field_os2web_meetings_com_shname['und'][0]['value']);
+     $link = $com_term->field_os2web_meetings_com_shname['und'][0]['value'];
     }
     else {
-      print($com_term->name);
+     $link = $com_term->name;
     }
     if ($com['field'] == 'c_plus') {
-      print('<b>++</b><br/>');
+      $link .= '<b>++</b>';
     }
     elseif ($com['field'] == 'c_pp') {
-      print('<b>+</b><br/>');
+      $link .= '<b>++</b>';
     }
-    else {
-      print('<br/>');
-    }
+    print '<a href="/meetings-search?field_os2web_meetings_committee_tid=' .$com['tid'] . '&from_date=&to_date">' . $link . '</a></br>';
   }
 }
 /////////////////////////////////////////BLOCK END /////////////////////////////////////////
