@@ -592,6 +592,14 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
           }
         }
       }
+      if (!empty($user_ent->field_follows_committee_pp)) { //follows committee PLUS_PLUS
+        foreach ($user_ent->field_follows_committee_pp['und'] as $user_committee_id) {
+          if (intval($meeting_committee_id) == $user_committee_id['tid']) {
+            return TRUE;
+          }
+        }
+      }
+
       //none of the above, access denied
       return FALSE;
     }
