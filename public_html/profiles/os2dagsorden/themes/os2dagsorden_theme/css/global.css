@@ -763,7 +763,7 @@ div.front-page-content-block {
 div.block-inner{
     margin-bottom: 10px;
 }
-.view-user-follow-committees a:link, .view-user-follow-committees a:visited
+.view-user-follow-committees a:link, .view-user-follow-committees a:visited,
 .view-user-committee a:link, .view-user-committee a:visited{
   color: inherit;
 }
