@@ -97,3 +97,4 @@ dependencies[] = os2dagsorden_sidepane_menu
 dependencies[] = os2dagsorden_ultimate_cron_configuration
 dependencies[] = os2dagsorden_fields_and_content_types
 dependencies[] = os2dagsorden_admin_views
+dependencies[] = os2dagsorden_rules_and_permissions
