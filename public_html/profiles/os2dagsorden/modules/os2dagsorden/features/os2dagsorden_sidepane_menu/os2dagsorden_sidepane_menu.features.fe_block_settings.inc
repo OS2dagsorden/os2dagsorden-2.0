@@ -14,46 +14,58 @@ function os2dagsorden_sidepane_menu_default_fe_block_settings() {
 
   $export['block-show_hide_menu_block'] = array(
     'cache' => -1,
-    'custom' => '0',
+    'custom' => 0,
     'machine_name' => 'show_hide_menu_block',
     'module' => 'block',
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'godkendt bruger' => '2',
+      'authenticated user' => 2,
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'menu',
-        'status' => '1',
+        'status' => 1,
         'theme' => 'os2dagsorden_theme',
-        'weight' => '-20',
+        'weight' => -20,
+      ),
+      'rubik' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'rubik',
+        'weight' => -20,
       ),
     ),
     'title' => '<none>',
-    'visibility' => '0',
+    'visibility' => 0,
   );
 
   $export['menu-menu-sidepane-menu'] = array(
     'cache' => -1,
-    'custom' => '0',
+    'custom' => 0,
     'delta' => 'menu-sidepane-menu',
     'module' => 'menu',
     'node_types' => array(),
     'pages' => '',
     'roles' => array(
-      'godkendt bruger' => '2',
+      'authenticated user' => 2,
     ),
     'themes' => array(
       'os2dagsorden_theme' => array(
         'region' => 'sidebar_second',
-        'status' => '1',
+        'status' => 1,
         'theme' => 'os2dagsorden_theme',
-        'weight' => '-20',
+        'weight' => -20,
+      ),
+      'rubik' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'rubik',
+        'weight' => -20,
       ),
     ),
     'title' => '<none>',
-    'visibility' => '0',
+    'visibility' => 0,
   );
 
   return $export;

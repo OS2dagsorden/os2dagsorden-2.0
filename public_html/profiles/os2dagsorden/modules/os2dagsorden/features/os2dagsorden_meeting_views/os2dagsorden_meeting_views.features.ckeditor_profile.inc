@@ -27,7 +27,7 @@ function os2dagsorden_meeting_views_ckeditor_profile_defaults() {
     'OS2dagsorden_filtered' => array(
       'name' => 'OS2dagsorden_filtered',
       'settings' => array(
-        'ss' => '2',
+        'ss' => 2,
         'toolbar' => '[
     [\'Bold\',\'Italic\',\'Underline\',\'NumberedList\',\'BulletedList\',\'TextColor\',\'Image\']
 ]',
@@ -66,7 +66,7 @@ function os2dagsorden_meeting_views_ckeditor_profile_defaults() {
         'UserFilesPath' => '%b%f/',
         'UserFilesAbsolutePath' => '%d%b%f/',
         'ckeditor_load_method' => 'ckeditor.js',
-        'ckeditor_load_time_out' => '0',
+        'ckeditor_load_time_out' => 0,
         'forcePasteAsPlainText' => 'f',
         'html_entities' => 't',
         'scayt_autoStartup' => 'f',
