@@ -9,9 +9,15 @@
   top: -15px;
   padding: 15px 0  5px 5px; }
 
-.user-logout-block .user-logout-textbox, .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
+.user-logout-block .user-logout-textbox {
   color: #FFF;
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: "Bitter", serif;
+  font-weight: 400;
+  font-size: 1em; }
+
+.user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
+  color: #FFF;
+  font-family: Arial, sans-serif;
   font-weight: bold;
   text-shadow: none;
   border-color: #FFF;
@@ -35,11 +41,70 @@
   white-space: nowrap;
   background-size: 25px 100%; }
 
+.front.not-logged-in .zone-content-wrapper {
+  padding-top: 30px; }
+
+.front.not-logged-in .region-branding {
+  margin: 0 auto;
+  width: 100%; }
+  .front.not-logged-in .region-branding .logo-img {
+    margin: 0 auto;
+    float: none;
+    display: block;
+    width: 74px; }
+
+#block-user-login {
+  max-width: 450px;
+  min-height: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  background: #FFF; }
+  #block-user-login .block-title {
+    text-align: center; }
+  #block-user-login .content {
+    padding: 20px 40px; }
+
+#user-login-form input.form-text {
+  display: block;
+  width: 100%; }
+
+.form-item, .views-exposed-widget {
+  margin-bottom: 1em;
+  width: 100%; }
+  .form-item label, .views-exposed-widget label {
+    display: inline-block;
+    font-size: 1.1em;
+    margin-bottom: 5px; }
+  .form-item input.form-text, .views-exposed-widget input.form-text {
+    font-size: 1.0em;
+    line-height: 1em;
+    border: 1px solid #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 2px;
+    background-color: #FFF;
+    box-sizing: border-box;
+    display: block;
+    width: 100%; }
+  .form-item select.form-select, .views-exposed-widget select.form-select {
+    font-size: 1.0em;
+    line-height: 1em;
+    border: 1px solid #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 2px;
+    background-color: #FFF;
+    box-sizing: border-box;
+    display: block;
+    width: 100%; }
+  .form-item .date-padding, .views-exposed-widget .date-padding {
+    float: none; }
+
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
   background: #FFF;
-  font-family: Arial, sans-serif; }
+  font-family: Arial, sans-serif;
+  font-size: 16px; }
 
 #region-footer-first, #region-postscript-first {
   min-height: 40px; }
@@ -55,15 +120,6 @@ body {
   background-color: #80B853; }
 
 /*---------------------------- Small Fixes Start ----------------------------*/
-/*Fixing the size of the textfields of Search on the front page*/
-#edit-from-date-value-datepicker-popup-0, #edit-to-date-value-datepicker-popup-0, #edit-field-os2web-meetings-committee-tid, #edit-search-params {
-  width: 100%; }
-
-/*Fixing user login screen*/
-#user-login-form {
-  padding: 5px 10px 5px 10px; }
-
-/*Fixing front page views attachments*/
 .front-page-info-block .attachment {
   margin-top: 0; }
   .front-page-info-block .attachment .view {
@@ -307,7 +363,7 @@ div.date-heading h3 {
     font-family: Arial,Helvetica,sans-serif;
     background: none; }
 
-.view-id-events, .view-id-user_committee, .view-id-user_follow_committees, .view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_, .block-views-exp-meetings-search-page .views-exposed-form, #user-login-form, .node-form, .node, .view-display-id-page {
+.view-id-events, .view-id-user_committee, .view-id-user_follow_committees, .view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_, .block-views-exp-meetings-search-page .views-exposed-form, .node-form, .node, .view-display-id-page {
   background: #ECEEEF;
   border-bottom: 1px solid #e0e0e0;
   padding: 5px; }
@@ -316,7 +372,7 @@ div.date-heading h3 {
   padding: 5px;
 }*/
 .block-views-exp-meetings-search-page div.views-exposed-form {
-  padding: 5px 10px 0 20px; }
+  padding: 5px 15px 0 15px; }
 
 div.attachment {
   margin-top: 30px; }
@@ -1443,6 +1499,7 @@ div.note {
   background: #f3f3f3;
   display: none;
   position: absolute;
+  top: 18px;
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   border-style: solid;
   border-width: 1px;
@@ -1476,14 +1533,8 @@ div.note {
   display: block; }
 
 .dropdown:hover .dropbtn {
-  background: #426BB3;
-  box-shadow: 0 2px 2px #5a5a5a inset;
-  border-color: #b9b9b9 #b9b9b9 #BBBBBB;
-  border-style: solid;
-  border-width: 1px;
-  color: #333333;
-  text-shadow: 0 1px 0 #EEEEEE;
-  background-color: #3e8e41; }
+  background: #34558e;
+  color: #FFF; }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /* ---------------------------- Dropdown Button END ---------------------------- */

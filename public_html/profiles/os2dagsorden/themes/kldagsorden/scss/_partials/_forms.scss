@@ -1,0 +1,34 @@
+.form-item, .views-exposed-widget {
+    margin-bottom: 1em;
+    width: 100%;
+    label {
+        display: inline-block;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+    }
+    input.form-text {
+        font-size: 1.0em;
+        line-height: 1em;
+        border: $border-solid;
+        padding: 5px 10px;
+        border-radius: 2px;
+        background-color: $color-white;
+        box-sizing:border-box;
+        display: block;
+        width: 100%;
+    }
+    select.form-select {
+        font-size: 1.0em;
+        line-height: 1em;
+        border: $border-solid;
+        padding: 5px 10px;
+        border-radius: 2px;
+        background-color: $color-white;
+        box-sizing:border-box;
+        display: block;
+        width: 100%;
+    }
+    .date-padding {
+        float: none;
+    }
+}
