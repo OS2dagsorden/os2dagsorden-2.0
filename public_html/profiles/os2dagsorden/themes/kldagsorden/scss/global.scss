@@ -316,9 +316,10 @@ ul li.leaf {
   font-family: $font-headings;
   font-weight: 100;
   font-size: 16px;
-  background-color: $color-grey;
-  padding: 10px;
+  background-color: $color-background-secondary;
+  padding: 5px 10px;
   margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .block-views-exp-meetings-search-page .views-exposed-form .views-exposed-widget .form-submit {
@@ -888,17 +889,17 @@ table {
 
 table {
   tr th {
-    background: $color-grey;
+    background: $color-background-secondary;
     border-bottom-style: none;
     border-top-style: none;
     color: $color-font-primary;
     font-family: $font-headings;
     font-weight: bold;
     a {
-      color: #FFF;
+      color: $color-white;
       font-weight: bold;
       &:hover {
-        color: #FFF;
+        color: $color-white;
         font-weight: bold;
       }
     }
@@ -907,13 +908,12 @@ table {
     a {
       display: block;
       position: relative;
-      background-color: #F0EDFF;
-      text-shadow: 1px 1px #f5f5f5;
-      color: #333333;
+      background-color: lighten($color-primary, 60%);
+      color: $color-font-primary;
       padding: 3px 10px 3px 10px;
       /*     vertical-align:center; */
       line-height: 30px;
-      font-family: Arial,Helvetica,sans-serif;
+      font-family: $font-paragraphs;
       font-weight: bold;
       font-size: 13px;
       text-decoration: none;
@@ -927,9 +927,9 @@ table {
       &:hover {
         display: block;
         position: relative;
-        background-color: #F0EDFF;
-        text-shadow: 1px 1px #f5f5f5;
-        color: #333333;
+        background-color: $color-grey;
+        
+        color: $color-font-primary;
         padding: 3px 10px 3px 10px;
         /*     vertical-align:center; */
         line-height: 30px;
@@ -1011,14 +1011,9 @@ tr {
   td {
     &:first-child a, .first-child {
       border-left-width: 1px;
-      -moz-border-radius: 4px 0 0 4px;
-      -webkit-border-radius: 4px 0 0 4px;
-      border-radius: 4px 0 0 4px;
     }
     &:last-child a, .last-child {
       border-right-width: 1px;
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
     }
   }
 }
@@ -1039,6 +1034,19 @@ table {
 }
 
 /*meeting details table*/
+.view-meeting-details {
+  background: $color-background-primary;
+  border: $border-solid;
+  border-top: 0px;
+  .view-meeting-details {
+    background: none;
+    border: none;
+  }
+}
+/*.view-content {
+  border: $border-solid;
+  margin-bottom: 10px;
+}*/
 
 /*bullet point details table*/
 
@@ -1503,7 +1511,7 @@ a.annotator-wrapper {
     width: 28px;
     height: 31px;
     padding: 7px;
-    border: 5px solid #FFFFFF;
+    border: 5px solid $color-white;
     opacity: 0.7;
   }
   left: 0;
@@ -1621,7 +1629,7 @@ a.annotator-wrapper {
 /* -- autocomplete input -- */
 
 #autocomplete {
-  background-color: #fff;
+  background-color: $color-white;
   z-index: 900;
   ul {
     padding-left: 0;
@@ -1641,7 +1649,7 @@ a.annotator-wrapper {
   position: relative;
   > img {
     width: 100%;
-    height: 80px;
+    height: auto;
     margin: auto;
     position: absolute;
     top: 0;
@@ -1663,7 +1671,7 @@ a.annotator-wrapper {
 #edit-available-committee {
   float: right;
   overflow-y: scroll;
-  background: #fff;
+  background: $color-white;
   &::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px;
@@ -1678,7 +1686,7 @@ a.annotator-wrapper {
 ul.droptrue {
   list-style: none;
   padding: 0;
-  background: #fff;
+  background: $color-white;
   border: 1px solid rgb(169, 169, 169);
   min-height: 45px;
   li {
