@@ -835,7 +835,7 @@ table.views-table tr td a {
   table.views-table tr td a:hover {
     display: block;
     position: relative;
-    background-color: #d7d9da;
+    background-color: #ecf0fa;
     color: #001D2F;
     padding: 3px 10px 3px 10px;
     /*     vertical-align:center; */

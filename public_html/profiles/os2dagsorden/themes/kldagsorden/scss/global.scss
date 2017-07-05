@@ -927,7 +927,7 @@ table {
       &:hover {
         display: block;
         position: relative;
-        background-color: $color-grey;
+        background-color: lighten($color-primary, 60%);
         
         color: $color-font-primary;
         padding: 3px 10px 3px 10px;
