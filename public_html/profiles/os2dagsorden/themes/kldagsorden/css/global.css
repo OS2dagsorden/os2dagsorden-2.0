@@ -99,6 +99,38 @@
   .form-item .date-padding, .views-exposed-widget .date-padding {
     float: none; }
 
+.form-submit {
+  background-color: #426BB3;
+  border: none;
+  color: #FFF;
+  padding: 5px 20px 5px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .1s ease-in; }
+  .form-submit:hover {
+    background-color: #28408C;
+    transition: background-color .3s ease-out; }
+  .form-submit.nav-button {
+    background: #426BB3;
+    color: #FFF;
+    padding: 5px 10px 5px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer; }
+    .form-submit.nav-button:hover {
+      background: #28408C;
+      padding: 5px 10px 5px 10px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer; }
+
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
@@ -188,17 +220,29 @@ div.content ul.menu li {
     div.content ul.menu li #menu-home.active {
       background: #d7d9da url("../img/icon_home.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-print-kalendar {
-    background: #ECEEEF url("../img/icon_print.png") no-repeat 15px 50%; }
+    background: #ECEEEF url("../img/icon_print.png") no-repeat 15px 50%;
+    transition: background-color .1s ease-in; }
+    div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
+      background: #426BB3 url("../img/icon_print_white.png") no-repeat 15px 50%;
+      color: #FFF;
+      transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-print-kalendar.active {
-      background: #d7d9da url("../img/icon_print.png") no-repeat 15px 50%; }
+      background: #28408C url("../img/icon_print_white.png") no-repeat 15px 50%;
+      color: #FFF; }
   div.content ul.menu li #menu-sog {
     background: #ECEEEF url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
       background: #d7d9da url("../img/icon_search.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-simple-user-edit {
-    background: #ECEEEF url("../img/icon_simple_user_edit.png") no-repeat 15px 50%; }
-    div.content ul.menu li #menu-simple-user-edit.active {
-      background: #d7d9da url("../img/icon_simple_user_edit.png") no-repeat 15px 50%; }
+    background: #ECEEEF url("../img/icon_simple_user_edit.png") no-repeat 15px 50%;
+    transition: background-color .1s ease-in; }
+    div.content ul.menu li #menu-simple-user-edit:hover {
+      background: #426BB3 url("../img/icon_simple_user_edit_white.png") no-repeat 15px 50%;
+      color: #FFF;
+      transition: background-color .3s ease-out; }
+    div.content ul.menu li #menu-simple-user-edit.active, div.content ul.menu li #menu-simple-user-edit.active:hover {
+      background: #28408C url("../img/icon_simple_user_edit_white.png") no-repeat 15px 50%;
+      color: #FFF; }
 
 /* general for all links with not pictures */
 /* specific for each link */
@@ -627,34 +671,6 @@ pager li.pager-first {
 
 .item-list .pager li {
   border: 0; }
-
-.form-submit {
-  background: #426BB3;
-  border: none;
-  color: #FFF;
-  padding: 5px 20px 5px 20px;
-  font-family: Arial, sans-serif;
-  font-size: 13px;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer; }
-  .form-submit.nav-button {
-    background: #426BB3;
-    color: #FFF;
-    padding: 5px 10px 5px 10px;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    text-decoration: none;
-    text-transform: uppercase;
-    cursor: pointer; }
-    .form-submit.nav-button:hover {
-      background: #28408C;
-      padding: 5px 10px 5px 10px;
-      font-family: Arial, sans-serif;
-      font-size: 13px;
-      text-decoration: none;
-      text-transform: uppercase;
-      cursor: pointer; }
 
 .view .date-nav-wrapper .date-next a, .view .date-nav-wrapper .date-prev a {
   /* Fallback */

@@ -130,8 +130,15 @@ div.content ul.menu li {
   }
   #menu-print-kalendar {
     background: $color-background-secondary url('../img/icon_print.png') no-repeat 15px 50%;
+    transition: background-color .1s ease-in;
+    &:hover, &.active:hover {
+      background: $color-secondary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      color: $color-white;
+      transition: background-color .3s ease-out;
+    }
     &.active {
-      background: $color-grey url('../img/icon_print.png') no-repeat 15px 50%;
+      background: $color-primary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      color: $color-white;
     }
   }
   #menu-sog {
@@ -142,8 +149,15 @@ div.content ul.menu li {
   }
   #menu-simple-user-edit {
     background: $color-background-secondary url('../img/icon_simple_user_edit.png') no-repeat 15px 50%;
-    &.active {
-      background: $color-grey url('../img/icon_simple_user_edit.png') no-repeat 15px 50%;
+    transition: background-color .1s ease-in;
+    &:hover {
+      background: $color-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      color: $color-white;
+      transition: background-color .3s ease-out;
+    }
+    &.active, &.active:hover {
+      background: $color-primary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      color: $color-white;
     }
   }
 }
@@ -679,37 +693,6 @@ pager li.pager-first {
 
 .item-list .pager li {
   border: 0;
-}
-
-.form-submit {
-  &.nav-button {
-    background: $color-secondary;
-    color: $color-white;
-    padding: 5px 10px 5px 10px;
-    font-family: $font-button;
-    font-size: 13px;
-    text-decoration: none;
-    text-transform: uppercase;
-    cursor: pointer;
-    &:hover {
-      background: $color-primary;
-      padding: 5px 10px 5px 10px;
-      font-family: $font-button;
-      font-size: 13px;
-      text-decoration: none;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
-  }
-  background: $color-secondary;
-  border: none;
-  color: $color-white;
-  padding: 5px 20px 5px 20px;
-  font-family: $font-button;
-  font-size: 13px;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
 }
 
 .view .date-nav-wrapper {
