@@ -31,40 +31,47 @@
     .date-padding {
         float: none;
     }
+    .filter-wrapper &{
+        padding: 0;
+    }
 }
 
 .form-submit {
-  background-color: $color-secondary;
-  border: none;
-  color: $color-white;
-  padding: 5px 20px 5px 20px;
-  font-family: $font-button;
-  font-size: 13px;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color .1s ease-in;
-  &:hover {
-      background-color: $color-primary;
-      transition: background-color .3s ease-out;
-  }
-  &.nav-button {
-    background: $color-secondary;
+    background-color: $color-secondary;
+    border: none;
     color: $color-white;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 20px 5px 20px;
     font-family: $font-button;
     font-size: 13px;
     text-decoration: none;
     text-transform: uppercase;
     cursor: pointer;
+    transition: background-color .1s ease-in;
     &:hover {
-      background: $color-primary;
-      padding: 5px 10px 5px 10px;
-      font-family: $font-button;
-      font-size: 13px;
-      text-decoration: none;
-      text-transform: uppercase;
-      cursor: pointer;
+        background-color: $color-primary;
+        transition: background-color .3s ease-out;
     }
-  }
+    &.nav-button {
+        background: $color-secondary;
+        color: $color-white;
+        padding: 5px 10px 5px 10px;
+        font-family: $font-button;
+        font-size: 13px;
+        text-decoration: none;
+        text-transform: uppercase;
+        cursor: pointer;
+        &:hover {
+            background: $color-primary;
+            padding: 5px 10px 5px 10px;
+            font-family: $font-button;
+            font-size: 13px;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+    }
+    .form-actions.form-wrapper & {
+        margin-right: 10px;
+    }
 }
+

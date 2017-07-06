@@ -408,7 +408,7 @@ h2.block-title, h1.title {
 }
 
 div.front-page-info-block, .node {
-  padding: 5px 10px 10px 20px;
+  padding: 10px;
 }
 
 div {
@@ -487,7 +487,7 @@ div {
     }
   }
   .mini tr td.today a {
-    background-color: #790056;
+    background-color: $color-font-primary;
     color: #feffff;
     font-weight: bold;
     border-radius: 5px;
@@ -503,28 +503,28 @@ div {
     padding: 3px 3px 1px 8px;
   }
   td .inner div.day a {
-    color: #790056;
+    color: $color-font-primary;
   }
   .month-view .full {
     tr {
       td.today, &.odd td.today, &.even td.today {
         background: none repeat scroll 0 0 transparent;
-        border-left: 2px solid #790056;
-        border-right: 2px solid #790056;
+        border-left: 2px solid $color-font-primary;
+        border-right: 2px solid $color-font-primary;
       }
       td.single-day.today {
-        border-bottom: 2px solid #790056;
+        border-bottom: 2px solid $color-font-primary;
       }
     }
     td.date-box.today {
-      border-color: #790056;
+      border-color: $color-font-primary;
       border-style: solid;
       border-width: 2px 2px 0;
     }
   }
   tr {
     td.today, &.odd td.today, &.even td.today, td.today a {
-      color: #790056;
+      color: $color-font-primary;
     }
   }
   td {
@@ -598,14 +598,14 @@ div {
 
 a {
   &:link, &:visited {
-    color: #790056;
+    color: $color-font-primary;
     text-decoration: none;
   }
 }
 
 .month a {
   &:link, &:visited {
-    color: #790056;
+    color: $color-font-primary;
     text-decoration: none;
   }
 }
@@ -846,7 +846,7 @@ ul.primary li {
   &.active a {
     color: #feffff;
     font-weight: bold;
-    background-color: #790056;
+    background-color: $color-font-primary;
     border-style: none;
     padding: 5px 20px 5px 20px;
   }
@@ -1795,3 +1795,53 @@ div.note {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 
 /* ---------------------------- Dropdown Button END ---------------------------- */
+
+/* Add content */
+.content {
+  dl.node-type-list {
+    dt a {
+      background-color: $color-secondary;
+      color: $color-white;
+      padding: 10px 20px;
+      width: 100%;
+      display: inline-block;
+      box-sizing:border-box;
+      transition: background-color .1s ease-in;
+      &::before {
+        content: ">";
+        display: inline-block;
+        margin-right: 7px;
+      }
+      &:hover {
+        background-color: $color-primary;
+        transition: background-color .3s ease-out;
+      }
+    }
+    dt, dd {
+      display: inline-block;
+      float: left;
+      width: 100%;
+    }
+    dt {
+      padding-top: 10px;
+      margin-top: 5px;
+    }
+    dd {
+      clear: both;
+      padding-top: 0; 
+      padding-left: 37px;
+      padding-bottom: 0;
+      margin-bottom: 5px; 
+    }
+  }
+}
+
+/* member of in sidebar */
+.views-field.views-field-field-os2web-meetings-com-shname {
+  border: $border-solid;
+  display: inline-block;
+  margin-bottom: 3px;
+  padding: 3px 5px;
+  width: 100%;
+  box-sizing: border-box;
+}

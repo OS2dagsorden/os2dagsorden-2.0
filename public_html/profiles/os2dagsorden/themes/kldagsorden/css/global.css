@@ -98,6 +98,8 @@
     width: 100%; }
   .form-item .date-padding, .views-exposed-widget .date-padding {
     float: none; }
+  .filter-wrapper .form-item, .filter-wrapper .views-exposed-widget {
+    padding: 0; }
 
 .form-submit {
   background-color: #426BB3;
@@ -130,6 +132,8 @@
       text-decoration: none;
       text-transform: uppercase;
       cursor: pointer; }
+  .form-actions.form-wrapper .form-submit {
+    margin-right: 10px; }
 
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
@@ -451,7 +455,7 @@ h2.block-title, h1.title {
   border-bottom: 1px solid #e0e0e0; }
 
 div.front-page-info-block, .node {
-  padding: 5px 10px 10px 20px; }
+  padding: 10px; }
 
 div.front-page-content-block {
   margin-bottom: 50px; }
@@ -511,7 +515,7 @@ div.block-inner {
   background: none; }
 
 .calendar-calendar .mini tr td.today a {
-  background-color: #790056;
+  background-color: #001D2F;
   color: #feffff;
   font-weight: bold;
   border-radius: 5px; }
@@ -527,23 +531,23 @@ div.block-inner {
   padding: 3px 3px 1px 8px; }
 
 .calendar-calendar td .inner div.day a {
-  color: #790056; }
+  color: #001D2F; }
 
 .calendar-calendar .month-view .full tr td.today, .calendar-calendar .month-view .full tr.odd td.today, .calendar-calendar .month-view .full tr.even td.today {
   background: none repeat scroll 0 0 transparent;
-  border-left: 2px solid #790056;
-  border-right: 2px solid #790056; }
+  border-left: 2px solid #001D2F;
+  border-right: 2px solid #001D2F; }
 
 .calendar-calendar .month-view .full tr td.single-day.today {
-  border-bottom: 2px solid #790056; }
+  border-bottom: 2px solid #001D2F; }
 
 .calendar-calendar .month-view .full td.date-box.today {
-  border-color: #790056;
+  border-color: #001D2F;
   border-style: solid;
   border-width: 2px 2px 0; }
 
 .calendar-calendar tr td.today, .calendar-calendar tr.odd td.today, .calendar-calendar tr.even td.today, .calendar-calendar tr td.today a {
-  color: #790056; }
+  color: #001D2F; }
 
 .calendar-calendar td {
   color: #777777;
@@ -595,11 +599,11 @@ div.block-inner {
 /*---------------------------- Date override END ----------------------------*/
 /*---------------------------- Omega globals override START ----------------------------*/
 a:link, a:visited {
-  color: #790056;
+  color: #001D2F;
   text-decoration: none; }
 
 .month a:link, .month a:visited {
-  color: #790056;
+  color: #001D2F;
   text-decoration: none; }
 
 a.form-submit, a.button {
@@ -798,7 +802,7 @@ ul.primary li a {
 ul.primary li.active a {
   color: #feffff;
   font-weight: bold;
-  background-color: #790056;
+  background-color: #001D2F;
   border-style: none;
   padding: 5px 20px 5px 20px; }
 
@@ -1560,3 +1564,44 @@ div.note {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /* ---------------------------- Dropdown Button END ---------------------------- */
+/* Add content */
+.content dl.node-type-list dt a {
+  background-color: #426BB3;
+  color: #FFF;
+  padding: 10px 20px;
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  transition: background-color .1s ease-in; }
+  .content dl.node-type-list dt a::before {
+    content: ">";
+    display: inline-block;
+    margin-right: 7px; }
+  .content dl.node-type-list dt a:hover {
+    background-color: #28408C;
+    transition: background-color .3s ease-out; }
+
+.content dl.node-type-list dt, .content dl.node-type-list dd {
+  display: inline-block;
+  float: left;
+  width: 100%; }
+
+.content dl.node-type-list dt {
+  padding-top: 10px;
+  margin-top: 5px; }
+
+.content dl.node-type-list dd {
+  clear: both;
+  padding-top: 0;
+  padding-left: 37px;
+  padding-bottom: 0;
+  margin-bottom: 5px; }
+
+/* member of in sidebar */
+.views-field.views-field-field-os2web-meetings-com-shname {
+  border: 1px solid #e0e0e0;
+  display: inline-block;
+  margin-bottom: 3px;
+  padding: 3px 5px;
+  width: 100%;
+  box-sizing: border-box; }
