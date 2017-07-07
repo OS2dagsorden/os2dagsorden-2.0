@@ -17,6 +17,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "gutil": "^1.6.4",
+    "include-media": "^1.4.9",
     "run-sequence": "^2.0.0"
   }
 }
