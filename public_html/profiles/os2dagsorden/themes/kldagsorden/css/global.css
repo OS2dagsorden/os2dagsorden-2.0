@@ -101,6 +101,50 @@
   .filter-wrapper .form-item, .filter-wrapper .views-exposed-widget {
     padding: 0; }
 
+/* Title, Meeting ID, Meeting sub ID */
+.form-item-title, .field-type-number-integer {
+  width: 32%;
+  display: inline-block;
+  margin-right: 5px; }
+  @media (max-width: 977px) {
+    .form-item-title, .field-type-number-integer {
+      width: 100%; } }
+
+@media (min-width: 979px) and (max-width: 1219px) {
+  .form-item-title, .field-type-number-integer {
+    width: 49%; } }
+
+/* Meeting type */
+.form-item-field-os2web-meetings-type-und {
+  display: block; }
+  .form-item-field-os2web-meetings-type-und .form-radios .form-item {
+    width: 32%;
+    display: inline-block; }
+    @media (max-width: 739px) {
+      .form-item-field-os2web-meetings-type-und .form-radios .form-item {
+        width: 48%; } }
+    @media (min-width: 979px) {
+      .form-item-field-os2web-meetings-type-und .form-radios .form-item {
+        width: 24%; } }
+
+/* Meeting date */
+.container-inline-date .form-item .form-item {
+  width: 19%;
+  display: inline-block;
+  margin-right: 5px; }
+  @media (max-width: 977px) {
+    .container-inline-date .form-item .form-item {
+      width: 47%; }
+      .container-inline-date .form-item .form-item.form-type-select[class*=hour] {
+        clear: left;
+        margin-left: 0; } }
+
+@media (min-width: 979px) and (max-width: 1219px) {
+  .container-inline-date .form-item .form-item {
+    width: 32%; }
+    .container-inline-date .form-item .form-item.form-type-select[class*=hour] {
+      margin-left: 0; } }
+
 .form-submit {
   background-color: #426BB3;
   border: none;
@@ -417,9 +461,9 @@ div.date-heading h3 {
   border-bottom: 1px solid #e0e0e0;
   padding: 5px; }
 
-/*div.view {
-  padding: 5px;
-}*/
+.node-form {
+  padding: 5px 15px; }
+
 .block-views-exp-meetings-search-page div.views-exposed-form {
   padding: 5px 15px 0 15px; }
 

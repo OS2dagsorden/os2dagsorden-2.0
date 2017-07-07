@@ -1,3 +1,5 @@
+@import './node_modules/include-media/dist/_include-media.scss';
+@import '_partials/_breakpoints';
 @import '_partials/_colors';
 @import '_partials/_borders';
 @import '_partials/_fonts';
@@ -358,10 +360,9 @@ div.date-heading h3 {
   border-bottom: $border-solid;
   padding: 5px;
 }
-
-/*div.view {
-  padding: 5px;
-}*/
+.node-form {
+    padding: 5px 15px;
+}
 
 .block-views-exp-meetings-search-page div.views-exposed-form {
   padding: 5px 15px 0 15px;
