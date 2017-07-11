@@ -744,7 +744,7 @@ function _acadre_esdh_mm_remove_empty_tags($data) {
 do
 {
    $len1 = mb_strlen($data);
-   $data = preg_replace( '/(<(a|span)[^>]*>[\s|&nbsp;?]*<(\/a|\/span)>)/', ' ' ,$data);
+   $data = preg_replace( '/(<(a|span)[^>]*>[\s|&nbsp;?]*<(\/a|\/span)>)/', '' ,$data);
    $len2 = mb_strlen($data);
 
 } while ($len1 > 0 && $len2 > 0 && $len1 != $len2);

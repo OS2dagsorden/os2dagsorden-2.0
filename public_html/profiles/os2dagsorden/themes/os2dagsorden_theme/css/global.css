@@ -1925,6 +1925,7 @@ ul.droptrue li {
     background: none;
     background-color: white;
     max-width: 250px;
+    min-width: 220px;
 }
 
 ul.droptrue li.can-subscribe {
