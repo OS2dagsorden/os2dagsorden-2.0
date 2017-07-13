@@ -386,17 +386,20 @@ HTML;
 	    $text = os2dagsorden_pdf2htmlex_hide_unused_pages($body_file, $pageStart, $pageEnd);
 	    $pageAmount = $bilag->field_os2web_meetings_bpa_pages['und'][0]['value'];
 	  }
+
+      //disallowing PDF download
+      if (variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+        //creating link for downloading pdf version
+        $download_pdf_link = file_create_url($bilag->field_os2web_meetings_bpa_file['und'][0]['uri']);
+
+        $file_name = $bilag->field_os2web_meetings_bpa_file['und'][0]['filename'];//for example, NAME.PDF
+        $extention = strtoupper(pathinfo($file_name, PATHINFO_EXTENSION));
+        if (stripos($extention, 'xls') || stripos($extention, 'xls') === 0)//is excel file
+          $extention = 'EXCEL';
 	  
-	  //creating link for downloading pdf version
-	  $download_pdf_link = file_create_url($bilag->field_os2web_meetings_bpa_file['und'][0]['uri']);
-	  
-	  $file_name = $bilag->field_os2web_meetings_bpa_file['und'][0]['filename'];//for example, NAME.PDF
-	  $extention = strtoupper(pathinfo($file_name, PATHINFO_EXTENSION));
-	  if (stripos($extention, 'xls') || stripos($extention, 'xls') === 0)//is excel file
-	    $extention = 'EXCEL';
-	  
-	  $html .= '<input class="form-submit" type="button" onclick="window.open(\'' . $download_pdf_link . '\')" value="Hent ' . $extention . '-version">';
-	  
+	    $html .= '<input class="form-submit" type="button" onclick="window.open(\'' . $download_pdf_link . '\')" value="Hent ' . $extention . '-version">';
+      }
+
 	  //composing the print link
 	  $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
 	  

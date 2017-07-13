@@ -166,6 +166,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description'=>t('This decides whether bullet point <i>"Afgøres i"</i> will be shown'),
     '#default_value' => variable_get('os2dagsorden_show_bp_comname', FALSE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_allow_pdf_download'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow download meeting document and attachment as PDF'),
+    '#description'=>t('This decides whether meeting and attachments are available for download as PDF'),
+    '#default_value' => variable_get('os2dagsorden_allow_pdf_download', TRUE),
+  );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Sager group title'),
@@ -1429,6 +1435,7 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_bilag', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag']);
     variable_set('os2dagsorden_use_abbr', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr']);
     variable_set('os2dagsorden_show_bp_comname', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bp_comname']);
+    variable_set('os2dagsorden_allow_pdf_download', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_allow_pdf_download']);
 
     variable_set('os2dagsorden_sager_group_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title']);
     variable_set('os2dagsorden_group_closed_bullet_points', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points']);

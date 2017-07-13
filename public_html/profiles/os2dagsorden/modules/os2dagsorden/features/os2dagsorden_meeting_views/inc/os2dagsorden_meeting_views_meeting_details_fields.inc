@@ -26,6 +26,11 @@ function os2dagsorden_meeting_views_meeting_details_agenda_and_edit_button() {
 }
 
 function os2dagsorden_meeting_views_meeting_details_description_download() {
+  //disallowing PDF download
+  if (!variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+    return '';
+  }
+
   global $base_url;
   $q = explode('/', $_GET['q']);
   $meeting_id = $q[1];
