@@ -1,0 +1,789 @@
+﻿<Root xmlns:edoc="http://www.fujitsu.dk/agenda/xml/schemas/2009/03/31/" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:my="urn:the-xml-files:xslt">
+  <edoc:OutputTypeEnumName>Agenda</edoc:OutputTypeEnumName>
+  <edoc:OutputFilterIsPublic>false</edoc:OutputFilterIsPublic>
+  <edoc:OutputLayoutCssFile>http://edocprod/AgendaWeb/xslt/MFK/Res/css/Layout.css</edoc:OutputLayoutCssFile>
+  <edoc:Committee>
+    <edoc:Identifier>dff71c16-666f-4b8a-bace-5602d46892dd</edoc:Identifier>
+    <edoc:Name>Hennys testudvalg</edoc:Name>
+    <edoc:ShortName>Htest</edoc:ShortName>
+    <edoc:DefaultLocation></edoc:DefaultLocation>
+    <edoc:Meeting>
+      <edoc:MeetingIdentifier>DE29346E-A9B1-4C91-A9D9-AE29CC8046BD</edoc:MeetingIdentifier>
+      <edoc:MeetingDateTime>02-05-2017 10:00</edoc:MeetingDateTime>
+      <edoc:EndDateTime>02-05-2017 11:00</edoc:EndDateTime>
+      <edoc:MeetingLocation>Mødelokale 1, Midtpunkt</edoc:MeetingLocation>
+      <edoc:MeetingNumberIdentifier></edoc:MeetingNumberIdentifier>
+      <edoc:MeetingStateCode>OPRETTET</edoc:MeetingStateCode>
+      <edoc:MeetingPublicExceptionIndicator></edoc:MeetingPublicExceptionIndicator>
+      <edoc:DescriptionText></edoc:DescriptionText>
+      <edoc:MeetingParticipants>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>20481e2e-6931-4a4f-a1d6-1ecd18f649df</edoc:Identifier>
+          <edoc:Name>Hanne  Lauritsen</edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-2010 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Socialistisk Folkeparti</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>F</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>f58b22c9-d8fe-453e-9ff5-95b80d37308b</edoc:Identifier>
+          <edoc:Name>Allan Buch</edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-2010 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Formand</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Socialdemokratiet</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>A</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>f6d113b9-41a8-4ab8-911f-9ab6c405f329</edoc:Identifier>
+          <edoc:Name>Anni B.  Tyrrestrup</edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-2010 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Dansk Folkeparti</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>O</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>62c1f63a-5151-4a2f-b476-350e7243dfa2</edoc:Identifier>
+          <edoc:Name>Arne Tofterup</edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-0001 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Spejderforeninger</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>Spejderforeninger</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>183f50e9-42f9-4bbd-96d9-3158a70fe1f9</edoc:Identifier>
+          <edoc:Name>Niels Bebe </edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-0001 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>false</edoc:Participate>
+          <edoc:PoliticalParty>Venstre</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>V</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>e01a5ee5-59e0-409b-91eb-75c0a92f384c</edoc:Identifier>
+          <edoc:Name>Asger  Frederiksen</edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-0001 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Aftenskoler</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>Aftenskoler</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+        <edoc:MeetingParticipant>
+          <edoc:Identifier>b6c7ab32-0953-45cc-95a6-42591ffade35</edoc:Identifier>
+          <edoc:Name>Henny test Posselt </edoc:Name>
+          <edoc:ValidMember></edoc:ValidMember>
+          <edoc:StartDate>01-01-0001 00:00</edoc:StartDate>
+          <edoc:Rank>0</edoc:Rank>
+          <edoc:Represent></edoc:Represent>
+          <edoc:Secretary></edoc:Secretary>
+          <edoc:AppointedByIdentifier></edoc:AppointedByIdentifier>
+          <edoc:RoleInMeeting>Medlem</edoc:RoleInMeeting>
+          <edoc:Participate>true</edoc:Participate>
+          <edoc:PoliticalParty>Løsgænger</edoc:PoliticalParty>
+          <edoc:PoliticalPartyList>Løsgænger</edoc:PoliticalPartyList>
+        </edoc:MeetingParticipant>
+      </edoc:MeetingParticipants>
+      <edoc:MeetingParticipantExternals>
+        <edoc:MeetingParticipantExternal>
+          <edoc:Name>Maja Føns</edoc:Name>
+        </edoc:MeetingParticipantExternal>
+      </edoc:MeetingParticipantExternals>
+      <edoc:Agenda>
+        <edoc:Identifier>61beeeb7-a631-4d3d-8524-56c19782647b</edoc:Identifier>
+        <edoc:Type>Dagsorden</edoc:Type>
+        <edoc:State>Oprettet</edoc:State>
+        <edoc:AgendaElements>
+          <edoc:AgendaElement>
+            <edoc:Identifier>8c71b435-0822-4eac-98b8-7a6a41289a92</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>true</edoc:AccessIsPublic>
+            <edoc:AccessName>Offentlig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Økonomiudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Taletidsregel A</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>1</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>0745d00b-367a-44a4-84eb-8c12dc507a4f</edoc:Identifier>
+              <edoc:ESDHIntegration>00000000-0000-0000-0000-000000000000</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>1</edoc:SerialNo>
+              <edoc:Title>test</edoc:Title>
+              <edoc:NeutralTitle>test</edoc:NeutralTitle>
+              <edoc:CaseNumber></edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Rikke Jørgensen</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Rikke Jørgensen</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier></edoc:CaseIdentifier>
+              <edoc:CaseTitle></edoc:CaseTitle>
+              <edoc:CaseWorker>Rikke Jørgensen</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>0745d00b-367a-44a4-84eb-8c12dc507a4f</edoc:Identifier>
+                  <edoc:SerialNo>1</edoc:SerialNo>
+                  <edoc:Title>test</edoc:Title>
+                  <edoc:NeutralTitle>test</edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting></edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Offentlig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Økonomiudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments>
+                <edoc:Attachment>
+                  <edoc:Identifier>57bc6c9b-6867-4e36-9a73-d7ec2b8f815a</edoc:Identifier>
+                  <edoc:AttachmentNumber>1</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>TrekantBrand Nyhedsbrev nr. 1-2017.msg</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\6104646-6648380-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>0</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2017-000516-1</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>f49a674c-b7a2-4e26-88d0-d773e997c2ad</edoc:Identifier>
+                  <edoc:AttachmentNumber>2</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Nyhedsbrev nr. 1-2017.pdf</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\6104646-6648381-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>1</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2017-000516-1</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>9bfa0582-2274-4e3e-ab44-a779d721146d</edoc:Identifier>
+                  <edoc:AttachmentNumber>3</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Signaturbevis.txt</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\6104646-6648382-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>2</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2017-000516-1</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>33445ce9-b12f-4fb8-98a5-b58bc61f72b0</edoc:Identifier>
+                  <edoc:AttachmentNumber>4</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>TrekantBrand nyhedsbrev nr. 2-2017.msg</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\6110589-6660338-2.pdf</edoc:Link>
+                  <edoc:ShowOrder>3</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2017-000516-2</edoc:DocumentNumber>
+                </edoc:Attachment>
+              </edoc:Attachments>
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+          <edoc:AgendaElement>
+            <edoc:Identifier>9b1b0ee8-c787-4d58-b8cb-8302c8c8936e</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>true</edoc:AccessIsPublic>
+            <edoc:AccessName>Offentlig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Økonomiudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Taletidsregel A</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>2</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>fa5d1cab-108d-4a52-b049-570ac721ec68</edoc:Identifier>
+              <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>2</edoc:SerialNo>
+              <edoc:Title>test tabel</edoc:Title>
+              <edoc:NeutralTitle>test tabel</edoc:NeutralTitle>
+              <edoc:CaseNumber>200906126</edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Rikke Jørgensen</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Rikke Jørgensen</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier>221834</edoc:CaseIdentifier>
+              <edoc:CaseTitle>testsag Rikke nyt system</edoc:CaseTitle>
+              <edoc:CaseWorker>Rikke Jørgensen</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>fa5d1cab-108d-4a52-b049-570ac721ec68</edoc:Identifier>
+                  <edoc:SerialNo>2</edoc:SerialNo>
+                  <edoc:Title>test tabel</edoc:Title>
+                  <edoc:NeutralTitle>test tabel</edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting></edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Offentlig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Økonomiudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments />
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+          <edoc:AgendaElement>
+            <edoc:Identifier>8793f78d-1b8b-4a14-9805-d26e937a5403</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>true</edoc:AccessIsPublic>
+            <edoc:AccessName>Offentlig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Børn- Unge- og Fritidsudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Taletidsregel A</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>3</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>97d209bf-9931-489a-b2ca-13d0301ee4ea</edoc:Identifier>
+              <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>3</edoc:SerialNo>
+              <edoc:Title>Fejloprettet</edoc:Title>
+              <edoc:NeutralTitle>Udvalgets indsatser 2010-2013</edoc:NeutralTitle>
+              <edoc:CaseNumber>2013-003869</edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Liselotte Skov</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Liselotte Skov</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier>5019890</edoc:CaseIdentifier>
+              <edoc:CaseTitle>Børn, Unge og Fritidsudvalgets indsatser i udvalgsperioden 2010-2013</edoc:CaseTitle>
+              <edoc:CaseWorker>Claus Friis Lange</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>97d209bf-9931-489a-b2ca-13d0301ee4ea</edoc:Identifier>
+                  <edoc:SerialNo>3</edoc:SerialNo>
+                  <edoc:Title>Fejloprettet</edoc:Title>
+                  <edoc:NeutralTitle>Udvalgets indsatser 2010-2013</edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting></edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Offentlig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Børn- Unge- og Fritidsudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[Udvalget skal drøfte status, politiske beslutninger, igangværende tiltag samt kommende temaer og udfordringer, så det kan videreformidles til et nyt Byråd.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[At punktet drøftes.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[På byrådsseminariet den 14. og 15. marts 2013 er det hensigten, at Byrådet skal opbygge en fælles forståelse af de beslutninger, initiativer og resultater, der er skabt i denne byrådsperiode.<br /><br />
+Fornålet med dette er at lave en samlet fremstilling af de væsentligste politiske initiativer, så de kan blive formidlet og indgå i et introduktionsprogram til det nye Byråd efter valget i november 2013.<br /><br />
+Udvalget bedes som forberedelse til seminariet besvare følgende spørgsmål:<br />
+Fremhæv de væsentligste beslutninger/initiativer/resultater i indeværende byrådsperiode.<br />
+Begrund hvorfor de, er de væsentligste.<br />
+Hvilke temaer og udfordringer bør det nye Byråd tage fat på, som det første indenfor jeres udvalgsområde ?<br />Ingen]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[På selve seminariet præsenterer udvalgsformanden udvalgets indstilling.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[Sagens indhold er gennemgået med henblik på at vurdere konsekvenser for handicappede borgere. For handicappede borgere har sagen ingen særlige konsekvenser.<br />Ingen høring, da kommunen ikke er forpligtet.<br />Ingen høring, da kommunen ikke er forpligtet.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments />
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+          <edoc:AgendaElement>
+            <edoc:Identifier>6de85987-5a5d-44ff-82b2-dbbb48bfc50e</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>true</edoc:AccessIsPublic>
+            <edoc:AccessName>Offentlig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Børn- Unge- og Fritidsudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Taletidsregel A</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>4</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>5b57f563-bfe7-4bc1-8dfa-83b2f19d2673</edoc:Identifier>
+              <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>4</edoc:SerialNo>
+              <edoc:Title>Fejloprettet</edoc:Title>
+              <edoc:NeutralTitle>Anlægsregnskab for anlægsprojekterne ved Børnehuset Nordlys, Båring Børnehus, Brenderup Børnehave og Børnehuset Nørre Aaby</edoc:NeutralTitle>
+              <edoc:CaseNumber>2013-000038</edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Britt Lykke Ejby</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Britt Lykke Ejby</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier>5016059</edoc:CaseIdentifier>
+              <edoc:CaseTitle>Regnskab 2012 for dagtilbudsområdet</edoc:CaseTitle>
+              <edoc:CaseWorker>Britt Lykke Ejby</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>5b57f563-bfe7-4bc1-8dfa-83b2f19d2673</edoc:Identifier>
+                  <edoc:SerialNo>4</edoc:SerialNo>
+                  <edoc:Title>Fejloprettet</edoc:Title>
+                  <edoc:NeutralTitle>Anlægsregnskab for anlægsprojekterne ved Børnehuset Nordlys, Båring Børnehus, Brenderup Børnehave og Børnehuset Nørre Aaby</edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting></edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Offentlig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Børn- Unge- og Fritidsudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[Anlægsprojekterne ved Børnehuset Nordlys, Båring Børnehus, Brenderup Børnehave og Børnehuset Nørre Aaby er færdiggjorte, og der skal dermed aflægges anlægsregnskab.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[<ul><li>At anlægsregnskabet for de fire anlægsprojekter godkendes.</li></ul>]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments />
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+          <edoc:AgendaElement>
+            <edoc:Identifier>37137c7d-8742-474c-bf21-40da0356d3fa</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>false</edoc:AccessIsPublic>
+            <edoc:AccessName>Fortrolig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Økonomiudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Taletidsregel A</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>5</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>5c7020e8-fec7-43f1-bdd0-0fd337ffe624</edoc:Identifier>
+              <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>5</edoc:SerialNo>
+              <edoc:Title>Anders' møgsag</edoc:Title>
+              <edoc:NeutralTitle>Anders' møgsag</edoc:NeutralTitle>
+              <edoc:CaseNumber>2016-003798</edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Anders Juel Sørensen</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Anders Juel Sørensen</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier>5063903</edoc:CaseIdentifier>
+              <edoc:CaseTitle>Test - Anders Juel Sørensen</edoc:CaseTitle>
+              <edoc:CaseWorker>Anders Juel Sørensen</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>5c7020e8-fec7-43f1-bdd0-0fd337ffe624</edoc:Identifier>
+                  <edoc:SerialNo>5</edoc:SerialNo>
+                  <edoc:Title>Anders' møgsag</edoc:Title>
+                  <edoc:NeutralTitle>Anders' møgsag</edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting>02-05-2017 10:00</edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Fortrolig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Økonomiudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[Anders har sjusket og sendt endnu en møgsag afsted.]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[At det fejes ind under gulvtæppet]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[Meget er skrevet og sagt]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[For dyrt]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[Nej]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments>
+                <edoc:Attachment>
+                  <edoc:Identifier>08c748d7-81e3-4abe-9dfe-ead5edd79ef3</edoc:Identifier>
+                  <edoc:AttachmentNumber>1</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>SV_ Vedrørende _ Regarding #Incident=121865#  Geosager, der ved sidste konvertering er knyttet op på en forkert ejendom.msg</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5753784-6125125-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>0</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-1</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>ede9cfb7-6e87-4490-84ec-4fa1950e4080</edoc:Identifier>
+                  <edoc:AttachmentNumber>2</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>geosager der er tilknyttet en forkert ejendom.docx</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5753784-6125126-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>1</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-1</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>62817a4d-202d-411a-9654-19c5dd489687</edoc:Identifier>
+                  <edoc:AttachmentNumber>3</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Nyt _ New #Incident=121865#  Geosager, der ved sidste konvertering er knyttet op på en forkert ejendom.msg</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5753786-6125128-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>2</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-2</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>e6928a18-0720-437f-aace-8174eca8cbef</edoc:Identifier>
+                  <edoc:AttachmentNumber>4</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>#Incident=211468# Geosager, der ved sidste konvertering er knyttet op på en forkert ejendom.msg</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5753787-6125129-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>3</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-3</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>e008735c-c35e-4b2f-b862-0278f94af3f0</edoc:Identifier>
+                  <edoc:AttachmentNumber>5</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Dokument</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5781888-6174959-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>7</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-62</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>1e81dd55-acab-45d8-98c7-f83a41471c0d</edoc:Identifier>
+                  <edoc:AttachmentNumber>6</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Plancher</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5781888-6174961-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>8</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-62</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>3e578443-28b8-48f4-a465-159db4d60873</edoc:Identifier>
+                  <edoc:AttachmentNumber>7</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>Regneark</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5781888-6174963-4.pdf</edoc:Link>
+                  <edoc:ShowOrder>9</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-62</edoc:DocumentNumber>
+                </edoc:Attachment>
+                <edoc:Attachment>
+                  <edoc:Identifier>de22955d-38a1-48d1-b808-3ba05651b269</edoc:Identifier>
+                  <edoc:AttachmentNumber>8</edoc:AttachmentNumber>
+                  <edoc:ESDHIntegration>00000040-0000-0000-0000-000000000040</edoc:ESDHIntegration>
+                  <edoc:Title>E-mail</edoc:Title>
+                  <edoc:AccessName>Offentlig</edoc:AccessName>
+                  <edoc:AccessEnumName>Public</edoc:AccessEnumName>
+                  <edoc:Link>\Attachments\5781888-6174964-1.pdf</edoc:Link>
+                  <edoc:ShowOrder>10</edoc:ShowOrder>
+                  <edoc:DocumentNumber>2016-003798-62</edoc:DocumentNumber>
+                </edoc:Attachment>
+              </edoc:Attachments>
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+          <edoc:AgendaElement>
+            <edoc:Identifier>78a65bb3-050a-47a2-b41d-d3d6ab4faffb</edoc:Identifier>
+            <edoc:Type>Behandling</edoc:Type>
+            <edoc:AccessIsPublic>false</edoc:AccessIsPublic>
+            <edoc:AccessName>Fortrolig publicering</edoc:AccessName>
+            <edoc:DescriptionText></edoc:DescriptionText>
+            <edoc:Domain>Økonomiudvalget</edoc:Domain>
+            <edoc:Category>A-sager</edoc:Category>
+            <edoc:RuleOfSpeaking>Udvalgsmøde</edoc:RuleOfSpeaking>
+            <edoc:SortOrder>5</edoc:SortOrder>
+            <edoc:Absences />
+            <edoc:HandlingItem>
+              <edoc:Identifier>2d496bfc-796a-4a7f-ac2d-3d84be7886b2</edoc:Identifier>
+              <edoc:ESDHIntegration>00000000-0000-0000-0000-000000000000</edoc:ESDHIntegration>
+              <edoc:StateCode>Under behandling</edoc:StateCode>
+              <edoc:SerialNo>6</edoc:SerialNo>
+              <edoc:Title>Underskriftsblad</edoc:Title>
+              <edoc:NeutralTitle></edoc:NeutralTitle>
+              <edoc:CaseNumber></edoc:CaseNumber>
+              <edoc:AdministrativeUnitIdentifier></edoc:AdministrativeUnitIdentifier>
+              <edoc:InitiatedByIdentifier>Maja Maria Føns</edoc:InitiatedByIdentifier>
+              <edoc:HandlingItemCaseWorker>Maja Maria Føns</edoc:HandlingItemCaseWorker>
+              <edoc:DescriptionText></edoc:DescriptionText>
+              <edoc:FinishedIndicator>false</edoc:FinishedIndicator>
+              <edoc:FinishedDate>01-01-0001 00:00</edoc:FinishedDate>
+              <edoc:CaseIdentifier></edoc:CaseIdentifier>
+              <edoc:CaseTitle>Fast punkt</edoc:CaseTitle>
+              <edoc:CaseWorker>Maja Maria Føns</edoc:CaseWorker>
+              <edoc:HandlingPlan>
+                <edoc:Handling>
+                  <edoc:Placement>This</edoc:Placement>
+                  <edoc:Identifier>2d496bfc-796a-4a7f-ac2d-3d84be7886b2</edoc:Identifier>
+                  <edoc:SerialNo>6</edoc:SerialNo>
+                  <edoc:Title>Underskriftsblad</edoc:Title>
+                  <edoc:NeutralTitle></edoc:NeutralTitle>
+                  <edoc:CommitteeName>Hennys testudvalg</edoc:CommitteeName>
+                  <edoc:PlannedMeeting></edoc:PlannedMeeting>
+                  <edoc:MeetingDate>02-05-2017 10:00</edoc:MeetingDate>
+                  <edoc:AgendaType>Dagsorden</edoc:AgendaType>
+                  <edoc:CreationDate>21-04-2017 11:47:40</edoc:CreationDate>
+                  <edoc:Access>Fortrolig publicering</edoc:Access>
+                  <edoc:State>Under behandling</edoc:State>
+                  <edoc:Domain>Økonomiudvalget</edoc:Domain>
+                  <edoc:Category>A-sager</edoc:Category>
+                  <edoc:Decision><![CDATA[Beslutning ikke frigivet]]></edoc:Decision>
+                </edoc:Handling>
+              </edoc:HandlingPlan>
+              <edoc:CasePresentations>
+                <edoc:CasePresentation>
+                  <edoc:Title>Præsentation</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningen foreslår</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Sagsbeskrivelse</edoc:Title>
+                  <edoc:Content><![CDATA[beskrivelse
+]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Økonomi</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Forvaltningens bemærkninger</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Handicapaspekter</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring af Handicaprådet</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+                <edoc:CasePresentation>
+                  <edoc:Title>Høring af Ældrerådet</edoc:Title>
+                  <edoc:Content><![CDATA[]]></edoc:Content>
+                  <edoc:IsDecision>false</edoc:IsDecision>
+                  <edoc:Resources />
+                </edoc:CasePresentation>
+              </edoc:CasePresentations>
+              <edoc:Attachments />
+            </edoc:HandlingItem>
+          </edoc:AgendaElement>
+        </edoc:AgendaElements>
+      </edoc:Agenda>
+    </edoc:Meeting>
+  </edoc:Committee>
+</Root>
