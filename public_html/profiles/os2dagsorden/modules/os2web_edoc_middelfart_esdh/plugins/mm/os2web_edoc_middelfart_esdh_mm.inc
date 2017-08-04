@@ -448,8 +448,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
  * @return int|string
  */
 function _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date, $committee) {
-  //TODO: remove
-  $meeting_id = 12; //sprintf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
+  $meeting_id = printf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
   if ($meeting_id > 2147483647) {
     $meeting_id = substr($meeting_id, 0, 9); //mysql int out of range fix
   }
