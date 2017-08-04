@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ *
+ * @return mixed
+ */
+function os2intra_simplesaml_schema() {
+  $schema['os2intra_simplesaml_nemid_pid_mapping'] = array(
+    'description' => 'This table stores the mapping between used and his PID received from nemid',
+    'fields' => array(
+      'uid' => array(
+        'description' => 'The user id',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'pid' => array(
+        'description' => 'PID mapped with this used',
+        'type' => 'varchar',
+        'length' => 24,
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the entry was most recently changed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+  return $schema;
+}
