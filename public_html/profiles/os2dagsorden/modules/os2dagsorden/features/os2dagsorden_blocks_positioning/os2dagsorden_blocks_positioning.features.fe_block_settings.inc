@@ -56,7 +56,7 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'delta' => 'login',
     'module' => 'user',
     'node_types' => array(),
-    'pages' => '',
+    'pages' => 'nemid',
     'roles' => array(),
     'themes' => array(
       'os2dagsorden_theme' => array(
