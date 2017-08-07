@@ -176,6 +176,12 @@ function _drupal_nemid_login_verify() {
       drupal_set_message(t($errorcodes[$response]['description']), 'error');
       $_SESSION['nemid_login'] = array();
       $_SESSION['nemid_login']['errors'] = $errorcodes[$response];
+
+      watchdog('os2intra_simplesaml', '%error_code Drupal NEMID error: %error_message', array(
+        '%error_code' => $errorcodes[$response]['code'],
+        '%error_message' => $errorcodes[$response]['description'],
+      ));
+
       if (arg(0) == 'nemid' && arg(1) == 'verify') {
         drupal_goto('<front>');
       }
@@ -209,6 +215,10 @@ function _drupal_nemid_login_verify() {
         }
       } catch (Exception $e) {
         echo $e->getMessage();
+        watchdog('os2intra_simplesaml', '%error_code Drupal NEMID error: %error_message', array(
+          '%error_code' => $e->getCode(),
+          '%error_message' => $e->getMessage(),
+        ));
       }
     }
     return $message;

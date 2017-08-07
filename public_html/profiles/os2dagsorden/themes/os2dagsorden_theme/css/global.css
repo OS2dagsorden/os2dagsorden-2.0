@@ -673,7 +673,8 @@ div.date-heading h3 a, div.date-heading h3{
 #user-login-form,
 .node-form,
 .node,
-.view-display-id-page{
+.view-display-id-page,
+.block-nemid-login-block {
     border-left: 1px solid;
     border-right: 1px solid;
     border-bottom: 1px solid;

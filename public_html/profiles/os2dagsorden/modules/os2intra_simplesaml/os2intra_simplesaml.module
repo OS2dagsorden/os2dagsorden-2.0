@@ -30,6 +30,24 @@ function os2intra_simplesaml_menu() {
 }
 
 /**
+ * Implements hook_monolog_channel_info().
+ *
+ * @return array
+ */
+function os2intra_simplesaml_monolog_channel_info() {
+  $channels = array();
+
+  $my_module_name = basename(__FILE__, '.module');
+  $channels[$my_module_name] = array(
+    'label' => t($my_module_name),
+    'description' => t('The default channel that os2logging messages are routed through.'),
+    'default profile' => '$my_module_name',
+  );
+
+  return $channels;
+}
+
+/**
  * Form callback for settings
  */
 function os2intra_simplesaml_settings_form($form, &$form_state) {
@@ -81,6 +99,13 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
 
   if (isset($_SESSION['nemlogin_pid'])) {
     $nemlogin_pid = $_SESSION['nemlogin_pid'];
+
+    watchdog('os2intra_simplesaml', 'Attemping to login with PID (%pid) started for user %login (uid: %uid).', array(
+      '%pid' => $nemlogin_pid,
+      '%login' => $account->name,
+      '%uid' => $account->uid
+    ));
+
     //check if account has PID stored in system
     $pid = db_select("os2intra_simplesaml_nemid_pid_mapping", "os2pid")
       ->fields("os2pid", array("pid"))
@@ -92,12 +117,24 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
       // if yes - is the PID the same?
       if (strcasecmp($pid, $nemlogin_pid) != 0) {
         // NO = the PID in the system and $_SESSION do not match, prevent login
-        watchdog('user', 'Session closed for %name.', array('%name' => $account->name));
         module_invoke_all('user_logout', $account);
         // Destroy the current session, and reset $user to the anonymous user.
         session_destroy();
 
         drupal_set_message(t("The user you are trying to login with is already associated with different PID"), 'warning');
+        watchdog('user', 'Session closed for %name.', array('%name' => $account->name));
+
+        watchdog('os2intra_simplesaml', 'The PID (%pid1) associated with this user %login (uid: %uid) does not match the PID (%pid2) from request headers.', array(
+          '%pid1' => $pid,
+          '%pid2' => $nemlogin_pid,
+          '%login' => $account->name,
+          '%uid' => $account->uid
+        ));
+        watchdog('os2intra_simplesaml', 'Session closed for user %name (uid: %uid)', array(
+          '%name' => $account->name,
+          '%uid' => $account->uid
+        ));
+
         drupal_goto();
       }
     }
@@ -121,7 +158,19 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
           ))
           ->execute();
       }
+
+      watchdog('os2intra_simplesaml', 'Mapping new PID (%pid) with user %login (uid: %uid)', array(
+        '%pid' => $nemlogin_pid,
+        '%login' => $account->name,
+        '%uid' => $account->uid
+      ));
     }
+
+    watchdog('os2intra_simplesaml', 'User %login (uid: %uid) successfully logged in with PID (%pid).', array(
+      '%pid' => $nemlogin_pid,
+      '%login' => $account->name,
+      '%uid' => $account->uid
+    ));
   }
 }
 

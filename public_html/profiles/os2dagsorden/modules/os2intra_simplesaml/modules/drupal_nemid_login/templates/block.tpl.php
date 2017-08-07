@@ -36,28 +36,31 @@ if (!isset($_SESSION['nemid_login']['errors'])) {
 
 ?>
 
-<iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" style="width:300px;height:450px;border:0; display:inline-block" src="<?php echo $settings['iframe_url']; ?>"></iframe>
-<div style="display:inline-block; vertical-align: top; width: 500px"><?php echo ($help)? $help['value'] : '' ?></div>
-<form name="postBackForm" action="<?php
+<div class="block-nemid-login-block">
+  <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" style="width:300px;height:450px;border:0; display:inline-block" src="<?php echo $settings['iframe_url']; ?>"></iframe>
+  <div style="display:inline-block; vertical-align: top; width: 500px"><?php echo ($help)? $help['value'] : '' ?></div>
+  <form name="postBackForm" action="<?php
 
-  if (isset($nid) && is_numeric($nid)) {
-    $node = node_load($nid);
-    if ($node->type == 'webform') {
-      echo url('node/'.$nid);
+    if (isset($nid) && is_numeric($nid)) {
+      $node = node_load($nid);
+      if ($node->type == 'webform') {
+        echo url('node/'.$nid);
+      }
     }
-  }
-  else {
-    echo url('nemid/verify');
-  }
+    else {
+      echo url('nemid/verify');
+    }
 
-  ?>" method="post">
-  <input type="hidden" name="response" value=""/>
-</form>
+    ?>" method="post">
+    <input type="hidden" name="response" value=""/>
+  </form>
 
-<?php
-}
-else
-{
-  echo t("There was a problem the NemID client");
-}
-?>
+
+  <?php
+  }
+  else
+  {
+    echo t("There was a problem the NemID client");
+  }
+  ?>
+</div>

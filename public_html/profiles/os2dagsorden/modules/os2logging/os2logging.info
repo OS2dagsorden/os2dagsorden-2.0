@@ -1,0 +1,13 @@
+name = OS2Logging
+description = Monolog logging
+core = 7.x
+package = Features
+version = 7.x-1.0
+project = os2logging
+dependencies[] = ctools
+dependencies[] = monolog
+features[ctools][] = monolog:monolog:1
+features[features_api][] = api:2
+features[monolog_profile][] = os2logging
+features[monolog_profile][] = watchdog
+project path = sites/all/modules/custom
