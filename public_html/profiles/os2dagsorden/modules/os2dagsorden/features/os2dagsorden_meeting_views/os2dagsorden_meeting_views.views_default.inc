@@ -1204,6 +1204,7 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
     'title' => 'title',
     'php_4' => 'php_4',
     'php_3' => 'php_4',
+    'php' => 'php',
     'php_6' => 'php_6',
     'php_5' => 'php_5',
     'php_2' => 'php_2',
