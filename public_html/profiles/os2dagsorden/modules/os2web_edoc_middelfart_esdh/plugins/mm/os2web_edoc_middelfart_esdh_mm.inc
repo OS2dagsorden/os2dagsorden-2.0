@@ -232,6 +232,9 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
   //$xml_item['agenda_type'] = (string) $meeting->AgendaType;
   $xml_item['documentid'] = (int) array_shift($xml->xpath('edoc:HandlingItem/edoc:Identifier'));
   $xml_item['access'] = (string) array_shift($xml->xpath('edoc:AccessIsPublic'));
+  $xml_item['case_nr'] = (string) array_shift($xml->xpath('edoc:HandlingItem/edoc:CaseNumber'));
+  $xml_item['case_id'] = (string) array_shift($xml->xpath('edoc:HandlingItem/edoc:CaseIdentifier'));
+
   if ($xml_item['access'] !== 'true') {
     $xml_item['access'] = 'Lukket';
   }
@@ -240,6 +243,8 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
     'id' => $xml_item['number'],
     //generated id - because there is not unique ID for the bullet point
     'sysid' => _os2web_edoc_middelfart_esdh_generate_item_id($meeting['committee'], $meeting['meeting_date'], $xml_item['documentid']),
+    'case_nr' => $xml_item['case_nr'],
+    'case_id' => $xml_item['case_id'],
     'title' => 'Punkt ' . $xml_item['number'] . ' ' . $xml_item['name'],
     'access' => $xml_item['access'],
     'bullets' => array(),
@@ -448,7 +453,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
  * @return int|string
  */
 function _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date, $committee) {
-  $meeting_id = printf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
+  $meeting_id = sprintf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
   if ($meeting_id > 2147483647) {
     $meeting_id = substr($meeting_id, 0, 9); //mysql int out of range fix
   }

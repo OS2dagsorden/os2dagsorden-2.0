@@ -136,6 +136,24 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a send to friend button is visible on each bullet point on meeting view.'),
     '#default_value' => variable_get('os2dagsorden_show_send_to_friend_icon', FALSE),
   );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bullet_case_id_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show case id link'),
+    '#description' => t('This decides whether case id is visible on each bullet point on the meeting view (assuming bullet point has case id provided)'),
+    '#default_value' => variable_get('os2dagsorden_show_bullet_case_id_link', FALSE),
+  );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_bullet_case_id_link_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Case nr link'),
+    '#description' => t('That is the case cr link prefix that is linking to external case presentation system. Case identifier will added to the end of the provided link'),
+    '#default_value' => variable_get('os2dagsorden_bullet_case_id_link_url', ""),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os2dagsorden_show_bullet_case_id_link"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = array(
    '#type' => 'checkbox',
    '#title' => t('Show comments on meeting view'),
@@ -1430,6 +1448,8 @@ function os2dagsorden_settings_import_from_file($form, &$form_state){
     variable_set('os2dagsorden_show_samlet_dokument_link', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_samlet_dokument_link']);
     variable_set('os2dagsorden_show_participants_afbud', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_participants_afbud']);
     variable_set('os2dagsorden_show_print_icon', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon']);
+    variable_set('os2dagsorden_show_bullet_case_id_link', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bullet_case_id_link']);
+    variable_set('os2dagsorden_bullet_case_id_link_url', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_bullet_case_id_link_url']);
     variable_set('os2dagsorden_show_comments', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments']);
     variable_set('os2dagsorden_show_closed_bullet_point_content', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_closed_bullet_point_content']);
     variable_set('os2dagsorden_show_bilag', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag']);

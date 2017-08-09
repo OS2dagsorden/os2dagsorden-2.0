@@ -1275,6 +1275,11 @@ table .speaker-paper-link-container{
     min-width: 130px;
 }
 
+table .case-id-link-container{
+    width: 75px;
+    min-width: 75px;
+}
+
 /*bullet point details table*/
 div.speaker-paper-print{
     float: right;
@@ -1379,14 +1384,15 @@ table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
      display:block;
     float: right;
 }
-.bullet-point-send-link {
-    background: url('../img/icon-send-to-friend-bullet-point.png') no-repeat 50% top;;
-    height: 20px;
-    width: 20px;
-    display:block;  
-    float: right;
-    margin-right: 8px;
-   
+.popup-link {
+    position: relative;
+    float:left;
+    background: url('../img/icon_popup_link.png') no-repeat 50% top;;
+    min-width: 16px;
+    min-height: 16px;
+    width: 16px;
+    height: 16px;
+    padding:2px 2px 0 2px;
 }
 
 .ul-item-list-dagsordenspunkt li.non-bilag a {
