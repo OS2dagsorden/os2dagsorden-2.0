@@ -43,3 +43,6 @@ ul.droptrue li.can-subscribe span {
 .breadcrumb .breadcrumb-active {
   max-width: 200px;
 }
+.block-views .view-user-logout-menu li div.right {
+  float: initial;
+}
