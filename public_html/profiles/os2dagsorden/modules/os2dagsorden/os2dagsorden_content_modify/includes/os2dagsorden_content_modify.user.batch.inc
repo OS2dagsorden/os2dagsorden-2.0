@@ -66,6 +66,10 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
   return $form;
 }
 
+/**
+ * Renders the drag and drop controls for add/remove committee functionality
+ * @param $form
+ */
 function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls(&$form) {
   $form[] = array(
     '#markup' => '<div class="remove-committee">',

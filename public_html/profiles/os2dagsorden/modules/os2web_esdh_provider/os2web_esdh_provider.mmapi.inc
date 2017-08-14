@@ -1109,7 +1109,7 @@ function _os2web_esdh_provider_bpa_body_format() {
 }
 
 /**
- * Todo, add docblock.
+ * Clears the cache for all views (if the os2dagsorden_clear_cache_active is TRUE).
  */
 function os2web_esdh_provider_clear_cache($success, $results, $operations) {
   if ($success) {
@@ -1138,10 +1138,10 @@ function os2web_esdh_provider_clear_cache($success, $results, $operations) {
   }
   drupal_goto('admin/config/os2web/esdh_provider');
 }
+
 /*
  * Removed inline styles from html tags
  */
-
 function os2web_esdh_provider_filter_html_tags($data) {
   $tags = explode(',', variable_get('os2dagsorden_filtered_tags', ''));
   foreach ($tags as $tag) {
@@ -1169,6 +1169,12 @@ function os2web_esdh_provider_filter_html_tags($data) {
    return $data;
 }
 
+/**
+ * Removes the src attribute from img tags.
+ *
+ * @param $data
+ * @return mixed
+ */
 function _os2web_esdh_provider_remove_img_tags($data){
   preg_match_all('/<img[^>]+>/i',$data, $imgTags);
   for ($i = 0; $i < count($imgTags[0]); $i++) {
@@ -1185,6 +1191,14 @@ function _os2web_esdh_provider_remove_img_tags($data){
   return $data;
 }
 
+/**
+ * Strips the tags from text.
+ *
+ * @param $str
+ * @param $tags
+ * @param bool $stripContent, if true the content will be also stripped.
+ * @return mixed
+ */
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
   $content = '';
   if (!is_array($tags)) {
@@ -1201,8 +1215,12 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = false) {
   }
   return $str;
 }
-/*
- * return meeting import status by commitee
+
+/**
+ * Return meeting import status by committee
+ *
+ * @param $tid
+ * @return int
  */
 function _os2web_esdh_provider_get_meeting_publish_status($tid) {
   $term = taxonomy_term_load($tid);
@@ -1212,6 +1230,13 @@ function _os2web_esdh_provider_get_meeting_publish_status($tid) {
     return 1;
 }
 
+/**
+ * Returns the list of email of the users that are set committee admins.
+ *
+ * @param $tid
+ * @param $meeting_type
+ * @return string
+ */
 function _os2web_esdh_provider_meeting_unpublished_state_emails($tid, $meeting_type) {
   $emails = array();
   $term = taxonomy_term_load($tid);

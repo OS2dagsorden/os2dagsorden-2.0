@@ -214,6 +214,14 @@ function os2dagsorden_annotator_update_notes_attachment($old_attachment_nid, $ne
   } 
 }
 
+/**
+ * Returns the right DOM path for the certain text, is used recursively
+ *
+ * @param DOMNode $domNode
+ * @param $first_word
+ * @param string $current_path
+ * @return string
+ */
 function _os2dagsorden_annotator_find_path(DOMNode $domNode, $first_word, $current_path= ''){
   foreach ($domNode->childNodes as $node) {
     if ($node->nodeName == 'style') {

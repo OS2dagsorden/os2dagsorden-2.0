@@ -543,6 +543,8 @@ function _os2web_acadre_esdh_similar_file_exists($filename) {
 
 /**
  * This function will set up the addendum connections for meetings.
+ *
+ * @param bool $drush
  */
 function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
   if (!lock_acquire(__FUNCTION__)) {
@@ -740,6 +742,12 @@ function _acadre_esdh_mm_improve_body_html($data) {
    return $data;
 }
 
+/**
+ * Removed the empty tags (tags having no content, or nbsp) from the provided text.
+ *
+ * @param $data
+ * @return mixed
+ */
 function _acadre_esdh_mm_remove_empty_tags($data) {
 do
 {
@@ -753,6 +761,13 @@ return $data;
 
 }
 
+/**
+ * Gets the string value from the raw XML.
+ *
+ * @param $xml_raw
+ * @param string $convert_to
+ * @return int|string
+ */
 function _get_value_from_xml($xml_raw, $convert_to = 'string'){
   if ($convert_to == 'string')
     return trim((string) array_shift($xml_raw));

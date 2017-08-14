@@ -460,6 +460,9 @@ function os2web_esdh_field_cron() {
   }
 }
 
+/**
+ * Re-queues all cases from all documents.
+ */
 function _os2web_esdh_field_add_all_documents_to_requeue() {
   // Check for correct api and required functions are implemented.
   if (!os2web_esdh_provider_has_api('cm')) {

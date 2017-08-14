@@ -275,6 +275,12 @@ function os2web_audit_log_overview_page_form($form, $form_state) {
   return $form;
 }
 
+/**
+ * Form submit, set the form_state rebuild.
+ *
+ * @param $form
+ * @param $form_state
+ */
 function os2web_audit_log_overview_page_form_submit($form, &$form_state){
   $form_state['rebuild'] = TRUE;
 }

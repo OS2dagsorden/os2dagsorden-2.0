@@ -40,7 +40,7 @@ function os2dagsorden_pdf2htmlex_menu() {
 }
 
 /**
- * Report page
+ * Renders and returns the reports page.
  *
  * @return mixed
  */
@@ -582,6 +582,8 @@ function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
 }
 
 /**
+ * Implements hook_file_delete().
+ *
  * Hook to file delete, deletes the corresponding row in the table.
  */
 function os2dagsorden_pdf2htmlex_file_delete($file) {
@@ -591,6 +593,8 @@ function os2dagsorden_pdf2htmlex_file_delete($file) {
 }
 
 /**
+ * Implements hook_node_delete().
+ *
  * Hook to node delete, deletes the corresponding row in the table.
  */
 function os2dagsorden_pdf2htmlex_node_delete($node) {

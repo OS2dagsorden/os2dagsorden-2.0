@@ -81,6 +81,8 @@ function os2dagsorden_simplesaml_settings_form_submit($form, &$form_state) {
 
 /**
  * Implements hook_boot().
+ *
+ * if the request comes from one of the IP from variable, then user is redirectred to saml login page.
  */
 function os2dagsorden_simplesaml_boot() {
   // Do not run this from CLI.

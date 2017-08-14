@@ -1245,6 +1245,12 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   return system_settings_form($form);
 }
 
+/**
+ * Validates pdf2htmlEX installation by checking if which commands returns anything.
+ *
+ * @param $element
+ * @param $form_state
+ */
 function _os2dagsorden_pdf2htmlEX_validate($element, &$form_state){
   $value = $element['#value'];
   if(!empty($value)) {
@@ -1256,6 +1262,13 @@ function _os2dagsorden_pdf2htmlEX_validate($element, &$form_state){
   }
 }
 
+/**
+ * Validates URL responce.
+ * if response code not 200, form error is set.
+ *
+ * @param $element
+ * @param $form_state
+ */
 function _os2dagsorden_url_responce_validate($element, &$form_state){
   $value = $element['#value'];
 
@@ -1274,6 +1287,15 @@ function _os2dagsorden_url_responce_validate($element, &$form_state){
   }
 }
 
+/**
+ * Checks that files for SOFD are presen.
+ * File paths are: "public://acadre_views/V_web_MeetingGroups.xml",
+ * "public://acadre_views/V_web_AcadreGroups.xml",
+ * "public://acadre_views/V_web_Meetings.xml",
+ *
+ * @param $element
+ * @param $form_state
+ */
 function _os2dagsorden_sofd_local_copy_validate($element, &$form_state){
   $value = $element['#value'];
   //if checked
@@ -1300,6 +1322,12 @@ function _os2dagsorden_sofd_local_copy_validate($element, &$form_state){
   }
 }
 
+/**
+ * Validates that the pdf rendering path is present and writable.
+ *
+ * @param $element
+ * @param $form_state
+ */
 function _os2dagsorden_pdf2html_rendering_path_validate($element, &$form_state){
   $value = $element['#value'];
   if ($value != "") {
@@ -1314,6 +1342,12 @@ function _os2dagsorden_pdf2html_rendering_path_validate($element, &$form_state){
   }
 }
 
+/**
+ * Validates that the os2web conversion path is present and writable.
+ *
+ * @param $element
+ * @param $form_state
+ */
 function _os2dagsorden_os2web_convertion_dir_validate($element, &$form_state){
   $value = $element['#value'];
   if(file_exists($value)){

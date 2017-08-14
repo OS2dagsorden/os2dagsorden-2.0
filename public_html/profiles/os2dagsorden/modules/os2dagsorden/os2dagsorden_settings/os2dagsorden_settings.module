@@ -252,6 +252,7 @@ function os2dagsorden_settings_committee_autocomplete_callback($string = '') {
 
 /**
  * Implement hook_views_pre_render().
+ * Alters the view title (block titles) - by using the values from the settings.
  *
  * @param $view
  */
@@ -265,6 +266,7 @@ function os2dagsorden_settings_views_pre_render(&$view) {
 
 /**
  * Implements hook_views_pre_view().
+ * Alters various texts - by using the values from the settings.
  *
  * @param $view
  * @param $display_id
@@ -365,6 +367,7 @@ function os2dagsorden_settings_write_ini_file($assoc_arr, $has_sections=FALSE) {
 
 /**
  * Implements hook_form_alter().
+ * does various modifications to the custom forms based on the os2dagsorden settings state.
  *
  * @param $form
  * @param $form_state
@@ -407,6 +410,7 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Form submit function that adds/removes quick guide file from/to file usage table.
+ *
  * @param $form
  * @param $form_state
  */
@@ -434,6 +438,7 @@ function os2dagsorden_settings_guide_file_lock ($form, &$form_state) {
 
 /**
  * Implements hook_block_view_alter().
+ * Alters various texts - by using the values from the settings.
  *
  * @param $data
  * @param $block
@@ -467,7 +472,7 @@ function os2dagsorden_settings_block_view_alter(&$data, $block){
 }
 
 /**
- * Helper function that retuns a list of active committees
+ * Helper function that returns a list of active committees from the settings
  *
  * @return array
  */

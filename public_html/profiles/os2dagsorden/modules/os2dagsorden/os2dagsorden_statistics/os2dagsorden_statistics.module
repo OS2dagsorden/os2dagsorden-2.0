@@ -57,7 +57,7 @@ function os2dagsorden_statistics_menu() {
 }
 
 /**
- * User statistics page output
+ * Renders user statistics page output
  *
  * @return string
  */
@@ -118,7 +118,7 @@ function os2dagsorden_statistics_user_statistics_by_year($year = null) {
 }
 
 /**
- * Content statistics page output
+ * Renders content statistics page output
  *
  * @return string
  */

@@ -561,6 +561,12 @@ function _os2web_pdf_conversion_manager_import_attachments_file($fid, $msg_file_
     return FALSE;
 }
 
+/**
+ * Delets the MSG files from a provided directory.
+ *
+ * @param $convertion_dir_path
+ * @return bool
+ */
 function _os2web_pdf_conversion_manager_delete_msg_attachments_folder($convertion_dir_path){
     $msg_files=glob($convertion_dir_path . '/*.{msg, MSG}', GLOB_BRACE);
     if (!$msg_files) return;
@@ -693,7 +699,8 @@ function os2web_pdf_conversion_manager_watchdog($log_entry) {
         return $mail_system->mail($message);
     }
 }
-/*
+
+/**
  * Delete all the .lock files what are older than 1 hour
  */
 function _os2web_pdf_conversion_manager_delete_lock_files ($convertion_dir_path) {
@@ -704,6 +711,7 @@ function _os2web_pdf_conversion_manager_delete_lock_files ($convertion_dir_path)
     }
   }
 }
+
 /**
  * Implements hook_requirements().
  */

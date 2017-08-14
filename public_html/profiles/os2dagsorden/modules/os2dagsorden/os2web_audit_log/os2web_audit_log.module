@@ -32,6 +32,14 @@ function os2web_audit_log_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_node_load().
+ *
+ * if the load is of the certain type, the log entry that this node was loaded is stored.
+ *
+ * @param $nodes
+ * @param $types
+ */
 function os2web_audit_log_node_load($nodes, $types) {
   global $user;
   
@@ -44,6 +52,17 @@ function os2web_audit_log_node_load($nodes, $types) {
   }
 }
 
+/**
+ * Actual write command to the database about node being loaded.
+ *
+ * @param $time
+ * @param $uid
+ * @param $ip
+ * @param $nid
+ * @param $node_type
+ * @param $action
+ * @param string $add_info
+ */
 function _os2web_audit_log_do_log($time, $uid, $ip, $nid, $node_type, $action, $add_info = '') {
   db_insert('os2web_audit_log')
       ->fields(array(

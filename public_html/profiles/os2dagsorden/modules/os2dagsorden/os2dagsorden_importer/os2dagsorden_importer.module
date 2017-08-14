@@ -115,6 +115,12 @@ function os2dagsorden_importer_import_user_committees() {
   _os2dagsorden_importer_process_user_committees($userCommittees);
 }
 
+/**
+ * Reads and returns the data from a local XML file, or loads it from a remote location.
+ * Optionally uses the proxy details from the settings.
+ *
+ * @return bool|SimpleXMLElement
+ */
 function os2dagsorden_importer_load_user_committees_from_xml(){
   if (!variable_get('os2dagsorden_pws_use_local_copy')) {
     $url = curl_init(variable_get('os2dagsorden_pws_v_meetinggroups_url'));
@@ -201,12 +207,23 @@ function os2dagsorden_importer_import_meetings() {
   _os2dagsorden_importer_process_meetings($meetings);
 }
 
+/**
+ * Wrapper function to processing user committees,
+ * if the XML file is provided internally calls _os2dagsorden_importer_process_user_committees_update.
+ * @param $xml_file
+ */
 function _os2dagsorden_importer_process_user_committees($xml_file){
   if ($xml_file) {
     _os2dagsorden_importer_process_user_committees_update($xml_file);
   }
 }
 
+/**
+ * Wra[[er function to processing user commitees,
+ * if the file is provided internally calls _os2dagsorden_importer_process_user_committees_update and
+ * _os2dagsorden_importer_process_user_committees_delete.
+ * @param $xml_file
+ */
 function _os2dagsorden_importer_process_user_committees_improved($xml_file){
   if ($xml_file) {
     _os2dagsorden_importer_process_user_committees_update($xml_file);
@@ -799,7 +816,7 @@ function _os2dagsorden_importer_add_user_follows_committee_plus($tid, $user) {
 }
 
 /**
- * Helper function. Unsets the follows+ committee to the user
+ * Helper function. Unsets the follows+ committee from the user
  *
  * @param int   $tid  role id
  * @param mixed $user user object
@@ -822,6 +839,7 @@ function _os2dagsorden_importer_unset_user_follows_committee_plus($tid, $user) {
 
     user_save($user, $edit);
 }
+
 /**
  * Helper function. Adds the follows++ committee to the user
  *
@@ -1143,8 +1161,15 @@ function os2dagsorden_importer_requirements($phase) {
     }
   return $requirements;
 }
-/*
- * check if webservice URL is avaible
+
+
+/**
+ * Checks if the provided URL is exists and accessible by checking the http requires headers.
+ * If http request will return >= 200 and 300, URL is considered as valid and TRUE is returned.
+ * Otherwise FALSE.
+ *
+ * @param null $url
+ * @return bool
  */
 function _os2dagsorden_importer_webservice_url_exists($url=NULL) {
   if($url == NULL) return false;

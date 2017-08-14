@@ -24,28 +24,32 @@ function os2dagsorden_logging_monolog_channel_info() {
  */
 function os2dagsorden_logging_menu() {
   $items['admin/config/development/monolog/os2dagsorden_logging_settings'] = array(
-    'title'            => 'Os2dagsorden Logging',
-    'description'      => t('Configure watchlist for specific watchdog log messages.'),
-    'page callback'    => 'drupal_get_form',
-    'page arguments'   => array('os2dagsorden_logging_settings_settings_form'),
+    'title' => 'Os2dagsorden Logging',
+    'description' => t('Configure watchlist for specific watchdog log messages.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('os2dagsorden_logging_settings_settings_form'),
     'access arguments' => array('administer os2web'),
     'file' => 'os2dagsorden_logging.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   return $items;
 }
 
 /**
  * Implements hook_watchdog().
+ * Makes sure that watchdog commands end up rerouted to monolog.
  *
  * @param array $log_entry
  */
 function os2dagsorden_logging_watchdog(array $log_entry) {
   try {
-  
-      if (in_array($log_entry['type'], variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")))){
-     
+    if (in_array($log_entry['type'], variable_get('os2dagsorden_logging_message_type', array(
+      "acadre MM" => "acadre MM",
+      "esdh provider" => "esdh provider"
+    )))
+    ) {
+
       // Perform a partial bootstrap if watchdog is called prior to the
       // DRUPAL_BOOTSTRAP_FULL phase.
       if (!function_exists('monolog')) {
@@ -53,7 +57,7 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
       }
 
       $logger = monolog('os2dagsorden_watchdog_logging');
- 
+
       $enabled_contexts = os2dagsorden_logging_get_contexts();
       $context = array_intersect_key($log_entry, $enabled_contexts);
       if (isset($enabled_contexts['request_id'])) {
@@ -61,11 +65,9 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
       }
       $message = strip_tags(!isset($log_entry['variables']) ? $log_entry['message'] : strtr($log_entry['message'], $log_entry['variables']));
       $level = os2dagsorden_logging_map_severity_level($log_entry['severity']);
-      $logger->log($level, $message,  $context);
-    } 
-  }
-  catch (Exception $e) {
-  
+      $logger->log($level, $message, $context);
+    }
+  } catch (Exception $e) {
     // Fail silently since we cannot log any messages or do anything that would
     // trigger another watchdog call.
   }
@@ -107,6 +109,7 @@ function os2dagsorden_logging_bootstrap() {
     // file_get_stream_wrappers() is called during the normal application flow.
   }
 }
+
 /**
  * Returns the selected event contexts.
  *
@@ -149,25 +152,39 @@ function os2dagsorden_logging_map_severity_level($level) {
   return isset($levels[$level]) ? $levels[$level] : Logger::NOTICE;
 }
 
-function os2dagsorden_logging_database_log_clear() {  
-  $time_limit = strtotime('-'.variable_get('os2dagsorden_logging_day_limit', 100).' days');
-  var_dump ($time_limit);
+/**
+ * Deletes entries from the database table os2web_print_send_to_friend_log, which are older than the certain number
+ * of days - 100 days is default.
+ */
+function os2dagsorden_logging_database_log_clear() {
+  $time_limit = strtotime('-' . variable_get('os2dagsorden_logging_day_limit', 100) . ' days');
   if (db_table_exists('os2web_print_send_to_friend_log')) {
-      db_delete('os2web_print_send_to_friend_log')
-              ->condition('time', $time_limit, '<')
-               ->execute();         
+    db_delete('os2web_print_send_to_friend_log')
+      ->condition('time', $time_limit, '<')
+      ->execute();
   }
- }
- 
- function os2dagsorden_logging_cron() { 
-    os2dagsorden_logging_database_log_clear();
- }
- function os2dagsorden_logging_cronapi($op, $job = NULL) {
+}
+
+/**
+ * Implement hook_cron().
+ */
+function os2dagsorden_logging_cron() {
+  os2dagsorden_logging_database_log_clear();
+}
+
+/**
+ * Implements hook_cronapi().
+ *
+ * @param $op
+ * @param null $job
+ * @return array
+ */
+function os2dagsorden_logging_cronapi($op, $job = NULL) {
   switch ($op) {
     case 'list':
       return array('os2dagsorden_logging_cron' => t('Remove expired log messages and flood control events'));
   }
-} 
+}
 
 /**
  * Implements hook_requirements().
@@ -176,15 +193,15 @@ function os2dagsorden_logging_requirements($phase) {
   if ($phase !== 'runtime') {
     return array();
   }
-   $t = get_t();
-   $channel_info = monolog_channel_info_load_all();
-   foreach ($channel_info as $channel_name => $info) {
-     $profile_info = (monolog_profile_load($info['default profile']));
-     foreach ($profile_info->options['handlers']  as $handler_name => $options){
-       if ($handler_name == 'rotating_file_handler') {
+  $t = get_t();
+  $channel_info = monolog_channel_info_load_all();
+  foreach ($channel_info as $channel_name => $info) {
+    $profile_info = (monolog_profile_load($info['default profile']));
+    foreach ($profile_info->options['handlers'] as $handler_name => $options) {
+      if ($handler_name == 'rotating_file_handler') {
         $requirements['os2dagsorden_logging_log_dir_' . $channel_name] = array(
-         'title' => $t('OS2Dagsorden Logging'),
-         'value' => $t('Log file directory')
+          'title' => $t('OS2Dagsorden Logging'),
+          'value' => $t('Log file directory')
         );
         if (!(is_dir(drupal_realpath(dirname($options['filepath']))) && is_writable(drupal_realpath(dirname($options['filepath']))))) {
           $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['severity'] = REQUIREMENT_ERROR;
@@ -195,9 +212,9 @@ function os2dagsorden_logging_requirements($phase) {
           $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['severity'] = REQUIREMENT_OK;
           $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['description'] = t('Channel: %channel. Directory for log files <b>%path</b> is  exists and writable.',
             array('%channel' => $channel_name, '%path' => dirname($options['filepath'])));
-        }        
-       }
-     }
-   }
+        }
+      }
+    }
+  }
   return $requirements;
 }

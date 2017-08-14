@@ -578,6 +578,13 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
   lock_release(__FUNCTION__);
 }
 
+/**
+ * Replaces the src attribute for img tag by providing the valid path to file.
+ *
+ * @param $html
+ * @param $image_folder_uri
+ * @return mixed
+ */
 function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
 
     preg_match_all('/src="([^"]+)"/',$html, $matches);
