@@ -37,8 +37,8 @@ if (!isset($_SESSION['nemid_login']['errors'])) {
 ?>
 
 <div class="block-nemid-login-block">
-  <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" style="width:300px;height:450px;border:0; display:inline-block" src="<?php echo $settings['iframe_url']; ?>"></iframe>
-  <div style="display:inline-block; vertical-align: top; width: 500px"><?php echo ($help)? $help['value'] : '' ?></div>
+  <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" style="width:200px; height:250px; padding-right: 20px; padding-left: 20px; border:0; display:inline-block" src="<?php echo $settings['iframe_url']; ?>"></iframe>
+  <div style="display:inline-block; vertical-align: top; max-width: 600px; min-width: 250px; text-align: left"><?php echo ($help)? $help['value'] : '' ?></div>
   <form name="postBackForm" action="<?php
 
     if (isset($nid) && is_numeric($nid)) {

@@ -685,6 +685,11 @@ div.date-heading h3 a, div.date-heading h3{
     padding: 5px 2px 2px 5px;
 }
 
+.block-nemid-login-block {
+    text-align: center;
+    padding: 10px;
+}
+
 div.view {
     padding: 1px 5px 5px 5px;
 }

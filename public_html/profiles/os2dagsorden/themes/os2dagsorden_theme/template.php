@@ -120,6 +120,28 @@ function os2dagsorden_theme_preprocess_page(&$variables)
 }
 
 /**
+ * Returns HTML for a breadcrumb trail.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - breadcrumb: An array containing the breadcrumb links.
+ */
+function os2dagsorden_theme_breadcrumb($variables) {
+  $breadcrumb = $variables['breadcrumb'];
+
+  if (!empty($breadcrumb)) {
+    // Provide a navigational heading to give context for breadcrumb links to
+    // screen-reader users. Make the heading invisible with .element-invisible.
+    $output = '<h2 class="element-invisible">' . t('You are here') . '</h2>';
+    if ( count($breadcrumb) > 1 ){
+      $output .= '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
+    }
+
+    return $output;
+  }
+}
+
+/**
  * Implementation of theming the calendar title. 
  * Change the format of navigation title in calendar day view to be [weekday], [day]. [month] [year]
  *
