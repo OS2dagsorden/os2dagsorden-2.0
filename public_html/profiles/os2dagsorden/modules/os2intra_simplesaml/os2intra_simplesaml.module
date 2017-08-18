@@ -201,6 +201,9 @@ function os2intra_simplesaml_boot() {
       require_once(DRUPAL_ROOT . '/includes/common.inc');
       require_once(DRUPAL_ROOT . '/includes/path.inc');
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
+        //unsetting session in case it had any nemid errors
+        unset($_SESSION['nemid_login']);
+
         drupal_goto('nemid');
       }
     }
