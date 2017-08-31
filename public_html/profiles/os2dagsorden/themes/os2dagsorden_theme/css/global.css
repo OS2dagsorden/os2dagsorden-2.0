@@ -1927,6 +1927,7 @@ ul.droptrue{
     background: #fff;
     border: 1px solid rgb(169, 169, 169);
     min-height: 45px;
+    min-width: 100px;
 }
 
 ul.droptrue li {
