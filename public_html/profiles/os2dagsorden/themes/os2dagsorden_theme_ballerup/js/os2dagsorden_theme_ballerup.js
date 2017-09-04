@@ -10,7 +10,6 @@ function stick_side_menu(){
       jQuery('#region-sidebar-second .region-sidebar-second-inner').append('<div class="side-menu-go-top"><a href="#">^ TIL TOPPEN ^</a></div>');
       var top = jQuery('#region-sidebar-second .region-sidebar-second-inner').offset().top - parseFloat(jQuery('#region-sidebar-second .region-sidebar-second-inner').css('marginTop').replace(/auto/, 0));
       jQuery(window).scroll(function (event) {
-    console.log(jQuery('#region-sidebar-second .region-sidebar-second-inner').width());
     var y = jQuery(this).scrollTop();
     if (y >= (top-50)) {
       jQuery('#region-sidebar-second .region-sidebar-second-inner').addClass('fixed');

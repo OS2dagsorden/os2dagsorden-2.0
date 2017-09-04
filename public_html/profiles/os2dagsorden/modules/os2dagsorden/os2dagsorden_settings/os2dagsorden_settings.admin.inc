@@ -39,7 +39,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   variable_set('os2dagsorden_version_no', variable_get('os2dagsorden_version_no', 1.0));
   $link = '';
   if ($version > variable_get('os2dagsorden_version_no')) {
-    $link = '<td> <a href="/admin/updatedb">Gå her til at opdatere DB</a></td>';
+    $link = '<td> <a href="/admin/updatedb">' . t('Gå her til at opdatere DB') . '</a></td>';
   }
   $form['os2dagsorden_version_no'] = array(
     '#type' => 'item',
@@ -182,9 +182,9 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   //hidden agenda
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = array(
     '#type' => 'textfield',
-    '#title' => 'List of committees which agenda is completely hidden to those without the rights',
+    '#title' => t('List of committees which agenda is completely hidden to those without the rights'),
     '#maxlength' => 200,
-    '#description' => 'Comma-separated list of committees ID which agenda and the summary (samlet dokument) is hidden to those without the rights',
+    '#description' => t('Comma-separated list of committees ID which agenda and the summary (samlet dokument) is hidden to those without the rights'),
     '#default_value' => variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown'] = array(
@@ -449,25 +449,25 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#description' => ('Add subject'),
+    '#description' => t('Add subject'),
     '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_subject', ''),
   );
   $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Message'),
-    '#description' => ('Add text'),
+    '#description' => t('Add text'),
     '#default_value' => variable_get('os2dagsorden_meeting_unpublished_state_body', ''),
   );
   $form['os2dagsorden_meeting_unpublished_state']['os2dagsorden_meeting_unpublished_state_email_text_available_variables'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committe</b> - name of the committee<br/>
-    <b>!meeting_name</b> - title of the meeting<br/>
-    <b>!meeting_date</b> - date of the meeting<br/>
-    <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
-    <b>!meeting_url</b> - link to the meeting',
+    '#value' => t('Can be used both in subject and body:') . '<br/>
+    <b>!committe</b> - ' . t('name of the committee') . '<br/>
+    <b>!meeting_name</b> - ' . t('title of the meeting') . '<br/>
+    <b>!meeting_date</b> - ' . t('date of the meeting') . '<br/>
+    <b>!meeting_type</b> - ' . t('type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i>') . '<br/>
+    <b>!meeting_url</b> - ' . t('link to the meeting'),
     '#title' => t('Available variables'),
   );
 
@@ -543,10 +543,10 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
 
   $form['os2dagsorden_sidepane_menu_layout']['main_menu_links'] = array(
       '#type' => 'link',
-       '#prefix' => '<p>',
+      '#prefix' => '<p>',
       '#href' => 'admin/structure/menu/manage/menu-sidepane-menu',
       '#title' => t('Change order of the main menu links'),
-         '#sufix' => '</p>',
+      '#sufix' => '</p>',
   );
   $form['os2dagsorden_sidepane_menu_layout']['sipepane_blocks_order'] = array(
     '#type' => 'link',
@@ -592,7 +592,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_send_notification_committee'] = array(
     '#type' => 'textfield',
-    '#title' => 'Send notification of committees',
+    '#title' => t('Send notification of committees'),
     '#maxlength' => 250,
     '#default_value' => variable_get('os2dagsorden_send_notification_committee', FALSE),
     '#description' => t('Comma-separated list of committees changing status of which should send an email notification.'),
@@ -600,14 +600,14 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_send_email_subject'] = array(
     '#type' => 'textfield',
-    '#title' => 'Meeting notification email text',
-    '#description' => 'The email subject, which would be send to users interested in meeting publishing - Member / Follow+ / Follow (optional)',
+    '#title' => t('Meeting notification email text'),
+    '#description' => t('The email subject, which would be send to users interested in meeting publishing - Member / Follow+ / Follow (optional)'),
     '#default_value' => variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret'),
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_send_email_body'] = array(
     '#type' => 'textarea',
-    '#title' => 'Meeting notification email text',
-    '#description' => 'The email body, which would be send to users interested in meeting publishing - Member / Follow+ / Follow (optional)',
+    '#title' => t('Meeting notification email text'),
+    '#description' => t('The email body, which would be send to users interested in meeting publishing - Member / Follow+ / Follow (optional)'),
     '#default_value' => variable_get('os2dagsorden_send_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
       'Du abonnerer på !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.'),
   );
@@ -615,13 +615,13 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committee</b> - name of the committee<br/>
-    <b>!meeting_name</b> - title of the meeting<br/>
-    <b>!meeting_date</b> - date of the meeting<br/>
-    <b>!meeting_type</b> - type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i><br/>
-    <b>!meeting_link</b> - link to the meeting<br/>
-    <b>!user</b> - name of the user that message is sent to<br/>',
+    '#value' => t('Can be used both in subject and body:') . '<br/>
+    <b>!committee</b> - ' . t('name of the committee') . '<br/>
+    <b>!meeting_name</b> - ' . t('title of the meeting') . '<br/>
+    <b>!meeting_date</b> - ' . t('date of the meeting') . '<br/>
+    <b>!meeting_type</b> - ' . t('type of the meeting with acticle: <i>et referat</i> or <i>en dagsorden</i>') . '<br/>
+    <b>!meeting_link</b> - ' . t('link to the meeting') . '<br/>
+    <b>!user</b> - ' . t('name of the user that message is sent to') . '<br/>',
     '#title' => t('Available variables'),
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_follows_committee_send_notification'] = array(
@@ -632,11 +632,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
   $form['os2dagsorden_meeting_import']['os2dagsorden_send_timespan_of_notification'] = array(
     '#type' => 'textfield',
-    '#title' => 'Meeting should be not older than:',
+    '#title' => t('Meeting should be not older than:'),
     '#maxlength' => 200,
-    '#field_suffix' => 'Days',
+    '#field_suffix' => t('Days'),
     '#size' => 10,
-    '#description' => 'If meeting is not older than the set amount of day, notification is sent. <br/>Otherwise notification process is skipped',
+    '#description' => t('If meeting is not older than the set amount of day, notification is sent. <br/>Otherwise notification process is skipped'),
     '#default_value' => variable_get('os2dagsorden_send_timespan_of_notification', 10),
   );
 
@@ -723,8 +723,8 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     );
     $form['os2dagsorden_pdf2htmlex_settings']['os2dagsorden_pdf2htmlex_path'] = array(
       '#type' => 'textfield',
-      '#title' => 'Path to pdf2htmlEX',
-      '#description' => 'Path to pdf2htmlEX',
+      '#title' => t('Path to pdf2htmlEX'),
+      '#description' => t('Path to pdf2htmlEX'),
       '#default_value' => variable_get('os2dagsorden_pdf2htmlex_path', ""),
       '#element_validate' => array('_os2dagsorden_pdf2htmlEX_validate'),
     );
@@ -800,14 +800,14 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   );
 
   $options = array(
-    '*/5 * * * *' => 'Every 5 min',
-    '*/15 * * * *' => 'Every 15 min',
-    '*/30 * * * *' => 'Every 30 min',
-    '0 */1 * * *' => 'Every 1 hour',
-    '0 */2 * * *' => 'Every 2 hours',
-    '0 */3 * * *' => 'Every 3 hours',
-    '0 */5 * * *' => 'Every 5 hours',
-    '0 */10 * * *' => 'Every 10 hours',
+    '*/5 * * * *' => t('Every 5 min'),
+    '*/15 * * * *' => t('Every 15 min'),
+    '*/30 * * * *' => t('Every 30 min'),
+    '0 */1 * * *' => t('Every 1 hour'),
+    '0 */2 * * *' => t('Every 2 hours'),
+    '0 */3 * * *' => t('Every 3 hours'),
+    '0 */5 * * *' => t('Every 5 hours'),
+    '0 */10 * * *' => t('Every 10 hours'),
   );
   if (module_exists('os2dagsorden_importer')){
     $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
@@ -1281,7 +1281,13 @@ function _os2dagsorden_url_responce_validate($element, &$form_state){
     $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
  
     if ($retcode != 200) {
-      form_error($element, "Specified url " . $url . " does not respond. Error code: " . $retcode);
+      form_error(
+        $element,
+        t("Specified url !url does not respond. Error code: !retcode", array(
+          '!url' => $url,
+          '!retcode' => $retcode,
+        ))
+      );
     }
     curl_close($ch);
   }
@@ -1310,13 +1316,13 @@ function _os2dagsorden_sofd_local_copy_validate($element, &$form_state){
 
       foreach ($files as $file) {
         if (!file_exists($file)) {
-          form_error($element, "File " . $file . " does not exist.");
+          form_error($element, t("File !file does not exist.", array('!file' => $file)));
         }
       }
 
     }
     else{
-      form_error($element, "directory public://acadre_views does not exist.");
+      form_error($element, t("directory public://acadre_views does not exist."));
     }
 
   }
@@ -1333,11 +1339,11 @@ function _os2dagsorden_pdf2html_rendering_path_validate($element, &$form_state){
   if ($value != "") {
     if (is_dir($value)) {
       if (!is_writable($value)) {
-        form_error($element, "Could not writte to directory. Please check permissions");
+        form_error($element, t("Could not writte to directory. Please check permissions"));
       }
     }
     else {
-      form_error($element, "Directory does not exist");
+      form_error($element, t("Directory does not exist"));
     }
   }
 }
@@ -1352,10 +1358,10 @@ function _os2dagsorden_os2web_convertion_dir_validate($element, &$form_state){
   $value = $element['#value'];
   if(file_exists($value)){
     if(!is_writable($value)){
-      form_error($element, "Could not writte to directory. Please check permissions");
+      form_error($element, t("Could not writte to directory. Please check permissions"));
     }
   }else{
-    form_error($element, "Directory " . $value . " does nor exist");
+    form_error($element, t("Directory !value does nor exist", array('!value' => $value)));
   }
 }
 

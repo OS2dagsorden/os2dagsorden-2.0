@@ -337,6 +337,12 @@ a.form-submit, a.button {
   	margin: 7px 0 7px 7px;
   	padding: 5px 0 5px 0;
 }
+
+.controls-right.breadcrumb-level{
+    position: relative;
+    right: 0;
+    top: 0;
+}
 /*---------------------------- Omega globals override START ----------------------------*/
 
 /* ---------------------------- Table Styles START---------------------------- */

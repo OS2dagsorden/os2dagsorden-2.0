@@ -89,8 +89,8 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
 
   $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_speaper_paper_email_subject'] = array(
     '#type' => 'textfield',
-    '#title' => 'Speaker paper sharing notification email subject',
-    '#description' => 'The email subject, which would be send to user with which the speaker paper has been shared',
+    '#title' => t('Speaker paper sharing notification email subject'),
+    '#description' => t('The email subject, which would be send to user with which the speaker paper has been shared'),
     '#default_value' => variable_get('os2dagsorden_speaper_paper_email_subject', '!author har delt talepapiret "!speaker_paper_name" med dig'),
     '#states' => array(
       'visible' => array(
@@ -100,8 +100,8 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
   );
   $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_speaper_paper_email_body'] = array(
     '#type' => 'textarea',
-    '#title' => 'Speaker paper sharing notification email text',
-    '#description' => 'The email body, which would be send to user  with which the speaker paper has been shared',
+    '#title' => t('Speaker paper sharing notification email text'),
+    '#description' => t('The email body, which would be send to user with which the speaker paper has been shared'),
     '#default_value' => variable_get('os2dagsorden_speaper_paper_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
       '!author har delt talepapiret "!speaker_paper_name" med dig' . PHP_EOL . 'Du kan læse/ændre dette talepapir her: !speaker_paper_link'),
     '#states' => array(
@@ -114,15 +114,15 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#value' => 'Can be used both in subject and body:<br/>
-    <b>!committe</b> - name of the committee<br/>
-    <b>!meeting_name</b> - title of the meeting<br/>
-    <b>!meeting_date</b> - date of the meeting<br/>
-    <b>!bullet_point_name</b> - title of the bullet point that speaker paper is created under<br/>
-    <b>!speaker_paper_name</b> - title of the created speaker paper<br/>
-    <b>!speaker_paper_link</b> - link to the created speaker paper<br/>
-    <b>!user</b> - name of the user that message is sent to<br/>
-    <b>!author</b> - name of the user that created speaker paper<br/>',
+    '#value' => t('Can be used both in subject and body:') . '<br/>
+    <b>!committe</b> - ' . t('name of the committee') . '<br/>
+    <b>!meeting_name</b> - ' . t('title of the meeting') . '<br/>
+    <b>!meeting_date</b> - ' . t('date of the meeting') . '<br/>
+    <b>!bullet_point_name</b> - ' . t('title of the bullet point that speaker paper is created under') . '<br/>
+    <b>!speaker_paper_name</b> - ' . t('title of the created speaker paper') . '<br/>
+    <b>!speaker_paper_link</b> - ' . t('link to the created speaker paper') . '<br/>
+    <b>!user</b> - ' . t('name of the user that message is sent to') . '<br/>
+    <b>!author</b> - ' . t('name of the user that created speaker paper') . '<br/>',
     '#title' => t('Available variables'),
     '#states' => array(
       'visible' => array(
