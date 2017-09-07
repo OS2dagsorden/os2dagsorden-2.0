@@ -26,6 +26,11 @@ function os2dagsorden_meeting_views_meeting_details_agenda_and_edit_button() {
 }
 
 function os2dagsorden_meeting_views_meeting_details_description_download() {
+  //disallowing PDF download
+  if (!variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+    return '';
+  }
+
   global $base_url;
   $q = explode('/', $_GET['q']);
   $meeting_id = $q[1];
@@ -642,7 +647,20 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_send_lin
       print '<a href="' . $base_url . '/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '">&nbsp;</a>';
     }
   }
+}
 
+function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_case_identifier_link($meeting_id, $bp_id) {
+  if (variable_get('os2dagsorden_show_bullet_case_id_link', FALSE) && variable_get('os2dagsorden_bullet_case_id_link_url', FALSE)) {
+    $bullet_point = node_load($bp_id);
+
+    $case_link_url = variable_get('os2dagsorden_bullet_case_id_link_url');
+    if (!empty($bullet_point->field_os2web_meetings_bul_caseid['und'][0]['value'])) {
+      $caseId = $bullet_point->field_os2web_meetings_bul_caseid['und'][0]['value'];
+      print '<a href="' . $case_link_url . $caseId . '" target="_blank"><div class="popup-link"></div>' . t('Sage') . '</a>';
+    } else {
+      print '<a>&nbsp;</a>';
+    }
+  }
 }
 
 /////////////////////////////////////////DAGSORDEN fields END /////////////////////////////////////////

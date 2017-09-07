@@ -160,7 +160,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         // This means that the one already exist is a Dagsorden.
         $republish = TRUE;
         $reason = 'DAGSORDEN -> REFERAT';
-      } elseif (filemtime($meeting['path']) > $node->changed){
+      } elseif (filemtime($meeting['path']) > $node->changed) {
           $republish = TRUE;
           $reason = 'NEW REFERAT VERSION';
       }
@@ -474,6 +474,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
       $node->uid = 1;
       node_object_prepare($node);
       $node->field_os2web_meetings_bul_case[LANGUAGE_NONE][0]['value'] = $item['case_nr'];
+      $node->field_os2web_meetings_bul_caseid[LANGUAGE_NONE][0]['value'] = $item['case_id'];
       $node->field_os2web_bullet_point_id[$node->language][0]['value'] = $item['sysid'];
     }
     $node->title = mb_substr($item['title'], 0, 200);

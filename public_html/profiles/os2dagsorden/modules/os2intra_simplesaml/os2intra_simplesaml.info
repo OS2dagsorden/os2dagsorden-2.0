@@ -1,0 +1,4 @@
+name = os2intra simpleSAMLphp
+description = Maps SimpleSAMLphp attributes and controls login
+core = 7.x
+dependencies[] = simplesamlphp_auth

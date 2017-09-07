@@ -673,7 +673,8 @@ div.date-heading h3 a, div.date-heading h3{
 #user-login-form,
 .node-form,
 .node,
-.view-display-id-page{
+.view-display-id-page,
+.block-nemid-login-block {
     border-left: 1px solid;
     border-right: 1px solid;
     border-bottom: 1px solid;
@@ -682,6 +683,11 @@ div.date-heading h3 a, div.date-heading h3{
     border-bottom-right-radius: 7px;
     box-shadow: 0  0  0  3px #cbcbcb inset;
     padding: 5px 2px 2px 5px;
+}
+
+.block-nemid-login-block {
+    text-align: center;
+    padding: 10px;
 }
 
 div.view {
@@ -1274,6 +1280,11 @@ table .speaker-paper-link-container{
     min-width: 130px;
 }
 
+table .case-id-link-container{
+    width: 75px;
+    min-width: 75px;
+}
+
 /*bullet point details table*/
 div.speaker-paper-print{
     float: right;
@@ -1378,14 +1389,15 @@ table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
      display:block;
     float: right;
 }
-.bullet-point-send-link {
-    background: url('../img/icon-send-to-friend-bullet-point.png') no-repeat 50% top;;
-    height: 20px;
-    width: 20px;
-    display:block;  
-    float: right;
-    margin-right: 8px;
-   
+.popup-link {
+    position: relative;
+    float:left;
+    background: url('../img/icon_popup_link.png') no-repeat 50% top;;
+    min-width: 16px;
+    min-height: 16px;
+    width: 16px;
+    height: 16px;
+    padding:2px 2px 0 2px;
 }
 
 .ul-item-list-dagsordenspunkt li.non-bilag a {
@@ -1915,6 +1927,7 @@ ul.droptrue{
     background: #fff;
     border: 1px solid rgb(169, 169, 169);
     min-height: 45px;
+    min-width: 100px;
 }
 
 ul.droptrue li {

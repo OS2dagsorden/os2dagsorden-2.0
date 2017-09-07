@@ -76,12 +76,16 @@ function os2dagsorden_settings_export_to_file(){
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_samlet_dokument_link'] =variable_get('os2dagsorden_show_samlet_dokument_link', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_participants_afbud'] = variable_get('os2dagsorden_show_participants_afbud', FALSE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon'] = variable_get('os2dagsorden_show_print_icon', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bullet_case_id_link'] = variable_get('os2dagsorden_show_bullet_case_id_link', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_bullet_case_id_link_url'] = variable_get('os2dagsorden_bullet_case_id_link_url', "");
+
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = variable_get('os2dagsorden_show_comments', FALSE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_closed_bullet_point_content'] = variable_get('os2dagsorden_show_closed_bullet_point_content', FALSE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag'] = variable_get('os2dagsorden_show_bilag', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = variable_get('os2dagsorden_sager_group_title', 'Sager');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr'] = variable_get('os2dagsorden_use_abbr', TRUE);
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bp_comname'] = variable_get('os2dagsorden_show_bp_comname', FALSE);
+    $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_allow_pdf_download'] = variable_get('os2dagsorden_allow_pdf_download', TRUE);
 
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points'] = variable_get('os2dagsorden_group_closed_bullet_points', 'false');
     $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee'] = variable_get('os2dagsorden_hidden_agenda_committee', OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE);
@@ -144,15 +148,17 @@ function os2dagsorden_settings_export_to_file(){
 
     $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_show_meeting_category'] = variable_get('os2dagsorden_show_meeting_category');
     $setting_array['os2dagsorden_political_organizational_settings']['os2dagsorden_user_default_meeting_category']= variable_get('os2dagsorden_user_default_meeting_category', 'pol');
-    
-    $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
-    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
-    $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
-    $setting_array['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
-    $conf = ultimate_cron_get_settings("os2dagsorden_pdf2htmlex_cron");
-    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_pdf2htmlex_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
-    $conf = ultimate_cron_get_settings("os2dagsorden_adlib_api_cron");
-    $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_adlib_api_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+
+    if (module_exists('ultimate_cron')) {
+      $conf = ultimate_cron_get_settings("os2dagsorden_importer_cron");
+      $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_importer_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+      $conf = ultimate_cron_get_settings("os2web_esdh_provider_cron");
+      $setting_array['os2dagsorden_cron_job_freq']['os2web_esdh_provider_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+      $conf = ultimate_cron_get_settings("os2dagsorden_pdf2htmlex_cron");
+      $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_pdf2htmlex_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+      $conf = ultimate_cron_get_settings("os2dagsorden_adlib_api_cron");
+      $setting_array['os2dagsorden_cron_job_freq']['os2dagsorden_adlib_api_cron'] = isset($conf['rules']) ? implode(';', $conf['rules']) : variable_get('ultimate_cron_rule', ULTIMATE_CRON_RULE);
+    }
   
     if (module_exists('os2dagsorden_importer')){
 	$setting_array['os2dagsorden_pws_sofd_group']['os2dagsorden_pws_use_local_copy'] = variable_get('os2dagsorden_pws_use_local_copy');
