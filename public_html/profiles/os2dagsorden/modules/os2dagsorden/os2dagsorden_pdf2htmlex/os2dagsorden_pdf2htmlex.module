@@ -40,7 +40,7 @@ function os2dagsorden_pdf2htmlex_menu() {
 }
 
 /**
- * Renders and returns the reports page.
+ * Report page
  *
  * @return mixed
  */
@@ -322,6 +322,7 @@ function _os2dagsorden_pdf2htmlex_improve_html($data){
   $data = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $data);//removing scripts tags
   $data = preg_replace('#::selection{(.*?)}#is', '', $data);//removing ::selection css specification
   $data = preg_replace('#::-moz-selection{(.*?)}#is', '', $data);//removing ::-moz-selection css specification
+  $data = preg_replace( '/[\x{200B}-\x{200D}]/u', "", $data ); //removing ZERO WIDTH SPACE character
   
   return $data;
 }
@@ -582,8 +583,6 @@ function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
 }
 
 /**
- * Implements hook_file_delete().
- *
  * Hook to file delete, deletes the corresponding row in the table.
  */
 function os2dagsorden_pdf2htmlex_file_delete($file) {
@@ -593,8 +592,6 @@ function os2dagsorden_pdf2htmlex_file_delete($file) {
 }
 
 /**
- * Implements hook_node_delete().
- *
  * Hook to node delete, deletes the corresponding row in the table.
  */
 function os2dagsorden_pdf2htmlex_node_delete($node) {
