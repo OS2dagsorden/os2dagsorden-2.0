@@ -653,10 +653,10 @@ watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Started importing file !uri an
     if (strlen($uri_out) > 255) {
       $pi = pathinfo($uri_out);
       if (isset($pi['extension'])) {
-        $uri_out = $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename']) - (len($uri_out) - 255)) . '.' . $pi['extension'];
+        $uri_out = $pi['dirname'] . '/' .  substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255)) . '.' . $pi['extension'];
       }
       else {
-        $uri_out = $pi['dirname'] . '/' .  substr($pi['filename'], 0, len($pi['filename']) - (len($uri_out) - 255));
+        $uri_out = $pi['dirname'] . '/' .  substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255));
       }
     }
     if ($uri_in === FALSE || FALSE === file_unmanaged_copy($uri_in, $uri_out, FILE_EXISTS_REPLACE)) {
