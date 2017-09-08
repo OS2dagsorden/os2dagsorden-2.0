@@ -728,20 +728,6 @@ os2dagsorden_meeting_views_meeting_details_fields_type($row->nid);
   $handler->display->display_options['fields']['field_os2web_meetings_committee']['alter']['trim'] = TRUE;
   $handler->display->display_options['fields']['field_os2web_meetings_committee']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_os2web_meetings_committee']['type'] = 'taxonomy_term_reference_plain';
-  /* Field: Samlet dokument link */
-  $handler->display->display_options['fields']['php_5']['id'] = 'php_5';
-  $handler->display->display_options['fields']['php_5']['table'] = 'views';
-  $handler->display->display_options['fields']['php_5']['field'] = 'php';
-  $handler->display->display_options['fields']['php_5']['ui_name'] = 'Samlet dokument link';
-  $handler->display->display_options['fields']['php_5']['label'] = 'Hent';
-  $handler->display->display_options['fields']['php_5']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['php_5']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['php_5']['use_php_setup'] = 0;
-  $handler->display->display_options['fields']['php_5']['php_output'] = '<?php 
-os2dagsorden_meeting_views_meeting_details_samlet_dokument_link();
- ?>';
-  $handler->display->display_options['fields']['php_5']['use_php_click_sortable'] = '0';
-  $handler->display->display_options['fields']['php_5']['php_click_sortable'] = '';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -1200,11 +1186,10 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
     'field_os2web_meetings_bul_closed' => 'php_4',
     'field_os2web_meetings_bul_pers' => 'php_4',
     'php_1' => 'php_4',
-    'php' => 'php_4',
+    'php' => 'php',
     'title' => 'title',
     'php_4' => 'php_4',
     'php_3' => 'php_4',
-    'php' => 'php',
     'php_6' => 'php_6',
     'php_5' => 'php_5',
     'php_2' => 'php_2',
@@ -2052,7 +2037,6 @@ os2dagsorden_meeting_views_meeting_details_fields_speaker_paper_link($meeting_id
     t('Slutdato'),
     t('Udvalg'),
     t('Type'),
-    t('Hent'),
     t('Lokation'),
     t('Comments'),
     t('Kommentarer'),

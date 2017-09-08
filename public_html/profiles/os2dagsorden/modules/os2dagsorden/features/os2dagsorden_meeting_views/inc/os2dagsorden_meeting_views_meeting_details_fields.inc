@@ -69,6 +69,11 @@ function os2dagsorden_meeting_views_meeting_details_description_download() {
     echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) .
       '" class="btn-group">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . '</a>';
     $has_description = true;
+  } else {
+    if (variable_get('os2dagsorden_show_samlet_dokument_link', TRUE)) {
+      echo '<a target="_blank" href="' . $base_url . '/printpdf/meeting/' . $meeting_id . '/print">' . variable_get('os2dagsorden_meeting_description_download_title', 'Samlet dokument') . '</a>';
+      $has_description = true;
+    }
   }
   ///////////////////////descriptions full doc END
 
@@ -201,29 +206,6 @@ function os2dagsorden_meeting_views_meeting_details_admin_controls() {
   }
 }
 
-function os2dagsorden_meeting_views_meeting_description_download() {
-  global $base_url;
-  $q = explode('/', $_GET['q']);
-  $meeting_id = $q[1];
-  $meeting = node_load($meeting_id);
-  $user_can_see_closed_agendas = os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting->nid);
-  //opened version - if not empty
-  if (!empty($meeting->field_os2web_meetings_full_doc['und'][0]['uri'])) {
-    echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc['und'][0]['uri']) .
-      '" ><span class="print-meeting-link">Samlet dokument</span> </a>';
-  } else
-    echo '<a target="_blank" href="/printpdf/meeting/' . $meeting_id . '/print" ><span class="print-meeting-link">Samlet dokument</span> </a>';
-
-  if ($user_can_see_closed_agendas) {
-    if (!empty($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri'])) {
-      echo '<a target="_blank" href="' . file_create_url($meeting->field_os2web_meetings_full_doc_c['und'][0]['uri']) .
-        '" class="form-submit">Hent samlet dokument i PDF (lukket)</a>';
-    }
-  }
-
-
-}
-
 /////////////////////////////////////////header END /////////////////////////////////////////
 
 /////////////////////////////////////////PAGE fields start /////////////////////////////////////////
@@ -260,11 +242,6 @@ function os2dagsorden_meeting_views_meeting_details_fields_type($meeting_id) {
 
     print $options['settings']['allowed_values'][$meeting_type[0]['value']];
   }
-}
-
-function os2dagsorden_meeting_views_meeting_details_samlet_dokument_link() {
-  if (variable_get('os2dagsorden_show_samlet_dokument_link', TRUE))
-    os2dagsorden_meeting_views_meeting_description_download();
 }
 
 //////////////////////////////////////////PAGE fields end ////////////////////////////////////////////
