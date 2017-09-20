@@ -114,7 +114,6 @@ function hook_monolog_handler_info() {
  * @see hook_monolog_handler_info()
  */
 function mymodule_stream_handler_loader($options) {
-  die;
   return new StreamHandler($options['filepath'], $options['level']);
 }
 

@@ -177,14 +177,12 @@ function monolog($channel_name) {
 
   if (!isset($loggers[$channel_name])) {
     try {
-      require_once  __DIR__ . '/src/Drupal/Monolog/Logger.php';
+
       composer_manager_register_autoloader();
-      
-     if (!class_exists('Drupal\Monolog\Logger')) {
+      if (!class_exists('Drupal\Monolog\Logger')) {
         $message = t('The Drupal\Monolog\Logger class was not found. Make sure the Monolog package is installed via Composer.');
         throw new \RuntimeException($message);
       }
-     
 
       $channel_profiles = variable_get('monolog_channel_profiles', array());
       if (!isset($channel_profiles[$channel_name])) {

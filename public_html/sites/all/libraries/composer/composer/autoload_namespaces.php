@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname(dirname(dirname($vendorDir))).'/default/files/composer';
 
 return array(
-    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
-    'Drupal\\Monolog' => array($baseDir . '/../../../all/modules/monolog/src'),
+    'Drupal\\Monolog' => array($baseDir . '/../../../../profiles/os2dagsorden/modules/contrib/monolog/src'),
 );

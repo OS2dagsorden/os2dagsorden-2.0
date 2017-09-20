@@ -15,7 +15,6 @@ use Monolog\Handler\StreamHandler;
 function monolog_stream_handler_loader($options) {
   $directory = dirname($options['filepath']);
   monolog_prepare_log_dir($directory);
- 
   return new StreamHandler($options['filepath'], $options['level'], $options['bubble']);
 }
 
