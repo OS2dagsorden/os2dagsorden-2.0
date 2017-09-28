@@ -200,11 +200,16 @@ function os2intra_simplesaml_boot() {
     if (!in_array($remote_ip, $custom_ips)) {
       require_once(DRUPAL_ROOT . '/includes/common.inc');
       require_once(DRUPAL_ROOT . '/includes/path.inc');
+      require_once(DRUPAL_ROOT . '/includes/menu.inc');
+
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
         //unsetting session in case it had any nemid errors
         unset($_SESSION['nemid_login']);
 
-        drupal_goto('nemid');
+        //redirecting only if module exists and path is valid
+        if (drupal_valid_path('nemid')) {
+          drupal_goto('nemid');
+        }
       }
     }
   }
