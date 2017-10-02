@@ -190,6 +190,8 @@ function os2intra_simplesaml_boot() {
           if (!in_array($_GET['q'], array('saml_login', 'user/logout'))) {
             require_once(DRUPAL_ROOT . '/includes/common.inc');
             require_once(DRUPAL_ROOT . '/includes/path.inc');
+
+            drupal_load('module', 'user');
             drupal_goto('saml_login', array('query' => drupal_get_destination()));
           }
         }
@@ -202,6 +204,8 @@ function os2intra_simplesaml_boot() {
       require_once(DRUPAL_ROOT . '/includes/path.inc');
       require_once(DRUPAL_ROOT . '/includes/menu.inc');
 
+      drupal_load('module', 'user');
+      
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
         //unsetting session in case it had any nemid errors
         unset($_SESSION['nemid_login']);
