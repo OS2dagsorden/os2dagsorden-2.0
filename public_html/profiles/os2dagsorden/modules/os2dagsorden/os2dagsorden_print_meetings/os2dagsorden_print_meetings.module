@@ -72,7 +72,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $from_month = $_GET['from_month'];
     }
 
-    
+
     if (!empty($form_state['values']['to_month'])) {
         $to_month = $form_state['values']['to_month'];
     }
@@ -99,7 +99,7 @@ function _os2dagsorden_print_meetings_form($form, &$form_state) {
         $form[] = array(
             '#markup' => '<table class="print-meetings-form"><tr><td>'
         );
-	
+
         $form['submit_1_half'] = array(
             '#type' => 'submit',
             '#submit' => array('_os2dagsorden_print_meetings_form_submit_1_half'),
@@ -199,14 +199,14 @@ function _os2dagsorden_print_meetings_get_table($from_month, $to_month) {
       ->fieldCondition('field_os2web_meetings_date', 'value', date('Y') . '-' . $to_month . '-31 23:59:59', '<=')//selecting meetings up to the to_month
       ->fieldOrderBy('field_os2web_meetings_date', 'value', 'ASC');
     $result = $query->execute();
-    
+
     $meetings = array();
     if (isset($result['node'])) {
 	  $results = array_keys($result['node']);
 	  $meetings = node_load_multiple($results, array('type' => array('os2web_meetings_meeting')));
     }
 
-    
+
 
     return _os2dagsorden_print_meetings_get_six_month_data($from_month, $to_month, $meetings);
 }
@@ -230,7 +230,7 @@ function _os2dagsorden_print_meetings_get_six_month_data($from_month, $to_month,
     //end of body
     $html .= "</table>";
     $html .= "</div>";
-    
+
     $html .= '<div class="view-footer">';
     //$html .= '<a href="' . $base_url . '?q=meetings-export/from_month/' . $from_month . '/to_month/' . $to_month . '" class="button">Eksporter halvårets møder til egen kalender</a>';
     $html .= '</div>';
@@ -270,7 +270,7 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
     global $base_url;
     global $user;
     $user = user_load($user->uid);
-    
+
     $html = "<tr>";
     for ($month = $from_month; $month <= $to_month; $month++) {
         $html .= "<td width='16.6%' class='no-pad valign_top'>";
@@ -286,11 +286,15 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
 		    continue;
 		}
 
-		//checking user rights
-		if (!os2dagsorden_access_helper_check_user_can_see_meeting($met)) {
-		    continue;
+    //checking user rights
+    if (!os2dagsorden_access_helper_check_user_can_see_meeting($met)) {
+        continue;
 		}
-                
+    //checking user rights
+    if (!os2dagsorden_access_helper_check_user_can_see_meeting_in_calendar($met)) {
+        continue;
+    }
+
                $committee = taxonomy_term_load($met->field_os2web_meetings_committee['und'][0]['tid']);
                 if (count($user->field_user_meetings_category['und']) != 2){//have to limit the results, because user should see only one type of meeting
 	         if (strcasecmp($user->field_user_meetings_category['und'][0]['value'], $committee->field_os2web_meetings_com_cat['und'][0]['value']) != 0)
@@ -299,7 +303,7 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
                 if (substr($met->field_os2web_meetings_date['und'][0]['value'], 0, 10) === date('Y-m-d', mktime(0, 0, 0, $month, $i, date("Y")))) {
                     $link = $base_url . '/meeting/' . $met->nid;
 
-                   
+
 		    $title = '';
                     if (!empty($committee->field_os2web_meetings_com_abbr['und'][0]['value']))
 			 $title = $committee->field_os2web_meetings_com_abbr['und'][0]['value'];
@@ -307,8 +311,8 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
 			// $title = $met->field_os2web_meetings_abbr['und'][0]['value'];
                     else
 			 $title = $met->title;
-                    
-                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, '; 
+
+                    $html .= '<a href="' . $link . '"><font style="color:#' . $committee->field_os2web_meetings_com_color['und'][0]['jquery_colorpicker'] . '">' . $title . '</font></a>, ';
                 }
             }
             //end of content
@@ -325,9 +329,9 @@ function os2dagsorden_print_meetings_generate_month($from_month, $to_month, $mee
 }
 
 /**
- * Determines and marks the day with the gray color if the given day is a weekend. 
+ * Determines and marks the day with the gray color if the given day is a weekend.
  *
- * @param int $month month number   
+ * @param int $month month number
  * @param int $day   day number
  *
  * @return string with added/not added "gray" flag.
@@ -342,7 +346,7 @@ function _os2dagsorden_print_meetings_mark_weekend_gray($month, $day) {
 /**
  * Adds week number if the day is Monday.
  *
- * @param int $month month number   
+ * @param int $month month number
  * @param int $day   day number
  *
  * @return string with added/not added week number.
@@ -357,7 +361,7 @@ function _os2dagsorden_print_meetings_mark_week_start($month, $day) {
 /**
  * Modifies the html markup for the day-cell, if the day is not Monday
  *
- * @param int $month month number   
+ * @param int $month month number
  * @param int $day   day number
  *
  * @return modified string.
