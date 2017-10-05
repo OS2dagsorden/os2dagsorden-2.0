@@ -369,20 +369,19 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
 
   //checking category
   $committee = taxonomy_term_load($committee_tid);
-  $access_granted = FALSE;
-  
+  $access_granted = TRUE;
+
   if (isset($committee->field_os2web_meetings_com_cat['und'])){
     $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
-    if (isset($user->field_user_meetings_category['und'])){
-      foreach ($user->field_user_meetings_category['und'] as $user_cat){
+    if (isset($user->field_user_forrbidden_categories['und'])){
+      foreach ($user->field_user_forrbidden_categories['und'] as $user_cat){
         if ($user_cat['value'] == $meeting_category){
-          $access_granted = TRUE;
+          $access_granted = FALSE;
           break;
         }
       }
     }
   }
-
   if (!$access_granted) {
     return FALSE;
   }
@@ -406,6 +405,44 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
   }
 }
 
+/**
+ * Checks is given meeting can bee seen by the user on calendar page.
+ *
+ * @param int $meeting the ID of the meeting or meeting object
+ *
+ * @return true of false
+ */
+function os2dagsorden_access_helper_check_user_can_see_meeting_in_calendar($meeting, $committee_tid = null) {
+  $user = os2dagsorden_access_helper_get_user();
+  if (!$user->uid) {
+    return FALSE;
+  }
+  if (!is_object($meeting)){
+    $meeting = node_load($meeting);
+  }
+
+
+  if (!$committee_tid){
+    $committee_tid = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
+  }
+
+  //checking category
+  $committee = taxonomy_term_load($committee_tid);
+  $access_granted = FALSE;
+
+  if (isset($committee->field_os2web_meetings_com_cat['und'])){
+    $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
+    if (isset($user->field_user_meetings_category['und'])){
+      foreach ($user->field_user_meetings_category['und'] as $user_cat){
+        if ($user_cat['value'] == $meeting_category){
+          $access_granted = TRUE;
+          break;
+        }
+      }
+    }
+  }
+ return $access_granted;
+}
 /**
  * Functions returns the user member of committees
  *
