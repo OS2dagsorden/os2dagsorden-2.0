@@ -145,9 +145,10 @@ class AcadrePWS {
           catch (SoapFault $sf) {
             drupal_set_message(t('Error connecting to PWS document search service endpoint'), 'error');
             return FALSE;
-          }
-          if (function_exists('xdebug_enable')) {
-            xdebug_enable();
+          } finally {
+            if (function_exists('xdebug_enable')) {
+              xdebug_enable();
+            }
           }
         }
       }

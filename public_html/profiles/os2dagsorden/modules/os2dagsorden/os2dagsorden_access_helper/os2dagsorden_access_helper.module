@@ -14,7 +14,7 @@
 /**
  * Implementation of hook_menu
  *
- * @return list of links
+ * @return array
  */
 function os2dagsorden_access_helper_menu() {
   $items = array();
@@ -824,7 +824,7 @@ function os2dagsorden_access_helper_get_main_meeting($meeting_id){
  *
  * @param int $bullet_point_id ID of the bullet point
  *
- * @return meeting
+ * @return stdClass meeting
  */
 function os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point_id) {
   $query = new EntityFieldQuery();
@@ -843,7 +843,7 @@ function os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point_id
  *
  * @param int $bpa_id ID of the bullet point attachment
  *
- * @return bullet point
+ * @return stdClass bullet point
  */
 function os2dagsorden_access_helper_get_bullet_point_by_bpa($bpa_id) {
   $query = new EntityFieldQuery();
@@ -863,7 +863,7 @@ function os2dagsorden_access_helper_get_bullet_point_by_bpa($bpa_id) {
  * @param int $bullet_point_id ID of the bullet point
  * @param int $bilag_id ID of the bullet point attachment
  *
- * @return true of false
+ * @return boolean
  */
 function os2dagsorden_access_helper_check_attachment_is_part_of_bullet_point($bullet_point_id, $bilag_id) {
   $bullet_point = node_load($bullet_point_id);
@@ -883,7 +883,7 @@ function os2dagsorden_access_helper_check_attachment_is_part_of_bullet_point($bu
 /**
  * Fetches the current user IP address.
  *
- * @return IP address
+ * @return string
  */
 function os2dagsorden_access_helper_get_client_ip() {
   $ipaddress = '';
@@ -916,7 +916,6 @@ function os2dagsorden_access_helper_get_client_ip() {
  * Function to make ser logout and set the information message about it.
  *
  * Important! Not a hook.
- * @return none
  */
 function os2dagsorden_access_helper_logout() {
   // Destroy the current session, and reset $user to the anonymous user.
@@ -946,60 +945,6 @@ function os2dagsorden_access_helper_cronapi($op, $job = NULL) {
   switch ($op) {
     case 'list':
       return array('os2dagsorden_access_helper_cron' => t('Deletes all the user rights (is member of) if the right has expired'));
-  }
-}
-
-/**
- * Implements the hook_cron
- *
- * @return none
- */
-function os2dagsorden_access_helper_cron() {
-  os2dagsorden_access_helper_delete_user_rights();
-}
-
-/**
- * Deletes all the user rights (is member of) if the right has expired.
- * The function will delete the connection to the member object, as well as the role object itself.
- *
- * @return none
- */
-function os2dagsorden_access_helper_delete_user_rights() {
-  $users = db_select('users', 'u')
-    ->fields('u', array('uid'))
-    ->execute()
-    ->fetchAll();
-
-  foreach ($users as $user) {
-    $full_user = user_load($user->uid);
-    if (isset($full_user->field_os2web_user_pos['und'])) {
-        $user_role_items = field_get_items('user', $full_user, 'field_os2web_user_pos');
-      foreach ($user_role_items  as $pos_index => $pos) {
-         $pos_full = field_collection_field_get_entity($pos);
-        //$pos_full = taxonomy_term_load($pos['tid']);
-        if (isset($pos_full->field_os2web_user_pos_valid['und'])) {
-          $valid_until = strtotime($pos_full->field_os2web_user_pos_valid['und']['0']['value2']);
-          if (strtotime('now') > $valid_until) {
-            //deleting user connection to that committee (member of)
-            if (isset($full_user->field_user_committee['und'])) {
-              foreach ($full_user->field_user_committee['und'] as $com_index => $com) {
-                if ($com['tid'] == $pos_full->field_os2web_user_pos_committee['und']['0']['tid']) {
-                  unset($full_user->field_user_committee['und'][$com_index]);
-                }
-              }
-            }
-
-            //deleting user connection to role
-             entity_delete_multiple('field_collection_item', array($pos['value']));
-              unset($full_user->field_os2web_user_pos['und'][$pos_index]);
-
-            user_save($full_user); //save changes
-            //deleting the role itself
-           // taxonomy_term_delete($pos['tid']);
-          }
-        }
-      }
-    }
   }
 }
 
@@ -1146,7 +1091,7 @@ function os2dagsorden_access_helper_node_save($node) {
 
       $days_since_meeting_date = (time() - strtotime($node->field_os2web_meetings_date['und'][0]['value'])) / 60 / 60 / 24;
 
-      if ($send_notification && $days_since_meeting_date < variable_get('os2dagsorden_send_timespan_of_notification', ACADRE_MM_DEFAULT_TIMESPAN_OF_NOTIFICATION)) {
+      if ($send_notification && $days_since_meeting_date < variable_get('os2dagsorden_send_timespan_of_notification', 10)) {
         //send the email to involved people
         //medlem
         $query = new EntityFieldQuery();
