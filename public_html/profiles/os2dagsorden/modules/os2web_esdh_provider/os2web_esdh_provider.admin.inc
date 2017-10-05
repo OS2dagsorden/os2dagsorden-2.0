@@ -25,8 +25,7 @@ function _os2web_esdh_provider_status() {
           os2web_esdh_provider_has_api($api) ? 'Working' : 'Error',
         );
       }
-    }
-    else {
+    } else {
       $rows[] = array($api, 'Unavailable', 'Not enabled.', 'Error');
     }
   }
@@ -200,14 +199,12 @@ function _os2web_esdh_provider_status_confirm($form, &$form_state) {
   $msg = '';
   if ($id > 0) {
     $msg = t('<p>Importing meeting with id !focus <br/>', array('!focus' => $id));
-  }
-  else {
+  } else {
     $msg = t('<p>Importing all meetings.<br/>');
   }
   if ($force) {
     $msg .= t('All imported nodes will be re-imported, detroying existing data and importing new.<br/>');
-  }
-  else {
+  } else {
     $msg .= t('Only new nodes will be imported, existing data is preserved.</p>');
   }
   $msg .= t('<p>Are you sure you want to run this import?</p>');
@@ -249,8 +246,7 @@ function _os2web_esdh_provider_status_confirm_submit($form, &$form_state) {
     $queue->createItem(array('post_import_process' => TRUE));
 
     drupal_goto('admin/config/os2web/esdh_provider');
-  }
-  // Use normal batch processing if external queue is disabled.
+  } // Use normal batch processing if external queue is disabled.
   else {
     foreach ($meetings as $meeting) {
       $meeting['file_time'] = filemtime($meeting['uri']);

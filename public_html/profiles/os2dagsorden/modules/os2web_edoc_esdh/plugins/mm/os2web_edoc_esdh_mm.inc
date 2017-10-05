@@ -70,8 +70,7 @@ function utf8_for_xml($string) {
   if (variable_get('os2web_edoc_esdh_banned_activate_regex', FALSE)) { //using regex
     $replace_me = variable_get('os2web_edoc_esdh_banned_special_regex', '');
     $str_new = preg_replace($replace_me, "", $string);
-  }
-  else { //using CSV list
+  } else { //using CSV list
     $replace_me = variable_get('os2web_edoc_esdh_banned_special_char', '');
     $str_new = str_replace(explode(',', $replace_me), "", $string);
   }
@@ -130,8 +129,7 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
 
         if (stripos($meeting_state, 'lukket') !== FALSE) {
           $agenda_access = 'Lukket';
-        }
-        else {
+        } else {
           $agenda_access = 'Åben';
         }
 
@@ -146,8 +144,7 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
         // Changing the meeting state to match ESDH Provider module
         if ($meeting_type == "Referat endeligt godkendt") {
           $meeting_type = "Referat";
-        }
-        else {
+        } else {
           $meeting_type = "Dagsorden";
         }
 
@@ -187,8 +184,7 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
           }
         }
       }
-    }
-    else {
+    } else {
       // Error logging to watchdog if the XML failde to parse. Check if all illegal characters are in the remove list. 
       watchdog('eDoc MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
@@ -311,8 +307,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
         $bullet_access = (string) $bullet_xml->PublishingType;
         if (empty($bullet_body)) {
           $bullet_body = "Intet indhold";
-        }
-        else {
+        } else {
           if ($bullet_access !== 'SKAL PUBLICERES') {
             $bullet_body = "Dette er et lukket punkt. Du kan læse selve indstillingen" . $bullet_xml['access'];
           }
@@ -343,8 +338,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
           );
         }
       }
-    }
-    else {
+    } else {
       //skipping content and importing just one PDF with all attachment gathered there
       $item['enclosures'][] = array(
         'uri' => implode('/', array(
@@ -465,8 +459,7 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
         '%nid' => $node->nid
       ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    }
-    else {
+    } else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -499,8 +492,7 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      }
-      else {
+      } else {
         #error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         #error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
         // node_delete($node->nid);
@@ -510,8 +502,7 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        }
-        else {
+        } else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }

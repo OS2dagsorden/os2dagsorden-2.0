@@ -78,12 +78,10 @@ function os2web_adlib_api_status_ajax($fid) {
       $adlib = _os2web_adlib_api_get_instance();
       $status = $adlib->getJobStatus($file->job_id);
       drupal_json_output($status->status);
-    }
-    else {
+    } else {
       drupal_json_output('Not queued.');
     }
-  }
-  else {
+  } else {
     drupal_json_output('Not found.');
   }
 }
@@ -219,8 +217,7 @@ function os2web_adlib_api_status() {
 
     if (is_object($file) && !empty($file->did)) {
       os2web_adlib_api_convert_to_pdf($_GET['reset'], $file->did);
-    }
-    else {
+    } else {
       os2web_adlib_api_convert_to_pdf($_GET['reset']);
     }
     drupal_goto('admin/config/os2web/adlibstatus');
@@ -394,8 +391,7 @@ function os2web_adlib_api_convert_to_html($fid, $nid) {
     );
     drupal_write_record('os2web_adlib_api_doc_files', $record);
     return TRUE;
-  }
-  else {
+  } else {
     // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File already in queue, aborting.");
     return FALSE;
   }
@@ -449,16 +445,14 @@ function os2web_adlib_api_convert_to_pdf($fid, $docref = NULL) {
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File queued for processing.");
       }
       return TRUE;
-    }
-    else {
+    } else {
       watchdog('adlib_api', 'File is already scheduled %file (fid: %fid).', array(
         '%fid' => $fid,
         '%file' => $file->filename
       ), WATCHDOG_WARNING);
       return FALSE;
     }
-  }
-  else {
+  } else {
     // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File already PDF.");
     watchdog('adlib_api', 'Filetype not approved %file (fid: %fid).', array(
       '%fid' => $fid,
@@ -560,8 +554,7 @@ function _os2web_adlib_api_process_fid($file) {
   }
   if ($file->job_id == NULL || $file->job_id == 'Requeue') {
     _os2web_adlib_api_queue_file($file);
-  }
-  elseif ($file->job_id != 'Complete') {
+  } elseif ($file->job_id != 'Complete') {
     _os2web_adlib_api_process_file($file);
     if (variable_get('os2dagsorden_clear_cache_active')) {
       if ($clear_cache_frequency = variable_get('os2dagsorden_clear_cache_frequency')) {
@@ -614,13 +607,11 @@ function _os2web_adlib_api_process_file($file) {
             '%fid' => $fdata->fid,
             '%file' => $fdata->filename
           ), WATCHDOG_WARNING);
-        }
-        else {
+        } else {
           watchdog('adlib_api', 'Cannot re-queue file %file. File does not exist or is invalid.', array('%file' => $fdata->filename), WATCHDOG_WARNING);
           os2web_adlib_api_file_delete($file);
         }
-      }
-      else {
+      } else {
         $record = array(
           'fid' => $file->fid,
           'jobtype' => $file->jobtype,
@@ -689,8 +680,7 @@ function _os2web_adlib_api_process_file($file) {
             field_cache_clear();
             watchdog('adlib_api', 'File (fid: %fid) was converted successfully to pdf.', array('%fid' => $file->fid), WATCHDOG_INFO);
             error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File saved, file record updated. New URI: " . $uri);
-          }
-          else {
+          } else {
             error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Filesize was 0. Aborting update.");
           }
           break;
@@ -762,8 +752,7 @@ function _os2web_adlib_api_process_html($data, $base_url) {
       $file_uri = $base_dir . basename(str_replace('\\', '/', $img[$i]->src));
       $file = file_save_data($image, $file_uri, FILE_EXISTS_REPLACE);
       $img[$i]->src = file_create_url($file->uri);
-    }
-    else {
+    } else {
       watchdog('adlib_api', 'Failed to fetch image for HTML: %fname', array('%fname' => basename($element->src)), WATCHDOG_WARNING);
     }
   }
@@ -772,8 +761,7 @@ function _os2web_adlib_api_process_html($data, $base_url) {
   // Clean up the html, since AdLib sometimes return less-than-valid html and hence can cause PDO exceptions.
   if (!function_exists('tidy_repair_string')) {
     watchdog('adlib_api', 'Tidy API not found! Cannot process HTML.', NULL, WATCHDOG_ERROR);
-  }
-  else {
+  } else {
     $config = array(
       'indent' => TRUE,
       'output-xhtml' => TRUE,
@@ -819,17 +807,14 @@ function _os2web_adlib_api_queue_file($file) {
         drupal_write_record('os2web_adlib_api_doc_files', $jobinfo, array('fid', 'jobtype'));
         watchdog('adlib_api', 'Queued file %file for PDF.', array('%file' => $file->file->filename));
         return TRUE;
-      }
-      else {
+      } else {
         watchdog('adlib_api', 'Failed to add job for  %file.', array('%file' => $file->file->filename));
       }
-    }
-    else {
+    } else {
       watchdog('adlib_api', 'Upload of %file failed. Check permissions.', array('%file' => $file->file->filename));
       db_delete('os2web_adlib_api_doc_files')->condition('fid', $file->file->fid)->execute();
     }
-  }
-  else {
+  } else {
     if (!_os2web_adlib_api_is_filetype_approved($file->file->fid)) {
       $jobinfo = array(
         'fid' => $file->fid,
@@ -839,8 +824,7 @@ function _os2web_adlib_api_queue_file($file) {
       );
       drupal_write_record('os2web_adlib_api_doc_files', $jobinfo, array('fid', 'jobtype'));
       watchdog('adlib_api', 'Failed to add %file to adlib queue. File is already pdf.', array('%file' => $file->file->filename));
-    }
-    else {
+    } else {
       watchdog('adlib_api', 'Failed to add %file to adlib queue. File not found.', array('%file' => $file->file->filename));
       db_delete('os2web_adlib_api_doc_files')->condition('fid', $file->file->fid)->execute();
     }
@@ -900,8 +884,7 @@ function _os2web_adlib_api_is_filetype_approved($fid) {
       $result[$file->fid]['file'] = $file;
     }
     return $result;
-  }
-  else {
+  } else {
     return in_array(strtolower(pathinfo(file_load($fid)->filename, PATHINFO_EXTENSION)), $approved_files);
   }
 }

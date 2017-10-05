@@ -271,8 +271,7 @@ function theme_os2web_esdh_document($vars) {
       $rows[] = array(
         l($document_meta['title'], file_create_url($file->uri), array('attributes' => array('target' => '_blank'))) . '<span class="documentdate">' . format_date(strtotime($document_meta['last_update']), 'custom', 'd/m/Y') . '</span>',
       );
-    }
-    else {
+    } else {
       // Add the documet to be updated trough cron.
       _os2web_esdh_field_add_to_cron($docid);
     }
@@ -353,8 +352,7 @@ function _os2web_esdh_field_array_compare(array $a1, array $a2) {
   foreach ($a1 as $key => $value) {
     if (isset($a2[$key]) && $a2[$key] === $value) {
       $result = $result && TRUE;
-    }
-    else {
+    } else {
       $result = $result && FALSE;
     }
   }
@@ -632,8 +630,7 @@ function _os2web_esdh_field_add_to_cron($document_id) {
         'job_info' => 'update'
       ))
       ->execute();
-  }
-  else {
+  } else {
     db_update('os2web_esdh_field_cm_documents')
       ->fields(array(
         'job_info' => 'update',

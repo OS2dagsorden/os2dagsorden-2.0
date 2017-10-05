@@ -40,8 +40,7 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda) {
       ->condition('meeting_xmlid', $manifest['id'], '=')
       ->condition('agenda_sysid', $agenda['meeting_sub_id'], '=')
       ->execute();
-  }
-  else { //no entry found - create a new entry
+  } else { //no entry found - create a new entry
     db_insert('os2web_esdh_provider_import')
       ->fields(array(
         'nid' => $nid ? $nid : 0,

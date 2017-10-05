@@ -121,8 +121,7 @@ class AdLibWS {
     ))->AddJobResult);
     if (is_object($result) && isset($result->JobSettings['JobID'])) {
       return $result;
-    }
-    else {
+    } else {
       $msg = (string) array_pop($result->xpath('//@Message'));
       if ($msg == '') {
         $msg = 'Unknown reason.';
@@ -189,8 +188,7 @@ class AdLibWS {
       $result = simplexml_load_string($result);
       if (is_object($result)) {
         return $result->xpath('//Server');
-      }
-      else {
+      } else {
         return 'Invalid response from AdLib.';
       }
     }
@@ -221,24 +219,20 @@ class AdLibWS {
       if (strncmp('<', $result, 1) === 0) {
         $return->status = (string) simplexml_load_string($result)->CurrentJobStatus['Status'];
         $return->result = simplexml_load_string($result);
-      }
-      else {
+      } else {
         $return->status = 'Not found';
         $return->result = $result;
       }
-    }
-    else {
+    } else {
       $return->status = 'Not found';
     }
     if ($return->status === '') {
       $message = (string) $return->result->ServerInfo[0]->Error['Message'];
       error_log(basename(__FILE__) . ':' . __LINE__ . ' AdLib Error: ' . $message);
       $return->status = 'Not Available';
-    }
-    elseif ($return->status === 'Pending') {
+    } elseif ($return->status === 'Pending') {
       // error_log("ConnectorStatus is " . $return->result->CurrentJobStatus['ConnectorStatus']);
-    }
-    else {
+    } else {
       // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Looked up status for job: " . $id . " Status: " . $return->status);
     }
     return $return;
@@ -324,8 +318,7 @@ class AdLibWS {
         'job_type' => $jobtype,
         'out_filename' => pathinfo($filename, PATHINFO_FILENAME) . '.' . $jobext,
       );
-    }
-    else {
+    } else {
       error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Failed to upload: " . $filename);
       watchdog('adlib_api', 'Upload of %filename failed with message: %msg', array(
         '%file' => $filename,
