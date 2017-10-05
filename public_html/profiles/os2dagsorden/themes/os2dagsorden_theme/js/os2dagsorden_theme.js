@@ -171,7 +171,7 @@ function set_up_button_position(button_id, region_sidebar_second, frontpage, wid
 }
 /* Changed ddmmyy and ddmmyyyy date formats to dd-mm-yyyy  */
 function prepareDate(dateValue) {
-   fromDateArray=dateValue.match( /^([0-9]{2})([0-9]{2})([0-9]{2,4})$/);
+   var fromDateArray = dateValue.match( /^([0-9]{2})([0-9]{2})([0-9]{2,4})$/);
    if (fromDateArray){
     if (fromDateArray[3].length<4)
       fromDateArray[3]=2000 + parseInt(fromDateArray[3]);
@@ -505,7 +505,7 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
     //load the content on first click and add the annotator
     if (jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().contents().first().text() == "Vent venligst..."){
       //get meeting id, bullet-point id and bilag id
-      classes = jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().attr('class').split(' ');
+      var classes = jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().attr('class').split(' ');
       var cl = jQuery.grep(classes, function(string, i){
 	return (string.indexOf("bpa-") == 0);
       });

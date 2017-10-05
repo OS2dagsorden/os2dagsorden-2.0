@@ -383,8 +383,8 @@ function os2web_esdh_provider_supports($api, $method) {
 /**
  * Invokes a method from an api.
  *
- * @return any
- *   Fowarded return value from method
+ * returns Forwarded return value from method
+ *
  */
 function os2web_esdh_provider_invoke() {
   /* Expects:
