@@ -82,7 +82,7 @@ function utf8_for_xml($string)
 function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
   $file = $meeting['uri'];
   if ($file === FALSE) {
-    os2web_meetings_order_addenums();
+    _os2web_sbsys_ishoj_esdh_mm_order_addenums();
   }
   $meetings = array();
   if (is_file(drupal_realpath($file))) {

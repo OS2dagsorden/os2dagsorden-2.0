@@ -1,6 +1,7 @@
 /** global: Drupal */
 /** global: DocumentTouch */
 /** global: pageScroller */
+/** global: screen */
 
 (function($) {
 if (!Array.prototype.indexOf) {

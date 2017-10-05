@@ -147,7 +147,7 @@ function os2dagsorden_theme_breadcrumb($variables) {
  *
  * @param mixed $params params
  *
- * @return reformatted title
+ * @return string - reformatted title
  */
 function os2dagsorden_theme_date_nav_title($params) 
 {
