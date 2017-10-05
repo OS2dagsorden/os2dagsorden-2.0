@@ -438,7 +438,6 @@ function os2dagsorden_admin_suite_delete_converted_files(){
 /**
   * Deletes the extra files from the acadre directory, which are copied together with the new acadre version but are never used
   *
-  * @return none
   */
 function os2dagsorden_admin_suite_delete_extra_files(){
     $to_delete = array();

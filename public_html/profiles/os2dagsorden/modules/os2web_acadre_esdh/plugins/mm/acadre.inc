@@ -88,7 +88,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
     
   $file = $meeting['uri'];
   if ($file === FALSE) {
-    os2web_meetings_order_addendums();
+    _os2web_acadre_esdh_mm_order_addendums();
   }
   $meetings = array();
   if (is_file(drupal_realpath($file))) {

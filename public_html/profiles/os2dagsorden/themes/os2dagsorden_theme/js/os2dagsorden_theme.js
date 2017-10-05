@@ -1,3 +1,7 @@
+/** global: Drupal */
+/** global: DocumentTouch */
+/** global: pageScroller */
+
 (function($) {
 if (!Array.prototype.indexOf) {
   Array.prototype.indexOf = function (searchElement  ) {
@@ -134,7 +138,7 @@ jQuery(document).ready(function() {
           jQuery(this).val(prepareDate(jQuery(this).val()));
     })
     // Set body font size.
-    jQuery('body').css({'font-size' : /** global: Drupal */ Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
+    jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
 
     // Set title font size.
     jQuery('table.views-table tr td a').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
@@ -582,7 +586,7 @@ function bullet_point_attachment_add_notes_indicator(ids){
  *
  */
 function isTouchDevice(){
-  return "ontouchstart" in window || window.DocumentTouch && document instanceof /** global: DocumentTouch */ DocumentTouch;
+  return "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch;
 }
 
 function addPagescroller(){
@@ -609,7 +613,6 @@ function addPagescroller(){
 		      e.preventDefault();
           //console.log(pageScroller.current);
 		      //pageScroller.goTo(page);
-              /** global: pageScroller */
               pageScroller.next();
 	      });
 

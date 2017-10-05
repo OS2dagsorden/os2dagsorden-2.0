@@ -19,7 +19,7 @@ function os2dagsorden_meeting_views_last_8_meetings_block_all_meetings_access(){
   if (variable_get('os2dagsorden_latest_meetings_view_mode', 'all') == 'all')
     return TRUE;
   else {//check if 'Mine' display returns no results - if that is the case, return 'All' display anyways
-    $view = views_get_view_result(seneste_8_m_der_i_de_st_ende_politiske_udvalg_, 'block_1');
+    $view = views_get_view_result('seneste_8_m_der_i_de_st_ende_politiske_udvalg_', 'block_1');
     $result = count($view);
     if (!$result) {
       return TRUE;

@@ -81,7 +81,7 @@ function utf8_for_xml($string)
 function os2web_sbsys_esdh_mm_import_meeting($meeting) {
   $file = $meeting['uri'];
   if ($file === FALSE) {
-    os2web_meetings_order_addenums();
+    _os2web_sbsys_esdh_mm_order_addenums();
   }
   $meetings = array();
   if (is_file(drupal_realpath($file))) {
@@ -124,12 +124,12 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
             break;
       }
 
-      $committee = (string) $committee[0][ID];
-      $committee_group_id = (string) $committee_group_id[0][ID];
+      $committee = (string) $committee[0]['ID'];
+      $committee_group_id = (string) $committee_group_id[0]['ID'];
       $committee_name = (string) $committee_name[0];
       $meeting_name = $committee_name;
-      $sys_id = (string) $sys_id[0][ID];
-      $xml_id = (string) $xml_id[0][ID];
+      $sys_id = (string) $sys_id[0]['ID'];
+      $xml_id = (string) $xml_id[0]['ID'];
       $meeting_public = (string) $meeting_public[0];
 
       $meeting_date_when = $meeting_data[0]->When;
@@ -138,7 +138,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_name = (string) $meeting_name[0];
       $meeting_name = $committee_name;
       $meeting_uri = (string) $meeting_uri[0];
-      $acadre_version = (string) $acadre_version[0][ID];
+      $acadre_version = (string) $acadre_version[0]['ID'];
 
       $directory_name = dirname(drupal_realpath($file));
       $dir_parts = explode('/',$directory_name);
