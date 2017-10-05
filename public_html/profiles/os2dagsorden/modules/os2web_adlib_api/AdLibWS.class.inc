@@ -40,12 +40,13 @@ class AdLibWS {
    * Initializes connector.
    */
   public function __construct() {
-    if (ADLIB_DISABLED)
+    if (ADLIB_DISABLED) {
       return;
+    }
     if (!isset($this->client)) {
       $options = array(
-          'soapversion' => SOAP_1_2,
-          'trace' => TRUE,
+        'soapversion' => SOAP_1_2,
+        'trace' => TRUE,
       );
       if (variable_get('os2web_pws_proxy', FALSE)) {
         $options['proxy_host'] = variable_get('os2web_pws_proxy_host');
@@ -55,8 +56,9 @@ class AdLibWS {
       $url = preg_replace('/([fhtps]{3,5}):\/\/(.+?)\//', self::$baseUrl, $url);
       preg_match('%http://.+?/%', $url, $matches);
       self::$baseUrl = array_shift($matches);
-      if (function_exists('xdebug_disable'))
+      if (function_exists('xdebug_disable')) {
         xdebug_disable();
+      }
       try {
         $this->client = new SoapClient($url, $options);
         //error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Created SOAP client.");
@@ -112,8 +114,11 @@ class AdLibWS {
       '!outfile' => $this->safeFilename($file_info['out_filename']),
       '!outfolder' => self::$basePath . $file_info['out_folder'],
       '!jobtype' => ($type == ADLIB_JOBTYPE_HTML ? 'HTML' : 'PDF'),
-        ));
-    $result = simplexml_load_string($this->client->addJob(array('jobInfo' => $job_info, 'jobTicket' => $job_ticket))->AddJobResult);
+    ));
+    $result = simplexml_load_string($this->client->addJob(array(
+      'jobInfo' => $job_info,
+      'jobTicket' => $job_ticket
+    ))->AddJobResult);
     if (is_object($result) && isset($result->JobSettings['JobID'])) {
       return $result;
     }
@@ -304,9 +309,9 @@ class AdLibWS {
         <JobFile FileName="' . $this->safeFilename($filename) . '" Data="' . base64_encode($data) . '" Length="' . strlen($data) . '" />
       </JobFiles>';
     $result = $this->client->AddJobFilesAsStream(array(
-          'JobFolder' => $folder . '\\Input',
-          'XmlStream' => $payload,
-        ))->AddJobFilesAsStreamResult;
+      'JobFolder' => $folder . '\\Input',
+      'XmlStream' => $payload,
+    ))->AddJobFilesAsStreamResult;
     $status = (string) simplexml_load_string($result)->System['Status'];
     if (strcmp($status, 'Success') == 0) {
       error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Uploaded file: " . $filename);
@@ -322,7 +327,10 @@ class AdLibWS {
     }
     else {
       error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Failed to upload: " . $filename);
-      watchdog('adlib_api', 'Upload of %filename failed with message: %msg', array('%file' => $filename, '%msg' => $result), WATCHDOG_ERROR);
+      watchdog('adlib_api', 'Upload of %filename failed with message: %msg', array(
+        '%file' => $filename,
+        '%msg' => $result
+      ), WATCHDOG_ERROR);
       $folder = explode('\\', $folder);
       $this->deleteJobFolder($folder[1]);
       return FALSE;

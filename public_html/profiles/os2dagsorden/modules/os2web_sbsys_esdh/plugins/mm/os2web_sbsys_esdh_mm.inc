@@ -55,14 +55,12 @@ function os2web_sbsys_esdh_mm_get_import_list() {
  * $return array
  *   The string sanitised
  */
-function utf8_for_xml($string)
-{
-  if (variable_get('os2web_sbsys_esdh_banned_activate_regex', FALSE)) {//using regex
-    $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_regex','');
+function utf8_for_xml($string) {
+  if (variable_get('os2web_sbsys_esdh_banned_activate_regex', FALSE)) { //using regex
+    $replace_me = variable_get('os2web_sbsys_esdh_banned_special_regex', '');
     $str_new = preg_replace($replace_me, "", $string);
-  }
-  else {//using CSV list
-    $replace_me =  variable_get('os2web_sbsys_esdh_banned_special_char','');
+  } else { //using CSV list
+    $replace_me = variable_get('os2web_sbsys_esdh_banned_special_char', '');
     $str_new = str_replace(explode(',', $replace_me), "", $string);
   }
 
@@ -85,16 +83,16 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
   }
   $meetings = array();
   if (is_file(drupal_realpath($file))) {
-    libxml_use_internal_errors(true);
+    libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA);
     libxml_clear_errors();
-    libxml_use_internal_errors(false);
+    libxml_use_internal_errors(FALSE);
 
-    if ($manifest === false) {
-       error_log("Failed loading XML");
-       foreach(libxml_get_errors() as $error) {
-          error_log ($error->message);
-       }
+    if ($manifest === FALSE) {
+      error_log("Failed loading XML");
+      foreach (libxml_get_errors() as $error) {
+        error_log($error->message);
+      }
     }
     if (is_object($manifest)) {
 
@@ -113,15 +111,15 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
       $meeting_type = $manifest->xpath('/Publication/PublicationTypeAsValue');
       switch (((string) $meeting_type[0])) {
-          case '0':
-            $meeting_type = 'Kladde';
-            break;
-          case '1':
-            $meeting_type = 'Dagsorden';
-            break;
-          case '2':
-            $meeting_type = 'Referat';
-            break;
+        case '0':
+          $meeting_type = 'Kladde';
+          break;
+        case '1':
+          $meeting_type = 'Dagsorden';
+          break;
+        case '2':
+          $meeting_type = 'Referat';
+          break;
       }
 
       $committee = (string) $committee[0]['ID'];
@@ -141,8 +139,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $acadre_version = (string) $acadre_version[0]['ID'];
 
       $directory_name = dirname(drupal_realpath($file));
-      $dir_parts = explode('/',$directory_name);
-      $pdf = array_pop($dir_parts).".pdf";
+      $dir_parts = explode('/', $directory_name);
+      $pdf = array_pop($dir_parts) . ".pdf";
 
       // Fix dates.
       $date_obj = date_create($meeting_date_when);
@@ -154,7 +152,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_date_until = date_format($date_obj1, 'Y-m-d H:i');
 
       //Members
-      foreach ($members as $member){
+      foreach ($members as $member) {
         // Changed by skifter@bellcom.dk 01.08.2013 - to handle "no show" members and messages for "no shoW"
         if (!empty($member->ParticipationNote)) {
           $member->ParticipationNote = ", " . $member->ParticipationNote;
@@ -162,13 +160,13 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
 
         if ($member->ParticipationStatusAsValue == '1' || $member->ParticipationStatusAsValue == '4') {
           $participants[] = (string) $member->Name . " - " . $member->ParticipationStatusAsText . $member->ParticipationNote;
-        }
-        // Changed by stan@bellcom.dk 19.09.2013 - to consider participants with "Ikke bestemt" status as actual participants
-        else if($member->ParticipationStatusAsText == 'NotDecided' || $member->ParticipationStatusAsValue == '0'){
-          $participants[] = (string) $member->Name . $member->ParticipationNote;
-        }
+        } // Changed by stan@bellcom.dk 19.09.2013 - to consider participants with "Ikke bestemt" status as actual participants
         else {
-          $participants_cancellation[] = (string) $member->Name . " - " . $member->ParticipationStatusAsText . $member->ParticipationNote;
+          if ($member->ParticipationStatusAsText == 'NotDecided' || $member->ParticipationStatusAsValue == '0') {
+            $participants[] = (string) $member->Name . $member->ParticipationNote;
+          } else {
+            $participants_cancellation[] = (string) $member->Name . " - " . $member->ParticipationStatusAsText . $member->ParticipationNote;
+          }
         }
       }
 
@@ -180,7 +178,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'committee_id' => $committee,
         'committee_group_id' => $committee_group_id,
         'title' => $meeting_name,
-        'uri' => strstr($file , $meeting_uri, TRUE),
+        'uri' => strstr($file, $meeting_uri, TRUE),
         'path' => drupal_realpath($file),
         'pdf' => $pdf,
         'type' => $meeting_type,
@@ -191,25 +189,25 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
         'participants' => $participants,
         'participants_cancellation' => $participants_cancellation,
       );
-     // var_dump($meeting);
+      // var_dump($meeting);
       /*stan@bellcom.dk 06.10 - importing multiple agendas*/
       $meeting_agendas = array();
-      foreach($manifest->xpath("/Publication/Agendas/Agenda") as $agenda_instance){
-        if (!$meeting_agendas){
+      foreach ($manifest->xpath("/Publication/Agendas/Agenda") as $agenda_instance) {
+        if (!$meeting_agendas) {
           $meeting_agendas = $agenda_instance->xpath("Items");
-        }
-        else {
-          foreach($agenda_instance->xpath("Items/Item") as $items_child){
+        } else {
+          foreach ($agenda_instance->xpath("Items/Item") as $items_child) {
             $toDom = dom_import_simplexml($meeting_agendas[0]);
             $fromDom = dom_import_simplexml($items_child);
-            $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
+            $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, TRUE));
           }
         }
       }
 
       $meeting_pdf = $manifest->xpath('/Meeting/MeetingAgendaTypes/MeetingAgendaType/PDFDocument');
-      if(!empty($meeting_pdf))
-         $meeting['pdf'] = (string) $meeting_pdf[0];
+      if (!empty($meeting_pdf)) {
+        $meeting['pdf'] = (string) $meeting_pdf[0];
+      }
       $meeting['state'] = (string) $meeting_state[0];
       if (empty($meeting_agendas)) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
@@ -226,13 +224,12 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
           $meetings[] = $imported;
         }
       }
-    }
-    else {
+    } else {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
 
- return $meetings;
+  return $meetings;
 }
 
 /**
@@ -256,8 +253,11 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   }
 
   // Check meeting status
-  if ($meeting['type'] == 'Klade'){
-    watchdog('SBsys MM', 'Ignored DRAFT: Meeting %id is of type %type.', array('%id' => $meeting['system_id'], '%type' => $meeting['type']), WATCHDOG_WARNING);
+  if ($meeting['type'] == 'Klade') {
+    watchdog('SBsys MM', 'Ignored DRAFT: Meeting %id is of type %type.', array(
+      '%id' => $meeting['system_id'],
+      '%type' => $meeting['type']
+    ), WATCHDOG_WARNING);
     return FALSE;
   }
 
@@ -266,12 +266,12 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
 
   if (file_exists(drupal_realpath($meeting['uri']))) {
 // There were no SBSYS meeting with meeting description, therefore disabled.
-   if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
-    $agenda['full_doc'] = array(
-     'uri' => $meeting['uri'] . $meeting['pdf'],
-     'title' => $meeting['committee'],
-    );
-   }
+    if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
+      $agenda['full_doc'] = array(
+        'uri' => $meeting['uri'] . $meeting['pdf'],
+        'title' => $meeting['committee'],
+      );
+    }
     // Import all agenda items.
     $agenda_bullet = $agenda_xml;
     $meeting['current_item_nr'] = 1;
@@ -330,8 +330,9 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
     'doc' => array(
       'uri' => implode('/', array(
         trim($meeting['uri'], "/"),
-        $xml_item['pdf'])),
-     'title' => $xml_item['name'],
+        $xml_item['pdf']
+      )),
+      'title' => $xml_item['name'],
     ),
   );
 
@@ -344,7 +345,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   // Process attachments.
   foreach ($xml_item_bullet->ItemField as $bullet_xml) {
 
-    if (((string) $bullet_xml->HasContent) === 'True'){
+    if (((string) $bullet_xml->HasContent) === 'True') {
       $images = array();
       foreach ($bullet_xml->Images->Image as $image) {
         $images[] = array(
@@ -354,8 +355,8 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
       }
       $body = _os2web_sbsys_esdh_mm_improve_html((string) $bullet_xml->Content, $meeting['uri'] . 'Images/');
       $item['bullets'][] = array(
-        'title' => !empty($bullet_xml->Caption)? (string) $bullet_xml->Caption : 'Indhold',
-        'body' => $body ,//(string) $bullet_xml->Content,
+        'title' => !empty($bullet_xml->Caption) ? (string) $bullet_xml->Caption : 'Indhold',
+        'body' => $body, //(string) $bullet_xml->Content,
         'sysid' => (string) $bullet_xml['ID'],
         'images' => $images,
       );
@@ -374,7 +375,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
         $history['body'] .= t('@decision truffet af @comittee d. @date', array(
           '@decision' => (string) $item_history->Caption,
           '@comittee' => (string) $item_history->MeetingDetails->CommitteeName,
-          '@date'     => date('d-m-Y', strtotime((string) $item_history->MeetingDetails->MeetingDueDate)),
+          '@date' => date('d-m-Y', strtotime((string) $item_history->MeetingDetails->MeetingDueDate)),
         ));
         $history['body'] .= '<br>' . strip_tags((string) $item_history->Content) . '<br>';
       }
@@ -383,14 +384,13 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
       // If this is a Referat, put the history in before the beslutning element.
       // Else just put in the buttom of the list.
       if ($meeting['type'] === 'Referat') {
-        foreach($item['bullets'] as $key => $bullet) {
+        foreach ($item['bullets'] as $key => $bullet) {
           if ($bullet['title'] === 'Beslutning') {
-            array_splice( $item['bullets'], $key, 0, array($history) );
+            array_splice($item['bullets'], $key, 0, array($history));
             break;
           }
         }
-      }
-      else {
+      } else {
         $item['bullets'][] = $history;
       }
     }
@@ -399,16 +399,17 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   // Process enclsures.
   foreach ($xml_item_document as $enclosures) {
     foreach ($enclosures->Enclosure as $enclosure) {
-      $enclosure_item['filename_in'] = (string) "Enclosures/".$enclosure->InstantiationFileName;
+      $enclosure_item['filename_in'] = (string) "Enclosures/" . $enclosure->InstantiationFileName;
       $enclosure_item['access'] = (string) $enclosure->PublishingType;
       #if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] === 'SKAL PUBLICERES') {
-      if (strlen($enclosure_item['filename_in']) > 0 ) {
+      if (strlen($enclosure_item['filename_in']) > 0) {
         $item['enclosures'][] = array(
           'uri' => implode('/', array(
             trim($meeting['uri'], "/"),
-            $enclosure_item['filename_in'])),
+            $enclosure_item['filename_in']
+          )),
           'title' => trim((string) $enclosure->Name),
-          'access' => ((string)$enclosure->IsProtected) === 'True'? FALSE : TRUE, //inverting the value
+          'access' => ((string) $enclosure->IsProtected) === 'True' ? FALSE : TRUE, //inverting the value
           'sysid' => (string) $enclosure['ID'],
           'type' => 'Bilag',
         );
@@ -418,13 +419,13 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
 
   //Process members that did not participate in the bullet discussion
   $non_participants = '';
-  foreach ($xml_item_participants->ItemMember as $participant){
-    if (((string) $participant->ParticipationStatusAsValue) === '4'){
+  foreach ($xml_item_participants->ItemMember as $participant) {
+    if (((string) $participant->ParticipationStatusAsValue) === '4') {
       $non_participants .= (string) $participant->Name . "<br/>";
     }
   }
 
-  if (!empty($non_participants)){
+  if (!empty($non_participants)) {
     //Add members that did not participate in the bullet discussion as a last bullet point
     $item['bullets'][] = array(
       'title' => 'Afbud / Fraværende',
@@ -475,7 +476,7 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
   // Find all meetings and gather meeting and agenda_ids.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node', '=')
-        ->propertyCondition('type', 'os2web_meetings_meeting', '=');
+    ->propertyCondition('type', 'os2web_meetings_meeting', '=');
   $nodes_result = $query->execute();
 
   if (!isset($nodes_result['node'])) {
@@ -508,10 +509,12 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
     }
     if (isset($meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']])) {
       // Duplicate meeting detected.
-      watchdog('SBsys MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array('%mid' => $meeting_id['value'], '%nid' => $node->nid), WATCHDOG_WARNING);
+      watchdog('SBsys MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array(
+        '%mid' => $meeting_id['value'],
+        '%nid' => $node->nid
+      ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    }
-    else {
+    } else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -539,13 +542,12 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
         $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
-           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
-           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));
+          error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
+          error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      }
-      else {
+      } else {
         error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
         // node_delete($node->nid);
@@ -555,8 +557,7 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        }
-        else {
+        } else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }
@@ -587,19 +588,18 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
  */
 function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
 
-    preg_match_all('/src="([^"]+)"/',$html, $matches);
+  preg_match_all('/src="([^"]+)"/', $html, $matches);
 
-    foreach($matches[1] as $path) {
-        $image_path = array_pop(glob(drupal_realpath($image_folder_uri . basename($path) . ".*"))) ;
-        $image_uri = file_create_url( $image_folder_uri . basename($image_path ));
-        if (!empty($image_path)){
-           $html = str_replace( $path, file_create_url($image_uri), $html);
-        }
-       else {
-         $html = str_replace( $path, "", $html);
-        }
-
+  foreach ($matches[1] as $path) {
+    $image_path = array_pop(glob(drupal_realpath($image_folder_uri . basename($path) . ".*")));
+    $image_uri = file_create_url($image_folder_uri . basename($image_path));
+    if (!empty($image_path)) {
+      $html = str_replace($path, file_create_url($image_uri), $html);
+    } else {
+      $html = str_replace($path, "", $html);
     }
+
+  }
   $html = preg_replace('/<img([^>]+)src=""([^>]*)>/', "", $html);
   return $html;
 }

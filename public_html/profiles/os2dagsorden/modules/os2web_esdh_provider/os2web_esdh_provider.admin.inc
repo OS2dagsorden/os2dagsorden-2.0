@@ -35,7 +35,10 @@ function _os2web_esdh_provider_status() {
   $watchdog_table = '';
   if (variable_get('os2web_esdh_provider_debug_info')) {
     $watchdog_rows = array();
-    $watchdog_messages = db_query('SELECT * FROM {watchdog} w WHERE w.type = :type AND w.severity = :severity ORDER BY w.timestamp DESC', array(':type' => 'acadre MM', ':severity' => WATCHDOG_WARNING));
+    $watchdog_messages = db_query('SELECT * FROM {watchdog} w WHERE w.type = :type AND w.severity = :severity ORDER BY w.timestamp DESC', array(
+      ':type' => 'acadre MM',
+      ':severity' => WATCHDOG_WARNING
+    ));
     $watchdog_head = array(t('Warning messages in descending order'), t('Date'));
     foreach ($watchdog_messages as $row) {
       $watchdog_rows[] = array(
@@ -94,10 +97,10 @@ function _os2web_esdh_provider_status() {
   $import_form = drupal_get_form('os2web_esdh_provider_import_form');
 
   return '<h2>' . t('ESDH Provider API plugin status') . '</h2>' .
-      theme('table', array('header' => $head, 'rows' => $rows)) .
-      '<h3>' . t('Last agenda import was successfully run at %time', array('%time' => format_date(variable_get('os2web_esdh_provider_last_import', 0)))) . '</h3>' .
-      '<h3>' . t('Last import job was run at %time', array('%time' => format_date(variable_get('os2web_esdh_provider_last_mm_import', 0)))) . '</h3>' .
-      drupal_render($import_form) . $queue_status . $watchdog_table;
+  theme('table', array('header' => $head, 'rows' => $rows)) .
+  '<h3>' . t('Last agenda import was successfully run at %time', array('%time' => format_date(variable_get('os2web_esdh_provider_last_import', 0)))) . '</h3>' .
+  '<h3>' . t('Last import job was run at %time', array('%time' => format_date(variable_get('os2web_esdh_provider_last_mm_import', 0)))) . '</h3>' .
+  drupal_render($import_form) . $queue_status . $watchdog_table;
 }
 
 /**
@@ -254,13 +257,15 @@ function _os2web_esdh_provider_status_confirm_submit($form, &$form_state) {
       if (empty($focus) || in_array($meeting['id'], $focus)) {
         $batch['operations'][] = array(
           '_os2web_esdh_provider_import_meeting',
-          array($meeting, $force));
+          array($meeting, $force)
+        );
       }
     }
     if (os2web_esdh_provider_supports('mm', 'post_import_process')) {
       $batch['operations'][] = array(
         'os2web_esdh_provider_invoke',
-        array('mm', 'post_import_process'));
+        array('mm', 'post_import_process')
+      );
     }
 
     batch_set($batch);

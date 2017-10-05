@@ -193,8 +193,8 @@ function os2web_esdh_provider_node_delete($node) {
     $meeting_xmlid = $node->field_os2web_meetings_system_id['und'][0]['value'];
     $agenda_sysid = $node->field_os2web_meetings_sub_id['und'][0]['value'];
 
-    os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, null, IMPORT_STATUS_DELETED);
-    os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, null, 0);
+    os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, NULL, IMPORT_STATUS_DELETED);
+    os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, NULL, 0);
   }
   if ($node->type === 'os2web_meetings_bullet') {
     // Delete bullet attachments from meeting.
@@ -242,29 +242,29 @@ function os2web_esdh_provider_queue_meetings() {
 
       // Do the magic in a queue.
       foreach ($meetings as $meeting) {
-       //$filename = basename($meeting['uri']);
+        //$filename = basename($meeting['uri']);
         //$changed = filemtime($meeting['uri']);
         //$import = FALSE;
         //if (isset($imported_meetings[$filename])) {
-         // if ($imported_meetings[$filename] != $changed) {
-          //  $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-            //db_update('os2web_esdh_provider_import')
-            //  ->fields(array(
-            //    'changed' => filemtime($meeting['uri']),
-            //  ))
-            //  ->condition('filename', basename($meeting['uri']), '=')
-            //  ->execute();
-          //}
+        // if ($imported_meetings[$filename] != $changed) {
+        //  $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
+        //db_update('os2web_esdh_provider_import')
+        //  ->fields(array(
+        //    'changed' => filemtime($meeting['uri']),
+        //  ))
+        //  ->condition('filename', basename($meeting['uri']), '=')
+        //  ->execute();
+        //}
         //}
         //else {
-          $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-          //db_insert('os2web_esdh_provider_import')
-          //  ->fields(array(
-          //    'filename' => basename($meeting['uri']),
-          //    'changed' => filemtime($meeting['uri']),
-          //  ))
-          //  ->execute();
-      //  }
+        $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
+        //db_insert('os2web_esdh_provider_import')
+        //  ->fields(array(
+        //    'filename' => basename($meeting['uri']),
+        //    'changed' => filemtime($meeting['uri']),
+        //  ))
+        //  ->execute();
+        //  }
       }
       $queue->createItem(array('post_import_process' => TRUE));
 
@@ -305,12 +305,14 @@ function _os2web_esdh_provider_cron_queue_worker($args) {
     _os2web_esdh_provider_import_meeting($args['meeting'], $args['force']);
   }
   elseif (isset($args['post_import_process']) &&
-          $args['post_import_process'] === TRUE &&
-          os2web_esdh_provider_supports('mm', 'post_import_process')) {
+    $args['post_import_process'] === TRUE &&
+    os2web_esdh_provider_supports('mm', 'post_import_process')
+  ) {
     os2web_esdh_provider_invoke('mm', 'post_import_process');
   }
   elseif (isset($args['unpublish_without_manifest'])
-    && $args['unpublish_without_manifest'] === TRUE) {
+    && $args['unpublish_without_manifest'] === TRUE
+  ) {
     os2web_esdh_provider_unpublish_process($args['meetings']);
   }
 }
@@ -339,7 +341,10 @@ function os2web_esdh_provider_has_api($api) {
     if (isset($info['required methods'])) {
       foreach ($info['required methods'] as $method) {
         if (!os2web_esdh_provider_supports($api, $method)) {
-          watchdog('esdh provider', 'Incomplete API found during check: %api - method: %method', array('%api' => $api, '%method' => $method), WATCHDOG_ERROR);
+          watchdog('esdh provider', 'Incomplete API found during check: %api - method: %method', array(
+            '%api' => $api,
+            '%method' => $method
+          ), WATCHDOG_ERROR);
           return FALSE;
         }
       }
@@ -407,7 +412,7 @@ function os2web_esdh_provider_invoke() {
     watchdog('esdh_provider', 'Incomplete api implementation: method %method in api: %api called, but does not exists.', array(
       '%method' => $method,
       '%api' => $api,
-        ), WATCHDOG_ERROR);
+    ), WATCHDOG_ERROR);
   }
 }
 
@@ -425,8 +430,8 @@ function os2web_esdh_provider_unpublish_process($meetings) {
   // This is only tested and working on acadre meetings.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'os2web_meetings_meeting')
-        ->propertyCondition('status', 1);
+    ->entityCondition('bundle', 'os2web_meetings_meeting')
+    ->propertyCondition('status', 1);
   if (!empty($meeting_ids)) {
     $query->fieldCondition('field_os2web_meetings_system_id', 'value', $meeting_ids, 'NOT IN');
   }
@@ -454,12 +459,11 @@ function os2web_esdh_provider_unpublish_meeting($nid) {
     $meeting = node_load($nid);
     node_unpublish_action($meeting);
     node_save($meeting);
-  }
-  catch (Exception $e) {
+  } catch (Exception $e) {
     watchdog('esdh_provider', 'Could not unpublish meeting %nid, %err', array(
-        '%nid' => $nid,
-        '%err' => $e->getMessage(),
-      ), WATCHDOG_ERROR);
+      '%nid' => $nid,
+      '%err' => $e->getMessage(),
+    ), WATCHDOG_ERROR);
   }
 }
 

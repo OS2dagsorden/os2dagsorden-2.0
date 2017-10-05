@@ -42,7 +42,7 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
 
   foreach (file_scan_directory($dir, '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
     // Skip preview.xml files
-    if($xml_file->name !== 'preview'){
+    if ($xml_file->name !== 'preview') {
       $pathinfo = pathinfo($xml_file->uri);
       $pub_id = (int) str_replace($dir . '/Publication', '', $pathinfo['dirname']);
       $uris[] = array('id' => $pub_id, 'uri' => $xml_file->uri);
@@ -53,21 +53,20 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
 
 
 /**
- * Strip illegal characters from the XML. 
+ * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
- * 
+ *
  * @param object $string
  *   string to sanitise
- * 
+ *
  * $return array
- *   The string sanitised 
+ *   The string sanitised
  */
-function utf8_for_xml($string)
-{
-    #$replace_me = "&#xC;";
-    $replace_me =  variable_get('os2web_sbsys_ishoj_esdh_banned_special_char');
-    $str_new = str_replace($replace_me, "", $string);
-    return $str_new;
+function utf8_for_xml($string) {
+  #$replace_me = "&#xC;";
+  $replace_me = variable_get('os2web_sbsys_ishoj_esdh_banned_special_char');
+  $str_new = str_replace($replace_me, "", $string);
+  return $str_new;
 }
 
 /**
@@ -86,17 +85,17 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
   }
   $meetings = array();
   if (is_file(drupal_realpath($file))) {
-    libxml_use_internal_errors(true);
+    libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA);
     //print_r($manifest);
     libxml_clear_errors();
-    libxml_use_internal_errors(false);
+    libxml_use_internal_errors(FALSE);
 
-    if ($manifest === false) {
-       error_log("Failed loading XML");
-       foreach(libxml_get_errors() as $error) {
-          error_log ($error->message);
-       }
+    if ($manifest === FALSE) {
+      error_log("Failed loading XML");
+      foreach (libxml_get_errors() as $error) {
+        error_log($error->message);
+      }
     }
     if (is_object($manifest)) {
       $committee = $manifest->xpath("Møde/@UdvalgID");
@@ -148,8 +147,34 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       }
 
       // Fix dates.
-      $meeting_date_when = str_ireplace(array(". januar ", ". februar ", ". marts ", ". april ", ". maj ", ". juni ", ". juli ", ". august ",". september ", ". oktober ", ". november ", ". december "),
-                                        array("-1-", "-2-", "-3-", "-4-", "-5-", "-6-", "-7-", "-8-", "-9-", "-10-", "-11-", "-12-"), $meeting_date_when);
+      $meeting_date_when = str_ireplace(array(
+          ". januar ",
+          ". februar ",
+          ". marts ",
+          ". april ",
+          ". maj ",
+          ". juni ",
+          ". juli ",
+          ". august ",
+          ". september ",
+          ". oktober ",
+          ". november ",
+          ". december "
+        ),
+        array(
+          "-1-",
+          "-2-",
+          "-3-",
+          "-4-",
+          "-5-",
+          "-6-",
+          "-7-",
+          "-8-",
+          "-9-",
+          "-10-",
+          "-11-",
+          "-12-"
+        ), $meeting_date_when);
       $date_obj = date_create($meeting_date_when);
       //date_timezone_set($date_obj, timezone_open('UTC'));
       $meeting_date_when = date_format($date_obj, 'Y-m-d H:i');
@@ -193,20 +218,20 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
 
       /*stan@bellcom.dk 06.10 - importing multiple agendas*/
       $meeting_agendas = array();
-      foreach($manifest->xpath("/Dagsorden/Dagsordenpunkter") as $agenda_instance){
-        if (!$meeting_agendas){
-          if (sizeof($agenda_instance->xpath("Dagsordenpunkt")))
+      foreach ($manifest->xpath("/Dagsorden/Dagsordenpunkter") as $agenda_instance) {
+        if (!$meeting_agendas) {
+          if (sizeof($agenda_instance->xpath("Dagsordenpunkt"))) {
             $meeting_agendas = $agenda_instance->xpath("Dagsordenpunkt");
-          else {
+          } else {
             //importing open agenda
             $meeting_agendas = $agenda_instance->xpath("Gruppe[@navn='Åbne dagsordenspunkter']/Dagsordenpunkt");
             //importing closed agenda
-            if (variable_get('os2web_meetings_import_closed_agenda', false))
+            if (variable_get('os2web_meetings_import_closed_agenda', FALSE)) {
               $meeting_agendas = array_merge($meeting_agendas, $agenda_instance->xpath("Gruppe[@navn='Lukkede dagsordenspunkter']/Dagsordenpunkt"));
+            }
           }
-        }
-        else {
-          foreach($agenda_instance->xpath("Dagsordenpunkt") as $items_child){
+        } else {
+          foreach ($agenda_instance->xpath("Dagsordenpunkt") as $items_child) {
             $meeting_agendas[] = $items_child;
             //$toDom = dom_import_simplexml($meeting_agendas[0]);
             //$fromDom = dom_import_simplexml($items_child);
@@ -222,14 +247,13 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
       }
       //foreach ($meeting_agendas as $meeting_agenda) {
-        $imported = _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda($meeting, $meeting_agendas);
-        if (is_array($imported)) {
-          $imported['publish'] = TRUE;
-          $meetings[] = $imported;
-        }
+      $imported = _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda($meeting, $meeting_agendas);
+      if (is_array($imported)) {
+        $imported['publish'] = TRUE;
+        $meetings[] = $imported;
+      }
       //}
-    }
-    else {
+    } else {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
@@ -280,8 +304,8 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xm
  *   The imported item.
  */
 function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
-  $xml_item['id'] = (string)$xml->attributes()->DagsordenpunktID;
-  $xml_item['number'] = (string)$xml->attributes()->Nummer;
+  $xml_item['id'] = (string) $xml->attributes()->DagsordenpunktID;
+  $xml_item['number'] = (string) $xml->attributes()->Nummer;
   //$xml_item['pdf'] = (string) $xml->PDFDocument;
   $xml_item_document = $xml->Bilagsliste;
   $xml_item_bullet = $xml->Indhold;
@@ -303,7 +327,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) 
     $item['access'] = 'Lukket';
   }
   //importing open bullets only, or open and closed if it is permitted
-  if ($item['access'] !== 'Lukket' || variable_get('os2web_meetings_import_closed_agenda', false)){
+  if ($item['access'] !== 'Lukket' || variable_get('os2web_meetings_import_closed_agenda', FALSE)) {
     //// Process attachments.
     $xml_item_bullet = (array) $xml_item_bullet;
     foreach ($xml_item_bullet as $title => $body) {
@@ -319,7 +343,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) 
       $item['enclosures'][] = array(
         'uri' => $meeting['folder'] . (string) $enclosure->attributes()->BilagUrl,
         'title' => (string) $enclosure->attributes()->Navn,
-        'access' => strcmp((string)$enclosure->attributes()->MaaPubliceres,'true') ? TRUE : FALSE,
+        'access' => strcmp((string) $enclosure->attributes()->MaaPubliceres, 'true') ? TRUE : FALSE,
         'sysid' => (string) $enclosure->attributes()->BilagID,
         'type' => 'Bilag',
       );
@@ -347,7 +371,7 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
   // Find all meetings and gather meeting and agenda_ids.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node', '=')
-        ->propertyCondition('type', 'os2web_meetings_meeting', '=');
+    ->propertyCondition('type', 'os2web_meetings_meeting', '=');
   $nodes_result = $query->execute();
 
   if (!isset($nodes_result['node'])) {
@@ -380,10 +404,12 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
     }
     if (isset($meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']])) {
       // Duplicate meeting detected.
-      watchdog('SBsys MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array('%mid' => $meeting_id['value'], '%nid' => $node->nid), WATCHDOG_WARNING);
+      watchdog('SBsys MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array(
+        '%mid' => $meeting_id['value'],
+        '%nid' => $node->nid
+      ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    }
-    else {
+    } else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -411,13 +437,12 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
         $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
-           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
-           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));
+          error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
+          error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      }
-      else {
+      } else {
         error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
         // node_delete($node->nid);
@@ -427,8 +452,7 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        }
-        else {
+        } else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }

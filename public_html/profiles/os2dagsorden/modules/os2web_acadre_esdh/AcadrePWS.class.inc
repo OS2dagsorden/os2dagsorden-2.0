@@ -56,14 +56,13 @@ class AcadrePWS {
    * Initializes the v4 client interface.
    */
   public function getClient() {
-    $this->client = &drupal_static('os2web_acadre_pws_client', NULL);
+    $this->client = & drupal_static('os2web_acadre_pws_client', NULL);
     if (!$this->client) {
       $url = variable_get('os2web_pws_url');
       $url = trim($url);
       if ($url == '') {
         drupal_set_message(t('Error, no endpoint url set for v4soap.'), 'error');
-      }
-      else {
+      } else {
         if ($this->checkUrl($url)) {
           // FIXME: Use a wellformed WSDL for V4 services.
           $options = $this->getBaseWSSetup();
@@ -74,8 +73,7 @@ class AcadrePWS {
           }
           try {
             $this->client = new SoapClient(NULL, $options);
-          }
-          catch (Exception $e) {
+          } catch (Exception $e) {
             drupal_set_message(t('Error connecting to PWSv4 endpoint'), 'error');
             return FALSE;
           }
@@ -92,14 +90,13 @@ class AcadrePWS {
    * Initializes the v5 client.
    */
   public function getClient6() {
-    $this->client6 = &drupal_static('os2web_acadre_pws_client6');
+    $this->client6 = & drupal_static('os2web_acadre_pws_client6');
     if (!$this->client6) {
       $url = variable_get('os2web_pws_url_v6');
       $url = trim($url);
       if ($url == '') {
         drupal_set_message(t('Error, no endpoint url set for v6.'), 'error');
-      }
-      else {
+      } else {
         if ($this->checkUrl($url)) {
           $options = $this->getBaseWSSetup();
           if (function_exists('xdebug_disable')) {
@@ -107,8 +104,7 @@ class AcadrePWS {
           }
           try {
             $this->client6 = new SoapClient($url . '?WSDL', $options);
-          }
-          catch (Exception $sf) {
+          } catch (Exception $sf) {
             drupal_set_message(t('Error connecting to PWSv6 endpoint'), 'error');
             return FALSE;
           }
@@ -125,14 +121,13 @@ class AcadrePWS {
    * Initializes the case lookup service.
    */
   public function getClientSearch() {
-    $this->clientSearch = &drupal_static('os2web_acadre_pws_client_search');
+    $this->clientSearch = & drupal_static('os2web_acadre_pws_client_search');
     if (!$this->clientSearch) {
       $url = variable_get('os2web_pws_url_search');
       $url = trim($url);
       if ($url == '') {
         drupal_set_message(t('Error, no endpoint url set for document search searvice.'), 'error');
-      }
-      else {
+      } else {
         if ($this->checkUrl($url)) {
           $options = $this->getBaseWSSetup();
           if (function_exists('xdebug_disable')) {
@@ -141,8 +136,7 @@ class AcadrePWS {
           try {
             $this->clientSearch = new SoapClient($url . '?WSDL', $options);
             return TRUE;
-          }
-          catch (SoapFault $sf) {
+          } catch (SoapFault $sf) {
             drupal_set_message(t('Error connecting to PWS document search service endpoint'), 'error');
             return FALSE;
           } finally {
@@ -166,22 +160,23 @@ class AcadrePWS {
    */
   public function lookupCase($query) {
     $cid = __FUNCTION__ . $query;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClientSearch()) {
+    } elseif ($this->getClientSearch()) {
       $query = str_replace('-', '/', $query);
       $query = explode('/', $query);
       if (is_numeric($query[0]) && is_numeric($query[1])) {
         try {
-          $result = (int) $this->clientSearch->getCaseSystemIdByYearAndSerial(array('year' => $query[0], 'serial' => $query[1]))->GetCaseSystemIdByYearAndSerialResult;
+          $result = (int) $this->clientSearch->getCaseSystemIdByYearAndSerial(array(
+            'year' => $query[0],
+            'serial' => $query[1]
+          ))->GetCaseSystemIdByYearAndSerialResult;
           cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-        }
-        catch (SoapFault $sf) {
+        } catch (SoapFault $sf) {
           $trace = $this->clientSearch->__getLastRequest();
           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $trace = ' . print_r($trace, 1));
           $result = $sf;
@@ -199,23 +194,24 @@ class AcadrePWS {
    */
   public function lookupDoc($query) {
     $cid = __FUNCTION__ . $query;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClientSearch()) {
+    } elseif ($this->getClientSearch()) {
       $query = str_replace('-', '/', $query);
       $query = explode('/', $query);
       if (is_numeric($query[0]) && is_numeric($query[1])) {
         try {
-          $result = (int) $this->clientSearch->getDocumentSystemIdByYearAndSerial(array('year' => $query[1], 'serial' => $query[0]))->GetDocumentSystemIdByYearAndSerialResult;
+          $result = (int) $this->clientSearch->getDocumentSystemIdByYearAndSerial(array(
+            'year' => $query[1],
+            'serial' => $query[0]
+          ))->GetDocumentSystemIdByYearAndSerialResult;
           $result = $result != -1 ? $result : FALSE;
           cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-        }
-        catch (SoapFault $sf) {
+        } catch (SoapFault $sf) {
           $result = $sf;
         }
       }
@@ -234,19 +230,17 @@ class AcadrePWS {
    */
   public function fetchCase($id) {
     $cid = __FUNCTION__ . $id;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClient6()) {
+    } elseif ($this->getClient6()) {
       try {
         $result = $this->client6->getCase($id);
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-      }
-      catch (SoapFault $exc) {
+      } catch (SoapFault $exc) {
         error_log("Var: \$exc = " . print_r($exc, 1));
         return FALSE;
       }
@@ -264,14 +258,13 @@ class AcadrePWS {
    *   Return FALSE on error, else array of documents
    */
   public function getCaseDocs($id) {
-    $result = &drupal_static(__FUNCTION__ . $id, FALSE);
+    $result = & drupal_static(__FUNCTION__ . $id, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get(__FUNCTION__ . $id, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    else {
+    } else {
       if ($this->getClient()) {
         $request = '<?xml version="1.0" encoding="utf-8"?>
           <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -283,8 +276,7 @@ class AcadrePWS {
         try {
           $result = $this->client->__doRequest($request, $this->client->location, $this->client->uri . 'GetAllDocuments', SOAP_1_1);
           cache_set(__FUNCTION__ . $id, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-        }
-        catch (SoapFault $sf) {
+        } catch (SoapFault $sf) {
           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $sf = ' . print_r($sf, 1));
           return FALSE;
         }
@@ -295,8 +287,7 @@ class AcadrePWS {
       $result = simplexml_load_string($result);
       if (is_object($result)) {
         return $result->xpath('//soap:Body[1]/*/*');
-      }
-      else {
+      } else {
         // Something is wrong, we are trying to use a string which is not XML.
         // This could be because of some error in Acadre.
         $err_message = t('A malformed XML document was recieved from Acadre, doing an GetAllDocuments call.');
@@ -325,14 +316,13 @@ class AcadrePWS {
    */
   public function getDocLock($id) {
     $cid = __FUNCTION__ . $id;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClient()) {
+    } elseif ($this->getClient()) {
       $request = '<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
@@ -346,14 +336,12 @@ class AcadrePWS {
           if ('' !== (string) array_pop($result->xpath('//soap:Fault/faultcode'))) {
             // This will indicate fault.
             $result = FALSE;
-          }
-          else {
+          } else {
             $result = $result->xpath('//soap:Body');
             $result = ('true' === (string) $result[0]->DocumentLockStatus) ? TRUE : FALSE;
           }
         }
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
 
       }
       cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
@@ -372,20 +360,18 @@ class AcadrePWS {
    */
   public function getDocInfo($id) {
     $cid = __FUNCTION__ . $id;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClientSearch()) {
+    } elseif ($this->getClientSearch()) {
       try {
         $result = $this->clientSearch->getDocumentById(array('id' => $id));
         $result = $result->GetDocumentByIdResult;
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         $result = FALSE;
       }
     }
@@ -403,19 +389,17 @@ class AcadrePWS {
    */
   public function getDocument($id) {
     $cid = __FUNCTION__ . $id;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
     }
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClient6()) {
+    } elseif ($this->getClient6()) {
       try {
         $result = $this->client6->getMainDocument($id);
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         $result = FALSE;
       }
     }
@@ -433,18 +417,16 @@ class AcadrePWS {
    */
   public function getDocuments($documents) {
     $cid = __FUNCTION__ . $query;
-    $result = &drupal_static($cid, FALSE);
+    $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
-    }
-    elseif ($this->getClientSearch()) {
+    } elseif ($this->getClientSearch()) {
       if (!is_array($documents)) {
         $documents = array($documents);
       }
       try {
         $result = $this->clientSearch->GetDocuments(array('DocumentIDs' => $documents))->GetDocumentsResult;
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         $result = $sf;
       }
     }
@@ -467,8 +449,7 @@ class AcadrePWS {
         'ref' => $doc->DocumentVersion->DocumentFileReference,
         'ver' => $doc->DocumentVersion->VersionNumber,
       );
-    }
-    else {
+    } else {
       return FALSE;
     }
   }
@@ -494,8 +475,7 @@ class AcadrePWS {
     $cid = __FUNCTION__ . $ref . $ver;
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClient()) {
+    } elseif ($this->getClient()) {
       $request = '<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
@@ -506,7 +486,10 @@ class AcadrePWS {
   </soap:Body>
 </soap:Envelope>';
       try {
-        $result = $this->client->__doRequest(format_string($request, array('@FileRef' => $ref, '@Version' => $ver)), $this->client->location, $this->client->uri . 'GetFileName', SOAP_1_1);
+        $result = $this->client->__doRequest(format_string($request, array(
+          '@FileRef' => $ref,
+          '@Version' => $ver
+        )), $this->client->location, $this->client->uri . 'GetFileName', SOAP_1_1);
         if (is_object($result = simplexml_load_string($result))) {
           $result = (string) array_shift($result->xpath('//soap:Body'))->FileName1;
           // Use md5sum to avoid long  and guessable filenames.
@@ -514,8 +497,7 @@ class AcadrePWS {
           $result = md5('adlibsalt' . $info['basename']) . '.' . $info['extension'];
           cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
         }
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         error_log("Var: \$sf = " . print_r($sf, 1));
       }
     }
@@ -575,7 +557,10 @@ class AcadrePWS {
   </soap:Body>
 </soap:Envelope>';
       try {
-        $result = $this->client->__doRequest(format_string($request, array('@FileRef' => $ref, '@Version' => $ver)), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
+        $result = $this->client->__doRequest(format_string($request, array(
+          '@FileRef' => $ref,
+          '@Version' => $ver
+        )), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
         if (is_object($result = simplexml_load_string($result))) {
           $result = (string) array_shift($result->xpath('//soap:Body'))->XMLBinary;
           if (file_prepare_directory($dest, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
@@ -586,8 +571,7 @@ class AcadrePWS {
               $file->uri = $unm_file;
               $file->filename = basename($unm_file);
               file_save($file);
-            }
-            else {
+            } else {
               $file = file_save_data(base64_decode($result), $dest . $filename, FILE_EXISTS_REPLACE);
             }
             if (FALSE != $file) {
@@ -595,21 +579,17 @@ class AcadrePWS {
                 os2web_adlib_api_convert_to_pdf($file->fid, $ref);
               }
               $result = file_create_url($file->uri);
-            }
-            else {
+            } else {
               drupal_set_message(t('There was an error saving the file'), 'error');
             }
-          }
-          else {
+          } else {
             drupal_set_message(t('There was an error creating the file'), 'error');
           }
-        }
-        else {
+        } else {
           error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' - Error parse output from WS.');
           return FALSE;
         }
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         watchdog('acadre_pws', 'Error during SOAP call in ' . __FUNCTION__, NULL, WATCHDOG_WARNING);
       }
     }
@@ -637,8 +617,7 @@ class AcadrePWS {
     $cid = __FUNCTION__ . $ref . $ver;
     if (($cache = cache_get($cid, 'cache_os2web_pws')) && !empty($cache->data) && (time() < $cache->expire)) {
       $result = $cache->data;
-    }
-    elseif ($this->getClient()) {
+    } elseif ($this->getClient()) {
       $request = '<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
@@ -649,11 +628,13 @@ class AcadrePWS {
   </soap:Body>
 </soap:Envelope>';
       try {
-        $result = $this->client->__doRequest(format_string($request, array('@FileRef' => $ref, '@Version' => $ver)), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
+        $result = $this->client->__doRequest(format_string($request, array(
+          '@FileRef' => $ref,
+          '@Version' => $ver
+        )), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
         $result = (string) array_shift(simplexml_load_string($result)->xpath('//soap:Body'))->XMLBinary;
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
-      }
-      catch (SoapFault $sf) {
+      } catch (SoapFault $sf) {
         return FALSE;
       }
     }

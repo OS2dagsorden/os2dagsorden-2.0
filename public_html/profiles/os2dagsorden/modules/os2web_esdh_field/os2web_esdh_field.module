@@ -71,7 +71,7 @@ function os2web_esdh_field_field_widget_form(&$form, &$form_state, $field, $inst
   $field_type = $field['type'];
   $default = '';
   if (isset($form_state['node']->{$field_name}[$langcode][$delta][$field_type])) {
-    $default = ($form_state['node']->{$field_name}[$langcode][$delta][$field_type])? : 0;
+    $default = ($form_state['node']->{$field_name}[$langcode][$delta][$field_type]) ? : 0;
   }
   switch ($instance['widget']['type']) {
     case 'os2web_esdh_field_case_ident_wid':
@@ -286,6 +286,7 @@ function theme_os2web_esdh_document($vars) {
   $html .= theme('table', array('rows' => $rows));
   return $html;
 }
+
 /**
  * Checks access conditions for a case.
  *
@@ -363,9 +364,8 @@ function _os2web_esdh_field_array_compare(array $a1, array $a2) {
 /**
  * Implements hook_node_insert().
  */
-function os2web_esdh_field_node_insert($node)
-{
-  if(!empty($node->field_os2web_base_field_case)) {
+function os2web_esdh_field_node_insert($node) {
+  if (!empty($node->field_os2web_base_field_case)) {
     _os2web_esdh_field_update_cm_documents_from_pws($node);
   }
 }
@@ -373,9 +373,8 @@ function os2web_esdh_field_node_insert($node)
 /**
  * Implements hook_node_update().
  */
-function os2web_esdh_field_node_update($node)
-{
-  if(!empty($node->field_os2web_base_field_case)) {
+function os2web_esdh_field_node_update($node) {
+  if (!empty($node->field_os2web_base_field_case)) {
     _os2web_esdh_field_update_cm_documents_from_pws($node);
   }
 }
@@ -416,7 +415,7 @@ function _os2web_esdh_field_update_cm_documents_from_pws($node) {
         // Document has the appropiate access settings.
         $documents = array_merge($documents, os2web_esdh_provider_invoke('cm', 'get_case_docs', $case_id));
       }
-    } catch(Exception $e) {
+    } catch (Exception $e) {
       watchdog('os2web_esdh_field', $e, NULL, WATCHDOG_ERROR);
     }
   }
@@ -511,10 +510,11 @@ function _os2web_esdh_field_add_all_documents_to_requeue() {
 
   // 3. Update all documents which has a newer version.
   foreach ($esdh_documents as $esdh_document) {
-    if(isset($document_to_update[$esdh_document->DocumentIdentifier]) &&
-       strtotime($document_to_update[$esdh_document->DocumentIdentifier]) < strtotime($esdh_document->ChangedDateTime) &&
-       _os2web_esdh_field_doc_access($esdh_document->DocumentIdentifier) &&
-       _os2web_esdh_field_case_access($esdh_document->CaseFileReference)) {
+    if (isset($document_to_update[$esdh_document->DocumentIdentifier]) &&
+      strtotime($document_to_update[$esdh_document->DocumentIdentifier]) < strtotime($esdh_document->ChangedDateTime) &&
+      _os2web_esdh_field_doc_access($esdh_document->DocumentIdentifier) &&
+      _os2web_esdh_field_case_access($esdh_document->CaseFileReference)
+    ) {
 
       _os2web_esdh_field_add_to_cron($esdh_document->DocumentIdentifier);
     }
@@ -555,7 +555,10 @@ function _os2web_esdh_field_update_document($document) {
             ->condition('did', $document['did'])
             ->execute();
 
-          watchdog('os2web_esdh_field', 'Document (did: %did, fid: %fid) was updated from ESDH.', array('%did' => $document['did'], '%fid' => $file->fid), WATCHDOG_INFO);
+          watchdog('os2web_esdh_field', 'Document (did: %did, fid: %fid) was updated from ESDH.', array(
+            '%did' => $document['did'],
+            '%fid' => $file->fid
+          ), WATCHDOG_INFO);
           return TRUE;
         }
       }
@@ -616,8 +619,7 @@ function _os2web_esdh_field_delete_doc_by_did($document_id) {
  * @param  int $document_id
  *   The document ID
  */
-function _os2web_esdh_field_add_to_cron($document_id)
-{
+function _os2web_esdh_field_add_to_cron($document_id) {
   $doc_in_db = db_select('os2web_esdh_field_cm_documents', 'd')
     ->fields('d')
     ->condition('did', $document_id)

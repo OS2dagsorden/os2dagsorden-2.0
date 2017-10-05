@@ -144,8 +144,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         foreach ($meeting_participants as $meeting_participant) {
           if ((string) array_shift($meeting_participant->xpath("edoc:Participate")) == 'true') {
             $meeting['participants'][] = (string) array_shift($meeting_participant->xpath("edoc:Name"));
-          }
-          else {
+          } else {
             $meeting['participants_cancellation'][] = (string) array_shift($meeting_participant->xpath("edoc:Name"));
           }
         }
@@ -164,8 +163,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
           }
         }
       }
-    }
-    else {
+    } else {
       // Error logging to watchdog if the XML failde to parse. Check if all illegal characters are in the remove list. 
       watchdog('eDoc MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
@@ -377,8 +375,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
         '%nid' => $node->nid
       ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    }
-    else {
+    } else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -411,8 +408,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      }
-      else {
+      } else {
         #error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         #error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
         // node_delete($node->nid);
@@ -422,8 +418,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        }
-        else {
+        } else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }
@@ -453,7 +448,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
  * @return int|string
  */
 function _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date, $committee) {
-  $meeting_id = sprintf("%u", crc32($meeting_date . ' ' . $committee));//generated meeting_id
+  $meeting_id = sprintf("%u", crc32($meeting_date . ' ' . $committee)); //generated meeting_id
   if ($meeting_id > 2147483647) {
     $meeting_id = substr($meeting_id, 0, 9); //mysql int out of range fix
   }

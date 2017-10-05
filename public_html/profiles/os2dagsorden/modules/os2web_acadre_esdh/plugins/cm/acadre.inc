@@ -132,8 +132,7 @@ function ops2web_acadre_esdh_get_document_file($doc_id) {
   if ($doc_id > 0) {
     $file = $pws->getDocData($doc_id);
     return $file;
-  }
-  else {
+  } else {
     return (object) NULL;
   }
 }
