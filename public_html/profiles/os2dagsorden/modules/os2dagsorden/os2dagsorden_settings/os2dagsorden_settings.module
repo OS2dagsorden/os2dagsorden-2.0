@@ -17,7 +17,7 @@ include_once 'os2dagsorden_settings.features.inc';
 /**
  * Implementation of hook_menu()
  *
- * @return list of links
+ * @return array - list of links
  */
 function os2dagsorden_settings_menu() {
     $items['admin/config/os2dagsorden'] = array(
@@ -217,22 +217,23 @@ function os2dagsorden_settings_export_to_file(){
  *
  * @return none
  */
-function os2dagsorden_settings_flush_calendar_preferences(){
-    $users = db_select('users', 'u')
-	  ->fields('u', array('uid'))
-	  ->execute()
-	  ->fetchAll();
-    foreach ($users as $user) {
-      if ($user->uid == 0)
-	continue;
-      
-      $user = user_load($user->uid);
-      $user->field_user_meetings_category['und'] = array();
-      user_save($user);
+function os2dagsorden_settings_flush_calendar_preferences() {
+  $users = db_select('users', 'u')
+    ->fields('u', array('uid'))
+    ->execute()
+    ->fetchAll();
+  foreach ($users as $user) {
+    if ($user->uid == 0) {
+      continue;
     }
-    
-    drupal_set_message('All users calendar preferences have been flushed');
-    drupal_goto('admin/config');
+
+    $user = user_load($user->uid);
+    $user->field_user_meetings_category['und'] = array();
+    user_save($user);
+  }
+
+  drupal_set_message('All users calendar preferences have been flushed');
+  drupal_goto('admin/config');
 }
 
 /**

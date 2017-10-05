@@ -689,7 +689,7 @@ watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Started importing file !uri an
   // Is an absolute path.
   if (variable_get('os2web_edoc_esdh_mm_is_abs', FALSE) && module_exists('os2web_edoc_esdh')) {
     $doc_root = realpath($_SERVER['DOCUMENT_ROOT']) . '/';
-    $uri = 'public://' . str_replace(variable_get(OS2WEB_EDOC_ESDH_MM_ABS_PATH_SUBS), '', $uri);
+    $uri = 'public://' . str_replace(variable_get('os2web_edoc_esdh_mm_abs_path_subs'), '', $uri);
   }
   $fid = db_select('file_managed', 'fm')
           ->fields('fm', array('fid'))

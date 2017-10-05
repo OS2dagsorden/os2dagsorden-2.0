@@ -134,7 +134,7 @@ jQuery(document).ready(function() {
           jQuery(this).val(prepareDate(jQuery(this).val()));
     })
     // Set body font size.
-    jQuery('body').css({'font-size' : Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
+    jQuery('body').css({'font-size' : /** global: Drupal */ Drupal.settings.os2dagsorden_settings.body_font_size+'px'});
 
     // Set title font size.
     jQuery('table.views-table tr td a').css({'font-size' : Drupal.settings.os2dagsorden_settings.title_font_size+'px'});
@@ -510,7 +510,7 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
 	return (string.indexOf("bpa-") == 0);
       });
 
-      cl_arr = String(cl).split("-");
+      var cl_arr = String(cl).split("-");
       var bilag_id = cl_arr[3];
       var bullet_point_id = cl_arr[2];
       var meeting_id = cl_arr[1];
@@ -582,7 +582,7 @@ function bullet_point_attachment_add_notes_indicator(ids){
  *
  */
 function isTouchDevice(){
-  return "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch;
+  return "ontouchstart" in window || window.DocumentTouch && document instanceof /** global: DocumentTouch */ DocumentTouch;
 }
 
 function addPagescroller(){
@@ -609,7 +609,8 @@ function addPagescroller(){
 		      e.preventDefault();
           //console.log(pageScroller.current);
 		      //pageScroller.goTo(page);
-		      pageScroller.next();
+              /** global: pageScroller */
+              pageScroller.next();
 	      });
 
   	    // assigns 'previous' API command to link
