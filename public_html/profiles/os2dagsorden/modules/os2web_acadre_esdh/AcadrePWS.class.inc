@@ -156,6 +156,8 @@ class AcadrePWS {
    *
    * FIXME: Make this a TRUE call to webservice.
    *
+   * @method getCaseSystemIdByYearAndSerial(array())
+   *
    * @param string $query
    *   A case journaling number, ie. 11/14293
    */

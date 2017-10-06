@@ -13,6 +13,7 @@ define('ADLIB_HTML_IMG_FOLDER', 'public://bpimg/');
  */
 function os2web_adlib_api_menu() {
   // Added fan for requeueing Adlib jobs.
+  $items = array();
   $items['admin/config/os2web/reprocess'] = array(
     'title' => 'AdLib requeue',
     'description' => 'Requeue AdLib jobs.',
@@ -114,6 +115,7 @@ function os2web_adlib_api_reprocess_form_submit() {
  */
 function os2web_adlib_api_reprocess() {
   $ids = _os2web_adlib_api_bulletpoint_nid();
+  $operations = array();
   foreach ($ids as $nodeid) {
     $operations[] = array('_os2web_adlib_api_reprocess_nid', array($nodeid));
   }
@@ -302,11 +304,11 @@ function os2web_adlib_api_status() {
  */
 function os2web_adlib_api_page() {
   error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
-  $fid = 32303;
-  $nid = 840980;
+  //$fid = 32303;
+  //$nid = 840980;
   // os2web_adlib_api_file_delete($fid);
   // db_delete('os2web_adlib_api_doc_files')->condition('fid', $fid)->execute();
-  os2web_adlib_api_convert_to_pdf($fid);
+  // os2web_adlib_api_convert_to_pdf($fid);
   // os2web_adlib_api_convert_to_html($fid, $nid);
   // _os2web_adlib_api_process_pdf();
   // sleep(5);
@@ -352,6 +354,7 @@ function os2web_adlib_api_cron() {
  * @author Thomas Thune Hansen <tth@bellcom.dk>
  */
 function os2web_adlib_api_cron_queue_info() {
+  $queues = array();
   $queues['os2web_adlib_reprocess'] = array(
     'worker callback' => '_os2web_adlib_api_reprocess_nid',
     'time' => 300,
@@ -416,7 +419,7 @@ function os2web_adlib_api_convert_to_pdf($fid, $docref = NULL) {
     db_delete('os2web_adlib_api_doc_files')->condition('fid', $fid)->execute();
     return FALSE;
   }
-  if (!file_exists(drupal_realpath($file->uri))) {
+  if (!drupal_realpath($file->uri) || !file_exists(drupal_realpath($file->uri))) {
     watchdog('adlib_api', 'Cannot queue file %file (fid: %fid). File does not exist. File record removed.', array(
       '%fid' => $fid,
       '%file' => $file->filename
@@ -590,10 +593,8 @@ function _os2web_adlib_api_process_file($file) {
     case 'Failed':
       os2web_adlib_api_destroy_job($file->job_id);
 
-      $jobfileinfo = unserialize($file->job_info);
-
       $fdata = file_load($file->fid);
-      if (!file_exists(drupal_realpath($fdata->uri)) || file_uri_scheme($fdata->uri) == '' || $fdata->filemime == 'application/pdf') {
+      if (!drupal_realpath($file->uri) || !file_exists(drupal_realpath($fdata->uri)) || file_uri_scheme($fdata->uri) == '' || $fdata->filemime == 'application/pdf') {
         if ($fdata->filemime == 'application/pdf') {
 
           $record = array(
@@ -659,7 +660,7 @@ function _os2web_adlib_api_process_file($file) {
         case 0:
           $upd_file = file_load($file->fid);
           $uri = file_unmanaged_save_data($data, str_replace($upd_file->filename, $jobfileinfo['out_filename'], $upd_file->uri), FILE_EXISTS_REPLACE);
-          if (filesize(drupal_realpath($uri)) > 0) {
+          if ($uri && filesize(drupal_realpath($uri)) > 0) {
             db_delete('file_managed')->condition('uri', $uri)->execute();
             $upd_file->uri = $uri;
             $upd_file->filename = basename($uri);
@@ -734,7 +735,8 @@ function _os2web_adlib_api_process_html($data, $base_url) {
   module_load_include('php', 'os2web_adlib_api', 'simple_html_dom');
   $html = str_get_html($data);
   $img = $html->find('img');
-  for ($i = 0; $i < count($img); $i++) {
+  $img_count = count($img);
+  for ($i = 0; $i < $img_count; $i++) {
     watchdog('adlib_api', 'Importing image for HTML: %fname', array('%fname' => basename($img[$i]->src)));
     $image_url = $base_url . '/' . rawurlencode($img[$i]->src);
     $download = curl_init($image_url);
@@ -747,13 +749,14 @@ function _os2web_adlib_api_process_html($data, $base_url) {
     $image = curl_exec($download);
 
     $info = curl_getinfo($download);
+
+    // AdLib uses Windows folder notation.
+    $file_uri = $base_dir . basename(str_replace('\\', '/', $img[$i]->src));
     if ($info['http_code'] === 200) {
-      // AdLib uses Windows folder notation.
-      $file_uri = $base_dir . basename(str_replace('\\', '/', $img[$i]->src));
       $file = file_save_data($image, $file_uri, FILE_EXISTS_REPLACE);
       $img[$i]->src = file_create_url($file->uri);
     } else {
-      watchdog('adlib_api', 'Failed to fetch image for HTML: %fname', array('%fname' => basename($element->src)), WATCHDOG_WARNING);
+      watchdog('adlib_api', 'Failed to fetch image for HTML: %fname', array('%fname' => basename($file_uri)), WATCHDOG_WARNING);
     }
   }
   $data = (string) $html;
@@ -786,7 +789,7 @@ function _os2web_adlib_api_process_html($data, $base_url) {
 function _os2web_adlib_api_queue_file($file) {
   $file->file = file_load($file->fid);
 
-  if (is_file(drupal_realpath($file->file->uri)) && _os2web_adlib_api_is_filetype_approved($file->file->fid)) {
+  if (drupal_realpath($file->file->uri) && is_file(drupal_realpath($file->file->uri)) && _os2web_adlib_api_is_filetype_approved($file->file->fid)) {
     $adlib = _os2web_adlib_api_get_instance();
     $upload = $adlib->uploadData($file->file->filename, file_get_contents(drupal_realpath($file->file->uri)));
     if ($upload) {
