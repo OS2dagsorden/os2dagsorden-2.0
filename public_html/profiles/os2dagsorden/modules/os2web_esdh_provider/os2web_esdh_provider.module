@@ -11,6 +11,7 @@
  * Implements hook_menu().
  */
 function os2web_esdh_provider_menu() {
+  $items = array();
   $items['admin/config/os2web/esdh_provider/importconfirm'] = array(
     'title' => 'Confirm reimport',
     'access arguments' => array('administer os2web'),
@@ -105,6 +106,7 @@ function os2web_esdh_provider_clear_mm_import_table_submit() {
  * Implements hook_ctools_plugin_type().
  */
 function os2web_esdh_provider_ctools_plugin_type() {
+  $plugins = array();
   $plugins['cm'] = array(
     'cache' => TRUE,
     'required methods' => array(
@@ -286,6 +288,7 @@ function os2web_esdh_provider_cron_queue_info() {
     return array();
   }
 
+  $queues = array();
   $queues['acadre_mm_import'] = array(
     'worker callback' => '_os2web_esdh_provider_cron_queue_worker',
     'time' => 30,
@@ -611,6 +614,7 @@ function _os2web_esdh_provider_import_check($caller = 'internal') {
     $error = 2;
     $severity = ($caller == 'nagios') ? NAGIOS_STATUS_CRITICAL : PROD_CHECK_REQUIREMENT_ERROR;
   }
+  $check = array();
   $check['esdh_import_check'] = array(
     '#title' => t('ESDH Import'),
     '#state' => $error == 0,
@@ -639,6 +643,7 @@ function _os2web_esdh_provider_pws_check($caller = 'internal') {
   else {
     $severity = ($caller == 'nagios') ? NAGIOS_STATUS_CRITICAL : PROD_CHECK_REQUIREMENT_ERROR;
   }
+  $check = array();
   $check['esdh_pws_check'] = array(
     '#title' => t('ESDH Webservices'),
     '#state' => $status,
@@ -687,6 +692,7 @@ function _os2web_esdh_provider_adlib_check($caller = 'internal') {
     $msg = 'AdLib module not available. Check <a href="/admin/modules">module list</a>';
   }
 
+  $check = array();
   $check['esdh_adlib_check'] = array(
     '#title' => t('AdLib webservice'),
     '#state' => $status,

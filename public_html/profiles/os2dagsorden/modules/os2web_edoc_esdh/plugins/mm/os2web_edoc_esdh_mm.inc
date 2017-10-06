@@ -38,15 +38,20 @@ function os2web_edoc_esdh_mm_get_import_list() {
    */
   $uris = array();
   foreach (file_scan_directory(variable_get('os2web_edoc_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
-    if (is_file(drupal_realpath($xml_file->uri))) {
+    if (drupal_realpath($xml_file->uri) && is_file(drupal_realpath($xml_file->uri))) {
       libxml_use_internal_errors(TRUE);
       $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($xml_file->uri))), 'SimpleXMLElement', LIBXML_NOWARNING);
       libxml_clear_errors();
       libxml_use_internal_errors(FALSE);
 
+      $committee = NULL;
+      $meeting_date = NULL;
+
       if (is_object($manifest)) {
-        $committee = (string) array_shift($manifest->xpath("/Meeting/Committee"));
-        $meeting_date = (string) array_shift($manifest->xpath("/Meeting/MeetingDate"));
+        $committee_xpath = $manifest->xpath("/Meeting/Committee");
+        $committee = (string) array_shift($committee_xpath);
+        $meeting_date_xpath = $manifest->xpath("/Meeting/MeetingDate");
+        $meeting_date = (string) array_shift($meeting_date_xpath);
       }
     }
 
@@ -92,7 +97,7 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
     _os2web_edoc_esdh_mm_order_addenums();
   }
   $meetings = array();
-  if (is_file(drupal_realpath($file))) {
+  if (drupal_realpath($file) && is_file(drupal_realpath($file))) {
 
     libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOWARNING);
@@ -107,17 +112,16 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
       }
     }
     if (is_object($manifest)) {
-
-      // Setting the XML file to load - don't think we need this anymore.
-      $directory_name = dirname(drupal_realpath($file));
-
       //Collecting agendas
       $meeting_agendas = $manifest->xpath("/Meeting/MeetingAgendaTypes/MeetingAgendaType");
       foreach ($meeting_agendas as $meeting_agenda) {
         // Collecting agenda data
-        $committee = (string) array_shift($manifest->xpath("/Meeting/Committee"));
-        $ref_state = (string) array_shift($manifest->xpath("/Meeting/MeetingState"));
-        $meeting_date = (string) array_shift($manifest->xpath("/Meeting/MeetingDate"));
+        $committee_xpath = $manifest->xpath("/Meeting/Committee");
+        $committee = (string) array_shift($committee_xpath);
+        $ref_state_xpath = $manifest->xpath("/Meeting/MeetingState");
+        $ref_state = (string) array_shift($ref_state_xpath);
+        $meeting_date_xpath = $manifest->xpath("/Meeting/MeetingDate");
+        $meeting_date = (string) array_shift($meeting_date_xpath);
         $meeting_id = _os2web_edoc_esdh_generate_meeting_id($meeting_date, $committee); //generated meeting_id
         $meeting_pdf = $meeting_agenda->xpath('PDFDocument');
         $meeting_pdf = (string) $meeting_pdf[0];
@@ -125,7 +129,8 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
         $meeting_state = (string) $meeting_state[0];
         $meeting_type = $manifest->xpath('/Meeting/MeetingState');
         $meeting_type = (string) $meeting_type[0];
-        $acadre_version = (string) array_shift(explode('.', $meeting_pdf));
+        $acadre_version_xpath = explode('.', $meeting_pdf);
+        $acadre_version = (string) array_shift($acadre_version_xpath);
 
         if (stripos($meeting_state, 'lukket') !== FALSE) {
           $agenda_access = 'Lukket';
@@ -215,9 +220,10 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $meeting['items'] = array();
   $agenda = $meeting;
   // Only add the agenda if its PDF exists.
-  if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
+  $meeting_full_pdf_path = $meeting['uri'] . $meeting['pdf'];
+  if (drupal_realpath($meeting_full_pdf_path) && file_exists(drupal_realpath($meeting_full_pdf_path))) {
     $agenda['full_doc'] = array(
-      'uri' => $meeting['uri'] . $meeting['meeting_pdf'],
+      'uri' => $meeting_full_pdf_path,
       'title' => $meeting['committee'],
     );
     // Import all agenda items.
@@ -231,7 +237,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
     $agenda += os2web_esdh_provider_default_meeting();
     return $agenda;
   }
-  watchdog('eDoc MM', 'File do not exist in folder. %file', array('%file' => $xml_item_pdf), WATCHDOG_WARNING);
+  watchdog('eDoc MM', 'File do not exist in folder. %file', array('%file' => $meeting_full_pdf_path), WATCHDOG_WARNING);
   return FALSE;
 }
 
@@ -248,6 +254,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
  *   The imported item.
  */
 function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
+  $xml_item = array();
   $xml_item['number'] = (int) $xml->AgendaItemNumber;
   $xml_item['pdf'] = (string) $xml->PDFDocument;
   $xml_item_document = $xml->Document;
@@ -321,6 +328,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
         }
 
         // Process enclosure, if any
+        $enclosure_item = array();
         $enclosure_item['filename_in'] = (string) $bullet_xml->PDFDocument;
         $enclosure_item['access'] = (string) $bullet_xml->PublishingType;
         if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] == 'SKAL PUBLICERES') {
@@ -484,7 +492,9 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addenum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
+        $addenum_to = is_array($addenum_to) ? array_shift($addenum_to) : FALSE;
+        $addenum_to = is_array($addenum_to) ? array_shift($addenum_to) : $addenum_to;
+
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
           #error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));

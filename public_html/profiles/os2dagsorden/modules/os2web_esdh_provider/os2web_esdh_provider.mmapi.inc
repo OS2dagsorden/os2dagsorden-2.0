@@ -144,6 +144,11 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     return;
   }
 
+  $republish = FALSE;
+  $reason = NULL;
+  $committee_term = NULL;
+  $node = NULL;
+
   // Ideally $meetings will only have one entry.
   // But can have more if manifest is wrong.
   foreach ($meetings as $meeting) {
@@ -160,7 +165,6 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     // Either update, republish, delete or skip.
     if ($nid) {
       $node = node_load($nid);
-      $republish = FALSE;
 
       // Republish by Force.
       if ($force) {
@@ -648,7 +652,9 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
 
       if (isset($bullet['images'])) {
         foreach ($bullet['images'] as $image) {
-          $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) . '" style="width:90%;" /></div>';
+          if (file_create_url($image['path'])) {
+            $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) . '" style="width:90%;" /></div>';
+          }
         }
       }
 
@@ -693,7 +699,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-  if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+  if (drupal_realpath($uri_out) && _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
     $file_counter = 0;
     do {
       $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename(mb_substr($fname, 0, 145) . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
@@ -722,11 +728,11 @@ function _os2web_esdh_provider_import_file($file_meta) {
     ), WATCHDOG_DEBUG);
 
   $uri = FALSE;
-  if ($uri_tmp = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
+  if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
     // We have an already converted pdf file.
     $uri = $uri_pdf;
     $convert = FALSE;
-  } elseif ($uri_tmp = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+  } elseif (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
     // File already copied.
     $convert = TRUE;
     $uri = $uri_out;
@@ -776,7 +782,6 @@ function _os2web_esdh_provider_import_file($file_meta) {
 
   // Is an absolute path.
   if (variable_get('os2web_edoc_esdh_mm_is_abs', FALSE) && module_exists('os2web_edoc_esdh')) {
-    $doc_root = realpath($_SERVER['DOCUMENT_ROOT']) . '/';
     $uri = 'public://' . str_replace(variable_get('os2web_edoc_esdh_mm_abs_path_subs'), '', $uri);
   }
   $fid = db_select('file_managed', 'fm')
@@ -979,15 +984,19 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
   $system_id = $node->field_os2web_meetings_system_id[LANGUAGE_NONE][0]['value'];
   $filename = 'Unknown';
   $files = file_scan_directory(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => FALSE));
+  $agenda = array();
   foreach ($files as $file) {
-    $xml = simplexml_load_file(drupal_realpath($file->uri));
-    if (is_object($xml)) {
-      $xml_mid = (string) array_shift($xml->xpath("//table[@name='meeting']/fields/field/@sysid"));
-      if ($meeting_id == $xml_mid) {
-        $filename = $file->filename;
-        $agenda = $xml->xpath("//table[@name='producedAgenda']/fields/field[@sysid='$system_id']/../field");
-        if (!empty($agenda)) {
-          break;
+    if (drupal_realpath($file->uri)) {
+      $xml = simplexml_load_file(drupal_realpath($file->uri));
+      if (is_object($xml)) {
+        $sysid_xpath = $xml->xpath("//table[@name='meeting']/fields/field/@sysid");
+        $xml_mid = (string) array_shift($sysid_xpath);
+        if ($meeting_id == $xml_mid) {
+          $filename = $file->filename;
+          $agenda = $xml->xpath("//table[@name='producedAgenda']/fields/field[@sysid='$system_id']/../field");
+          if (!empty($agenda)) {
+            break;
+          }
         }
       }
     }
@@ -1008,6 +1017,7 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
   $html .= "<h1>" . $node->title . "</h1>";
 
   $head = array('Node id', 'Meeting id', 'System id', 'Filename');
+  $rows = array();
   $rows[] = array(
     $node->nid,
     $meeting_id,
@@ -1115,7 +1125,7 @@ function _os2web_esdh_provider_import($id = FALSE) {
 /**
  * Helper function to dump output from REST importer.
  */
-function _os2web_esdh_provider_import_output($id, $nids) {
+function _os2web_esdh_provider_import_output($id = NULL, $nids = NULL) {
   if (isset($id)) {
     $msg = 'Meeting not found.';
   }
