@@ -39,6 +39,7 @@ class AcadrePWS {
     $proxy = variable_get('os2web_pws_proxy', FALSE);
     $proxy_host = variable_get('os2web_pws_proxy_host');
     $proxy_port = variable_get('os2web_pws_proxy_port');
+    $options = array();
     $options['trace'] = FALSE;
     $options['exceptions'] = TRUE;
     $options['login'] = $user;
@@ -333,7 +334,8 @@ class AcadrePWS {
         $result = $this->client->__doRequest(format_string($request, array('[DocID]' => $id)), $this->client->location, $this->client->uri . 'GetLockStatus', SOAP_1_1);
         $result = simplexml_load_string($result);
         if (is_object($result)) {
-          if ('' !== (string) array_pop($result->xpath('//soap:Fault/faultcode'))) {
+          $result_xpath = $result->xpath('//soap:Fault/faultcode');
+          if ('' !== (string) array_pop($result_xpath)) {
             // This will indicate fault.
             $result = FALSE;
           } else {
@@ -416,7 +418,7 @@ class AcadrePWS {
    *   Documents meta
    */
   public function getDocuments($documents) {
-    $cid = __FUNCTION__ . $query;
+    $cid = __FUNCTION__;
     $result = & drupal_static($cid, FALSE);
     if ($result != FALSE) {
       return $result;
@@ -491,7 +493,8 @@ class AcadrePWS {
           '@Version' => $ver
         )), $this->client->location, $this->client->uri . 'GetFileName', SOAP_1_1);
         if (is_object($result = simplexml_load_string($result))) {
-          $result = (string) array_shift($result->xpath('//soap:Body'))->FileName1;
+          $body_xpath = $result->xpath('//soap:Body');
+          $result = (string) array_shift($body_xpath)->FileName1;
           // Use md5sum to avoid long  and guessable filenames.
           $info = pathinfo($result);
           $result = md5('adlibsalt' . $info['basename']) . '.' . $info['extension'];
@@ -518,6 +521,8 @@ class AcadrePWS {
   public function getDocData($id, $ver = FALSE) {
     $dest = ACADRE_CM_DEFAULT_DOC_CACHE_PATH;
     $result = FALSE;
+    $ref = NULL;
+
     if (!is_numeric($ver)) {
       $info = $this->getDocRef($id);
       $ref = $info['ref'];
@@ -527,7 +532,7 @@ class AcadrePWS {
 
     // Cache files unless there is a newer version available.
     $fid = os2web_adlib_api_get_fid($ref);
-    if ($fid > 0 && ($result = file_load($fid)) && is_file(drupal_realpath($result->uri))) {
+    if ($fid > 0 && ($result = file_load($fid)) && drupal_realpath($result->uri) && is_file(drupal_realpath($result->uri))) {
       $ctime = filectime(drupal_realpath($result->uri));
       $info = $this->getDocInfo($id);
       if (is_object($info)) {
@@ -562,15 +567,18 @@ class AcadrePWS {
           '@Version' => $ver
         )), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
         if (is_object($result = simplexml_load_string($result))) {
-          $result = (string) array_shift($result->xpath('//soap:Body'))->XMLBinary;
+          $body_xpath = $result->xpath('//soap:Body');
+          $result = (string) array_shift($body_xpath)->XMLBinary;
           if (file_prepare_directory($dest, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
             $filename = (string) $ref . '-' . (string) $ver . '-' . $this->getDocFileName($ref, $ver);
             if (isset($fid) && $fid > 0) {
               $unm_file = file_unmanaged_save_data(base64_decode($result), $dest . $filename, FILE_EXISTS_REPLACE);
-              $file = file_load($fid);
-              $file->uri = $unm_file;
-              $file->filename = basename($unm_file);
-              file_save($file);
+              if (isset($unm_file) && $unm_file) {
+                $file = file_load($fid);
+                $file->uri = $unm_file;
+                $file->filename = basename($unm_file);
+                file_save($file);
+              }
             } else {
               $file = file_save_data(base64_decode($result), $dest . $filename, FILE_EXISTS_REPLACE);
             }
@@ -632,7 +640,8 @@ class AcadrePWS {
           '@FileRef' => $ref,
           '@Version' => $ver
         )), $this->client->location, $this->client->uri . 'GetPhysicalDocument', SOAP_1_1);
-        $result = (string) array_shift(simplexml_load_string($result)->xpath('//soap:Body'))->XMLBinary;
+        $body_xpath = simplexml_load_string($result)->xpath('//soap:Body');
+        $result = (string) array_shift($body_xpath)->XMLBinary;
         cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
       } catch (SoapFault $sf) {
         return FALSE;
