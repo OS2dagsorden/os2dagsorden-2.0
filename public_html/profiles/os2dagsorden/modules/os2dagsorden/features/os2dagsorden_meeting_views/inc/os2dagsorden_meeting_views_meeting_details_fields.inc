@@ -633,7 +633,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_case_ide
     $case_link_url = variable_get('os2dagsorden_bullet_case_id_link_url');
     if (!empty($bullet_point->field_os2web_meetings_bul_caseid['und'][0]['value'])) {
       $caseId = $bullet_point->field_os2web_meetings_bul_caseid['und'][0]['value'];
-      print '<a href="' . $case_link_url . $caseId . '" target="_blank"><div class="popup-link"></div>' . t('Sage') . '</a>';
+      print '<a href="' . $case_link_url . $caseId . '" target="_blank"><div class="popup-link"></div>' . t('Sag') . '</a>';
     } else {
       print '<a>&nbsp;</a>';
     }

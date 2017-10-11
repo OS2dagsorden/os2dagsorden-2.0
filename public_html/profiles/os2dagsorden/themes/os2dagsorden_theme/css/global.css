@@ -1400,6 +1400,10 @@ table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
     padding:2px 2px 0 2px;
 }
 
+.view-meeting-details .ul-item-list-dagsordenspunkt {
+    margin-right: -130px;
+}
+
 .ul-item-list-dagsordenspunkt li.non-bilag a {
     overflow: hidden;
     text-overflow: ellipsis;
