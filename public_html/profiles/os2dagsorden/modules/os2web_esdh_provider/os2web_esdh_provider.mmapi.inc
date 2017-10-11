@@ -1162,7 +1162,9 @@ function os2web_esdh_provider_filter_html_tags($data) {
   $data = _os2web_esdh_provider_strip_tags($data, $stripped_tags);
 
   //remove all img tags that link missing files
-  $data = _os2web_esdh_provider_remove_img_tags($data);
+  if (variable_get('os2dagsorden_clean_image_tags', TRUE)) {
+    $data = _os2web_esdh_provider_remove_img_tags($data);
+  }
   //replace all <p></p> and <p>&nbsp;</p> tags with <br />
   $data = preg_replace('#(<p>((<span>)*?)(|&nbsp;)((<\/span>)*?)<\/p>\s*)+#i', '<br />', $data);
   //replace multiple &nbsp; tags with...

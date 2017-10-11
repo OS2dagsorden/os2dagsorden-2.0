@@ -706,13 +706,19 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#default_value' => variable_get('os2dagsorden_tab_tag', '&nbsp;'),
     '#description' => t('Tag what should be put into the document instead of multiple &amp;nbsp; tags'),
   );
-   $form['os2dagsorden_meeting_import']['os2dagsorden_url_strip_count'] = array(
-     '#type' => 'textfield',
-     '#title' => t('Link (a href) limit: '),
-     '#maxlength' => 250,
-     '#default_value' => variable_get('os2dagsorden_url_strip_count', '20'),
-     '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
-   );
+  $form['os2dagsorden_meeting_import']['os2dagsorden_url_strip_count'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Link (a href) limit: '),
+    '#maxlength' => 250,
+    '#default_value' => variable_get('os2dagsorden_url_strip_count', '20'),
+    '#description' => t('Specify a max limit in chars, which a link can have. If the link has more than specified, then link text is trimmed and ... is added.'),
+  );
+  $form['os2dagsorden_meeting_import']['os2dagsorden_clean_image_tags'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Clean image (img) tags'),
+    '#default_value' => variable_get('os2dagsorden_clean_image_tags', TRUE),
+    '#description' => t('This will decide whether the image (img) tags scr will be removed during the import. The scr is checked for http headers, and if they are 404/FALSE the scr attribute is removed. However on some installation that should be omitted.'),
+  );
 
   //PDF conversion settings
   if (module_exists('os2web_pdf_conversion_manager')) {
