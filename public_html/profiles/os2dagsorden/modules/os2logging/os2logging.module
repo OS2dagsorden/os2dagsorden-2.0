@@ -118,6 +118,7 @@ function _os2logging_node_type_chosen($node_type) {
 function os2logging_help($path, $arg) {
   switch ($path) {
     case 'admin/help/os2logging':
+      $readme = '';
 
       $filepath = dirname(__FILE__) . '/README.md';
       if (file_exists($filepath)) {

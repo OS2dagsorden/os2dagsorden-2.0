@@ -87,6 +87,7 @@ function _os2web_qbrick_get_movie_id($nid) {
  * Implements hook_field_info().
  */
 function os2web_qbrick_field_info() {
+  $field = array();
   $field['os2web_qbrick_movie'] = array(
     'label' => t('QBrick movie'),
     'description' => t('Add a QBrick movie to this field.'),
@@ -110,6 +111,7 @@ function os2web_qbrick_field_is_empty($item, $field) {
  * Implments hook_field_widget_info().
  */
 function os2web_qbrick_field_widget_info() {
+  $widgets = array();
   $widgets['os2web_qbrick_movie_simple'] = array(
     'label' => 'Qbrick Movie simple entry',
     'field types' => array('os2web_qbrick_movie'),
@@ -165,6 +167,7 @@ function os2web_qbrick_field_widget_form(&$form, &$form_state, $field, $instance
  * Implements hook_field_formatter_info().
  */
 function os2web_qbrick_field_formatter_info() {
+  $formatters = array();
   $formatters['os2web_qbrick_movie_simple'] = array(
     'label' => t('QBrick movie render'),
     'field types' => array('os2web_qbrick_movie'),

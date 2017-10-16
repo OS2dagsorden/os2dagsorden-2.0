@@ -156,8 +156,6 @@ class AcadrePWS {
    *
    * FIXME: Make this a TRUE call to webservice.
    *
-   * @method getCaseSystemIdByYearAndSerial(array())
-   *
    * @param string $query
    *   A case journaling number, ie. 11/14293
    */
@@ -573,6 +571,7 @@ class AcadrePWS {
           $result = (string) array_shift($body_xpath)->XMLBinary;
           if (file_prepare_directory($dest, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
             $filename = (string) $ref . '-' . (string) $ver . '-' . $this->getDocFileName($ref, $ver);
+            $file = NULL;
             if (isset($fid) && $fid > 0) {
               $unm_file = file_unmanaged_save_data(base64_decode($result), $dest . $filename, FILE_EXISTS_REPLACE);
               if (isset($unm_file) && $unm_file) {

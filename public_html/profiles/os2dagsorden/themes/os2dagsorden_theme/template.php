@@ -22,8 +22,7 @@
  * Implementation of hook_preprocess_page.
  * Adds needed JS behaviour, loads the notes/speaker paper indicators, makes the security log entries.
  *
- * @param mixed &$variables variables
- * @return none
+ * @param mixed $variables array
  */
 function os2dagsorden_theme_preprocess_page(&$variables) {
   drupal_add_library('system', 'ui.draggable');
@@ -31,9 +30,11 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
   drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/os2dagsorden_theme.js');
 
   if (!os2dagsorden_access_helper_is_touch()) {
-    drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu', TRUE) . ');', 'inline');
+    $collapse_menu = variable_get('os2dagsorden_collapse_menu', TRUE);
+    drupal_add_js('add_show_hide_menu_behaviour(' . $collapse_menu . ');', 'inline');
   } else {
-    drupal_add_js('add_show_hide_menu_behaviour(' . variable_get('os2dagsorden_collapse_menu_touch', TRUE) . ');', 'inline');
+    $collapse_menu_touch = variable_get('os2dagsorden_collapse_menu_touch', TRUE);
+    drupal_add_js('add_show_hide_menu_behaviour(' . $collapse_menu_touch . ');', 'inline');
   }
   drupal_add_js(array('os2dagsorden_settings' => array('body_font_size' => variable_get('os2dagsorden_body_text_size', '13'))), array('type' => 'setting'));
   drupal_add_js(array('os2dagsorden_settings' => array('title_font_size' => variable_get('os2dagsorden_title_text_size', '13'))), array('type' => 'setting'));
@@ -54,8 +55,13 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
     if ($view->name == 'meeting_details') {
       //adding expand/collapse behaviour to meeting details view
       $os2dagsorden_expand_all_bullets = variable_get('os2dagsorden_expand_all_bullets', FALSE) ? TRUE : 'false';
-      drupal_add_js('bullet_point_add_expand_behaviour("' . $base_path . '?q=", ' . variable_get('os2dagsorden_expand_attachment', TRUE) . ',  ' . $os2dagsorden_expand_all_bullets . ' , ' . variable_get('os2dagsorden_expand_attachment_onload', FALSE) . ')', 'inline');
-      drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ',' . variable_get('os2dagsorden_expand_cases', "false") . ')', 'inline');
+      $expand_attachment = variable_get('os2dagsorden_expand_attachment', TRUE);
+      $expand_attachment_onload = variable_get('os2dagsorden_expand_attachment_onload', FALSE);
+      drupal_add_js('bullet_point_add_expand_behaviour("' . $base_path . '?q=", ' . $expand_attachment . ',  ' . $os2dagsorden_expand_all_bullets . ' , ' . $expand_attachment_onload . ')', 'inline');
+
+      $expand_bilags = variable_get('os2dagsorden_expand_bilags', "true");
+      $expand_cases = variable_get('os2dagsorden_expand_cases', "false");
+      drupal_add_js('open_all_bilag_case_bullet_points(' . $expand_bilags . ',' . $expand_cases . ')', 'inline');
       $variables['views'] = '';
 
       //adding pagescroll
@@ -111,7 +117,8 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
       $destination = $_GET['destination'];
       $destination = explode('/', $destination);
 
-      $breadcrumb[] = l('Forsiden', $base_url);
+      $breadcrumb = array();
+      $breadcrumb[] = l('Forsiden', $GLOBALS['base_url']);
       $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $destination[1]);
 
       if (isset($destination[3])) //bullet point
@@ -161,6 +168,10 @@ function os2dagsorden_theme_date_nav_title($params) {
   $date_info = $view->date_info;
   $link = !empty($params['link']) ? $params['link'] : FALSE;
   $format = !empty($params['format']) ? $params['format'] : NULL;
+
+  $title = '';
+  $date_arg = '';
+
   switch ($granularity) {
     case 'year':
       $title = $date_info->year;
@@ -198,7 +209,7 @@ function os2dagsorden_theme_date_nav_title($params) {
  *
  * @param mixed $vars vars
  *
- * @return reformatted title
+ * @return string reformatted title
  */
 function os2dagsorden_theme_calendar_time_row_heading($vars) {
   $start_time = $vars['start_time'];
@@ -232,10 +243,9 @@ function os2dagsorden_theme_calendar_time_row_heading($vars) {
  * Changes the format of the exposed form - meetings search.
  * Also removes the unneeded links on log in page.
  *
- * @param mixed &$form form
- * @param mixed &$form_state form state
+ * @param mixed $form form
+ * @param mixed $form_state form state
  *
- * @return none
  */
 function os2dagsorden_theme_form_alter(&$form, &$form_state) {
   if ($form['#id'] == 'views-exposed-form-meetings-search-page') {
@@ -274,10 +284,7 @@ function os2dagsorden_theme_form_alter(&$form, &$form_state) {
  * Preprocess HTML hook.
  * Fixes the IE compatibility problem.
  *
- * @param mixed &$form form
- * @param mixed &$form_state form state
- *
- * @return none
+ * @param $var array of variables
  */
 function os2dagsorden_theme_preprocess_html(&$vars) {
   // Setup IE meta tag to force IE rendering mode

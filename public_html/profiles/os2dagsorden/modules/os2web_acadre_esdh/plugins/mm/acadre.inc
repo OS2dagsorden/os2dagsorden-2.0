@@ -90,8 +90,9 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
     _os2web_acadre_esdh_mm_order_addendums();
   }
   $meetings = array();
-  if (is_file(drupal_realpath($file))) {
-    $manifest = simplexml_load_file(drupal_realpath($file));
+  $real_path = drupal_realpath($file);
+  if ($real_path && is_file($real_path)) {
+    $manifest = simplexml_load_file($real_path);
     if (is_object($manifest)) {
       $agenda_id = _get_value_from_xml($manifest->xpath("/root/table[@name='agenda']/fields/field/@sysid"), 'int');
       $items_xml = $manifest->xpath("//table[@name='producedAgenda']/fields");
@@ -266,7 +267,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
         pathinfo($info['docfilename'], PATHINFO_FILENAME) . '.pdf'
       ));
 
-    if (file_exists(drupal_realpath($pdf_uri))) {
+    if (drupal_realpath($pdf_uri) && file_exists(drupal_realpath($pdf_uri))) {
       $uri = $pdf_uri;
     } else {
       $uri = $doc_uri;
@@ -360,7 +361,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $name = _get_value_from_xml($xml->xpath("fields/field[@name='name']"));
   $access = _get_value_from_xml($xml->xpath("fields/field[@name='accessname']"));
   $case = _get_value_from_xml($xml->xpath("fields/field[@name='caseno']"));
-  $case_id = _get_value_from_xml($xml->xpath("table/table/fields/field[@name='sysid']"));
+  //$case_id = _get_value_from_xml($xml->xpath("table/table/fields/field[@name='sysid']"));
   $sysid = _get_value_from_xml($xml->xpath("fields/field[@name='sysid']"), 'int');
   $comname = _get_value_from_xml($xml->xpath("fields/field[@name='comname']"));
 
@@ -527,13 +528,17 @@ function _os2web_acadre_esdh_import_bullet($info, $bullet_xml) {
 /**
  * Case insensitive fileexists(). Code from comments on php.net.
  *
- * @param string $filename
+ * @param string|boolean $filename
  *   File name to check.
  *
  * @return mixed
  *   False if file not found, case corrected filename if found.
  */
 function _os2web_acadre_esdh_similar_file_exists($filename) {
+  if (!$filename) {
+    return FALSE;
+  }
+
   if (file_exists($filename)) {
     return $filename;
   }
@@ -635,7 +640,14 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addendum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addendum_to = is_array($addendum_to) ? array_shift(array_shift($addendum_to)) : FALSE;
+
+        if (is_array($addendum_to)) {
+          $addendum_to = array_shift($addendum_to);
+          $addendum_to = array_shift($addendum_to);
+        } else {
+          $addendum_to = FALSE;
+        }
+
         // Save time by only updating what is needed.
         if ($addendum_to != $primary->nid) {
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
@@ -777,7 +789,7 @@ function _acadre_esdh_mm_remove_empty_tags($data) {
 function _get_value_from_xml($xml_raw, $convert_to = 'string') {
   if ($convert_to == 'string') {
     return trim((string) array_shift($xml_raw));
-  } elseif ($convert_to = 'int') {
+  } elseif ($convert_to == 'int') {
     return (int) array_shift($xml_raw);
   }
 }

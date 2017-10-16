@@ -235,6 +235,7 @@ function theme_os2web_esdh_case($vars) {
     $markup .= t('There was a problem connecting to the case service provider. Sorry for the inconvenience.');
     $markup .= '</li></ul></div>';
 
+    $page = array();
     $page['region'] = array(
       '#type' => 'markup',
       '#markup' => $markup,
@@ -268,9 +269,12 @@ function theme_os2web_esdh_document($vars) {
   foreach ($id as $docid) {
     $file = _os2web_esdh_field_get_file_by_did($docid);
     if (is_object($file) && $document_meta = os2web_esdh_provider_invoke('cm', 'get_document', $docid)) {
-      $rows[] = array(
-        l($document_meta['title'], file_create_url($file->uri), array('attributes' => array('target' => '_blank'))) . '<span class="documentdate">' . format_date(strtotime($document_meta['last_update']), 'custom', 'd/m/Y') . '</span>',
-      );
+      $file_url = file_create_url($file->uri);
+      if ($file_url) {
+        $rows[] = array(
+          l($document_meta['title'], $file_url, array('attributes' => array('target' => '_blank'))) . '<span class="documentdate">' . format_date(strtotime($document_meta['last_update']), 'custom', 'd/m/Y') . '</span>',
+        );
+      }
     } else {
       // Add the documet to be updated trough cron.
       _os2web_esdh_field_add_to_cron($docid);
@@ -503,7 +507,6 @@ function _os2web_esdh_field_add_all_documents_to_requeue() {
 
   // 2.
   // Get all meta data for every document we now.
-  $newest_documents = array();
   $esdh_documents = os2web_esdh_provider_invoke('cm', 'get_documents', array_keys($document_to_update));
 
   // 3. Update all documents which has a newer version.
@@ -523,6 +526,7 @@ function _os2web_esdh_field_add_all_documents_to_requeue() {
  * Implements hook_cron_queue_info().
  */
 function os2web_esdh_field_cron_queue_info() {
+  $queues = array();
   $queues['os2web_esdh_field_cm_doc_queue'] = array(
     'worker callback' => '_os2web_esdh_field_update_document',
     'time' => 300,
@@ -569,14 +573,15 @@ function _os2web_esdh_field_update_document($document) {
 /**
  * Helper function to get the file instance of a document.
  *
- * @param  [int] $document_id The document ID
+ * @param  $document_id int The document ID
+ *
  * @return Object             The drupal file Object.
  */
 function _os2web_esdh_field_get_file_by_did($document_id) {
 
   $doc_in_db = _os2web_esdh_field_get_doc_by_did($document_id);
 
-  if ($doc_in_db && !empty($doc_in_db['fid'])) {
+  if (isset($doc_in_db) && !empty($doc_in_db['fid'])) {
     return file_load($doc_in_db['fid']);
   }
   return NULL;
@@ -585,7 +590,7 @@ function _os2web_esdh_field_get_file_by_did($document_id) {
 /**
  * Helper function to get the document by document id.
  *
- * @param  [int] $document_id The document ID
+ * @param  $document_id int The document ID
  * @return array             The document.
  */
 function _os2web_esdh_field_get_doc_by_did($document_id) {
@@ -601,10 +606,10 @@ function _os2web_esdh_field_get_doc_by_did($document_id) {
 /**
  * Helper function to delete an document from out table.
  *
- * @param  [int] $document_id The document ID
+ * @param  $document_id int The document ID
  */
 function _os2web_esdh_field_delete_doc_by_did($document_id) {
-  $doc_in_db = db_delete('os2web_esdh_field_cm_documents')
+  db_delete('os2web_esdh_field_cm_documents')
     ->condition('did', $document_id)
     ->execute();
 }

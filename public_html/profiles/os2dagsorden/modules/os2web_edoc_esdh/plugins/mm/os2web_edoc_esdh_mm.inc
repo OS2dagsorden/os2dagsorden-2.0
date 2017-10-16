@@ -38,14 +38,14 @@ function os2web_edoc_esdh_mm_get_import_list() {
    */
   $uris = array();
   foreach (file_scan_directory(variable_get('os2web_edoc_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
+    $committee = NULL;
+    $meeting_date = NULL;
+
     if (drupal_realpath($xml_file->uri) && is_file(drupal_realpath($xml_file->uri))) {
       libxml_use_internal_errors(TRUE);
       $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($xml_file->uri))), 'SimpleXMLElement', LIBXML_NOWARNING);
       libxml_clear_errors();
       libxml_use_internal_errors(FALSE);
-
-      $committee = NULL;
-      $meeting_date = NULL;
 
       if (is_object($manifest)) {
         $committee_xpath = $manifest->xpath("/Meeting/Committee");
@@ -365,6 +365,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
         if (empty($bullet_id)) {
           $bullet_id = $xml_item['documentid'];
         }
+        $enclosure_item = array();
         $enclosure_item['filename_in'] = (string) $bullet_xml->PDFDocument;
         $enclosure_item['access'] = (string) $bullet_xml->PublishingType;
         if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] == 'SKAL PUBLICERES') {
@@ -492,8 +493,12 @@ function _os2web_edoc_esdh_mm_order_addenums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addenum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addenum_to = is_array($addenum_to) ? array_shift($addenum_to) : FALSE;
-        $addenum_to = is_array($addenum_to) ? array_shift($addenum_to) : $addenum_to;
+        if (is_array($addenum_to)) {
+          $addenum_to = array_shift($addenum_to);
+          $addenum_to = array_shift($addenum_to);
+        } else {
+          $addenum_to = FALSE;
+        }
 
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {

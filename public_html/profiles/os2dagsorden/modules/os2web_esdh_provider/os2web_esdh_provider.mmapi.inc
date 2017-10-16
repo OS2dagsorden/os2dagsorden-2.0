@@ -394,6 +394,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] Imported bullet points !list ',
         array('!id' => $PROCESSING_MEETING_ID, '!list' => print_r($item_nids, TRUE)), WATCHDOG_DEBUG);
 
+      $nids_to_delete = null;
+
       if (module_exists('os2dagsorden_esdh_provider')) {
         if (is_array($nids_to_delete) && is_array($item_nids)) {
           // Deleting only those, that were not added again.
@@ -942,6 +944,8 @@ function _acadre_esdh_import_term($term_name, $vocab) {
   $term->vid = $vid;
   $term->name = $term_name;
 
+  $tid = null;
+
   // Searching for an existing term based on the provided ESDH ID.
   if (!empty($term_esdh_id_field) && !empty($term_esdh_id) && $term_esdh_id > 0) {
     $term->{$term_esdh_id_field}['und'][0]['value'] = $term_esdh_id;
@@ -1070,13 +1074,17 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
 /**
  * Case insensitive fileexists(). Code from comments on php.net.
  *
- * @param string $filename
+ * @param string|boolean $filename
  *   Filename
  *
  * @return mixed
  *   False if file not found, case corrected filename if found.
  */
 function _os2web_esdh_provider_similar_file_exists($filename) {
+  if (!$filename) {
+    return FALSE;
+  }
+
   if (file_exists($filename)) {
     return $filename;
   }
@@ -1280,7 +1288,8 @@ function os2web_esdh_provider_filter_html_tags($data) {
  */
 function _os2web_esdh_provider_remove_img_tags($data) {
   preg_match_all('/<img[^>]+>/i', $data, $imgTags);
-  for ($i = 0; $i < count($imgTags[0]); $i++) {
+  $count = count($imgTags[0]);
+  for ($i = 0; $i < $count; $i++) {
     // get the source string
     preg_match('/src="([^"]+)/i', $imgTags[0][$i], $imgage);
 

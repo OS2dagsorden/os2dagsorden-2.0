@@ -206,7 +206,7 @@ function add_indicator_help_text(){
  */
 function add_tablet_orientation_listener(){
   jQuery(document).ready(function() {
-      jQuery(window).bind('orientationchange', function(e) {
+      jQuery(window).bind('orientationchange', function() {
           switch (window.orientation) {
               case -90:
               case 90:
@@ -373,26 +373,25 @@ function bullet_point_details_init(url, massive_bilag_expand, attachments_expand
     jQuery(".item-list-dagsordenspunkt .ul-item-list-dagsordenspunkt").each(function(index) {
 	attachment_add_expand_all_behaviour(this, index, url, massive_bilag_expand);
 	attachment_add_expand_behaviour(this, index, url, massive_bilag_expand);
-        bilag_cases_add_expand_behaviour(this, index, url, massive_bilag_expand);
+        bilag_cases_add_expand_behaviour(this, index);
        if (attachments_expand)
             bullet_points_expand_all(this, index, url, massive_bilag_expand, attachments_expand);
     });
   });
 }
 
-function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bilag_expand, attachments_expand){
-  var pathname = window.location.pathname;
-        jQuery("#attachments_container_"+bulletPointIndex).show();
-        jQuery("#btn_hide_show_attachments_"+bulletPointIndex).val("⇑");
-        if (attachments_expand){
-          jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
+function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bilag_expand, attachments_expand) {
+    jQuery("#attachments_container_" + bulletPointIndex).show();
+    jQuery("#btn_hide_show_attachments_" + bulletPointIndex).val("⇑");
+    if (attachments_expand) {
+        jQuery("[id^=attachment_text_container_" + bulletPointIndex + "_]").each(function (index_attachment) {
             attachment_load_content(bulletPointIndex, index_attachment, url);
-                jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
-                jQuery(this).show();
+            jQuery("#btn_hide_show_attachment_text_" + bulletPointIndex + "_" + index_attachment).val("⇑");
+            jQuery(this).show();
 
-          });
-      }
-    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val('⇈');
+        });
+    }
+    jQuery(".btn_hide_show_all_attachments_text_" + bulletPointIndex).val('⇈');
 }
 /**
  * Add expand all behavious for bullet point - opens all of its children.
@@ -494,10 +493,10 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).click();
     }
   });
-  jQuery("#attachments_container_"+bulletPointIndex).each(function(index) {
+  jQuery("#attachments_container_"+bulletPointIndex).each(function() {
       jQuery(this).children("li.bilags_cases").children(".bilags_cases_container").attr("id","bilags_cases_container_"+bulletPointIndex);
       jQuery(this).children("li.bilags_cases").children(".bilags_cases_container").hide();
-      bilag_cases_add_expand_behaviour(this,bulletPointIndex, url, massive_bilag_expand);
+      bilag_cases_add_expand_behaviour(this,bulletPointIndex);
     });
   }
 
@@ -511,8 +510,8 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
     if (jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().contents().first().text() == "Vent venligst..."){
       //get meeting id, bullet-point id and bilag id
       var classes = jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().attr('class').split(' ');
-      var cl = jQuery.grep(classes, function(string, i){
-	return (string.indexOf("bpa-") == 0);
+      var cl = jQuery.grep(classes, function(string){
+	    return (string.indexOf("bpa-") == 0);
       });
 
       var cl_arr = String(cl).split("-");
@@ -537,7 +536,7 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
       });
     }
 }
-function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex, url, massive_bilag_expand){
+function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex){
   var pathname = window.location.pathname;
 
   jQuery(bulletPoint).children("li").children(".bilags_cases_container").each(function(index_attachment){
@@ -655,7 +654,7 @@ function hide_search_block_title(){
 function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
   jQuery(document).ready(function() {
    if (expand_bilags)  {
-    jQuery("li.bilags").children(".hide_show_bilags_cases").each(function(index) {
+    jQuery("li.bilags").children(".hide_show_bilags_cases").each(function() {
        if (jQuery(this).val() == '⇓') {
 
 	jQuery(this).click();
@@ -663,7 +662,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     });
   }
   if(expand_cases)  {
-    jQuery("li.cases").children(".hide_show_bilags_cases").each(function(index) {
+    jQuery("li.cases").children(".hide_show_bilags_cases").each(function() {
       if (jQuery(this).val() == '⇓') {
 	jQuery(this).click();
       }
@@ -681,7 +680,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     $(".help-button").each(function() {
       var offset = $(this).offset();
 
-      $(this).click(function(e) {
+      $(this).click(function() {
         if ($("#ToolTipDiv").css('display') == 'block') {
           $("#ToolTipDiv").css({'position': 'absolute', 'bottom': '', 'right': ''});
           if ($("#ToolTipDiv").hasClass($(this).attr('id'))) {

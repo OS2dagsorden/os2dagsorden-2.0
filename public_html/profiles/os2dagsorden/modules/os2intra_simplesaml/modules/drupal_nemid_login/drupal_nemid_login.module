@@ -14,6 +14,7 @@ require dirname(__FILE__) . '/lib/Nemid.php';
  * Implements hook_menu().
  */
 function drupal_nemid_login_menu() {
+  $items = array();
   $items['nemid'] = array(
     'title' => t('NemID login page'),
     'page callback' => '_drupal_nemid_login_page',
@@ -46,6 +47,7 @@ function drupal_nemid_login_menu() {
  * Implements hook_block_info().
  */
 function drupal_nemid_login_block_info() {
+  $blocks = array();
   $blocks['nemid_login'] = array(
     'info' => t('NemID login block'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
@@ -169,6 +171,8 @@ function _drupal_nemid_login_verify() {
   $message = '';
 
   if (isset($_POST['response'])) {
+    $errorcodes = array();
+
     require dirname(__FILE__) . '/lib/nemid-error-codes.php';
     $response = base64_decode($_POST['response']);
 

@@ -170,7 +170,7 @@ function os2web_pdf_conversion_manager_pdf_converter_form($form, $form_state) {
  * Implements hook_cronapi
  *
  * @param $op
- * @param null $job
+ * @param $job
  * @return array
  */
 function os2web_pdf_conversion_manager_cronapi($op, $job = NULL) {

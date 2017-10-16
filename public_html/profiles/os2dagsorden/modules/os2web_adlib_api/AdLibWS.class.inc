@@ -122,7 +122,8 @@ class AdLibWS {
     if (is_object($result) && isset($result->JobSettings['JobID'])) {
       return $result;
     } else {
-      $msg = (string) array_pop($result->xpath('//@Message'));
+      $message_xpath = $result->xpath('//@Message');
+      $msg = (string) array_pop($message_xpath);
       if ($msg == '') {
         $msg = 'Unknown reason.';
       }
@@ -142,6 +143,7 @@ class AdLibWS {
    */
   public function deleteJob($id) {
     if (ADLIB_DISABLED) {
+      $return = new stdClass();
       $return->status = 'Disabled';
       $return->result = '';
       return $return;
@@ -205,6 +207,8 @@ class AdLibWS {
    *   Result and status
    */
   public function getJobStatus($id) {
+    $return = new stdClass();
+
     if (ADLIB_DISABLED) {
       $return->status = 'Disabled';
       $return->result = '';

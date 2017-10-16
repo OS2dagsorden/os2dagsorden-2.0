@@ -105,8 +105,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
       $xml_id = $manifest->xpath("Agendas/Agenda/Meeting/@ID");
-      $meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
-      $meeting_name = (string) $meeting_name[0];
+      //$meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
+      //$meeting_name = (string) $meeting_name[0];
       $acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
       $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
       $meeting_type = $manifest->xpath('/Publication/PublicationTypeAsValue');
@@ -125,15 +125,14 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $committee = (string) $committee[0]['ID'];
       $committee_group_id = (string) $committee_group_id[0]['ID'];
       $committee_name = (string) $committee_name[0];
-      $meeting_name = $committee_name;
       $sys_id = (string) $sys_id[0]['ID'];
       $xml_id = (string) $xml_id[0]['ID'];
-      $meeting_public = (string) $meeting_public[0];
+      //$meeting_public = (string) $meeting_public[0];
 
       $meeting_date_when = $meeting_data[0]->When;
       $meeting_date_until = $meeting_data[0]->Until;
       $meeting_where = (string) $meeting_data[0]->Where;
-      $meeting_name = (string) $meeting_name[0];
+      //$meeting_name = (string) $meeting_name[0];
       $meeting_name = $committee_name;
       $meeting_uri = (string) $meeting_uri[0];
       $acadre_version = (string) $acadre_version[0]['ID'];
@@ -152,6 +151,8 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_date_until = date_format($date_obj1, 'Y-m-d H:i');
 
       //Members
+      $participants = array();
+      $participants_cancellation = array();
       foreach ($members as $member) {
         // Changed by skifter@bellcom.dk 01.08.2013 - to handle "no show" members and messages for "no shoW"
         if (!empty($member->ParticipationNote)) {
@@ -208,7 +209,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       if (!empty($meeting_pdf)) {
         $meeting['pdf'] = (string) $meeting_pdf[0];
       }
-      $meeting['state'] = (string) $meeting_state[0];
+      //$meeting['state'] = (string) $meeting_state[0];
       if (empty($meeting_agendas)) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
       }
@@ -285,7 +286,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
     $agenda += os2web_esdh_provider_default_meeting();
     return $agenda;
   }
-  watchdog('SBsys MM', 'File do not exist in folder. %file', array('%file' => $xml_item_pdf), WATCHDOG_WARNING);
+  watchdog('SBsys MM', 'File do not exist in folder. %file', array('%file' => drupal_realpath($meeting['uri'])), WATCHDOG_WARNING);
   return FALSE;
 }
 
@@ -302,6 +303,7 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
  *   The imported item.
  */
 function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
+  $xml_item = array();
   $xml_item['number'] = (string) $xml->Number;
   //$xml_item['sysid'] = (string) $xml
   $xml_item['pdf'] = (string) $xml->PDFDocument;
@@ -312,11 +314,6 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
   $xml_item['document_type'] = (string) $xml->IsPublic;
   $xml_item_participants = $xml->Members;
   $xml_case_id = (string) $xml->ItemCaseNumber;
-
-  $case_text = '';
-  if (isset($xml_case_id)) {
-    $case_text = ' (' . $xml_case_id . ')';
-  }
 
   $item = array(
     'id' => $xml_item['number'],
@@ -539,7 +536,13 @@ function _os2web_sbsys_esdh_mm_order_addenums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addenum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
+        if (is_array($addenum_to)) {
+          $addenum_to = array_shift($addenum_to);
+          $addenum_to = array_shift($addenum_to);
+        } else {
+          $addenum_to = FALSE;
+        }
+
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));

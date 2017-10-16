@@ -41,18 +41,21 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
     $meeting_date = NULL;
     $committee = NULL;
 
-    if (drupal_realpath($xml_file->uri) && is_file(drupal_realpath($xml_file->uri))) {
-      libxml_use_internal_errors(TRUE);
-      $manifest = simplexml_load_string(file_get_contents(drupal_realpath($xml_file->uri)), 'SimpleXMLElement', LIBXML_NOWARNING);
-      libxml_clear_errors();
-      libxml_use_internal_errors(FALSE);
+    $real_path = drupal_realpath($xml_file->uri);
+    if ($real_path) {
+      if (is_file($real_path)) {
+        libxml_use_internal_errors(TRUE);
+        $manifest = simplexml_load_string(file_get_contents($real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
+        libxml_clear_errors();
+        libxml_use_internal_errors(FALSE);
 
-      if (is_object($manifest)) {
-        $committee = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
-        $committee = (string) array_shift($committee);
+        if (is_object($manifest)) {
+          $committee = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
+          $committee = (string) array_shift($committee);
 
-        $meeting_date = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
-        $meeting_date = (string) array_shift($meeting_date);
+          $meeting_date = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
+          $meeting_date = (string) array_shift($meeting_date);
+        }
       }
     }
 
@@ -79,10 +82,11 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
     _os2web_edoc_middelfart_esdh_mm_order_addenums();
   }
   $meetings = array();
-  if (drupal_realpath($file) && is_file(drupal_realpath($file))) {
 
+  $real_path = drupal_realpath($file);
+  if ($real_path && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
-    $manifest = simplexml_load_string(file_get_contents(drupal_realpath($file)), 'SimpleXMLElement', LIBXML_NOWARNING);
+    $manifest = simplexml_load_string(file_get_contents($real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
 
@@ -109,7 +113,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         $meeting_id = _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date_start, $committee); //generated meeting_id
 
         $meeting_type_xpath = $meeting_agenda->xpath('edoc:Type');
-        $meeting_type = (string) array_shift($meeting_type);
+        $meeting_type = (string) array_shift($meeting_type_xpath);
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
         $agenda_access = 'Åben';
 
@@ -298,6 +302,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
 
     // Process enclosures.
     foreach ($xml_item_enclosures->xpath('edoc:Attachment') as $bullet_xml) {
+      $enclosure_item = array();
       $title_xpath = $bullet_xml->xpath('edoc:Title');
       $enclosure_item['title'] = (string) array_shift($title_xpath);
       $accessName_xpath = $bullet_xml->xpath('edoc:AccessName');
@@ -428,7 +433,14 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addenum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
+
+        if (is_array($addenum_to)) {
+          $addenum_to = array_shift($addenum_to);
+          $addenum_to = array_shift($addenum_to);
+        } else {
+          $addenum_to = FALSE;
+        }
+
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
           #error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));

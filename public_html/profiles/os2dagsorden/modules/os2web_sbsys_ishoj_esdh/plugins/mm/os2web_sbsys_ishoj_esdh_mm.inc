@@ -84,9 +84,10 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
     _os2web_sbsys_ishoj_esdh_mm_order_addenums();
   }
   $meetings = array();
-  if (is_file(drupal_realpath($file))) {
+  $real_path = drupal_realpath($file);
+  if ($real_path && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
-    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA);
+    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOCDATA);
     //print_r($manifest);
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
@@ -120,7 +121,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       $committee_name = (string) $committee_name[0];
       $sys_id = (string) $sys_id[0];
       $meeting_id = (string) $meeting_id[0]['MødeID'];
-      $meeting_public = (string) $meeting_public[0];
+      //$meeting_public = (string) $meeting_public[0];
       $meeting_type = (string) $meeting_type[0];
       $additional_agenda = (string) $additional_agenda[0];
 
@@ -130,7 +131,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       $meeting_name = $committee_name;
       //$meeting_uri = (string) $meeting_uri[0];
       //$acadre_version = (string) $acadre_version[0][ID];
-      $directory_name = dirname(drupal_realpath($file));
+      //$directory_name = dirname($real_path);
 
       $folder_uri = str_replace(basename($file), '', $file);
 
@@ -304,6 +305,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xm
  *   The imported item.
  */
 function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) {
+  $xml_item = array();
   $xml_item['id'] = (string) $xml->attributes()->DagsordenpunktID;
   $xml_item['number'] = (string) $xml->attributes()->Nummer;
   //$xml_item['pdf'] = (string) $xml->PDFDocument;
@@ -434,7 +436,13 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
       $node = $nodes[$next];
       if ($primary) {
         $addenum_to = field_get_items('node', $node, 'field_os2web_meetings_addendum');
-        $addenum_to = is_array($addenum_to) ? array_shift(array_shift($addenum_to)) : FALSE;
+        if (is_array($addenum_to)) {
+          $addenum_to = array_shift($addenum_to);
+          $addenum_to = array_shift($addenum_to);
+        } else {
+          $addenum_to = FALSE;
+        }
+
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
           error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
