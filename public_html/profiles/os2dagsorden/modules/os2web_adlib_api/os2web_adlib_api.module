@@ -664,30 +664,32 @@ function _os2web_adlib_api_process_file($file) {
         case 0:
           $upd_file = file_load($file->fid);
           $uri = file_unmanaged_save_data($data, str_replace($upd_file->filename, $jobfileinfo['out_filename'], $upd_file->uri), FILE_EXISTS_REPLACE);
-          $real_path = drupal_realpath($uri);
-          if ($real_path !== FALSE && drupal_realpath($uri) !== FALSE && filesize(drupal_realpath($uri)) > 0) {
-            db_delete('file_managed')->condition('uri', $uri)->execute();
-            $upd_file->uri = $uri;
-            $upd_file->filename = basename($uri);
-            $upd_file->filemime = file_get_mimetype($upd_file->uri);
-            $upd_file->filesize = filesize(drupal_realpath($upd_file->uri));
-            $upd_file->timestamp = time();
-            os2web_adlib_api_destroy_job($file->job_id);
-            $record = array(
-              'fid' => $file->fid,
-              'jobtype' => $file->jobtype,
-              'job_id' => 'Complete',
-            );
-            drupal_write_record('os2web_adlib_api_doc_files', $record, array('fid', 'jobtype'));
-            drupal_write_record('file_managed', $upd_file, array('fid'));
-            if (module_exists('os2dagsorden_pdf2htmlex')) {
-              os2dagsorden_pdf2htmlex_schedule_if_bpa($file->fid);
+          if ($uri !== FALSE) {
+            $real_path = drupal_realpath($uri);
+            if ($real_path !== FALSE && filesize($real_path) > 0) {
+              db_delete('file_managed')->condition('uri', $uri)->execute();
+              $upd_file->uri = $uri;
+              $upd_file->filename = basename($uri);
+              $upd_file->filemime = file_get_mimetype($upd_file->uri);
+              $upd_file->filesize = filesize(drupal_realpath($upd_file->uri));
+              $upd_file->timestamp = time();
+              os2web_adlib_api_destroy_job($file->job_id);
+              $record = array(
+                'fid' => $file->fid,
+                'jobtype' => $file->jobtype,
+                'job_id' => 'Complete',
+              );
+              drupal_write_record('os2web_adlib_api_doc_files', $record, array('fid', 'jobtype'));
+              drupal_write_record('file_managed', $upd_file, array('fid'));
+              if (module_exists('os2dagsorden_pdf2htmlex')) {
+                os2dagsorden_pdf2htmlex_schedule_if_bpa($file->fid);
+              }
+              field_cache_clear();
+              watchdog('adlib_api', 'File (fid: %fid) was converted successfully to pdf.', array('%fid' => $file->fid), WATCHDOG_INFO);
+              error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File saved, file record updated. New URI: " . (string) $uri);
+            } else {
+              error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Filesize was 0. Aborting update.");
             }
-            field_cache_clear();
-            watchdog('adlib_api', 'File (fid: %fid) was converted successfully to pdf.', array('%fid' => $file->fid), WATCHDOG_INFO);
-            error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: File saved, file record updated. New URI: " . $uri);
-          } else {
-            error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Filesize was 0. Aborting update.");
           }
           break;
 

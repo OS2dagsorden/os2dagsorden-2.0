@@ -401,8 +401,10 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
           if (strcasecmp($filetype, 'MSG') == 0) {
             // E.g. [...]/1709477.MSG_attachments.
             $attachments_folder_path = $folder_path . '/' . $filename_in . '_attachments';
-            $files = glob(drupal_realpath($attachments_folder_path) . '/*.pdf');
-            if (file_exists($attachments_folder_path)) {
+            $real_path = drupal_realpath($attachments_folder_path);
+            if (file_exists($attachments_folder_path) && $real_path !== FALSE) {
+              $files = glob($real_path . '/*.pdf');
+
               foreach ($files as $file) {
                 // Avoiding part1 file import - don't need it.
                 if (strpos(basename($file), 'eml.part1') === FALSE) {

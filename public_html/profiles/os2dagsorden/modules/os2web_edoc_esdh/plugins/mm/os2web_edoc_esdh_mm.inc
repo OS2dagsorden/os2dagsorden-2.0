@@ -221,7 +221,7 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $agenda = $meeting;
   // Only add the agenda if its PDF exists.
   $meeting_full_pdf_path = $meeting['uri'] . $meeting['pdf'];
-  $real_path = $meeting_full_pdf_path;
+  $real_path = drupal_realpath($meeting_full_pdf_path);
   if ($real_path !== FALSE && file_exists($real_path)) {
     $agenda['full_doc'] = array(
       'uri' => $meeting_full_pdf_path,

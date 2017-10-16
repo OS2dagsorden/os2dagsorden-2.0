@@ -598,12 +598,18 @@ function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
   foreach ($matches[1] as $path) {
     $real_path = drupal_realpath($image_folder_uri . basename($path) . ".*");
     if ($real_path !== FALSE) {
-      $image_path = array_pop(glob($real_path));
-      $image_uri = file_create_url($image_folder_uri . basename($image_path));
-      if (!empty($image_path)) {
-        $html = str_replace($path, file_create_url($image_uri), $html);
-      } else {
-        $html = str_replace($path, "", $html);
+      $glob_real_path = glob($real_path);
+      if ($glob_real_path !== FALSE) {
+        $image_path = array_pop($glob_real_path);
+        $image_uri = file_create_url($image_folder_uri . basename($image_path));
+        if (!empty($image_path)) {
+          $new_uri = file_create_url($image_uri);
+          if ($new_uri !== FALSE) {
+            $html = str_replace($path, $new_uri, $html);
+          }
+        } else {
+          $html = str_replace($path, "", $html);
+        }
       }
     }
   }
