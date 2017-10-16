@@ -65,7 +65,9 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $PROCESSING_MEETING_NID = $nid;
   }
 
-  if (!os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime(drupal_realpath($meeting_id['uri']))) &&
+  $meeting_realpath = drupal_realpath($meeting_id['uri']);
+
+  if ($meeting_realpath !== FALSE && !os2web_esdh_provider_index_meeting_is_manifest_outdated($meeting_id['id'], filemtime($meeting_realpath)) &&
     !os2web_esdh_provider_index_meeting_has_deleted_agendas($meeting_id['id'])
   ) {
     if ($nid) {
@@ -702,7 +704,8 @@ function _os2web_esdh_provider_import_file($file_meta) {
   }
 
   $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename($fname . '.' . strtolower($pinfo['extension']));
-  if (drupal_realpath($uri_out) && _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+  $real_path = drupal_realpath($uri_out);
+  if ($real_path !== FALSE && _os2web_esdh_provider_similar_file_exists($real_path)) {
     $file_counter = 0;
     do {
       $uri_out = $pinfo['dirname'] . '/' . _os2web_esdh_provider_sanetize_filename(mb_substr($fname, 0, 145) . '_' . $file_counter++ . '.' . strtolower($pinfo['extension']));
@@ -1076,7 +1079,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
 /**
  * Case insensitive fileexists(). Code from comments on php.net.
  *
- * @param boolean $filename
+ * @param string $filename
  *   Filename
  *
  * @return mixed

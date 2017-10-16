@@ -671,7 +671,7 @@ function _os2web_adlib_api_process_file($file) {
               $upd_file->uri = $uri;
               $upd_file->filename = basename($uri);
               $upd_file->filemime = file_get_mimetype($upd_file->uri);
-              $upd_file->filesize = filesize(drupal_realpath($upd_file->uri));
+              $upd_file->filesize = filesize($real_path);
               $upd_file->timestamp = time();
               os2web_adlib_api_destroy_job($file->job_id);
               $record = array(

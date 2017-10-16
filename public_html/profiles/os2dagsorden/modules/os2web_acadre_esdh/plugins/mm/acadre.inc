@@ -178,7 +178,10 @@ function _os2web_acadre_esdh_import_meeting($info) {
   // Debug bit set in os2web_esdh_provider settings.
   $debug = variable_get('os2web_esdh_provider_debug_info');
   $debug && error_log('MM Import - import meeting from XML - sysid=' . $info['sysid'] . ' - ' . timer_read('mm_import') . 'ms');
-  if (($real_path = _os2web_acadre_esdh_similar_file_exists(drupal_realpath($info['agenda_uri']))) !== FALSE) {
+  $real_path = drupal_realpath($info['agenda_uri']);
+  $real_path = ($real_path !== FALSE)? _os2web_acadre_esdh_similar_file_exists($real_path) : FALSE;
+
+  if ($real_path !== FALSE) {
     $xml = simplexml_load_file($real_path);
     $committee = _get_value_from_xml($xml->xpath("//table[@name='committee']/fields/field[@name='name']"));
     $committee_id = _get_value_from_xml($xml->xpath("//table[@name='committee']/fields/field[@name='sysid']"));
@@ -286,7 +289,8 @@ function _os2web_acadre_esdh_import_meeting($info) {
         $info['pdffilename']
       ));
 
-    if (file_exists(drupal_realpath($full_doc_with_attachements_uri))) {
+    $full_doc_with_attachments_real_path = drupal_realpath($full_doc_with_attachements_uri);
+    if ($full_doc_with_attachments_real_path !== FALSE && file_exists($full_doc_with_attachments_real_path)) {
       $meeting['full_doc_with_attachments'] = array(
         'uri' => $full_doc_with_attachements_uri,
         'title' => $meeting['title'],
@@ -418,7 +422,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
                 }
               }
             } else {
-              if (_os2web_acadre_esdh_similar_file_exists(drupal_realpath($folder_path . '/' . $filename_in))) {
+              $enclosure_real_path = drupal_realpath($folder_path . '/' . $filename_in);
+              if ($enclosure_real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($enclosure_real_path)) {
                 $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
                 $item['enclosures'][] = array(
                   'uri' => $uri,
@@ -452,8 +457,12 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
         if (strcasecmp($filetype, '.msg') == 0) {
           // E.g. [...]/1709477.MSG_attachments.
           $attachments_folder_path = $folder_path . '/' . $filename_in . '_attachments';
-          $files = glob(drupal_realpath($attachments_folder_path) . '/*.pdf');
-          if (file_exists($attachments_folder_path)) {
+          $files = array();
+
+          $msg_real_path = drupal_realpath($attachments_folder_path);
+          if ($msg_real_path !== FALSE && file_exists($attachments_folder_path)) {
+            $files = glob($msg_real_path . '/*.pdf');
+
             foreach ($files as $file) {
               // Avoiding part1 file import - don't need it.
               if (strpos(basename($file), 'eml.part1') === FALSE) {
@@ -702,7 +711,8 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
   $name_arr = explode('.', $name);
 
   $pdf_path = $path . '/' . $name_arr[0] . '.PDF';
-  if (_os2web_acadre_esdh_similar_file_exists(drupal_realpath($pdf_path))) {
+  $real_path = drupal_realpath($pdf_path);
+  if ($real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($real_path)) {
     return $pdf_path;
   } else {
     return $path . '/' . $name;
