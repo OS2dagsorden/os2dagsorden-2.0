@@ -49,8 +49,7 @@ function os2web_sbsys_esdh_mm_get_import_list() {
  * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
  *
- * @param object $string
- *   string to sanitise
+ * @param $string string to sanitise
  *
  * $return array
  *   The string sanitised
@@ -82,9 +81,10 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
     _os2web_sbsys_esdh_mm_order_addenums();
   }
   $meetings = array();
-  if (is_file(drupal_realpath($file))) {
+  $real_path = drupal_realpath($file);
+  if ($real_path !== FALSE && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
-    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOCDATA);
+    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOCDATA);
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
 
@@ -102,7 +102,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $committee_name = $manifest->xpath("Agendas/Agenda/Committee/Name");
       $meeting_uri = $manifest->xpath("/Publication/OutputFileName");
       $meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
-      $meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
+      //$meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $manifest->xpath("Agendas/Agenda/@ID");
       $xml_id = $manifest->xpath("Agendas/Agenda/Meeting/@ID");
       //$meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
@@ -137,7 +137,7 @@ function os2web_sbsys_esdh_mm_import_meeting($meeting) {
       $meeting_uri = (string) $meeting_uri[0];
       $acadre_version = (string) $acadre_version[0]['ID'];
 
-      $directory_name = dirname(drupal_realpath($file));
+      $directory_name = dirname($real_path);
       $dir_parts = explode('/', $directory_name);
       $pdf = array_pop($dir_parts) . ".pdf";
 
@@ -265,9 +265,11 @@ function _os2web_sbsys_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $meeting['items'] = array();
   $agenda = $meeting;
 
-  if (file_exists(drupal_realpath($meeting['uri']))) {
+  $real_path = drupal_realpath($meeting['uri']);
+  if ($real_path !== FALSE && file_exists($real_path)) {
 // There were no SBSYS meeting with meeting description, therefore disabled.
-    if (file_exists(drupal_realpath($meeting['uri'] . $meeting['pdf']))) {
+    $fulldoc_real_path = drupal_realpath($meeting['uri'] . $meeting['pdf']);
+    if ($fulldoc_real_path !== FALSE && file_exists($fulldoc_real_path)) {
       $agenda['full_doc'] = array(
         'uri' => $meeting['uri'] . $meeting['pdf'],
         'title' => $meeting['committee'],
@@ -594,14 +596,16 @@ function _os2web_sbsys_esdh_mm_improve_html($html, $image_folder_uri) {
   preg_match_all('/src="([^"]+)"/', $html, $matches);
 
   foreach ($matches[1] as $path) {
-    $image_path = array_pop(glob(drupal_realpath($image_folder_uri . basename($path) . ".*")));
-    $image_uri = file_create_url($image_folder_uri . basename($image_path));
-    if (!empty($image_path)) {
-      $html = str_replace($path, file_create_url($image_uri), $html);
-    } else {
-      $html = str_replace($path, "", $html);
+    $real_path = drupal_realpath($image_folder_uri . basename($path) . ".*");
+    if ($real_path !== FALSE) {
+      $image_path = array_pop(glob($real_path));
+      $image_uri = file_create_url($image_folder_uri . basename($image_path));
+      if (!empty($image_path)) {
+        $html = str_replace($path, file_create_url($image_uri), $html);
+      } else {
+        $html = str_replace($path, "", $html);
+      }
     }
-
   }
   $html = preg_replace('/<img([^>]+)src=""([^>]*)>/', "", $html);
   return $html;

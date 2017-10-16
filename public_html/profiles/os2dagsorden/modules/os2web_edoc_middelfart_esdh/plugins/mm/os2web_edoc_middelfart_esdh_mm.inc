@@ -82,7 +82,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
   $meetings = array();
 
   $real_path = drupal_realpath($file);
-  if ($real_path && is_file($real_path)) {
+  if ($real_path !== FALSE && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(file_get_contents($real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
     libxml_clear_errors();

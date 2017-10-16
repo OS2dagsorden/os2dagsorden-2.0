@@ -664,7 +664,8 @@ function _os2web_adlib_api_process_file($file) {
         case 0:
           $upd_file = file_load($file->fid);
           $uri = file_unmanaged_save_data($data, str_replace($upd_file->filename, $jobfileinfo['out_filename'], $upd_file->uri), FILE_EXISTS_REPLACE);
-          if ($uri && drupal_realpath($uri) !== FALSE && filesize(drupal_realpath($uri)) > 0) {
+          $real_path = drupal_realpath($uri);
+          if ($real_path !== FALSE && drupal_realpath($uri) !== FALSE && filesize(drupal_realpath($uri)) > 0) {
             db_delete('file_managed')->condition('uri', $uri)->execute();
             $upd_file->uri = $uri;
             $upd_file->filename = basename($uri);

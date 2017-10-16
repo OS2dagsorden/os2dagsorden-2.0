@@ -532,7 +532,8 @@ class AcadrePWS {
 
     // Cache files unless there is a newer version available.
     $fid = os2web_adlib_api_get_fid($ref);
-    if ($fid > 0 && ($result = file_load($fid)) && drupal_realpath($result->uri) && is_file(drupal_realpath($result->uri))) {
+    $real_path = drupal_realpath($result->uri);
+    if ($fid > 0 && ($result = file_load($fid)) && $real_path !== FALSE && is_file($real_path)) {
       $ctime = filectime(drupal_realpath($result->uri));
       $info = $this->getDocInfo($id);
       if (is_object($info)) {

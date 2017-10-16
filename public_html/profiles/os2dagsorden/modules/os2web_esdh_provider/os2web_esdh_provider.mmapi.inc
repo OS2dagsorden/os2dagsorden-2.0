@@ -654,8 +654,9 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
 
       if (isset($bullet['images'])) {
         foreach ($bullet['images'] as $image) {
-          if (file_create_url($image['path'])) {
-            $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . file_create_url($image['path']) . '" style="width:90%;" /></div>';
+          $image_url = file_create_url($image['path']);
+          if ($image_url !== FALSE) {
+            $node->field_os2web_meetings_bpa_body[$node->language][0]['value'] .= '<div><img src="' . $image_url . '" style="width:90%;" /></div>';
           }
         }
       }
@@ -990,8 +991,9 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
   $files = file_scan_directory(variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => FALSE));
   $agenda = array();
   foreach ($files as $file) {
-    if (drupal_realpath($file->uri)) {
-      $xml = simplexml_load_file(drupal_realpath($file->uri));
+    $real_path = drupal_realpath($file->uri);
+    if ($real_path !== FALSE) {
+      $xml = simplexml_load_file($real_path);
       if (is_object($xml)) {
         $sysid_xpath = $xml->xpath("//table[@name='meeting']/fields/field/@sysid");
         $xml_mid = (string) array_shift($sysid_xpath);
@@ -1074,17 +1076,13 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
 /**
  * Case insensitive fileexists(). Code from comments on php.net.
  *
- * @param string|boolean $filename
+ * @param boolean $filename
  *   Filename
  *
  * @return mixed
  *   False if file not found, case corrected filename if found.
  */
 function _os2web_esdh_provider_similar_file_exists($filename) {
-  if (!$filename) {
-    return FALSE;
-  }
-
   if (file_exists($filename)) {
     return $filename;
   }

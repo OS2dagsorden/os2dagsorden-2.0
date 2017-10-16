@@ -267,7 +267,8 @@ function _os2web_acadre_esdh_import_meeting($info) {
         pathinfo($info['docfilename'], PATHINFO_FILENAME) . '.pdf'
       ));
 
-    if (drupal_realpath($pdf_uri) && file_exists(drupal_realpath($pdf_uri))) {
+    $real_path = drupal_realpath($pdf_uri);
+    if ($real_path !== FALSE && file_exists($real_path)) {
       $uri = $pdf_uri;
     } else {
       $uri = $doc_uri;
@@ -528,20 +529,17 @@ function _os2web_acadre_esdh_import_bullet($info, $bullet_xml) {
 /**
  * Case insensitive fileexists(). Code from comments on php.net.
  *
- * @param string|boolean $filename
+ * @param string $filename
  *   File name to check.
  *
  * @return mixed
  *   False if file not found, case corrected filename if found.
  */
 function _os2web_acadre_esdh_similar_file_exists($filename) {
-  if (!$filename) {
-    return FALSE;
-  }
-
   if (file_exists($filename)) {
     return $filename;
   }
+
   $lcase_filename = strtolower($filename);
   foreach (glob(dirname($filename) . '/*') as $file) {
     if (strtolower($file) == $lcase_filename) {

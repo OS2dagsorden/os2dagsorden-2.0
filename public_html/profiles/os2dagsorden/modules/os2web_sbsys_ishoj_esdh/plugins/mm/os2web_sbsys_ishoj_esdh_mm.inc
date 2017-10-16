@@ -56,8 +56,7 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
  * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
  *
- * @param $string
- *   string to sanitise
+ * @param $string string to sanitise
  *
  * $return array
  *   The string sanitised

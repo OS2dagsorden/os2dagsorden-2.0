@@ -41,9 +41,10 @@ function os2web_edoc_esdh_mm_get_import_list() {
     $committee = NULL;
     $meeting_date = NULL;
 
-    if (drupal_realpath($xml_file->uri) && is_file(drupal_realpath($xml_file->uri))) {
+    $real_path = drupal_realpath($xml_file->uri);
+    if ($real_path !== FALSE && is_file($real_path)) {
       libxml_use_internal_errors(TRUE);
-      $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($xml_file->uri))), 'SimpleXMLElement', LIBXML_NOWARNING);
+      $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOWARNING);
       libxml_clear_errors();
       libxml_use_internal_errors(FALSE);
 
@@ -65,8 +66,7 @@ function os2web_edoc_esdh_mm_get_import_list() {
  * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
  *
- * @param object $string
- *   string to sanitise
+ * @param $string string to sanitise
  *
  * $return array
  *   The string sanitised
@@ -97,10 +97,10 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
     _os2web_edoc_esdh_mm_order_addenums();
   }
   $meetings = array();
-  if (drupal_realpath($file) && is_file(drupal_realpath($file))) {
-
+  $real_path = drupal_realpath($file);
+  if ($real_path !== FALSE && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
-    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents(drupal_realpath($file))), 'SimpleXMLElement', LIBXML_NOWARNING);
+    $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOWARNING);
 
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
@@ -118,8 +118,8 @@ function os2web_edoc_esdh_mm_import_meeting($meeting) {
         // Collecting agenda data
         $committee_xpath = $manifest->xpath("/Meeting/Committee");
         $committee = (string) array_shift($committee_xpath);
-        $ref_state_xpath = $manifest->xpath("/Meeting/MeetingState");
-        $ref_state = (string) array_shift($ref_state_xpath);
+        //$ref_state_xpath = $manifest->xpath("/Meeting/MeetingState");
+        //$ref_state = (string) array_shift($ref_state_xpath);
         $meeting_date_xpath = $manifest->xpath("/Meeting/MeetingDate");
         $meeting_date = (string) array_shift($meeting_date_xpath);
         $meeting_id = _os2web_edoc_esdh_generate_meeting_id($meeting_date, $committee); //generated meeting_id
@@ -221,7 +221,8 @@ function _os2web_edoc_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   $agenda = $meeting;
   // Only add the agenda if its PDF exists.
   $meeting_full_pdf_path = $meeting['uri'] . $meeting['pdf'];
-  if (drupal_realpath($meeting_full_pdf_path) && file_exists(drupal_realpath($meeting_full_pdf_path))) {
+  $real_path = $meeting_full_pdf_path;
+  if ($real_path !== FALSE && file_exists($real_path)) {
     $agenda['full_doc'] = array(
       'uri' => $meeting_full_pdf_path,
       'title' => $meeting['committee'],
