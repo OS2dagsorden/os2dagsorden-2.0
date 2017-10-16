@@ -735,28 +735,32 @@ function _os2web_esdh_provider_import_file($file_meta) {
 
   $uri = FALSE;
   $pdf_real_path = drupal_realpath($uri_pdf);
-  $uri_out_realpath = drupal_realpath($uri_out);
+  $uri_out_real_path = drupal_realpath($uri_out);
+  $uri_in_real_path = drupal_realpath($uri_in);
 
   if ($pdf_real_path !== FALSE && _os2web_esdh_provider_similar_file_exists($pdf_real_path)) {
     // We have an already converted pdf file.
     $uri = $uri_pdf;
     $convert = FALSE;
-  } elseif ($uri_out_realpath !== FALSE && _os2web_esdh_provider_similar_file_exists($uri_out_realpath)) {
+  } elseif ($uri_out_real_path !== FALSE && _os2web_esdh_provider_similar_file_exists($uri_out_real_path)) {
     // File already copied.
     $convert = TRUE;
     $uri = $uri_out;
   } else {
     // Completely unprocessed file.
     $uri_old = $uri_in;
-    $uri_in = _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_in));
-    if (strlen($uri_out) > 255) {
-      $pi = pathinfo($uri_out);
-      if (isset($pi['extension'])) {
-        $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255)) . '.' . $pi['extension'];
-      } else {
-        $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255));
+    if ($uri_in_real_path !== FALSE) {
+      $uri_in = _os2web_esdh_provider_similar_file_exists($uri_in_real_path);
+      if (strlen($uri_out) > 255) {
+        $pi = pathinfo($uri_out);
+        if (isset($pi['extension'])) {
+          $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255)) . '.' . $pi['extension'];
+        } else {
+          $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255));
+        }
       }
     }
+    
     if ($uri_in === FALSE || FALSE === file_unmanaged_copy($uri_in, $uri_out, FILE_EXISTS_REPLACE)) {
       // Bummed out on copy.
       watchdog('acadre MM', 'File copy failed for %infile -> %outfile. Check folder permissions.', array(

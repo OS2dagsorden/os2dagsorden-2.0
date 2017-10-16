@@ -546,7 +546,7 @@ class AcadrePWS {
     }
 
     // Clean up failed files.
-    if (is_object($result) && ($real_path == FALSE || !is_file($real_path))) {
+    if (is_object($result) && ($real_path === FALSE || !is_file($real_path))) {
       error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' Failed file ' . $result->filename);
       file_delete($result, TRUE);
     }
