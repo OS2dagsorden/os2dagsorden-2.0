@@ -532,23 +532,29 @@ class AcadrePWS {
 
     // Cache files unless there is a newer version available.
     $fid = os2web_adlib_api_get_fid($ref);
-    $real_path = drupal_realpath($result->uri);
-    if ($fid > 0 && ($result = file_load($fid)) && $real_path !== FALSE && is_file($real_path)) {
-      $ctime = filectime($real_path);
-      $info = $this->getDocInfo($id);
-      if (is_object($info)) {
-        $updated = strtotime($info->ChangedDateTime);
-        if ($updated < $ctime) {
-          $result = file_create_url($result->uri);
-          return $result;
+
+    if ($fid > 0 && ($result = file_load($fid))) {
+      $real_path = drupal_realpath($result->uri);
+      if ($real_path !== FALSE && is_file($real_path)) {
+        $ctime = filectime($real_path);
+        $info = $this->getDocInfo($id);
+        if (is_object($info)) {
+          $updated = strtotime($info->ChangedDateTime);
+          if ($updated < $ctime) {
+            $result = file_create_url($result->uri);
+            return $result;
+          }
         }
       }
     }
 
     // Clean up failed files.
-    if (is_object($result) && ($real_path === FALSE || !is_file($real_path))) {
-      error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' Failed file ' . $result->filename);
-      file_delete($result, TRUE);
+    if (is_object($result)) {
+      $real_path = drupal_realpath($result->uri);
+      if ($real_path === FALSE || !is_file($real_path)) {
+        error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' Failed file ' . $result->filename);
+        file_delete($result, TRUE);
+      }
     }
 
     error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Fetching file from WS. Ref: $ref");

@@ -21,6 +21,9 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda) {
     $status = IMPORT_STATUS_IGNORED;
   }
 
+  $manifest_real_path = drupal_realpath($manifest['uri']);
+  $agenda_real_path = drupal_realpath($agenda['path']);
+
   //trying to update existing entry
   if (os2web_esdh_provider_index_meeting_is_meeting_indexed($manifest['id'], $agenda['meeting_sub_id'])) {
     db_update('os2web_esdh_provider_import')
@@ -29,12 +32,12 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda) {
         'import_status' => $status,
         'meeting_xml' => $manifest['uri'],
         'meeting_name' => $agenda['title'],
-        'meeting_xml_changed' => ($manifest['uri']) ? filemtime(drupal_realpath($manifest['uri'])) : NULL,
+        'meeting_xml_changed' => ($manifest_real_path !== FALSE) ? filemtime($manifest_real_path) : NULL,
         'agenda_xmlid' => $agenda['agenda_xmlid'],
         'agenda_access' => ($agenda['agenda_access'] == 'Lukket') ? 0 : 1,
         'agenda_publish' => ($agenda['publish']) ? 1 : 0,
         'agenda_type' => $agenda['type'],
-        'agenda_xml_changed' => ($agenda['path']) ? filemtime(drupal_realpath($agenda['path'])) : NULL,
+        'agenda_xml_changed' => ($agenda_real_path !== FALSE) ? filemtime($agenda_real_path) : NULL,
         'committeed_id' => $agenda['committee_id'],
       ))
       ->condition('meeting_xmlid', $manifest['id'], '=')
@@ -49,13 +52,13 @@ function os2web_esdh_provider_index_meeting($nid, $manifest, $agenda) {
         'meeting_xmlid' => $manifest['id'],
         'meeting_name' => $agenda['title'],
         'meeting_sysid' => $agenda['meeting_id'],
-        'meeting_xml_changed' => ($manifest['uri']) ? filemtime(drupal_realpath($manifest['uri'])) : NULL,
+        'meeting_xml_changed' => ($manifest_real_path !== FALSE) ? filemtime($manifest_real_path) : NULL,
         'agenda_sysid' => $agenda['meeting_sub_id'],
         'agenda_xmlid' => $agenda['agenda_xmlid'],
         'agenda_access' => ($agenda['agenda_access'] == 'Lukket') ? 0 : 1,
         'agenda_publish' => ($agenda['publish']) ? 1 : 0,
         'agenda_type' => $agenda['type'],
-        'agenda_xml_changed' => ($agenda['path']) ? filemtime(drupal_realpath($agenda['path'])) : NULL,
+        'agenda_xml_changed' => ($agenda_real_path !== FALSE) ? filemtime($agenda_real_path) : NULL,
         'committeed_id' => $agenda['committee_id'],
         'committeed_tid' => 0,
       ))
