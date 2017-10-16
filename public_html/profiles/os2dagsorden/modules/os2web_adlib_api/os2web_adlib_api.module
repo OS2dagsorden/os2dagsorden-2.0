@@ -598,7 +598,7 @@ function _os2web_adlib_api_process_file($file) {
       os2web_adlib_api_destroy_job($file->job_id);
 
       $fdata = file_load($file->fid);
-      if (!drupal_realpath($file->uri) || !file_exists(drupal_realpath($fdata->uri)) || file_uri_scheme($fdata->uri) == '' || $fdata->filemime == 'application/pdf') {
+      if (!drupal_realpath($fdata->uri) || !file_exists(drupal_realpath($fdata->uri)) || file_uri_scheme($fdata->uri) == '' || $fdata->filemime == 'application/pdf') {
         if ($fdata->filemime == 'application/pdf') {
 
           $record = array(
@@ -664,7 +664,7 @@ function _os2web_adlib_api_process_file($file) {
         case 0:
           $upd_file = file_load($file->fid);
           $uri = file_unmanaged_save_data($data, str_replace($upd_file->filename, $jobfileinfo['out_filename'], $upd_file->uri), FILE_EXISTS_REPLACE);
-          if ($uri && filesize(drupal_realpath($uri)) > 0) {
+          if ($uri && drupal_realpath($uri) !== FALSE && filesize(drupal_realpath($uri)) > 0) {
             db_delete('file_managed')->condition('uri', $uri)->execute();
             $upd_file->uri = $uri;
             $upd_file->filename = basename($uri);
@@ -795,7 +795,7 @@ function _os2web_adlib_api_queue_file($file) {
 
 
   $real_path = drupal_realpath($file->file->uri);
-  if ($real_path && is_file($real_path) && _os2web_adlib_api_is_filetype_approved($file->file->fid)) {
+  if ($real_path !== FALSE && is_file($real_path) && _os2web_adlib_api_is_filetype_approved($file->file->fid)) {
     $adlib = _os2web_adlib_api_get_instance();
     $upload = $adlib->uploadData($file->file->filename, file_get_contents($real_path));
     if ($upload) {

@@ -56,7 +56,7 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
  * Strip illegal characters from the XML.
  * Ex &#xC = ASCII new line feed
  *
- * @param object $string
+ * @param $string
  *   string to sanitise
  *
  * $return array
@@ -85,7 +85,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
   }
   $meetings = array();
   $real_path = drupal_realpath($file);
-  if ($real_path && is_file($real_path)) {
+  if ($real_path !== FALSE && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOCDATA);
     //print_r($manifest);
@@ -104,7 +104,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       $committee_name = $manifest->xpath("Møde/@Udvalg");
       //$meeting_uri = $manifest->xpath("/Publication/OutputFileName");
       //$meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
-      $meeting_public = $manifest->xpath("@Åben");
+      //$meeting_public = $manifest->xpath("@Åben");
       $meeting_id = $manifest->xpath("Møde/@MødeID");
       $sys_id = $manifest->xpath("@DagsordenID");
       //$meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
@@ -267,7 +267,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
  * @param array $meeting
  *   Meeting array.
  *
- * @param SimpleXMLElement $agenda_xml
+ * @param array $agenda_xml
  *   Meeting agenda XML object.
  *
  * @return mixed

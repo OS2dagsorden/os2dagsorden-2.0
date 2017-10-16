@@ -233,7 +233,6 @@ function _drupal_nemid_login_admin() {
 
   $variablePrefix = 'nemid_login_';
   $modes = array('test', 'live');
-  $current_mode = variable_get('nemid_login_mode');
 
   $sharedFields = array(
     'certificate' => array('type' => 'textarea', 'title' => t('Certificate')),

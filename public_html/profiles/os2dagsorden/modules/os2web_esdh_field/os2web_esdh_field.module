@@ -355,9 +355,9 @@ function _os2web_esdh_field_array_compare(array $a1, array $a2) {
   $result = TRUE;
   foreach ($a1 as $key => $value) {
     if (isset($a2[$key]) && $a2[$key] === $value) {
-      $result = $result && TRUE;
+      ($result = $result ) && TRUE;
     } else {
-      $result = $result && FALSE;
+      ($result = $result ) && FALSE;
     }
   }
   return $result;
@@ -400,7 +400,7 @@ function _os2web_esdh_field_update_cm_documents_from_pws($node) {
   foreach ($documents as &$document) {
     // Translate the SSSSSS/YY serial into database identifier.
     if (!is_numeric($document)) {
-      $document = ops2web_acadre_esdh_lookup_doc($doc_id);
+      $document = ops2web_acadre_esdh_lookup_doc($document);
     }
   }
 

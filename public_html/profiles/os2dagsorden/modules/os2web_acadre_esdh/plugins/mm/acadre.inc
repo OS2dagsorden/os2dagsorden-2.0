@@ -91,7 +91,7 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
   }
   $meetings = array();
   $real_path = drupal_realpath($file);
-  if ($real_path && is_file($real_path)) {
+  if ($real_path !== FALSE && is_file($real_path)) {
     $manifest = simplexml_load_file($real_path);
     if (is_object($manifest)) {
       $agenda_id = _get_value_from_xml($manifest->xpath("/root/table[@name='agenda']/fields/field/@sysid"), 'int');

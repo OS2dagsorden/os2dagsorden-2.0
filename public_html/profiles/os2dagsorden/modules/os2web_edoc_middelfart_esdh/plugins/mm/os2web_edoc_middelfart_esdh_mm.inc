@@ -42,20 +42,18 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
     $committee = NULL;
 
     $real_path = drupal_realpath($xml_file->uri);
-    if ($real_path) {
-      if (is_file($real_path)) {
-        libxml_use_internal_errors(TRUE);
-        $manifest = simplexml_load_string(file_get_contents($real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
-        libxml_clear_errors();
-        libxml_use_internal_errors(FALSE);
+    if ($real_path !== FALSE && is_file($real_path)) {
+      libxml_use_internal_errors(TRUE);
+      $manifest = simplexml_load_string(file_get_contents($real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
+      libxml_clear_errors();
+      libxml_use_internal_errors(FALSE);
 
-        if (is_object($manifest)) {
-          $committee = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
-          $committee = (string) array_shift($committee);
+      if (is_object($manifest)) {
+        $committee = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
+        $committee = (string) array_shift($committee);
 
-          $meeting_date = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
-          $meeting_date = (string) array_shift($meeting_date);
-        }
+        $meeting_date = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
+        $meeting_date = (string) array_shift($meeting_date);
       }
     }
 
