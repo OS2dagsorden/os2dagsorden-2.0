@@ -344,7 +344,7 @@ class AcadrePWS {
           }
         }
       } catch (SoapFault $sf) {
-
+        watchdog('acadre_pws', 'Error during SOAP call in ' . __FUNCTION__, NULL, WATCHDOG_WARNING);
       }
       cache_set($cid, $result, 'cache_os2web_pws', time() + PWS_CACHE_TIMEOUT);
     }
@@ -534,7 +534,7 @@ class AcadrePWS {
     $fid = os2web_adlib_api_get_fid($ref);
     $real_path = drupal_realpath($result->uri);
     if ($fid > 0 && ($result = file_load($fid)) && $real_path !== FALSE && is_file($real_path)) {
-      $ctime = filectime(drupal_realpath($result->uri));
+      $ctime = filectime($real_path);
       $info = $this->getDocInfo($id);
       if (is_object($info)) {
         $updated = strtotime($info->ChangedDateTime);
@@ -546,7 +546,7 @@ class AcadrePWS {
     }
 
     // Clean up failed files.
-    if (is_object($result) && !is_file(drupal_realpath($result->uri))) {
+    if (is_object($result) && !is_file($real_path)) {
       error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' Failed file ' . $result->filename);
       file_delete($result, TRUE);
     }

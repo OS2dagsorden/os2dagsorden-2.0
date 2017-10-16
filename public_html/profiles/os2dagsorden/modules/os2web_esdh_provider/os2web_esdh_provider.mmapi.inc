@@ -734,11 +734,11 @@ function _os2web_esdh_provider_import_file($file_meta) {
     ), WATCHDOG_DEBUG);
 
   $uri = FALSE;
-  if (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
+  if (drupal_realpath($uri_pdf) !== FALSE && _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_pdf))) {
     // We have an already converted pdf file.
     $uri = $uri_pdf;
     $convert = FALSE;
-  } elseif (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
+  } elseif (drupal_realpath($uri_out) !== FALSE && _os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out))) {
     // File already copied.
     $convert = TRUE;
     $uri = $uri_out;

@@ -457,7 +457,6 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
         if (strcasecmp($filetype, '.msg') == 0) {
           // E.g. [...]/1709477.MSG_attachments.
           $attachments_folder_path = $folder_path . '/' . $filename_in . '_attachments';
-          $files = array();
 
           $msg_real_path = drupal_realpath($attachments_folder_path);
           if ($msg_real_path !== FALSE && file_exists($attachments_folder_path)) {
@@ -476,7 +475,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
               }
             }
           } else {
-            if (_os2web_acadre_esdh_similar_file_exists(drupal_realpath($folder_path . '/' . $filename_in))) {
+            $enclosure_real_path = drupal_realpath($folder_path . '/' . $filename_in);
+            if ($enclosure_real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($enclosure_real_path)) {
               $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
               $item['enclosures'][] = array(
                 'sysid' => _get_value_from_xml($enclosure->xpath("fields/field[@name='sysid']"), 'int'),
