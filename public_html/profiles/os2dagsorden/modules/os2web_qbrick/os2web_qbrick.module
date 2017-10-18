@@ -40,8 +40,7 @@ function _os2web_qbrick_get_chapters($movie_id) {
       $chapters[$id[1]] = (int) $chapter['time'];
     }
     return $chapters;
-  }
-  else {
+  } else {
     return FALSE;
   }
 }
@@ -60,8 +59,7 @@ function _os2web_qbrick_get_movie_id($nid) {
   $search_url = 'http://vms.api.qbrick.com/rest/v3/Search/444777D8/';
   if (is_numeric($nid)) {
     $node = node_load($nid);
-  }
-  else {
+  } else {
     $node = $nid;
   }
   if (!is_object($node)) {
@@ -78,8 +76,7 @@ function _os2web_qbrick_get_movie_id($nid) {
   $movie_id = (string) ($xml->media->item['id']);
   if (strlen($movie_id) == 8) {
     return $movie_id;
-  }
-  else {
+  } else {
     return FALSE;
   }
 }
@@ -90,6 +87,7 @@ function _os2web_qbrick_get_movie_id($nid) {
  * Implements hook_field_info().
  */
 function os2web_qbrick_field_info() {
+  $field = array();
   $field['os2web_qbrick_movie'] = array(
     'label' => t('QBrick movie'),
     'description' => t('Add a QBrick movie to this field.'),
@@ -113,6 +111,7 @@ function os2web_qbrick_field_is_empty($item, $field) {
  * Implments hook_field_widget_info().
  */
 function os2web_qbrick_field_widget_info() {
+  $widgets = array();
   $widgets['os2web_qbrick_movie_simple'] = array(
     'label' => 'Qbrick Movie simple entry',
     'field types' => array('os2web_qbrick_movie'),
@@ -168,6 +167,7 @@ function os2web_qbrick_field_widget_form(&$form, &$form_state, $field, $instance
  * Implements hook_field_formatter_info().
  */
 function os2web_qbrick_field_formatter_info() {
+  $formatters = array();
   $formatters['os2web_qbrick_movie_simple'] = array(
     'label' => t('QBrick movie render'),
     'field types' => array('os2web_qbrick_movie'),
@@ -212,7 +212,8 @@ function os2web_qbrick_field_formatter_view($entity_type, $entity, $field, $inst
           $element[$delta]['#markup'] = format_string($embed_script, array(
             '!playerid' => $player_id,
             '!movieid' => $item['id'],
-            '!seek' => $item['seek']));
+            '!seek' => $item['seek']
+          ));
         }
       }
       break;

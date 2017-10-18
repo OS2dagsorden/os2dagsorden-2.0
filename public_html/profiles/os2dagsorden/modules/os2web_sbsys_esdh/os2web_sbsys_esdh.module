@@ -50,7 +50,7 @@ function os2web_sbsys_esdh_form_os2web_settings_settings_form_alter(&$form, &$fo
     '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
     '#default_value' => variable_get('os2web_sbsys_esdh_approved_committees', MM_DEFAULT_APPROVED),
   );
- $form['meetings']['os2web_sbsys_esdh_banned_activate_regex'] = array(
+  $form['meetings']['os2web_sbsys_esdh_banned_activate_regex'] = array(
     '#type' => 'checkbox',
     '#title' => 'Aktiver regex',
     '#description' => t('This decides whether the regulax expression or CSV list will be used to trim out the unneeded content from XMLs.'),
@@ -65,7 +65,7 @@ function os2web_sbsys_esdh_form_os2web_settings_settings_form_alter(&$form, &$fo
     '#default_value' => variable_get('os2web_sbsys_esdh_banned_special_char', MM_DEFAULT_BANNED_CHAR),
     '#states' => array(
       'invisible' => array(
-       ':input[name="os2web_sbsys_esdh_banned_activate_regex"]' => array('checked' => TRUE),
+        ':input[name="os2web_sbsys_esdh_banned_activate_regex"]' => array('checked' => TRUE),
       ),
     ),
   );
@@ -78,7 +78,7 @@ function os2web_sbsys_esdh_form_os2web_settings_settings_form_alter(&$form, &$fo
     '#default_value' => variable_get('os2web_sbsys_esdh_banned_special_regex', MM_DEFAULT_BANNED_REGEX),
     '#states' => array(
       'invisible' => array(
-       ':input[name="os2web_sbsys_esdh_banned_activate_regex"]' => array('checked' => FALSE),
+        ':input[name="os2web_sbsys_esdh_banned_activate_regex"]' => array('checked' => FALSE),
       ),
     ),
   );
@@ -90,13 +90,21 @@ function os2web_sbsys_esdh_form_os2web_settings_settings_form_alter(&$form, &$fo
 function os2web_sbsys_esdh_os2web_help($sections) {
 
   // Content types.
-  $sections['contenttype'] .= t('<p><b>Meeting node:</b> Add <a href="@url" target="_blank">meetings</a> directly.<br /><i><a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array('@url' => url('node/add/os2web_meetings_meeting'), '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')));
-  $sections['import'] .= t('<p><b>Import agenades:</b> <a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module import</a>(.pdf)</i></p>', array('@url' => url('node/add/os2web_meetings_meeting'), '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')));
-  $sections['documentation'] .= t('<p><b>PDF documentation for sbsys:</b> <a href="@sbsys" target="_blank">Documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array('@url' => url('node/add/os2web_meetings_meeting'), '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')));
+  $sections['contenttype'] .= t('<p><b>Meeting node:</b> Add <a href="@url" target="_blank">meetings</a> directly.<br /><i><a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
+    '@url' => url('node/add/os2web_meetings_meeting'),
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')
+  ));
+  $sections['import'] .= t('<p><b>Import agenades:</b> <a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module import</a>(.pdf)</i></p>', array(
+    '@url' => url('node/add/os2web_meetings_meeting'),
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')
+  ));
+  $sections['documentation'] .= t('<p><b>PDF documentation for sbsys:</b> <a href="@sbsys" target="_blank">Documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
+    '@url' => url('node/add/os2web_meetings_meeting'),
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_esdh') . '/os2web_sbsys_modul_setup.pdf')
+  ));
   return $sections;
 
 }
-
 
 
 /**

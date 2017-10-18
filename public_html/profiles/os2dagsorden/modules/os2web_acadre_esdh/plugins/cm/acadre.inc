@@ -74,19 +74,22 @@ function ops2web_acadre_esdh_get_document($doc_id) {
     $doc_id = ops2web_acadre_esdh_lookup_doc($doc_id);
   }
   $doc_data = $pws->getDocument($doc_id);
+  $doc = array();
+
   if ($doc_data === FALSE) {
     return FALSE;
+  } elseif (is_object($doc_data)) {
+    $doc = array(
+      'id' => $doc_id,
+      'case_reference' => $doc_data->Record->CaseFileReference,
+      'title' => $doc_data->Document->DocumentTitleText,
+      'last_update' => $doc_data->Record->RecordLatestUpdateDate,
+      'access_code' => $doc_data->Record->AccessCode,
+      'publication_indicator' => $doc_data->Record->PublicationIndicator,
+      'lock_status' => $pws->getDocLock($doc_id),
+    );
+    $doc += os2web_esdh_provider_default_document();
   }
-  $doc = array(
-    'id' => $doc_id,
-    'case_reference' => $doc_data->Record->CaseFileReference,
-    'title' => $doc_data->Document->DocumentTitleText,
-    'last_update' => $doc_data->Record->RecordLatestUpdateDate,
-    'access_code' => $doc_data->Record->AccessCode,
-    'publication_indicator' => $doc_data->Record->PublicationIndicator,
-    'lock_status' => $pws->getDocLock($doc_id),
-  );
-  $doc += os2web_esdh_provider_default_document();
   return $doc;
 }
 
@@ -132,8 +135,7 @@ function ops2web_acadre_esdh_get_document_file($doc_id) {
   if ($doc_id > 0) {
     $file = $pws->getDocData($doc_id);
     return $file;
-  }
-  else {
+  } else {
     return (object) NULL;
   }
 }

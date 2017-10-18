@@ -113,9 +113,9 @@ function os2dagsorden_meeting_views_bullet_point_fields_title_navigation_buttons
   if ($next_bullet_point)
     print '<a href="' . $base_url . '/meeting/' . $meeting_id . '/bullet-point/' . $next_bullet_point->nid . '" class="form-submit nav-button right">></a>';
 
-  if ($bullet_point->field_os2web_meetings_bul_closed['und'][0][value] == 1)
+  if ($bullet_point->field_os2web_meetings_bul_closed['und'][0]['value'] == 1)
     print '<div class="indicator-unlocked"></div>';
-  if ($bullet_point->field_os2web_meetings_bul_pers['und'][0][value] == 1)
+  if ($bullet_point->field_os2web_meetings_bul_pers['und'][0]['value'] == 1)
     print '<div class="indicator-personal"></div>';
 
   $title = $bullet_point->title;
@@ -375,11 +375,11 @@ function os2dagsorden_meeting_views_bullet_point_fields_shared_with($sp_id) {
         $shared_with_group_str .= ', ';
       }
     }
-    if ($shared_with_str) {
+    if (isset($shared_with_str)) {
       $shared_with_html = t('Deles med') . ': ' . substr($shared_with_str, 0, -2);
     }
-    if ($shared_with_group_str) {
-      if ($shared_with_html) {
+    if (isset($shared_with_group_str)) {
+      if (isset($shared_with_html)) {
         $shared_with_html .= '<br/>';
       }
       $shared_with_html .= t('Deles med grupper') . ': ' . substr($shared_with_group_str, 0, -2);

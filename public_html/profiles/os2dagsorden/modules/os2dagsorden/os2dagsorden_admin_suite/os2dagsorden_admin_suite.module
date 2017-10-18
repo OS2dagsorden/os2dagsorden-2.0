@@ -3,7 +3,7 @@
 /**
  * Implementation of hook_menu
  *
- * @return list of links
+ * @return array - list of links
  */
 function os2dagsorden_admin_suite_menu() {
     $items = array();
@@ -385,7 +385,6 @@ function os2dagsorden_admin_suite_calculate_damaged_meetings(){
 /**
   * Forces the file deletion of thos file that were successfully conveted to PDF.
   *
-  * @return none
   */
 function os2dagsorden_admin_suite_delete_converted_files(){
   $acadre_dir =  drupal_realpath("private://");
@@ -439,7 +438,6 @@ function os2dagsorden_admin_suite_delete_converted_files(){
 /**
   * Deletes the extra files from the acadre directory, which are copied together with the new acadre version but are never used
   *
-  * @return none
   */
 function os2dagsorden_admin_suite_delete_extra_files(){
     $to_delete = array();
@@ -581,7 +579,7 @@ function os2dagsorden_admin_suite_force_meeting_description_converting(){
 	print_r("<br/>");
 	if (strcasecmp($ext[1], 'PDF') != 0){
 	  print_r("conversion scheduled");
-	  os2dagsorden_adlib_api_convert_to_pdf($file['fid'], $node->nid);
+	  os2web_adlib_api_convert_to_pdf($file['fid'], $node->nid);
 	}
 	print_r("<br/><br/>");
       }
@@ -592,7 +590,7 @@ function os2dagsorden_admin_suite_force_meeting_description_converting(){
 	print_r("<br/>");
 	if (strcasecmp($ext[1], 'PDF') != 0){
 	  print_r("conversion scheduled");
-	  os2dagsorden_adlib_api_convert_to_pdf($file['fid'], $node->nid);
+	  os2web_adlib_api_convert_to_pdf($file['fid'], $node->nid);
 	}
 	print_r("<br/><br/>");
       }
