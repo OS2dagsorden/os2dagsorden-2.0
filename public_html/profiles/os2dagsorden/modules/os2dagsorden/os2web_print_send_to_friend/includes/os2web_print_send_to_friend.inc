@@ -148,7 +148,6 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
       'attachments' => os2web_print_send_to_friend_print_bullet_point_attachments($bullet_point_id)
     )
   );
-  var_dump($params['params']['attachments']);
   drupal_mail('os2web_print_send_to_friend', 'send_to_friend_', $to_email, language_default(), $params, $from);
   //$system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;

@@ -1,0 +1,8 @@
+
+/* Prod check settings page styling */
+
+.prod-check-settings{float:left;padding:0 5px;}
+.prod-check-settings.odd{background-color:#f8f8f8;}
+.prod-check-settings.even{background-color:#f1f1f1;}
+.form-item.form-item-prod-check-module-list-day, .form-item.form-item-prod-check-module-list-time{float:left;margin-right:10px;}
+.clear{clear:both;}

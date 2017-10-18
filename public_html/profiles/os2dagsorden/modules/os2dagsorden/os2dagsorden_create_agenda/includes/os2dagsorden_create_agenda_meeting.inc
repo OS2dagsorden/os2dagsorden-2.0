@@ -201,7 +201,6 @@ function os2dagsorden_create_agenda_meeting($form, $form_state, $meeting_id) {
  * @param $form       the form
  * @param $form_state the current state of the form
  *
- * @return none
 */
 function os2dagsorden_create_agenda_bullet_point_delete_ajax($form, $form_state) {
   return $form['agenda'];
@@ -284,10 +283,9 @@ function os2dagsorden_create_agenda_meeting_submit($form, &$form_state) {
 /**
  * Calls os2dagsorden_create_agenda_save_meeting and redirects to bullet point creation/modification page.
  *
- * @param $bullet_point_id id of the bullet point
- * @param $bpa_id          id of the bullet point attachment
+ * @param $bullet_point_id int id of the bullet point
+ * @param $bpa_id          int id of the bullet point attachment
  *
- * @return none
 */
 function os2dagsorden_create_agenda_meeting_submit_add_edit_bullet_point($form, &$form_state) {
   $node = os2dagsorden_create_agenda_save_meeting($form, $form_state);

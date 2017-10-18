@@ -1,0 +1,41 @@
+
+extension=apc.so
+
+# commented entries are set by default
+
+#apc.cache_by_default=1
+#apc.coredump_unmap=0
+
+apc.enable_cli=1
+
+#apc.enabled=1
+#apc.file_update_protection=2
+#apc.filters
+#apc.gc_ttl=3600
+#apc.include_once_override=0
+#apc.max_file_size=1M
+
+apc.mmap_file_mask=/tmp/apc.XXXXXX
+apc.num_files_hint=4096
+
+#apc.report_autofilter=0
+#apc.rfc1867=0
+#apc.rfc1867_freq=0
+#apc.rfc1867_name=APC_UPLOAD_PROGRESS
+#apc.rfc1867_prefix=upload_
+#apc.shm_segments=1
+
+# 64Mb should be sufficient for dedicated single site hosting.
+# For shared hosting setups, you should double this.
+apc.shm_size=64
+#apc.shm_size=128
+
+#apc.slam_defense=0
+#apc.stat=1
+#apc.stat_ctime=0
+
+apc.ttl=7200
+apc.user_entries_hint=4096
+apc.user_ttl=7200
+
+#apc.write_lock=1

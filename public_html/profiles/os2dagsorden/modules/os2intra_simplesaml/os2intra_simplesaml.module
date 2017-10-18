@@ -137,8 +137,7 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
 
         drupal_goto();
       }
-    }
-    else {
+    } else {
       //If no, store this PID for the user
       $num_updated = db_update('os2intra_simplesaml_nemid_pid_mapping')
         ->fields(array(
@@ -205,7 +204,7 @@ function os2intra_simplesaml_boot() {
       require_once(DRUPAL_ROOT . '/includes/menu.inc');
 
       drupal_load('module', 'user');
-      
+
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
         //unsetting session in case it had any nemid errors
         unset($_SESSION['nemid_login']);

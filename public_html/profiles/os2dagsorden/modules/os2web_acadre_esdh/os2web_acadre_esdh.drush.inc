@@ -60,13 +60,11 @@ function drush_os2web_acadre_esdh_acadre_doc($docid = NULL) {
     $data = os2web_esdh_provider_invoke('cm', 'get_document', $docid);
     if ($data === FALSE) {
       drush_log('Document lookup..', 'fail');
-    }
-    else {
+    } else {
       drush_log('Document lookup..', 'ok');
       error_log(print_r($data, 1));
     }
-  }
-  else {
+  } else {
     drush_log('Api load', 'fail');
   }
 }
@@ -80,13 +78,11 @@ function drush_os2web_acadre_esdh_acadre_case($caseid = NULL) {
     drush_log('API load', 'ok');
     if ($data === FALSE) {
       drush_log('Case lookup..', 'fail');
-    }
-    else {
+    } else {
       drush_log('Case lookup..', 'ok');
       error_log(print_r($data, 1));
     }
-  }
-  else {
+  } else {
     drush_log('Api load', 'fail');
   }
 }
@@ -100,13 +96,11 @@ function drush_os2web_acadre_esdh_acadre_case_docs($caseid = NULL) {
     $data = os2web_esdh_provider_invoke('cm', 'get_case_docs', $caseid);
     if ($data === FALSE) {
       drush_log('Case lookup..', 'fail');
-    }
-    else {
+    } else {
       drush_log('Case lookup..', 'ok');
       error_log(print_r($data, 1));
     }
-  }
-  else {
+  } else {
     drush_log('Api load', 'fail');
   }
 }
@@ -120,8 +114,7 @@ function drush_os2web_acadre_esdh_acadre_case_docs_load($caseid = NULL) {
     $data = os2web_esdh_provider_invoke('cm', 'get_case_docs', $caseid);
     if ($data === FALSE) {
       drush_log('Case lookup..', 'fail');
-    }
-    else {
+    } else {
       drush_log('Case lookup..', 'ok');
       $docs = array();
       foreach ($data as $doc) {
@@ -129,8 +122,7 @@ function drush_os2web_acadre_esdh_acadre_case_docs_load($caseid = NULL) {
       }
       error_log(print_r($docs, 1));
     }
-  }
-  else {
+  } else {
     drush_log('Api load', 'fail');
   }
 }

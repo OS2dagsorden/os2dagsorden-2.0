@@ -225,7 +225,7 @@ function _os2dagsorden_annotator_delete($id) {
  * Implementation search notes endpoint.
  * Makes and sql-query to the database with a params taken from $_GET.
  *
- * @return list of notes in JSON.
+ * @return array - list of notes in JSON.
  */
 function _os2dagsorden_annotator_search() {
     drupal_add_http_header('Content-Type', 'application/json');
@@ -296,8 +296,10 @@ function _os2dagsorden_annotator_dummy(){
  * @param int $bullet_point_id ID of the bullet point
  * @param int $bilag_id        ID of the attachment (bilag)
  *
- * @return calls the function, that checks if a user is allowed 
+ * calls the function, that checks if a user is allowed
  * to see a specific bullet point.
+ *
+ * @return boolean
  */
 function _os2dagsorden_annotator_check_permission($meeting_id, $bullet_point_id, $bilag_id) {
     return os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($meeting_id, $bullet_point_id, $bilag_id);
@@ -715,9 +717,9 @@ function _os2dagsorden_compare_xpath($path1, $path2){
 /**
  * Appends the right index number to a word/set of words, that has a annotation attached.
  *
- * @param string $body    the entire text of the attachment
- * @param string $note    the note object
- * @param int    $note_nr the ordinal number of the note
+ * @param string    $body    the entire text of the attachment
+ * @param stdClass  $note    the note object
+ * @param int       $note_nr the ordinal number of the note
  *
  * @return the modified body text with attached index.
  */
@@ -733,41 +735,44 @@ function _os2dagsorden_annotator_append_index($body, $note, $note_nr) {
  * Composes the line with note ordinal index and the note text.
  * Is used below the attachment text as footnotes.
  *
- * @param string  $note        the note object
- * @param int     $index       the ordinal number of the note
- * @param boolaen $print_text  print or not print the annotated text
- * @param string  $link        the link that needs to be associated with the note text
+ * @param stdClass  $note        the note object
+ * @param int       $index       the ordinal number of the note
+ * @param boolean   $print_text  print or not print the annotated text
+ * @param string    $link        the link that needs to be associated with the note text
  *
  * @return the footnote with note text.
  */
-function _os2dagsorden_annotator_append_note($note, $index, $print_text = false, $link = false) {
-    $to_return = '<b>[' . $index . ']</b> ';
-    if (!$print_text) {
-      $to_return .= $note->text . '<br/>';
-    } else {
-      $sp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-      $xpath = $note->ranges[0]->start;
-      $xpath_arr = explode('/', $xpath);
-      $page_nr = trim($xpath_arr[2], 'div[]');
-      if (!$page_nr)
-	$page_nr = 1;
-      
-      if (is_numeric($page_nr))
-	$to_return .= ' Side ' . $page_nr . '.';
-	
-      $to_return .= ' <b>' . $note->quote . '</b>:<br/><i>' . $sp . $note->text . '</i>';
-      if ($link){
-	if (intval($page_nr) > ANNOTATOR_PAGES_PER_VIEW){
-	    $link .= '?page=' . intval($page_nr / ANNOTATOR_PAGES_PER_VIEW) * ANNOTATOR_PAGES_PER_VIEW;//if pages per view is 5, then the page number will be 5, 10, 15 etc
-	}
-	
-	global $base_url;
-	$to_return .= '<a target="_blank" href="' . $base_url . $link . '"> >>> </a>';
-	
-      }
-      $to_return .= '<br/>';
+function _os2dagsorden_annotator_append_note($note, $index, $print_text = FALSE, $link = FALSE) {
+  $to_return = '<b>[' . $index . ']</b> ';
+  if (!$print_text) {
+    $to_return .= $note->text . '<br/>';
+  }
+  else {
+    $sp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    $xpath = $note->ranges[0]->start;
+    $xpath_arr = explode('/', $xpath);
+    $page_nr = trim($xpath_arr[2], 'div[]');
+    if (!$page_nr) {
+      $page_nr = 1;
     }
-    return $to_return;
+
+    if (is_numeric($page_nr)) {
+      $to_return .= ' Side ' . $page_nr . '.';
+    }
+
+    $to_return .= ' <b>' . $note->quote . '</b>:<br/><i>' . $sp . $note->text . '</i>';
+    if (!empty($link)) {
+      if (intval($page_nr) > ANNOTATOR_PAGES_PER_VIEW) {
+        $link .= '?page=' . intval($page_nr / ANNOTATOR_PAGES_PER_VIEW) * ANNOTATOR_PAGES_PER_VIEW; //if pages per view is 5, then the page number will be 5, 10, 15 etc
+      }
+
+      global $base_url;
+      $to_return .= '<a target="_blank" href="' . $base_url . $link . '"> >>> </a>';
+
+    }
+    $to_return .= '<br/>';
+  }
+  return $to_return;
 }
 
 /**

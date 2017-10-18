@@ -22,15 +22,17 @@
  * Implementation of hook_preprocess_page.
  * Adds needed JS behaviour, loads the notes/speaker paper indicators, makes the security log entries.
  *
- * @param mixed &$variables variables
- * @return none
+ * @param mixed $variables array
  */
-function os2dagsorden_theme_ballerup_preprocess_page(&$variables)
-{
-	drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme_ballerup') . '/js/os2dagsorden_theme_ballerup.js');
-	drupal_add_js('stick_side_menu();', 'inline');
-	drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme_ballerup') . '/css/ie.css', array('group' => CSS_THEME, 'browsers' => array('IE' => 'lt IE 9', '!IE' => FALSE), 'preprocess' => FALSE));
-       if (variable_get('os2dagsorden_show_search_block_title', 'true')==='false')
-            drupal_add_js('hide_search_block_title_ballerup()', 'inline');
-        
+function os2dagsorden_theme_ballerup_preprocess_page(&$variables) {
+  drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme_ballerup') . '/js/os2dagsorden_theme_ballerup.js');
+  drupal_add_js('stick_side_menu();', 'inline');
+  drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme_ballerup') . '/css/ie.css', array(
+    'group' => CSS_THEME,
+    'browsers' => array('IE' => 'lt IE 9', '!IE' => FALSE),
+    'preprocess' => FALSE
+  ));
+  if (variable_get('os2dagsorden_show_search_block_title', 'true') === 'false') {
+    drupal_add_js('hide_search_block_title_ballerup()', 'inline');
+  }
 }

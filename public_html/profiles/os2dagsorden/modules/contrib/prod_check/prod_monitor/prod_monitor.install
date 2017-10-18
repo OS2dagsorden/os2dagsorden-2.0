@@ -1,0 +1,295 @@
+<?php
+
+/**
+ * Implementation of hook_schema().
+ */
+function prod_monitor_schema() {
+  return array(
+    'prod_monitor_sites' => array(
+      'description' => 'Holds all sites and data monitored by Production monitor.',
+      'fields' => array(
+        'id' => array(
+          'description' => 'The primary identifier for a site.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'url' => array(
+          'description' => 'URL of the website to monitor.',
+          'type' => 'text',
+          'size' => 'normal',
+          'default' => NULL,
+        ),
+        'settings' => array(
+          'description' => 'All settings related to the site.',
+          'type' => 'text',
+          'size' => 'medium',
+          'default' => NULL,
+        ),
+        'data' => array(
+          'description' => 'All data collected through XMLRPC in serialized form.',
+          'type' => 'text',
+          'size' => 'medium',
+          'default' => NULL,
+        ),
+        'added' => array(
+          'description' => 'The Unix timestamp when the site was added.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0
+        ),
+        'lastupdate' => array(
+          'description' => 'The Unix timestamp when the data was most recently updated.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'primary key' => array('id'),
+    ),
+    'prod_monitor_site_modules' => array(
+      'description' => 'Holds all retrieved module data for a specific site.',
+      'fields' => array(
+        'id' => array(
+          'description' => 'The primary identifier for a site.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'projects' => array(
+          'description' => 'All modules installed on the remote site.',
+          'type' => 'text',
+          'size' => 'medium',
+          'default' => NULL,
+        ),
+        'sitekey' => array(
+          'description' => 'The unique key for the site.',
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+        'lastfetch' => array(
+          'description' => 'The Unix timestamp when the data was most recently retrieved from the remote site.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'available' => array(
+          'description' => 'All module updates available for the remote site.',
+          'type' => 'text',
+          'size' => 'medium',
+          'default' => NULL,
+        ),
+        'updates' => array(
+          'description' => '0 = unknown, 1 = no updates, 2 = regular updates, 3 = security updates.',
+          'type' => 'int',
+          'size' => 'tiny',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'lastupdate' => array(
+          'description' => 'The Unix timestamp of the most recent module update check.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'foreign keys' => array(
+        'prod_monitor_sites' => array(
+          'table' => 'prod_monitor_sites',
+          'columns' => array('id' => 'id'),
+         ),
+       ),
+      'primary key' => array('id'),
+    ),
+    'prod_monitor_site_performance' => array(
+      'description' => 'Holds all retrieved performance data for a specific site.',
+      'fields' => array(
+        'id' => array(
+          'description' => 'The primary identifier for a site.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+        'module' => array(
+          'description' => 'The module that reported the performance data.',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'data' => array(
+          'description' => 'The actual performance data.',
+          'type' => 'text',
+          'size' => 'medium',
+          'default' => NULL,
+        ),
+        'annotation' => array(
+          'description' => 'A short annotation to this specific dataset.',
+          'type' => 'varchar',
+          'length' => 255,
+          'default' => NULL,
+        ),
+        'fetched' => array(
+          'description' => 'The Unix timestamp when the data was retrieved from the remote site.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+      ),
+      'foreign keys' => array(
+        'prod_monitor_sites' => array(
+          'table' => 'prod_monitor_sites',
+          'columns' => array('id' => 'id'),
+         ),
+       ),
+      'primary key' => array('id', 'module', 'fetched'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function prod_monitor_uninstall() {
+  // This beats multiple variable_del() calls.
+  db_delete('variable')->condition('name', 'prod_monitor\_%', 'LIKE')->execute();
+}
+
+/**
+ * Increase the size of the settings field for table prod_monitor_sites.
+ */
+function prod_monitor_update_7100() {
+  // Note http://drupal.org/node/150220 about not using hook_schema() here!
+  db_change_field(
+    'prod_monitor_sites',
+    'settings',
+    'settings',
+    array(
+      'description' => 'All settings related to the site.',
+      'type' => 'text',
+      'size' => 'medium',
+      'default' => NULL,
+    )
+  );
+}
+
+/**
+ * Update xmlrpc settings for all sites.
+ */
+function prod_monitor_update_7101(&$sandbox) {
+  $prefix = '_prod_check_';
+  $ret = array();
+
+  // Update 5 sites at a time
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_site'] = 0;
+    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT id) FROM {prod_monitor_sites}')->fetchField();
+  }
+
+  $sites = db_select('prod_monitor_sites', 'pms')
+    ->fields('pms', array('id', 'settings'))
+    ->condition('id', $sandbox['current_site'], '>')
+    ->range(0, 5)
+    ->orderBy('id', 'ASC')
+    ->execute();
+
+  foreach ($sites as $site) {
+    $change = FALSE;
+    $site->settings = unserialize($site->settings);
+    // Adjust functions
+    foreach ($site->settings['functions'] as $set => &$data) {
+      foreach ($data['functions'] as $function => $title) {
+        if (stripos($function, $prefix) === FALSE) {
+          // Can't 'rename' keys, so we remove them and add a new one.
+          unset($data['functions'][$function]);
+          $data['functions'][$prefix . $function] = $title;
+          $change = TRUE;
+        }
+      }
+    }
+    // Prevent any chance of the next loop from going kaka cuckoo.
+    // See warning at http://php.net/manual/en/control-structures.foreach.php
+    unset($data, $function);
+    // Adjust checks
+    foreach ($site->settings['checks'] as $set => &$calls) {
+      foreach ($calls as $key => &$function) {
+        if (stripos($function, $prefix) === FALSE) {
+          $function = $prefix . $function;
+          $change = TRUE;
+        }
+      }
+    }
+    // Only update record if there were changes. Added to prevent loss of data
+    // when (accidentally) running this update twice.
+    if ($change) {
+      $site->settings = serialize($site->settings);
+      db_update('prod_monitor_sites')
+        ->fields(array('settings' => $site->settings))
+        ->condition('id', $site->id)
+        ->execute();
+      $msg = t('Successfully updated all remote site settings.');
+    }
+    else {
+      $msg = t('No remote site settings found that needed an update.');
+    }
+
+    $sandbox['progress']++;
+    $sandbox['current_site'] = $site->id;
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  return $msg;
+}
+
+/**
+ * Add new table to store performance data.
+ */
+function prod_monitor_update_7102() {
+  $schema = prod_monitor_schema();
+  db_create_table('prod_monitor_site_performance', $schema['prod_monitor_site_performance']);
+}
+
+/**
+ * Update sitekey field in database to allow longer D7 values.
+ */
+function prod_check_update_7103() {
+  // Note http://drupal.org/node/150220 about not using hook_schema() here!
+  db_change_field(
+    'prod_monitor_site_modules',
+    'sitekey',
+    'sitekey',
+    array(
+      'description' => 'The unique key for the site.',
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => TRUE,
+      'default' => '',
+    )
+  );
+}
+
+/**
+ * Add new dbconnect_path setting to database to prevent warnings.
+ */
+function prod_check_update_7104() {
+  $table = 'prod_monitor_sites';
+
+  // Fetch all settings.
+  $result = db_select($table, 'psm')
+    ->fields('psm', array('id', 'settings'))
+    ->execute();
+
+  // Update all sites to add new setting.
+  foreach ($result as $site) {
+    $settings = unserialize($site->settings);
+    $settings['dbconnect_path'] = '';
+    $site->settings = serialize($settings);
+
+    // Write to DB.
+    drupal_write_record($table, $site, array('id'));
+  }
+}

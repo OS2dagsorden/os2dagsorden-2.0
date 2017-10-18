@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function prod_check_install() {
+  // Allow immediate fetching of module data by prod_mon after installation
+  // for remote the module status update checking feature.
+  variable_set('prod_check_module_list_lastrun', -1);
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function prod_check_uninstall() {
+  // This beats multiple variable_del() calls.
+  db_delete('variable')->condition('name', 'prod_check\_%', 'LIKE')->execute();
+}
+
+/**
+ * Implementation of hook_requirements().
+ */
+function prod_check_requirements($phase) {
+  $requirements = array();
+
+  switch ($phase) {
+    case 'runtime':
+      $sitemail = variable_get('prod_check_sitemail', '');
+      if (empty($sitemail)) {
+        $requirements['prod_check_email'] = array(
+          'title' => t('Production check'),
+          'value' => t('Site e-mail check not properly configured.'),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('You have not changed the e-mail address on the prod-check !link. The Site e-mail check will not function properly. Please read the README.txt file.', prod_check_link_array('settings page', 'admin/config/system/prod-check')),
+        );
+      }
+      if (function_exists('apc_cache_info') && variable_get('prod_check_apcpass', 'password') == 'password') {
+        $requirements['prod_check_apc_opc'] = array(
+          'title' => t('Production check'),
+          'value' => t('APC password not configured.'),
+          'severity' => REQUIREMENT_WARNING,
+          'description' => t('You have not !link for the APC status page. The page will function, but advanced options require that you set a password. Please read the README.txt file.', prod_check_link_array('changed the password', 'admin/config/system/prod-check')),
+        );
+      }
+      $nagios = variable_get('prod_check_enable_nagios', 0);
+      if ($nagios && !module_exists('nagios')) {
+        $requirements['prod_check_nagios'] = array(
+          'title' => t('Production check'),
+          'value' => t('Nagios module not installed/enabled.'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('You have enabled <em>Nagios integration</em> but you have not installed or enabled the !link module! Please install the !link module if you wish to use this functionality.', prod_check_link_array('Nagios', 'http://drupal.org/project/nagios')),
+        );
+      }
+      break;
+  }
+
+  return $requirements;
+}
+
+/**
+ * Update prod_check_nagios_checks settings if present.
+ */
+function prod_check_update_7100() {
+  if ($checks = variable_get('prod_check_nagios_checks', FALSE)) {
+    $prefix = '_prod_check_';
+    foreach ($checks as $set => &$calls) {
+      foreach ($calls as $key => &$function) {
+        if (stripos($function, $prefix) === FALSE) {
+          $function = $prefix . $function;
+        }
+      }
+    }
+    variable_set('prod_check_nagios_checks', $checks);
+    return t('Successfully updated prod_check_nagios_checks settings.');
+  }
+
+  return t('No prod_check_nagios_checks found that needed an update.');
+}
+
+/**
+ * Remove obsolete memcache settings.
+ */
+function prod_check_update_7101() {
+  variable_del('prod_check_memcacheuser');
+  variable_del('prod_check_memcachepass');
+
+  return t('Obsolete memcache settings removed.');
+}

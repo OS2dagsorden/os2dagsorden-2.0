@@ -21,7 +21,7 @@ define('OS2DAGSORDEN_HIDDEN_AGENGA_COMMITTEE', '28');
  * @param $form       the settings form
  * @param $form_state the state of the form
  *
- * @return settings form.
+ * @return array - settings form.
  */
 function os2dagsorden_settings_settings_form($form, $form_state) {
   $output = os2dagsorden_blocks_positioning_show_git_version();
