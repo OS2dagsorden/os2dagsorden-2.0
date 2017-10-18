@@ -1183,17 +1183,13 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
     'nid_1' => 'nid_1',
     'nid' => 'nid',
     'nothing' => 'nothing',
-    'field_os2web_meetings_bul_closed' => 'php_4',
-    'field_os2web_meetings_bul_pers' => 'php_4',
-    'php_1' => 'php_4',
-    'php' => 'php',
     'title' => 'title',
     'php_4' => 'php_4',
     'php_3' => 'php_4',
+    'php' => 'php',
     'php_6' => 'php_6',
     'php_5' => 'php_5',
     'php_2' => 'php_2',
-    'php_7' => 'php_4',
   );
   $handler->display->display_options['style_options']['default'] = '-1';
   $handler->display->display_options['style_options']['info'] = array(
@@ -1216,30 +1212,6 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
       'separator' => '',
       'empty_column' => 0,
     ),
-    'field_os2web_meetings_bul_closed' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'field_os2web_meetings_bul_pers' => array(
-      'sortable' => 0,
-      'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'php_1' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'php' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
     'title' => array(
       'sortable' => 0,
       'default_sort_order' => 'asc',
@@ -1257,6 +1229,11 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
       'separator' => '',
       'empty_column' => 0,
     ),
+    'php' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 1,
+    ),
     'php_6' => array(
       'align' => '',
       'separator' => '',
@@ -1272,17 +1249,12 @@ os2dagsorden_meeting_views_meeting_details_fields_participants_afbud($row->nid);
       'separator' => '',
       'empty_column' => 0,
     ),
-    'php_7' => array(
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
   );
   $handler->display->display_options['defaults']['style_options'] = FALSE;
   $handler->display->display_options['defaults']['row_plugin'] = FALSE;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['header'] = FALSE;
-  /* Header: Dagsorden header */
+  /* Overskrift: Dagsorden header */
   $handler->display->display_options['header']['area']['id'] = 'area';
   $handler->display->display_options['header']['area']['table'] = 'views';
   $handler->display->display_options['header']['area']['field'] = 'area';
