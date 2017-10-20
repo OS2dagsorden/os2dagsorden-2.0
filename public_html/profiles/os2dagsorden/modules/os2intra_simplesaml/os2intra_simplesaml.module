@@ -177,8 +177,8 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
 /**
  * Implements hook_boot().
  */
-function os2intra_simplesaml_boot() {
-  // Do not run this from CLI.
+function os2intra_simplesaml_init() {
+  // // Do not run this from CLI.
   if (php_sapi_name() != 'cli' && $GLOBALS['user']->uid == 0) {
     $custom_ips = explode(',', variable_get('os2intra_simplesaml_redirected_ips'));
     $remote_ip = $_SERVER['REMOTE_ADDR'];
@@ -186,13 +186,18 @@ function os2intra_simplesaml_boot() {
     if (variable_get('os2intra_simplesaml_simplesaml_enable')) {
       foreach ($custom_ips as $custom_ip) {
         // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use nemid login
-        if ($remote_ip == $custom_ip) {
-          if (!in_array($_GET['q'], array('saml_login', 'user/logout'))) {
-            require_once(DRUPAL_ROOT . '/includes/common.inc');
-            require_once(DRUPAL_ROOT . '/includes/path.inc');
 
-            drupal_load('module', 'user');
-            drupal_goto('saml_login', array('query' => drupal_get_destination()));
+        // If check for only parts of the ip address.
+        // This makes it possible to add only the beginning of the IP range.
+        // F.ex. 192.168 will allow all ip adresses including 192.168 as part of the io.
+        if (strpos($remote_ip, $custom_ip) !== false) {
+          if (!in_array($_GET['q'], array('saml_login', 'user/logout', 'user/login', 'logout'))) {
+            if (module_exists('simplesamlphp_auth')) {
+              // Loading the Simplesamlphp autoloader.
+              require_once (variable_get('simplesamlphp_auth_installdir') . '/lib/_autoload.php');
+              $as = new SimpleSAML_Auth_Simple(variable_get('simplesamlphp_auth_authsource'));
+              $as->requireAuth();
+            }
           }
         }
       }
@@ -200,18 +205,12 @@ function os2intra_simplesaml_boot() {
 
     //redirect to Nemid Login
     if (!in_array($remote_ip, $custom_ips)) {
-      require_once(DRUPAL_ROOT . '/includes/common.inc');
-      require_once(DRUPAL_ROOT . '/includes/path.inc');
-      require_once(DRUPAL_ROOT . '/includes/menu.inc');
-
-      drupal_load('module', 'user');
-      
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
         //unsetting session in case it had any nemid errors
         unset($_SESSION['nemid_login']);
 
         //redirecting only if module exists and path is valid
-        if (drupal_valid_path('nemid')) {
+        if (module_exists('drupal_nemid_login')) {
           drupal_goto('nemid');
         }
       }
