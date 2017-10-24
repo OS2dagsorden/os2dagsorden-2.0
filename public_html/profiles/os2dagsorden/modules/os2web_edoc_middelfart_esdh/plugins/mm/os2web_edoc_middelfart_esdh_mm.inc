@@ -99,7 +99,13 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         $meeting_date_start = (string) array_shift($manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime'));
         $meeting_date_end = (string) array_shift($manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:EndDateTime'));
         $meeting_id = _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date_start, $committee); //generated meeting_id
-        $meeting_type = (string) array_shift($meeting_agenda->xpath('edoc:Type'));
+        $meeting_type = (string) array_shift($manifest->xpath('/Root/edoc:OutputTypeEnumName'));
+        if (strcasecmp($meeting_type, 'Minute') == 0) {
+          $meeting_type = 'Referat';
+        } else {
+          $meeting_type = 'Dagsorden';
+        }
+        
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
         $agenda_access = 'Åben';
 
