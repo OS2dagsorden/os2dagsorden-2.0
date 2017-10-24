@@ -110,8 +110,14 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         $meeting_date_end = (string) array_shift($meeting_date_end_xpath);
         $meeting_id = _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date_start, $committee); //generated meeting_id
 
-        $meeting_type_xpath = $meeting_agenda->xpath('edoc:Type');
+        $meeting_type_xpath = $manifest->xpath('/Root/edoc:OutputTypeEnumName');
         $meeting_type = (string) array_shift($meeting_type_xpath);
+        if (strcasecmp($meeting_type, 'Minute') == 0) {
+          $meeting_type = 'Referat';
+        } else {
+          $meeting_type = 'Dagsorden';
+        }
+
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
         $agenda_access = 'Åben';
 
@@ -292,7 +298,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
       if (!empty($bullet_title) && !empty($bullet_body)) {
         $item['bullets'][] = array(
           'title' => (string) $bullet_title,
-          'body' => (string) $bullet_body,
+          'body' => _os2web_edoc_esdh_mm_improve_body_html((string) $bullet_body, $meeting['uri']),
           'sysid' => $bullet_id,
         );
       }
@@ -520,4 +526,54 @@ function _os2web_edoc_middelfart_esdh_generate_committee_id($committee_name) {
     $committee_id = substr($committee_id, 0, 9); //mysql int out of range fix
   }
   return $committee_id;
+}
+
+
+/**
+ * Improve the body HTML by substituting img references,
+ *
+ * @param $data -string - the body text
+ * @param $meeting_uri - string - the uri of the meeting folder
+ *
+ * @return mixed
+ */
+function _os2web_edoc_esdh_mm_improve_body_html($data, $meeting_uri) {
+  $doc = new DOMDocument();
+  $doc->loadHTML($data);
+  $elements = $doc->getElementsByTagName('img');
+
+  if ($elements->length > 0) {
+    foreach ($elements as $element) {
+      $file = $element->getAttribute('src');
+      if (strpos($file, 'http://') === FALSE) {
+        $file = str_replace('"', '', $file);
+        $uri_parts = explode('/', $file);
+
+        //saving the file location information
+        $filename = trim(array_pop($uri_parts));
+        $folder_name = array_pop($uri_parts);
+
+        $file_realpath = drupal_realpath($meeting_uri . '/' .
+          implode('/', array(
+            $folder_name,
+            $filename,
+          )));
+
+        $copy_destination = 'public://edoc_images/' . $folder_name;
+
+        watchdog('acadre MM', 'Copying %from to %to', array(
+          '%from' => $file_realpath,
+          '%to' => $copy_destination . '/' . $filename
+        ), WATCHDOG_DEBUG);
+
+        //since drupal can end up with different URL because of FILE_EXISTS_RENAME flag, we need to catch it
+        $destination_file_uri = file_unmanaged_copy($file_realpath, $copy_destination);
+
+        // Modify url.
+        $new_url = file_create_url($destination_file_uri);
+        $data = str_replace($file, $new_url, $data);
+      }
+    }
+  }
+  return $data;
 }

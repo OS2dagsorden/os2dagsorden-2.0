@@ -21,7 +21,7 @@ function os2dagsorden_meeting_views_common_meeting_has_notes_else_empty($meeting
   $annotations = os2dagsorden_annotator_get_notes_by_meeting_id($meeting_id);
   if (!empty($annotations))
     print '<div class="indicator-has-notes"></div>';
-  else 
+  else
     print '<div class="indicator-empty"></div>';
 }
 
@@ -49,7 +49,7 @@ function os2dagsorden_meeting_views_common_meeting_title_listed($data){
   //if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und']) && !empty($data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value']))
   if (variable_get('os2dagsorden_use_abbr', TRUE) && isset($committee->field_os2web_meetings_com_shname['und']) && !empty($committee->field_os2web_meetings_com_shname['und'][0]['value']))
    $title = $committee->field_os2web_meetings_com_shname['und'][0]['value'] ;//$data->_field_data['nid']['entity']->field_os2web_meetings_abbr['und'][0]['value'];
-  else 
+  else
     $title = $data->_field_data['nid']['entity']->title;
 
   os2dagsorden_meeting_views_common_meeting_has_sp($data->_field_data['nid']['entity']->nid);
@@ -65,7 +65,7 @@ function  os2dagsorden_meeting_views_common_meeting_committee($meeting_id){
     if (!empty($short_name))
        print taxonomy_term_load($meeting_committee[0]["tid"])->field_os2web_meetings_com_shname['und'][0]['value'];
     else
-        print taxonomy_term_load($meeting_committee[0]["tid"])->name;  
+        print taxonomy_term_load($meeting_committee[0]["tid"])->name;
 }
 function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     $meeting = node_load($meeting_id);
@@ -78,7 +78,7 @@ function  os2dagsorden_meeting_views_common_meeting_location($meeting_id){
     else {
       print '';
     }
-    
+
 }
 /////////////////////////////////////////meeting END/////////////////////////////////////////
 
@@ -104,6 +104,10 @@ function os2dagsorden_meeting_views_common_bullet_point_has_sp($bp_id){
  */
 function os2dagsorden_meeting_views_common_filter_in_my_list($tid){
   $user = os2dagsorden_access_helper_get_user();
+  //checking user rights
+  if (!os2dagsorden_access_helper_check_user_can_see_meeting('', $tid)) {
+		return TRUE;
+  }
   if (!empty($user->field_user_committee)) { //is part of the committee
     foreach ($user->field_user_committee['und'] as $user_committee_id) {
       if ($tid == $user_committee_id['tid']) {
@@ -111,7 +115,7 @@ function os2dagsorden_meeting_views_common_filter_in_my_list($tid){
       }
     }
   }
-  
+
   if (!empty($user->field_follows_committee)) { //follows committee
     foreach ($user->field_follows_committee['und'] as $user_committee_id) {
       if ($tid == $user_committee_id['tid']) {
