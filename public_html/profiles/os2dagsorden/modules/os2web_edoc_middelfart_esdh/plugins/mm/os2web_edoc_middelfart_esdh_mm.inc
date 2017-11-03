@@ -119,7 +119,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         }
 
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
-        $agenda_access = 'Åben';
+        $agenda_access = 'Lukket';
 
         $location_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingLocation');
         $location = (string) array_shift($location_xpath);
