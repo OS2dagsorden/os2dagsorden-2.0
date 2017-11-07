@@ -30,7 +30,7 @@ function os2web_sbsys_aarhus_mm_test($stuff) {
  *   List of URIs
  */
 function os2web_sbsys_aarhus_mm_get_import_list() {
-  dpm('os2web_sbsys_aarhus_mm_get_import_list');
+
   /*
    * For the SBsys service, we need to import meetings from xml files.
    * We will enumerate the list with the publication-id
@@ -100,62 +100,30 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
     }
     if (is_object($manifest)) {
 
-      //Genirate id from xml timestamp
-      //$id=51;
-
-
       $committee = $manifest->xpath("Agendas/Agenda/Committee/@ID");
 
+      //Id is not numeric - need to convert
       $id = (string) $committee[0]['ID'];
-
       $id = _os2web_sbsys_aarhus_generate_crc_id($id);
 
-
-      $committee_name = $manifest->xpath("Agendas/Agenda/Committee/Name");
-
-
-
+      $committee_name = $manifest->xpath("Agendas/Agenda/Name");
       $committee = $id;
       $committee_group_id = $id;
-      #$committee_name = $manifest->xpath("Agendas/Agenda/Committee/Name");
       $meeting_uri = pathinfo($file)['dirname'] . '/';
       $meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
-      //$meeting_public = $manifest->xpath("/Publication/Agendas/Agenda/NewItemsIsPublic");
       $sys_id = $id;
       $xml_id = $id;
-      //$meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
-      //$meeting_name = (string) $meeting_name[0];
       $acadre_version = $id;
       $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
-      //$meeting_type = $manifest->xpath('/Publication/PublicationTypeAsValue');
-//      switch (((string) $meeting_type[0])) {
-//        case '0':
-//          $meeting_type = 'Kladde';
-//          break;
-//        case '1':
-//          $meeting_type = 'Dagsorden';
-//          break;
-//        case '2':
-//          $meeting_type = 'Referat';
-//          break;
-//      }
 
+      //Type is not set in XML - always use Dagsorden
       $meeting_type = 'Dagsorden';
 
-      //$committee = (string) $committee[0]['ID'];
-      //$committee_group_id = (string) $committee_group_id[0]['ID'];
       $committee_name = (string) $committee_name[0];
-      //$sys_id = (string) $sys_id[0]['ID'];
-      //$xml_id = (string) $xml_id[0]['ID'];
-      //$meeting_public = (string) $meeting_public[0];
-
       $meeting_date_when = $meeting_data[0]->When;
       $meeting_date_until = $meeting_data[0]->Until;
       $meeting_where = (string) $meeting_data[0]->Where;
-      //$meeting_name = (string) $meeting_name[0];
       $meeting_name = $committee_name;
-      //$meeting_uri = (string) $meeting_uri[0];
-      //$acadre_version = (string) $acadre_version[0]['ID'];
 
       $directory_name = dirname($real_path);
       $dir_parts = explode('/', $directory_name);
@@ -175,11 +143,10 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
       $participants_cancellation = array();
       foreach ($members as $member) {
 
-
+        //Now use 'True' value as cancellation
         if ($member->Participate == 0) {
           $participants[] = (string) $member->Name;
         }else {
-
           $participants_cancellation[] = (string) $member->Name;
         }
       }
@@ -203,18 +170,13 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
           'participants_cancellation' => $participants_cancellation,
       );
 
-
-
       // var_dump($meeting);
       /* stan@bellcom.dk 06.10 - importing multiple agendas */
       $meeting_agendas = array();
       foreach ($manifest->xpath("/Publication/Agendas/Agenda") as $agenda_instance) {
-
         if (!$meeting_agendas) {
-
           $meeting_agendas = $agenda_instance->xpath("Items");
         }else {
-
           foreach ($agenda_instance->xpath("Items/Item") as $items_child) {
             $toDom = dom_import_simplexml($meeting_agendas[0]);
             $fromDom = dom_import_simplexml($items_child);
@@ -227,9 +189,8 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
       if (!empty($meeting_pdf)) {
         $meeting['pdf'] = (string) $meeting_pdf[0];
       }
-      //$meeting['state'] = (string) $meeting_state[0];
-      if (empty($meeting_agendas)) {
 
+      if (empty($meeting_agendas)) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
       }
 
@@ -239,7 +200,7 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
         if (is_array($imported)) {
           $imported['publish'] = TRUE;
           $imported['meeting_sub_id'] = $sys_id;
-          //stan@bellcom.dk - 17.03.2016 
+          //stan@bellcom.dk - 17.03.2016
           //forcing the agenda to be considered as closed, otherwise the closed BP will not be imported
           $imported['agenda_access'] = 'Lukket';
           $meetings[] = $imported;
@@ -249,7 +210,6 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
-
   return $meetings;
 }
 
@@ -270,8 +230,6 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
   // Check if the committee is allowed to publish.
   $publish_committee = array_map('trim', explode(',', variable_get('os2web_sbsys_aarhus_approved_committees', MM_DEFAULT_APPROVED)));
   $publish_committee = array_map('_os2web_sbsys_aarhus_generate_crc_id', $publish_committee);
-
-
 
   if ($meeting['committee_id'] == '' || !in_array($meeting['committee_id'], $publish_committee)) {
     watchdog('SBsys MM', 'Ignored agenda from "%committee" .', array('%committee' => $meeting['committee_id']));
@@ -300,6 +258,7 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
           'title' => $meeting['committee'],
       );
     }
+
     // Import all agenda items.
     $agenda_bullet = $agenda_xml;
     $meeting['current_item_nr'] = 1;
@@ -333,16 +292,12 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda(&$meeting, $agenda_xml) {
  */
 function _os2web_sbsys_aarhus_mm_import_meeting_agenda_item($meeting, $xml) {
   $xml_item = array();
+
+  //Number is not numeric - need to convert
   $xml_item['number'] = $xml->xpath("@ID");
-
   $xml_item['number'] = (string) $xml_item['number'][0]['ID'];
-
-  dpm($xml_item['number']);
-
   $xml_item['number'] = _os2web_sbsys_aarhus_generate_item_number($xml_item['number']);
-  
-    dpm($xml_item['number']);
-  //$xml_item['sysid'] = (string) $xml
+
   $xml_item['pdf'] = (string) $xml->PDFDocument;
   $xml_item_document = $xml->Enclosures;
   $xml_item_bullet = $xml->Fields;
@@ -371,7 +326,6 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda_item($meeting, $xml) {
   );
 
   /* stan@bellcom.dk - 08.10 - closed item now has only non participants bullet */
-
 
   if (0 <> strcasecmp($item['access'], 'true')) {
     //rewriting the access field to match esdh provider module
@@ -435,7 +389,7 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda_item($meeting, $xml) {
   // Process enclsures.
   foreach ($xml_item_document as $enclosures) {
     foreach ($enclosures->Enclosure as $enclosure) {
-      $enclosure_item['filename_in'] = (string) "Enclosures/" . $enclosure->InstantiationFileName;
+      $enclosure_item['filename_in'] = (string) $enclosure->FileName;
       $enclosure_item['access'] = (string) $enclosure->PublishingType;
       #if (strlen($enclosure_item['filename_in']) > 0 && $enclosure_item['access'] === 'SKAL PUBLICERES') {
       if (strlen($enclosure_item['filename_in']) > 0) {
@@ -445,8 +399,8 @@ function _os2web_sbsys_aarhus_mm_import_meeting_agenda_item($meeting, $xml) {
                 $enclosure_item['filename_in']
             )),
             'title' => trim((string) $enclosure->Name),
-            'access' => ((string) $enclosure->IsProtected) === 'True' ? FALSE : TRUE, //inverting the value
-            'sysid' => (string) $enclosure['ID'],
+            'access' => 0 <> strcasecmp((string) $enclosure->IsPublic, 'true') ? FALSE : TRUE,
+            'sysid' => _os2web_sbsys_aarhus_generate_crc_id($enclosure_item['filename_in']),
             'type' => 'Bilag',
         );
       }
@@ -507,7 +461,6 @@ function _os2web_sbsys_aarhus_mm_order_addenums($drush = FALSE) {
   // Debug bit set in os2web_esdh_provider settings.
   $debug = variable_get('os2web_esdh_provider_debug_info');
   $debug && timer_start('_os2web_sbsys_aarhus_mm_order_addenums') && error_log('MM Import - Start of addendums - ' . timer_read('_os2web_sbsys_aarhus_mm_order_addenums') . 'ms - ' . memory_get_usage());
-
   $rev_meetings = array();
 
   // Find all meetings and gather meeting and agenda_ids.
@@ -670,21 +623,19 @@ function _os2web_sbsys_aarhus_generate_crc_id($string) {
 }
 
 /**
- * This function generates numeric Number, from Item ID string.
+ * This function generates numeric Number field, from Item ID string by first 2 chars.
  *
  * @param $string
  * @return int|string
  */
 function _os2web_sbsys_aarhus_generate_item_number($string) {
 
-
   $number = substr($string, 0, 2);
-
   if ($number[1] == '_') {
     $number = $number[0];
   }
   if ($number == 0) {
-    $number = 0; //set as last item
+    $number = 0; //todo: set as last item
   }
   return $number;
 }
