@@ -37,7 +37,7 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
    * as parsed from the dir name of the manifest.
    */
   $uris = array();
-  foreach (file_scan_directory(variable_get('os2web_edoc_middelfart_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
+  foreach (file_scan_directory(variable_get('os2web_edoc_middelfart_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE, 'min_depth' => 1)) as $xml_file) {
     $meeting_date = NULL;
     $committee = NULL;
 
@@ -119,7 +119,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         }
 
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
-        $agenda_access = 'Åben';
+        $agenda_access = 'Lukket';
 
         $location_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingLocation');
         $location = (string) array_shift($location_xpath);
@@ -255,7 +255,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
   //$xml_item['document_type'] = (string) $xml_item_document->PublishingType;
   //$xml_item['agenda_type'] = (string) $meeting->AgendaType;
   $identifier_xpath = $xml->xpath('edoc:HandlingItem/edoc:Identifier');
-  $xml_item['documentid'] = (int) array_shift($identifier_xpath);
+  $xml_item['documentid'] = (string) array_shift($identifier_xpath);
   $accessIsPublic_xpath = $xml->xpath('edoc:AccessIsPublic');
   $xml_item['access'] = (string) array_shift($accessIsPublic_xpath);
   $caseNumber_xpath = $xml->xpath('edoc:HandlingItem/edoc:CaseNumber');

@@ -433,38 +433,39 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
  * @return TRUE or false
  */
 function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
-    //getting corresponding bullet point
+  //getting corresponding bullet point
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->fieldCondition('field_os2web_meetings_attach', 'target_id', $node->nid, '=');
+  $result = $query->execute();
+
+  if (isset($result['node'])) { //if success
+    $nids = array_keys($result['node']);
+    $bullet_point = reset(entity_load('node', $nids));
+    //getting corresponding meeting
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
-	  ->fieldCondition('field_os2web_meetings_attach', 'target_id', $node->nid, '=');
+      ->fieldCondition('field_os2web_meetings_bullets', 'target_id', $bullet_point->nid, '=');
+
     $result = $query->execute();
 
-    if (isset($result['node'])) {//if success
+    if (isset($result['node'])) { //if success
       $nids = array_keys($result['node']);
-      $bullet_point = reset(entity_load('node', $nids));
-      //getting corresponding meeting
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'node')
-	  ->fieldCondition('field_os2web_meetings_bullets', 'target_id', $bullet_point->nid, '=');
+      $meeting = reset(entity_load('node', $nids));
 
-      $result = $query->execute();
-
-      if (isset($result['node'])) {//if success
-	$nids = array_keys($result['node']);
-	$meeting = reset(entity_load('node', $nids));
-	
-	if ($meeting){
-	    if (os2dagsorden_access_helper_meeting_fully_converted($meeting)){
-		if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0)
-		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
-		else
-		    $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
-		node_submit($meeting);
-		node_save($meeting);
-	    }
-	}
+      if ($meeting) {
+        if (os2dagsorden_access_helper_meeting_fully_converted($meeting)) {
+          if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0) {
+            $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
+          } elseif (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0) {
+            $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
+          }
+          node_submit($meeting);
+          node_save($meeting);
+        }
       }
     }
+  }
 }
 
 /**
@@ -529,7 +530,7 @@ function os2dagsorden_pdf2htmlex_print_first_page($html, $meeting_id, $bullet_po
  *
  * @return html with selected pages left
  */
-function os2dagsorden_pdf2htmlex_hide_unused_pages($html, $startPage, $endPage){    
+function os2dagsorden_pdf2htmlex_hide_unused_pages($html, $startPage, $endPage){
     $doc = new DOMDocument();
     libxml_use_internal_errors(true);
     $doc->loadHTML('<?xml encoding="UTF-8">' . $html);
@@ -539,17 +540,17 @@ function os2dagsorden_pdf2htmlex_hide_unused_pages($html, $startPage, $endPage){
 
     //pdf2html older version (~ v0.6)
     $nodes = $finder->query('//div[@id="pdf-main"]/div');
-    
+
     //pdf2html newer version (~ v0.10)
     if ($nodes->length == 0){
 	$nodes = $finder->query('//div[@id="page-container"]/div');
-    } 
-    
+    }
+
     $i = 1;
     foreach ($nodes as $node) {
       if ($i < $startPage || $i > $endPage){//if outside the allowed borders
 	  $node->removeAttribute("style");
-	  $node->setAttribute("style", "display: none;");	  
+	  $node->setAttribute("style", "display: none;");
 	  foreach($node->childNodes as $child) {
 	    if ($child instanceof DOMElement) {
 	      $child->removeAttribute("style");

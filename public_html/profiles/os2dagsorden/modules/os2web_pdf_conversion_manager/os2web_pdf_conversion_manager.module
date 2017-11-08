@@ -679,9 +679,9 @@ function _os2web_pdf_conversion_manager_set_status_published_plus($node) {
 
       if (os2dagsorden_access_helper_meeting_fully_converted($meeting)) {
         if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0) {
-          $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden+";
-        } else {
-          $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat+";
+          $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
+        } elseif (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0) {
+          $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
         }
         node_submit($node);
         node_save($node);
