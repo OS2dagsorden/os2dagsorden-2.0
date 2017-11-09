@@ -4,10 +4,9 @@
  * Can also be used with HTTP GET parameters
  * 
  * @package dompdf
- * @link    http://www.dompdf.com/
+ * @link    http://dompdf.github.com/
  * @author  Benj Carson <benjcarson@digitaljunkies.ca>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- * @version $Id: dompdf.php 448 2011-11-13 13:00:03Z fabien.menager $
  */
 
 /**
@@ -130,6 +129,8 @@ global $_dompdf_show_warnings, $_dompdf_debug, $_DOMPDF_DEBUG_TYPES;
 $sapi = php_sapi_name();
 $options = array();
 
+$dompdf = new DOMPDF();
+
 switch ( $sapi ) {
 
  case "cli":
@@ -169,7 +170,7 @@ switch ( $sapi ) {
     if ( $file === "-" )
       $outfile = "dompdf_out.pdf";
     else
-      $outfile = str_ireplace(array(".html", ".htm", ".php"), "", $file) . ".pdf";
+      $outfile = str_ireplace(array(".html", ".htm"), "", $file) . ".pdf";
   }
 
   if ( isset($opts["v"]) )
@@ -194,6 +195,8 @@ switch ( $sapi ) {
 
  default:
 
+  $dompdf->set_option('enable_php', false);
+  
   if ( isset($_GET["input_file"]) )
     $file = rawurldecode($_GET["input_file"]);
   else
@@ -220,21 +223,11 @@ switch ( $sapi ) {
   
   $file_parts = explode_url($file);
   
-  /* Check to see if the input file is local and, if so, that the base path falls within that specified by DOMDPF_CHROOT */
-  if(($file_parts['protocol'] == '' || $file_parts['protocol'] === 'file://')) {
-    $file = realpath($file);
-    if ( strpos($file, DOMPDF_CHROOT) !== 0 ) {
-      throw new DOMPDF_Exception("Permission denied on $file.");
-    }
-  }
-  
   $outfile = "dompdf_out.pdf"; # Don't allow them to set the output file
   $save_file = false; # Don't save the file
   
   break;
 }
-
-$dompdf = new DOMPDF();
 
 if ( $file === "-" ) {
   $str = "";

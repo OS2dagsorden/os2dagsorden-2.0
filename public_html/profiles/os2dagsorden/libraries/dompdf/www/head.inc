@@ -1,4 +1,8 @@
 <?php
+$allowed_hosts = array("::1", "127.0.0.1");
+if( !in_array($_SERVER['REMOTE_ADDR'], $allowed_hosts) ) {
+  die("Access denied to host at " . $_SERVER['REMOTE_ADDR']);
+}
 
 session_start();
 
@@ -21,6 +25,7 @@ auth_check();
 <head>
   <title>dompdf - The PHP 5 HTML to PDF Converter</title>
   <link rel="stylesheet" href="style.css" type="text/css"/>
+  <meta name="robots" content="noindex">
   <link rel="SHORTCUT ICON" href="images/favicon.ico"/>
   <script type="text/javascript" src="jquery-1.4.2.js"></script>
   
@@ -35,9 +40,9 @@ auth_check();
 
 <div id="header" class="bar">
   <a href="index.php"><img id="logo" src="images/title.gif" alt="dompdf"/></a>
-  <a href="http://www.dompdf.com/" target="_blank">www.dompdf.com</a>
+  <a href="http://dompdf.github.com/" target="_blank">dompdf.github.com</a>
   &mdash; 
-  Send bug reports to <a href="http://code.google.com/p/dompdf/issues/list">the bug tracker</a> 
+  Send bug reports to <a href="https://github.com/dompdf/dompdf/issues">the bug tracker</a> 
   &amp; support questions to <a href="http://groups.google.com/group/dompdf">Google Groups</a>.
 </div>
 
