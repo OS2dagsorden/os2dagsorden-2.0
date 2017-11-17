@@ -37,10 +37,11 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
    * as parsed from the dir name of the manifest.
    */
   $uris = array();
-  foreach (file_scan_directory(variable_get('os2web_edoc_middelfart_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => TRUE, 'min_depth' => 1)) as $xml_file) {
+  foreach (file_scan_directory(variable_get('os2web_edoc_middelfart_esdh_mm_path', MM_IMPORT_DIR), '/\.xml$/i', array('recurse' => FALSE, 'min_depth' => 0)) as $xml_file) {
     $meeting_date = NULL;
     $committee = NULL;
 
+    //loading meeting manifest
     $real_path = drupal_realpath($xml_file->uri);
     if ($real_path !== FALSE && is_file($real_path)) {
       libxml_use_internal_errors(TRUE);
@@ -49,18 +50,39 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
       libxml_use_internal_errors(FALSE);
 
       if (is_object($manifest)) {
-        $committee = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
-        $committee = (string) array_shift($committee);
+        //loading agenda manifest
+        $path_to_xml = $manifest->xpath('/Root/edoc:Notification/edoc:PathToXml');
+        $path_to_xml = (string) array_shift($path_to_xml);
+        $path_to_xml = str_replace('\\', '/', $path_to_xml);
 
-        $meeting_date = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
-        $meeting_date = (string) array_shift($meeting_date);
+        $agenda_real_path = dirname($real_path) . $path_to_xml;
+
+        if ($agenda_real_path !== FALSE && is_file($agenda_real_path)) {
+          libxml_use_internal_errors(TRUE);
+          $agenda_manifest = simplexml_load_string(file_get_contents($agenda_real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
+          libxml_clear_errors();
+          libxml_use_internal_errors(FALSE);
+
+          if (is_object($agenda_manifest)) {
+            $committee = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Name');
+            $committee = (string) array_shift($committee);
+
+            $meeting_date = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
+            $meeting_date = (string) array_shift($meeting_date);
+
+            $isPublished = $manifest->xpath('/Root/edoc:Notification/edoc:Publish');
+            $isPublished = (string) array_shift($isPublished);
+            $isPublished = (strcmp($isPublished, 'true') == 0) ? TRUE : FALSE;
+
+            $uris[] = array(
+              'id' => _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date, $committee),
+              'uri' => $xml_file->uri,
+              'publish' => $isPublished
+            );
+          }
+        }
       }
     }
-
-    $uris[] = array(
-      'id' => _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date, $committee),
-      'uri' => $xml_file->uri
-    );
   }
   return $uris;
 }
@@ -68,14 +90,14 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
 /**
  * Imports a meeting, and return the import as a structured array.
  *
- * @param object $meeting
+ * @param object agenda
  *   Meeting XML object.
  *
  * @return array
  *   List of meeting_structures to save
  */
-function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
-  $file = $meeting['uri'];
+function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
+  $file = $agenda['uri'];
   if ($file === FALSE) {
     _os2web_edoc_middelfart_esdh_mm_order_addenums();
   }
@@ -88,29 +110,46 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
 
-    if ($manifest === FALSE) {
+    //loading agenda manifest
+    $path_to_xml = $manifest->xpath('/Root/edoc:Notification/edoc:PathToXml');
+    $path_to_xml = (string) array_shift($path_to_xml);
+    $path_to_xml = str_replace('\\', '/', $path_to_xml);
+
+    $agenda_real_path = dirname($real_path) . $path_to_xml;
+
+    //if agenda cannot be loaded
+    if ($real_path == FALSE || !is_file($real_path)) {
+      return $meetings;
+    }
+
+    libxml_use_internal_errors(TRUE);
+    $agenda_manifest = simplexml_load_string(file_get_contents($agenda_real_path), 'SimpleXMLElement', LIBXML_NOWARNING);
+    libxml_clear_errors();
+    libxml_use_internal_errors(FALSE);
+
+    if ($agenda_manifest === FALSE) {
       error_log("Failed loading XML");
       foreach (libxml_get_errors() as $error) {
         error_log($error->message);
       }
     }
-    if (is_object($manifest)) {
+    if (is_object($agenda_manifest)) {
       //Collecting agendas
-      $meeting_agendas = $manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:Agenda");
+      $meeting_agendas = $agenda_manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:Agenda");
       foreach ($meeting_agendas as $meeting_agenda) {
 
         // Collecting agenda data
-        $committee_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Name');
+        $committee_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Name');
         $committee = (string) array_shift($committee_xpath);
 
-        $meeting_date_start_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
+        $meeting_date_start_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingDateTime');
         $meeting_date_start = (string) array_shift($meeting_date_start_xpath);
 
-        $meeting_date_end_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:EndDateTime');
+        $meeting_date_end_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:EndDateTime');
         $meeting_date_end = (string) array_shift($meeting_date_end_xpath);
         $meeting_id = _os2web_edoc_middelfart_esdh_generate_meeting_id($meeting_date_start, $committee); //generated meeting_id
 
-        $meeting_type_xpath = $manifest->xpath('/Root/edoc:OutputTypeEnumName');
+        $meeting_type_xpath = $agenda_manifest->xpath('/Root/edoc:OutputTypeEnumName');
         $meeting_type = (string) array_shift($meeting_type_xpath);
         if (strcasecmp($meeting_type, 'Minute') == 0) {
           $meeting_type = 'Referat';
@@ -121,7 +160,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
         $agenda_access = 'Lukket';
 
-        $location_xpath = $manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingLocation');
+        $location_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingLocation');
         $location = (string) array_shift($location_xpath);
 
         // Collecting agenda items
@@ -159,7 +198,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
         );
 
         //collect participants
-        $meeting_participants = $manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:MeetingParticipants/edoc:MeetingParticipant");
+        $meeting_participants = $agenda_manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:MeetingParticipants/edoc:MeetingParticipant");
         foreach ($meeting_participants as $meeting_participant) {
           $participate_xpath = $meeting_participant->xpath("edoc:Participate");
           $name_xpath = $meeting_participant->xpath("edoc:Name");
@@ -179,7 +218,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($meeting) {
           // Importing each agenda item through the ESDH provider module
           $imported = _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda($meeting, $meeting_agenda_item);
           if (is_array($imported)) {
-            $imported['publish'] = TRUE;
+            $imported['publish'] = $agenda['publish'];
             $meetings[] = $imported;
           }
         }
