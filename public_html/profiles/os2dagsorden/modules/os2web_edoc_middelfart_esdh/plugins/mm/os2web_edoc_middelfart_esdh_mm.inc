@@ -109,6 +109,8 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
       $path_to_xml = str_replace('\\', '/', $path_to_xml);
 
       $agenda_real_path = dirname($real_path) . $path_to_xml;
+      $agenda_relative_path = str_replace(drupal_realpath(variable_get('os2web_edoc_middelfart_esdh_mm_path'))
+        , variable_get('os2web_edoc_middelfart_esdh_mm_path'), $agenda_real_path);
 
       //if agenda cannot be loaded
       if ($real_path == FALSE || !is_file($real_path)) {
@@ -180,8 +182,8 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
             'committee_id' => _os2web_edoc_middelfart_esdh_generate_id($committee),
             'location' => $location,
             'title' => $committee,
-            'uri' => dirname($file),
-            'path' => drupal_realpath($file),
+            'uri' => dirname($agenda_relative_path),
+            'path' => $agenda_real_path,
             'meeting_date' => $meeting_date_start,
             'meeting_date_start' => $meeting_date_start,
             'meeting_date_finish' => $meeting_date_end,
