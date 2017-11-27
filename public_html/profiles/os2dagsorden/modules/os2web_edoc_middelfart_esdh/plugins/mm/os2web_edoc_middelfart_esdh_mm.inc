@@ -102,7 +102,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
         'publish' => FALSE,
         'meeting_id' => $meeting_id,
         'system_id' => $meeting_id,
-        'meeting_id' => $meeting_id,
+        'meeting_sub_id' => $meeting_id,
         'path' => drupal_realpath($file),
       );
     } else {//this meeting will be published
