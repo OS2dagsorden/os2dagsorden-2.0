@@ -96,10 +96,13 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
 
       $meeting_id = $manifest->xpath('/Root/edoc:Notification/edoc:MeetingIdentifier');
       $meeting_id = (string) array_shift($meeting_id);
+      $meeting_id = _os2web_edoc_middelfart_esdh_generate_id($meeting_id);
 
       $meetings[] = array(
         'publish' => FALSE,
-        'meeting_id' => _os2web_edoc_middelfart_esdh_generate_id($meeting_id),
+        'meeting_id' => $meeting_id,
+        'system_id' => $meeting_id,
+        'meeting_id' => $meeting_id,
         'path' => drupal_realpath($file),
       );
     } else {//this meeting will be published
