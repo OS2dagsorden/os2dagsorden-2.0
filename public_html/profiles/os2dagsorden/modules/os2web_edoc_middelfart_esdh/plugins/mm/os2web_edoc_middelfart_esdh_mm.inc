@@ -312,7 +312,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
   $item = array(
     'id' => $xml_item['number'],
     //generated id - because there is not unique ID for the bullet point
-    'sysid' => _os2web_edoc_middelfart_esdh_generate_id($meeting['committee'] . ' ' . $meeting['meeting_date'] . ' ' . $xml_item['documentid']),
+    'sysid' => _os2web_edoc_middelfart_esdh_generate_id($xml_item['documentid']),
     'case_nr' => $xml_item['case_nr'],
     'case_id' => $xml_item['case_id'],
     'title' => 'Punkt ' . $xml_item['number'] . ' ' . $xml_item['name'],
@@ -335,7 +335,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
       $bullet_title = (string) array_shift($title_xpath);
       $content_xpath = $bullet_xml->xpath('edoc:Content');
       $bullet_body = (string) array_shift($content_xpath);
-      $bullet_id = _os2web_edoc_middelfart_esdh_generate_id($meeting['committee'] . ' ' . $meeting['meeting_date'] . ' ' . $bullet_title);
+      $bullet_id = _os2web_edoc_middelfart_esdh_generate_id($bullet_title);
 
       if (!empty($bullet_title) && !empty($bullet_body)) {
         $item['bullets'][] = array(
@@ -354,7 +354,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
       $accessName_xpath = $bullet_xml->xpath('edoc:AccessName');
       $enclosure_item['access'] = (string) array_shift($accessName_xpath);
       $identifier_xpath = $bullet_xml->xpath('edoc:Identifier');
-      $enclosure_item['sysid'] = _os2web_edoc_middelfart_esdh_generate_id($meeting['committee'] . ' ' . $meeting['meeting_date'] . ' ' . (string) array_shift($identifier_xpath));
+      $enclosure_item['sysid'] = _os2web_edoc_middelfart_esdh_generate_id((string) array_shift($identifier_xpath));
       $link_xpath = $bullet_xml->xpath('edoc:Link');
       $enclosure_item['uri'] = (string) array_shift($link_xpath);
 
