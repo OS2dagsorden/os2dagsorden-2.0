@@ -10,13 +10,13 @@ padding: 1px;
 background-color: #ffffff !important;
 }
 
-td.number {
-width: 5%;
-}
+/*td.number {*/
+/*width: 5%;*/
+/*}*/
 
-td.content {
-width: 90%;
-}
+/*td.content {*/
+/*width: 90%;*/
+/*}*/
 
 table.print-meetings, table.print-meetings-form {
 width: 100%;

@@ -85,6 +85,34 @@ function print_pdf_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
+  $data['print_pdf_node_conf']['size'] = array(
+    'title' => t('PDF: Paper size'),
+    'help' => t('Configured PDF paper size'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+  $data['print_pdf_node_conf']['orientation'] = array(
+    'title' => t('PDF: Page orientation'),
+    'help' => t('Configured PDF page orientation.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
 
 
   // print_pdf_page_counter fields

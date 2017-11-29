@@ -418,7 +418,7 @@ function os2dagsorden_meeting_views_meeting_details_fields_bullet_point_attachme
           print '<a href="' . $link . '" class="first-child last-child"><div id="' . $attachment->nid . '" class="indicator-has-no-notes"></div>' . $attachment->title . '</a>';
 
           //attachment text - if any
-          if (!empty($attachment->field_os2web_meetings_bpa_body['und'][0]['safe_value'])) {
+          if (!empty($attachment->field_os2web_meetings_bpa_body['und'][0]['value'])) {
             print '<div class="attachment_text_container">';
 
             print '<div class="attachment_text_full_container ajax-progress bpa-' . $meeting_id . '-' . $bp_id . '-' . $attachment->nid . '">';

@@ -617,7 +617,7 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   $form['os2dagsorden_meeting_import']['os2dagsorden_send_notification_committee'] = array(
     '#type' => 'textfield',
     '#title' => t('Send notification of committees'),
-    '#maxlength' => 250,
+    '#maxlength' => 1000,
     '#default_value' => variable_get('os2dagsorden_send_notification_committee', FALSE),
     '#description' => t('Comma-separated list of committees changing status of which should send an email notification.'),
     '#autocomplete_path' => 'get_committee/autocomplete',
