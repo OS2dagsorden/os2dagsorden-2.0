@@ -52,15 +52,25 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
       if (is_object($manifest)) {
         $meeting_id = $manifest->xpath('/Root/edoc:Notification/edoc:MeetingIdentifier');
         $meeting_id = (string) array_shift($meeting_id);
+        $meeting_id = _os2web_edoc_middelfart_esdh_generate_id($meeting_id);
 
         $isPublished = $manifest->xpath('/Root/edoc:Notification/edoc:Publish');
         $isPublished = (string) array_shift($isPublished);
         $isPublished = (strcmp($isPublished, 'true') == 0) ? TRUE : FALSE;
 
-        $uris[] = array(
-          'id' => _os2web_edoc_middelfart_esdh_generate_id($meeting_id),
+        //skipping if the last modified date is smaller, meaning older file
+        //in this way we get only the newest agendas
+        if (isset($uris[$meeting_id])) {
+          if (filemtime($real_path) < $uris[$meeting_id]['lastModified']) {
+            continue;
+          }
+        }
+
+        $uris[$meeting_id] = array(
+          'id' => $meeting_id,
           'uri' => $xml_file->uri,
-          'publish' => $isPublished
+          'publish' => $isPublished,
+          'lastModified' => filemtime($real_path)
         );
       }
     }
