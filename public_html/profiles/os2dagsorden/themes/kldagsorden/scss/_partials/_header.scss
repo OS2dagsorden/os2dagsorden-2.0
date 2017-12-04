@@ -1,0 +1,45 @@
+#section-header {
+    background: $color-primary;
+}
+
+.content div.user-logout-block {
+    position: absolute;
+    right: 0;
+    top: -15px;
+    padding: 15px 0  5px 5px;
+}
+
+.user-logout-block {
+    .user-logout-textbox {
+        color: $color-white;
+        font-family: $font-headings;
+        font-weight: 400;
+        font-size: 1em;
+    }
+    .settings-btn, .user-logout-btn, .user-guide-btn{
+        color: $color-white;
+        font-family: $font-paragraphs;
+        font-weight: bold;
+        text-shadow: none;
+        border-color: $color-white;
+        border-style: solid;
+        border-width: 0px;
+        padding: 5px 10px 5px 10px;
+        background: $color-secondary;
+    } 
+    .settings-btn {
+        background: $color-secondary url('../img/icon_settings.png') no-repeat 5px 50%;
+        padding: 5px 10px 5px 25px;
+    }
+    .user-logout-btn {
+        background: $color-secondary url('../img/icon_log_out.png') no-repeat 5px 50%;
+        white-space: nowrap;
+        padding: 5px 10px 5px 25px;
+    }
+    .user-guide-btn {
+        background: $color-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
+        padding: 5px 10px 5px 35px;
+        white-space: nowrap;
+        background-size: 25px 100%;
+    }
+}

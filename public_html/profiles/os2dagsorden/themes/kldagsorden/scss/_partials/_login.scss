@@ -1,0 +1,37 @@
+.front.not-logged-in {
+    .zone-content-wrapper {
+        padding-top: 30px;
+    }
+    .region-branding {
+        margin: 0 auto;
+        width: 100%;
+        .logo-img{
+            margin: 0 auto;
+            float: none;
+            display: block;
+            width: 74px;
+        }
+    }
+}
+
+#block-user-login {
+    max-width: 450px;
+    min-height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .25);
+    background: $color-background-primary;
+    .block-title {
+        text-align: center;
+    }
+    .content {
+        padding: 20px 40px;
+    }
+}
+
+#user-login-form {
+  input.form-text {
+    display: block;
+    width: 100%;
+  }
+}
