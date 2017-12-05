@@ -2,9 +2,8 @@
 
 /**
  * @file
- * Install file for the AdLib API implementation module
+ * Install file for the AdLib API implementation module.
  */
-
 
 /**
  * Implements hook_schema().
@@ -58,7 +57,7 @@ function os2web_adlib_api_update_7002(&$sandbox) {
       'description' => 'Jobtype identifier. 0 = PDF , 1 = HTML',
       'type' => 'int',
       'unsigned' => TRUE,
-        ));
+    ));
     $ret[] = db_add_primary_key('os2web_adlib_api_doc_files', array('fid', 'jobtype'));
   }
   return $ret;

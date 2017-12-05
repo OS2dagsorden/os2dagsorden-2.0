@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * This file cleans up variables from the settings module
+ * This file cleans up variables from the settings module.
  */
 
 /**

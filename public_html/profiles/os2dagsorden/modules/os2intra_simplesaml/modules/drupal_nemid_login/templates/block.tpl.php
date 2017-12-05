@@ -1,3 +1,9 @@
+<?php
+
+/**
+ * @file
+ */
+?>
 <script type="text/x-nemid" id="nemid_parameters"><?php echo $params;?></script>
 <script>
  function onNemIDMessage(e) {
@@ -38,13 +44,13 @@ if (!isset($_SESSION['nemid_login']['errors'])) {
 
 <div class="block-nemid-login-block">
   <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" style="width:500px;height:450px; padding-right: 20px; padding-left: 20px; border:0; display:inline-block" src="<?php echo $settings['iframe_url']; ?>"></iframe>
-  <div style="display:inline-block; vertical-align: top; max-width: 400px; min-width: 250px; text-align: left"><?php echo ($help)? $help['value'] : '' ?></div>
+  <div style="display:inline-block; vertical-align: top; max-width: 400px; min-width: 250px; text-align: left"><?php echo ($help) ? $help['value'] : '' ?></div>
   <form name="postBackForm" action="<?php
 
     if (isset($nid) && is_numeric($nid)) {
       $node = node_load($nid);
       if ($node->type == 'webform') {
-        echo url('node/'.$nid);
+        echo url('node/' . $nid);
       }
     }
     else {
@@ -57,7 +63,7 @@ if (!isset($_SESSION['nemid_login']['errors'])) {
 
 
   <?php
-  }
+}
   else
   {
     echo t("There was a problem the NemID client");

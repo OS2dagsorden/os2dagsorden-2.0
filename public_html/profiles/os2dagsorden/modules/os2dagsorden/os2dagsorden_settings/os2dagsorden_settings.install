@@ -1,16 +1,18 @@
 <?php
+
 /**
-* os2dagsorden_settings
-*
-* PHP version 5
-*
-* @category OS2Dagsorden
-* @package  OS2Dagsorden_Importer
-* @file     Install file
-* @author   Stanislav Kutasevits <stan@bellcom.dk>
-* @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
-* @link     http://bellcom.dk
-*/
+ * @file
+ * Os2dagsorden_settings.
+ *
+ * PHP version 5
+ *
+ * @category OS2Dagsorden
+ * @package OS2Dagsorden_Importer
+ *  Install file
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
+ */
 
 /**
  * Implementation of module uninstall. Resets the variables.
