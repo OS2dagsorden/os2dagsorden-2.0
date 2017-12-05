@@ -18,7 +18,7 @@ request](https://github.com/blog/1935-see-results-from-all-pull-request-status-c
 
 If you want to be notified through other means you must follow the
 projects/subscribe to updates on the individual test platforms
-([Scrutinizer](https://scrutinizer-ci.com/g/OS2dagsorden/os2dagsorden-2.0/).
+([Scrutinizer](https://scrutinizer-ci.com/g/OS2dagsorden/os2dagsorden-2.0/)).
 
 
 ### Local checks
