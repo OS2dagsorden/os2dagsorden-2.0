@@ -19,26 +19,26 @@
  * @param $form_state the current state of the form
  *
  * @return $form the created form
-*/
-function os2dagsorden_create_agenda_bpa($form, $form_state){  
+ */
+function os2dagsorden_create_agenda_bpa($form, &$form_state) {
   $form[] = array(
     '#markup' => '<h1 class="title">' . t('Bullet point attachment') . '</h1>',
   );
-  
+
   $form[] = array(
     '#markup' => '<div class="node">',
   );
-  
+
   $form['bpa_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title:'),
     '#required' => TRUE,
   );
-  
+
   $form['add_attachment'] = array(
     '#type' => 'vertical_tabs',
   );
-   
+
   $form['attachment'] = array(
     '#type' => 'fieldset',
     '#title' => t('Attachment'),
@@ -46,9 +46,9 @@ function os2dagsorden_create_agenda_bpa($form, $form_state){
     '#description' => t('Add the text-based bullet point attachment to the bullet point.'),
     '#group' => 'add_attachment'
   );
-  
+
   $form['attachment']['body'] = array(
-    '#type'=>'text_format',
+    '#type' => 'text_format',
     '#title' => t('Body:'),
     '#format' => 'full_html',
     '#group' => 'add_attachment',
@@ -61,39 +61,40 @@ function os2dagsorden_create_agenda_bpa($form, $form_state){
     '#description' => t('Enclose a file to the bullet point attachment.'),
     '#group' => 'add_attachment'
   );
-  
+
   $form['bilag']['file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Bilag file:'),
     '#group' => 'add_attachment',
-    '#description' => 'Files must be less than <b>20 MB</b>.<br/>Allowed file types: <b>doc docx pdf</b>.',
+    '#description' => 'Files must be less than <b>20 MB</b>.<br/>Allowed file types: <b>pdf</b>.',
+    '#upload_location' => 'private://manual_agendas/attachments',
     '#upload_validators' => array(
-      'file_validate_extensions' => array('doc docx pdf'),
+      'file_validate_extensions' => array('pdf'),
       // Pass the maximum file size in bytes
-      'file_validate_size' => array(20*1024*1024*1024),//2 MB
+      'file_validate_size' => array(20 * 1024 * 1024 * 1024), //2 MB
     ),
   );
-  
+
   //filling the fields if meeting_id is not empty
-  if ($form_state['bpa_id']){
+  if ($form_state['bpa_id']) {
     $node = node_load($form_state['bpa_id']);
     $form['bpa_title']['#default_value'] = $node->title;
-    
-    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_body')){
+
+    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_body')) {
       $body_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_bpa_body'));
       $form['attachment']['body']['#default_value'] = $body_field['value'];
       $form['add_attachment']['#default_tab'] = 'edit-attachment';
     }
-    
-    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_file')){
+
+    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_file')) {
       $file_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_bpa_file'));
       $form['bilag']['file']['#default_value'] = $file_field['fid'];
       $form['add_attachment']['#default_tab'] = 'edit-bilag';
     }
   }
-  
+
   $form[] = array(
-    '#type'=>'submit',
+    '#type' => 'submit',
     '#value' => t('Return to bullet point'),
     '#attributes' => array(
       'class' => array('form-back'),
@@ -105,7 +106,7 @@ function os2dagsorden_create_agenda_bpa($form, $form_state){
     '#markup' => '&nbsp;',
   );
   $form['submit'] = array(
-    '#type'=>'submit',
+    '#type' => 'submit',
     '#value' => t('Save & return to bullet point'),
     '#attributes' => array(
       'class' => array('form-save-submit'),
@@ -113,32 +114,32 @@ function os2dagsorden_create_agenda_bpa($form, $form_state){
     '#validate' => array('os2dagsorden_create_agenda_bpa_validate'),
     '#submit' => array('os2dagsorden_create_agenda_bpa_submit'),
   );
-  
+
   $form[] = array(
     '#markup' => '</div>',
   );
-  
+
   return $form;
 }
 
 /**
- * Custom validation of bullet point attachment form. Validates that only one of the option 
+ * Custom validation of bullet point attachment form. Validates that only one of the option
  * is chosen  - either file is uploaded or body of the bullet point attachmet is filled.
  *
  * @param $form       the form
  * @param $form_state the current state of the form
  *
  * @return none
-*/
+ */
 function os2dagsorden_create_agenda_bpa_validate($form, &$form_state) {
   $input = $form_state['input'];
-  
+
   $body = $input['body']['value'];
   $bilag = $form_state['values']['file'];
   if (!empty($body) && $bilag != 0) {
     form_set_error('body', t('You cannot provide both file and the body text.<br/>Please choose one of the options.'));
   }
-} 
+}
 
 /**
  * Saves the bullet point attachment - either by creating new or modifying the existing.
@@ -148,48 +149,54 @@ function os2dagsorden_create_agenda_bpa_validate($form, &$form_state) {
  * @param $form_state the current state of the form
  *
  * @return $node bullet point attachment
-*/
-function os2dagsorden_create_agenda_save_bpa($form, &$form_state){
+ */
+function os2dagsorden_create_agenda_save_bpa($form, &$form_state) {
   $input = $form_state['input'];
-  
+
   $title = $input['bpa_title'];
   $body = $input['body']['value'];
   $bilag = $form_state['values']['file'];
 
-  if (!$form_state['bpa_id']){
+  if (!$form_state['bpa_id']) {
     //node creating
     $node = new stdClass();
-    $node->type = "bullet_point_attachment";
+    $node->type = "os2web_meetings_bullet_attach";
     $node->language = LANGUAGE_NONE;
     node_object_prepare($node);
   } else {
     $node = node_load($form_state['bpa_id']);
-  }  
-  
+  }
+
   $node->title = $title;
   $node->field_os2web_meetings_bpa_body['und'][0]['value'] = $body;
-  
-  if ($bilag != 0){
+
+  if ($bilag != 0) {
     //resaving file permanently
     $bilag = file_load($bilag);
     $bilag->status = FILE_STATUS_PERMANENT;
     $bilag->display = 1;
     file_save($bilag);
-    
+
     $node->field_os2web_meetings_bpa_file['und'][0] = (array) $bilag;
   } else {
-    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_file')){
+    if (field_get_items('node', $node, 'field_os2web_meetings_bpa_file')) {
       $bilag = array_pop(field_get_items('node', $node, 'field_os2web_meetings_bpa_file'));
-      $to_del_file = file_load($bilag['fid']); 
+      $to_del_file = file_load($bilag['fid']);
       unset($node->field_os2web_meetings_bpa_file['und']);
       file_delete($to_del_file);
+      $bilag = NULL;
     }
   }
-  
+
   node_save($node);
-  
+
   os2dagsorden_create_agenda_add_bpa_to_bullet_point($form_state['bullet_point_id'], $node->nid);
-  
+
+  //schedule file for html conversion
+  if ($bilag) {
+    os2dagsorden_pdf2htmlex_schedule_if_bpa($bilag->fid);
+  }
+
   return $node;
 }
 
@@ -200,17 +207,19 @@ function os2dagsorden_create_agenda_save_bpa($form, &$form_state){
  * @param $bpa_id          id of the bullet point attachment
  *
  * @return none
-*/
-function os2dagsorden_create_agenda_add_bpa_to_bullet_point($bullet_point_id, $bpa_id){
+ */
+function os2dagsorden_create_agenda_add_bpa_to_bullet_point($bullet_point_id, $bpa_id) {
   $bullet_point = node_load($bullet_point_id);
-  if (field_get_items('node', $bullet_point, 'field_os2web_meetings_attach')){
+  if (field_get_items('node', $bullet_point, 'field_os2web_meetings_attach')) {
     $bpas = field_get_items('node', $bullet_point, 'field_os2web_meetings_attach');
-    foreach($bpas as $bpa){
-      if ($bpa['target_id'] == $bpa_id)
-	return;//no need to readd
+    foreach ($bpas as $bpa) {
+      if ($bpa['target_id'] == $bpa_id) {
+        return;
+      }
+      //no need to readd
     }
   }
-  
+
   $bullet_point->field_os2web_meetings_attach['und'][]['target_id'] = $bpa_id;
   node_save($bullet_point);
 }
@@ -223,10 +232,10 @@ function os2dagsorden_create_agenda_add_bpa_to_bullet_point($bullet_point_id, $b
  * @param $form_state the current state of the form
  *
  * @return none
-*/
-function os2dagsorden_create_agenda_bpa_submit($form, &$form_state){
+ */
+function os2dagsorden_create_agenda_bpa_submit($form, &$form_state) {
   os2dagsorden_create_agenda_save_bpa($form, $form_state);
-  
+
   $form_state['page_num'] = 2;
   $form_state['rebuild'] = TRUE;
 }
@@ -238,8 +247,8 @@ function os2dagsorden_create_agenda_bpa_submit($form, &$form_state){
  * @param $form_state the current state of the form
  *
  * @return none
-*/
-function os2dagsorden_create_agenda_bpa_back($form, &$form_state){
+ */
+function os2dagsorden_create_agenda_bpa_back($form, &$form_state) {
   $form_state['page_num'] = 2;
   $form_state['rebuild'] = TRUE;
 }

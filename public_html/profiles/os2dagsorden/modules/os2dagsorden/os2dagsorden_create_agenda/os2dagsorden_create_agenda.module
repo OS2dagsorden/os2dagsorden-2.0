@@ -17,7 +17,7 @@ require drupal_get_path('module', 'os2dagsorden_create_agenda') . '/includes/os2
 require drupal_get_path('module', 'os2dagsorden_create_agenda') . '/includes/os2dagsorden_create_agenda_meeting_form.inc';
 require drupal_get_path('module', 'os2dagsorden_create_agenda') . '/includes/os2dagsorden_create_agenda_bullet_point.inc';
 require drupal_get_path('module', 'os2dagsorden_create_agenda') . '/includes/os2dagsorden_create_agenda_bpa.inc';
- 
+
 /**
  * Implementation of hook_menu
  *
@@ -26,19 +26,19 @@ require drupal_get_path('module', 'os2dagsorden_create_agenda') . '/includes/os2
 function os2dagsorden_create_agenda_menu() {
   $items = array();
   $items['agenda/meeting'] = array(
-      'page callback' => 'os2dagsorden_create_agenda_meeting_page',
-      'access arguments' => array('administer os2web'),
-      'type' => MENU_CALLBACK,
+    'page callback' => 'os2dagsorden_create_agenda_meeting_page',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_CALLBACK,
   );
-  
+
   $items['agenda/meeting/%'] = array(
-      'page callback' => 'os2dagsorden_create_agenda_meeting_page',
-      'access callback' => '_os2dagsorden_create_agenda_meeting_access',
-      'access arguments' => array(2),
-      'page arguments' => array(2),
-      'type' => MENU_CALLBACK,
+    'page callback' => 'os2dagsorden_create_agenda_meeting_page',
+    'access callback' => '_os2dagsorden_create_agenda_meeting_access',
+    'access arguments' => array(2),
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
   );
-  
+
   $items['node/%/agenda'] = array(
     'page callback' => '_os2dagsorden_create_agenda_redirect',
     'access callback' => '_os2dagsorden_create_agenda_meeting_access',
@@ -47,7 +47,7 @@ function os2dagsorden_create_agenda_menu() {
     'title' => 'Edit agenda',
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   $items['node/%/agenda_simple'] = array(
     'page callback' => '_os2dagsorden_create_agenda_simple_redirect',
     'access callback' => '_os2dagsorden_create_agenda_meeting_access',
@@ -56,7 +56,7 @@ function os2dagsorden_create_agenda_menu() {
     'title' => 'Edit agenda simple',
     'type' => MENU_LOCAL_TASK,
   );
-  
+
   $items['admin/config/os2dagsorden/create_agenda'] = array(
     'title' => 'OS2dagsorden Manually create full agenda',
     'description' => 'Module that supports manual agenda creation',
@@ -64,7 +64,7 @@ function os2dagsorden_create_agenda_menu() {
     'access arguments' => array('administer os2web'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   $items['admin/config/os2dagsorden/create_agenda_simple'] = array(
     'title' => 'OS2dagsorden Manually create simple agenda',
     'description' => 'Module that supports manual agenda creation',
@@ -72,7 +72,7 @@ function os2dagsorden_create_agenda_menu() {
     'access arguments' => array('administer os2web'),
     'type' => MENU_NORMAL_ITEM,
   );
-  
+
   return $items;
 }
 
@@ -83,11 +83,12 @@ function os2dagsorden_create_agenda_menu() {
  *
  * @return none
  */
-function _os2dagsorden_create_agenda_redirect($meeting_id = null){
-  if (!$meeting_id)
+function _os2dagsorden_create_agenda_redirect($meeting_id = NULL) {
+  if (!$meeting_id) {
     drupal_goto('agenda/meeting');
-  else 
+  } else {
     drupal_goto('agenda/meeting/' . $meeting_id);
+  }
 }
 
 /**
@@ -97,11 +98,12 @@ function _os2dagsorden_create_agenda_redirect($meeting_id = null){
  *
  * @return none
  */
-function _os2dagsorden_create_agenda_simple_redirect($meeting_id = null){
-  if (!$meeting_id)
+function _os2dagsorden_create_agenda_simple_redirect($meeting_id = NULL) {
+  if (!$meeting_id) {
     drupal_goto('agenda/meeting', array('query' => array('simple' => '1')));
-  else 
+  } else {
     drupal_goto('agenda/meeting/' . $meeting_id, array('query' => array('simple' => '1')));
+  }
 }
 
 /**
@@ -111,11 +113,12 @@ function _os2dagsorden_create_agenda_simple_redirect($meeting_id = null){
  *
  * @return form
  */
-function os2dagsorden_create_agenda_meeting_page($meeting_id = null) {
-  if ($_GET['simple'])
+function os2dagsorden_create_agenda_meeting_page($meeting_id = NULL) {
+  if ($_GET['simple']) {
     return drupal_get_form('os2dagsorden_create_agenda_meeting_simple', $meeting_id);
-  else
+  } else {
     return drupal_get_form('os2dagsorden_create_agenda_meeting', $meeting_id);
+  }
 }
 
 /**
@@ -125,7 +128,7 @@ function os2dagsorden_create_agenda_meeting_page($meeting_id = null) {
  *
  * @return true of false
  */
-function _os2dagsorden_create_agenda_meeting_access($meeting_id){
+function _os2dagsorden_create_agenda_meeting_access($meeting_id) {
   $node = node_load($meeting_id);
   if ($node->type != 'os2web_meetings_meeting') {
     return FALSE;
