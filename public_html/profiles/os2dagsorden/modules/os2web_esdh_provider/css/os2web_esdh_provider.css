@@ -1,13 +1,3 @@
-.item-list ul {
-    /*margin: 0.75em 0.75em 0.75em;*/
-    margin: 0;
-    padding: 0;
-}
-
-.item-list ul,
-.item-list ol {
-    padding-left: 1.2em;
-}
 .agenda-item .item-list .field-items ul li {
     list-style: initial;
 }
@@ -16,16 +6,24 @@
   background: #323232;
 }
 
-
 /* Showing list number in attachment preview */
 .attachment_text_trimmed_container ol li,
 .attachment_text_full_container ol li {
   list-style: decimal inside none;
 }
 
-.attachment_text_trimmed_container ul li,
-.attachment_text_full_container ul li {
+.attachment_text_trimmed_container .attachment-text ul,
+.attachment_text_full_container .attachment-text ul,
+.attachment_text_full_container.attachment-text ul {
+  margin: 0;
+  padding: 0;
+}
+
+.attachment_text_trimmed_container .attachment-text li,
+.attachment_text_full_container .attachment-text li,
+.attachment_text_full_container.attachment-text li {
   list-style: disc inside none;
+  margin-left: 35px;
 }
 
 .attachment_text_full_container p {
