@@ -8,4 +8,3 @@ version = 7.x-1.0-beta1
 dependencies[] = features
 dependencies[] = rules
 #features[features_api][] = api:1
-

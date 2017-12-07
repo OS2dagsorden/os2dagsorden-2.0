@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the OS2dagsorden updatedb.
@@ -26,16 +27,17 @@ function os2dagsorden_updatedb_menu() {
 }
 
 /**
- * Setting form
+ * Setting form.
  *
  * @param $form
  * @param $form_state
+ *
  * @return mixed
  */
 function os2dagsorden_updatedb_setting_form($form, $form_state) {
-  $info_path = drupal_get_path('profile','os2dagsorden'). '/os2dagsorden.info';
+  $info_path = drupal_get_path('profile', 'os2dagsorden') . '/os2dagsorden.info';
   $info = drupal_parse_info_file($info_path);
-  $version = (isset($info["version"])) ? $info["version"]: 'no version' ;
+  $version = (isset($info["version"])) ? $info["version"] : 'no version';
 
   $form['os2dagsorden_update_setting'] = array(
     '#type' => 'fieldset',
@@ -68,10 +70,11 @@ function os2dagsorden_updatedb_setting_form($form, $form_state) {
 }
 
 /**
- * Check if system requires any updates
+ * Check if system requires any updates.
  *
  * @param $form
  * @param $form_state
+ *
  * @return array
  */
 function os2dagsorden_updatedb_check($form, &$form_state) {
@@ -114,7 +117,7 @@ function os2dagsorden_updatedb_check($form, &$form_state) {
     }
     if (isset($module['pending'])) {
       foreach ($module['pending'] as $version => $text) {
-        if ($version >= (int)$version_no) {
+        if ($version >= (int) $version_no) {
           $pending['pending'][$version] = $text;
           $output .= '<li>' . $text . '</li>';
           $pending['start'] = $module['start'];
@@ -139,10 +142,11 @@ function os2dagsorden_updatedb_check($form, &$form_state) {
 }
 
 /**
- * Runs all the pending updates
+ * Runs all the pending updates.
  *
  * @param $form
  * @param $form_state
+ *
  * @return mixed
  */
 function os2dagsorden_updatedb_run($form, &$form_state) {
@@ -151,21 +155,20 @@ function os2dagsorden_updatedb_run($form, &$form_state) {
   }
   $list = os2dagsorden_updatedb_check($form, $form_state);
   if (!empty($list)) {
-    //dsm($list);
+    // dsm($list);
     foreach ($list as $module_name => $item) {
       module_load_include('module', $module_name);
-
 
       foreach ($item['pending'] as $version => $text) {
 
         $function = $module_name . '_update_' . $version;
         module_invoke($module_name, 'update_' . $version);
         db_update('system')
-        ->fields(array(
-          'schema_version' => $version,
-        ))
-        ->condition('name', $module_name, '=')
-        ->execute();
+          ->fields(array(
+            'schema_version' => $version,
+          ))
+          ->condition('name', $module_name, '=')
+          ->execute();
       }
 
     }
@@ -175,9 +178,10 @@ function os2dagsorden_updatedb_run($form, &$form_state) {
 }
 
 /**
- * Helper function to get the module type
+ * Helper function to get the module type.
  *
  * @param $module
+ *
  * @return mixed
  */
 function os2dagsorden_updatedb_get_module_type($module) {
@@ -195,61 +199,60 @@ function os2dagsorden_updatedb_get_module_type($module) {
  */
 function os2dagsorden_updatedb_update_7100() {
   $num_updated = db_update('variable')
-  ->fields(array(
-    'value' => serialize(1.0),
-  ))
-  ->condition('name', 'os2dagsorden_version_no', '=')
-  ->execute();
+    ->fields(array(
+      'value' => serialize(1.0),
+    ))
+    ->condition('name', 'os2dagsorden_version_no', '=')
+    ->execute();
 }
-
 
 /**
  * Test - setting os2dagsorden version to 2.10.
  */
 function os2dagsorden_updatedb_update_7210() {
   $num_updated = db_update('variable')
-  ->fields(array(
-    'value' => serialize(2.1),
-  ))
-  ->condition('name', 'os2dagsorden_version_no', '=')
-  ->execute();
+    ->fields(array(
+      'value' => serialize(2.1),
+    ))
+    ->condition('name', 'os2dagsorden_version_no', '=')
+    ->execute();
 
 }
 
 /**
  * Test - setting os2dagsorden version to 2.20.
  *
-function os2dagsorden_updatedb_update_7220() {
-  $num_updated = db_update('variable')
-  ->fields(array(
-    'value' => serialize(2.20),
-  ))
-  ->condition('name', 'os2dagsorden_version_no', '=')
-  ->execute();
-
-}
-/**
+ * Function os2dagsorden_updatedb_update_7220() {
+ * $num_updated = db_update('variable')
+ * ->fields(array(
+ * 'value' => serialize(2.20),
+ * ))
+ * ->condition('name', 'os2dagsorden_version_no', '=')
+ * ->execute();
+ *
+ * }
+ * /**
  * Test - setting os2dagsorden version to 2.30.
  *
-function os2dagsorden_updatedb_update_7230() {
-  $num_updated = db_update('variable')
-  ->fields(array(
-    'value' => serialize(2.30),
-  ))
-  ->condition('name', 'os2dagsorden_version_no', '=')
-  ->execute();
-
-}
-
-/**
+ * function os2dagsorden_updatedb_update_7230() {
+ * $num_updated = db_update('variable')
+ * ->fields(array(
+ * 'value' => serialize(2.30),
+ * ))
+ * ->condition('name', 'os2dagsorden_version_no', '=')
+ * ->execute();
+ *
+ * }
+ *
+ * /**
  * Test - setting os2dagsorden version to 3.34.
-
-function os2dagsorden_updatedb_update_7334() {
-  $num_updated = db_update('variable') // Table name no longer needs {}
-  ->fields(array(
-    'value' => serialize(3.34),
-  ))
-  ->condition('name', 'os2dagsorden_version_no', '=')
-  ->execute();
-
+ *
+ * function os2dagsorden_updatedb_update_7334() {
+ * $num_updated = db_update('variable') // Table name no longer needs {}
+ * ->fields(array(
+ * 'value' => serialize(3.34),
+ * ))
+ * ->condition('name', 'os2dagsorden_version_no', '=')
+ * ->execute();
+ *
 }*/

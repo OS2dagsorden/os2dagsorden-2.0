@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Implements hook_menu()
  */
 function os2intra_simplesaml_menu() {
@@ -23,7 +27,7 @@ function os2intra_simplesaml_menu() {
     'description' => 'Administer SimpleSAML',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os2intra_simplesaml_settings_form'),
-    'access arguments' => array('administer os2intra simplesaml')
+    'access arguments' => array('administer os2intra simplesaml'),
   );
 
   return $items;
@@ -48,20 +52,20 @@ function os2intra_simplesaml_monolog_channel_info() {
 }
 
 /**
- * Form callback for settings
+ * Form callback for settings.
  */
 function os2intra_simplesaml_settings_form($form, &$form_state) {
   $form['os2intra_simplesaml_simplesaml_enable'] = array(
     '#title' => t('Enabled SimpleSAML redirect'),
     '#type' => 'checkbox',
-    '#default_value' => variable_get('os2intra_simplesaml_simplesaml_enable')
+    '#default_value' => variable_get('os2intra_simplesaml_simplesaml_enable'),
   );
 
   $form['os2intra_simplesaml_redirected_ips'] = array(
     '#title' => t('Redirect IP\'s to SimpleSAML login'),
     '#type' => 'textfield',
     '#description' => t('Comma separated. Ex. 192.168.1.1,192.168.2.1'),
-    '#default_value' => variable_get('os2intra_simplesaml_redirected_ips')
+    '#default_value' => variable_get('os2intra_simplesaml_redirected_ips'),
   );
 
   return system_settings_form($form);
@@ -82,31 +86,29 @@ function os2intra_simplesaml_settings_form_validate($form, &$form_state) {
  * Updates the user's LOOP account details.
  */
 function os2intra_simplesaml_user_login(&$edit, $account) {
-  //$attributes = simplesamlphp_auth_get_attributes();
-
-#  if (!empty($attributes)) {
-#    if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'])) {
-#      $edit['field_name_first'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
-#    }
-#    if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'])) {
-#      $edit['field_name_last'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
-#    }
-#    if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'])) {
-#      $edit['mail'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
-#    }
-#    user_save($account, $edit);
-#  }
-
+  // $attributes = simplesamlphp_auth_get_attributes();
+  // if (!empty($attributes)) {
+  // if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'])) {
+  // $edit['field_name_first'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+  // }
+  // if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'])) {
+  // $edit['field_name_last'][LANGUAGE_NONE][0]['value'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
+  // }
+  // if (isset($attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'])) {
+  // $edit['mail'] = $attributes['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+  // }
+  // user_save($account, $edit);
+  // }.
   if (isset($_SESSION['nemlogin_pid'])) {
     $nemlogin_pid = $_SESSION['nemlogin_pid'];
 
     watchdog('os2intra_simplesaml', 'Attemping to login with PID (%pid) started for user %login (uid: %uid).', array(
       '%pid' => $nemlogin_pid,
       '%login' => $account->name,
-      '%uid' => $account->uid
+      '%uid' => $account->uid,
     ));
 
-    //check if account has PID stored in system
+    // Check if account has PID stored in system.
     $pid = db_select("os2intra_simplesaml_nemid_pid_mapping", "os2pid")
       ->fields("os2pid", array("pid"))
       ->condition("uid", $account->uid)
@@ -114,9 +116,9 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
       ->fetchField();
 
     if (!empty($pid)) {
-      // if yes - is the PID the same?
+      // If yes - is the PID the same?
       if (strcasecmp($pid, $nemlogin_pid) != 0) {
-        // NO = the PID in the system and $_SESSION do not match, prevent login
+        // NO = the PID in the system and $_SESSION do not match, prevent login.
         module_invoke_all('user_logout', $account);
         // Destroy the current session, and reset $user to the anonymous user.
         session_destroy();
@@ -128,17 +130,18 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
           '%pid1' => $pid,
           '%pid2' => $nemlogin_pid,
           '%login' => $account->name,
-          '%uid' => $account->uid
+          '%uid' => $account->uid,
         ));
         watchdog('os2intra_simplesaml', 'Session closed for user %name (uid: %uid)', array(
           '%name' => $account->name,
-          '%uid' => $account->uid
+          '%uid' => $account->uid,
         ));
 
         drupal_goto();
       }
-    } else {
-      //If no, store this PID for the user
+    }
+    else {
+      // If no, store this PID for the user.
       $num_updated = db_update('os2intra_simplesaml_nemid_pid_mapping')
         ->fields(array(
           'pid' => $nemlogin_pid,
@@ -147,7 +150,7 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
         ->condition('uid', $account->uid)
         ->execute();
 
-      //not updated, new entry
+      // Not updated, new entry.
       if (!$num_updated) {
         db_insert('os2intra_simplesaml_nemid_pid_mapping')
           ->fields(array(
@@ -161,14 +164,14 @@ function os2intra_simplesaml_user_login(&$edit, $account) {
       watchdog('os2intra_simplesaml', 'Mapping new PID (%pid) with user %login (uid: %uid)', array(
         '%pid' => $nemlogin_pid,
         '%login' => $account->name,
-        '%uid' => $account->uid
+        '%uid' => $account->uid,
       ));
     }
 
     watchdog('os2intra_simplesaml', 'User %login (uid: %uid) successfully logged in with PID (%pid).', array(
       '%pid' => $nemlogin_pid,
       '%login' => $account->name,
-      '%uid' => $account->uid
+      '%uid' => $account->uid,
     ));
   }
 }
@@ -184,16 +187,15 @@ function os2intra_simplesaml_init() {
 
     if (variable_get('os2intra_simplesaml_simplesaml_enable')) {
       foreach ($custom_ips as $custom_ip) {
-        // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use nemid login
-
+        // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use nemid login.
         // If check for only parts of the ip address.
         // This makes it possible to add only the beginning of the IP range.
         // F.ex. 192.168 will allow all ip adresses including 192.168 as part of the io.
-        if (strpos($remote_ip, $custom_ip) !== false) {
+        if (strpos($remote_ip, $custom_ip) !== FALSE) {
           if (!in_array($_GET['q'], array('saml_login', 'user/logout', 'user/login', 'logout'))) {
             if (module_exists('simplesamlphp_auth')) {
               // Loading the Simplesamlphp autoloader.
-              require_once (variable_get('simplesamlphp_auth_installdir') . '/lib/_autoload.php');
+              require_once variable_get('simplesamlphp_auth_installdir') . '/lib/_autoload.php';
               $as = new SimpleSAML_Auth_Simple(variable_get('simplesamlphp_auth_authsource'));
               $as->requireAuth();
             }
@@ -202,13 +204,13 @@ function os2intra_simplesaml_init() {
       }
     }
 
-    //redirect to Nemid Login
+    // Redirect to Nemid Login.
     if (!in_array($remote_ip, $custom_ips)) {
       if (!$_SESSION['nemlogin_pid'] && strpos($_GET['q'], 'nemid') !== 0) {
-        //unsetting session in case it had any nemid errors
+        // Unsetting session in case it had any nemid errors.
         unset($_SESSION['nemid_login']);
 
-        //redirecting only if module exists and path is valid
+        // Redirecting only if module exists and path is valid.
         if (module_exists('drupal_nemid_login')) {
           drupal_goto('nemid');
         }

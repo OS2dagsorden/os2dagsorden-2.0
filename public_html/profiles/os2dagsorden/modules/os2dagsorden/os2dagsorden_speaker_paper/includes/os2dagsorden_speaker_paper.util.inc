@@ -1,21 +1,21 @@
 <?php
 
 /**
- * os2dagsorden_speaker_paper
+ * @file
+ * Os2dagsorden_speaker_paper.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_Speaker_papaer
- * @file     The speaker paper module help functions
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
- *
+ * @package OS2Dagsorden_Speaker_papaer
+ *  The speaker paper module help functions
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
- * Returns true if the message has been sent, false otherwise
+ * Returns true if the message has been sent, false otherwise.
  *
  * @param $uid
  * @param $nid
@@ -55,12 +55,12 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
   $author = user_load($node->uid);
   $authorName = empty($author->field_user_full_name['und'][0]['value']) ? $author->name : $author->field_user_full_name['und'][0]['value'];
 
-  //getting subject and body
+  // Getting subject and body.
   $subject_template = variable_get('os2dagsorden_speaper_paper_email_subject', '!author har delt talepapiret "!speaker_paper_name" med dig');
   $body_template = variable_get('os2dagsorden_speaper_paper_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
     '!author har delt talepapiret "!speaker_paper_name" med dig' . PHP_EOL . 'Du kan læse/ændre dette talepapir her: !speaker_paper_link');
 
-  //composing search/replace
+  // Composing search/replace.
   $search = array(
     '!committee',
     '!meeting_name',
@@ -70,11 +70,11 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
     '!speaker_paper_link',
     '!user',
     '!author',
-    PHP_EOL
+    PHP_EOL,
   );
   $replace = array($cName, $mName, $mDate, $bpName, $spName, $spLink, $uName, $authorName, '<br/>');
 
-  //making replacements
+  // Making replacements.
   $subject = str_replace($search, $replace, $subject_template);
   $subject = ucfirst($subject);
   $body = str_replace($search, $replace, $body_template);
@@ -96,10 +96,10 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
   $system = drupal_mail_system("os2dagsorden_speaker_paper", "");
 
   // The format function must be called before calling the mail function.
-  //$message = $system->format($message);
+  // $message = $system->format($message);
   $system->mail($message);
 
-  //setting the database entry about sent email
+  // Setting the database entry about sent email.
   db_insert('os2dagsorden_speaker_paper_notification_emails')
     ->fields(array(
       'uid' => $uid,
@@ -112,7 +112,9 @@ function _os2dagsorden_speaker_paper_send_message($uid, $node) {
 /**
  * Functions that retus the uids of all the users that are part of the speaker paper group with that tid.
  *
- * @param $tid - speaker paper group tid
+ * @param $tid
+ *   - speaker paper group tid
+ *
  * @return array - array of user uids
  */
 function _os2dagsorden_speaker_paper_fetch_group_users($tid) {

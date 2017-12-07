@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This module implements SBSYS ESDH backend for use in os2web
+ * This module implements SBSYS ESDH backend for use in os2web.
  */
 
 define('MM_IMPORT_DIR', 'public://edoc_middelfart');
@@ -13,7 +13,7 @@ define('MM_DEFAULT_BANNED_REGEX', '/&#x.*;/');
 /**
  * Implements hook_ctools_plugin_directory().
  *
- * Register as provider of esdh plugins
+ * Register as provider of esdh plugins.
  */
 function os2web_edoc_middelfart_esdh_ctools_plugin_directory($module, $plugin) {
   if ($module == 'os2web_esdh_provider') {
@@ -75,7 +75,7 @@ function os2web_edoc_middelfart_esdh_form_os2web_settings_settings_form_alter(&$
     '#title' => 'Import closed agenda',
     '#maxlength' => 200,
     '#description' => t('This decides if the closed agenda bullet points\' content will be imported.'),
-    '#default_value' => variable_get('os2web_edoc_middelfart_esdh_import_closed_agenda', FALSE)
+    '#default_value' => variable_get('os2web_edoc_middelfart_esdh_import_closed_agenda', FALSE),
   );
   $form['meetings']['os2web_edoc_middelfart_esdh_banned_activate_regex'] = array(
     '#type' => 'checkbox',
@@ -127,7 +127,7 @@ function os2web_edoc_middelfart_esdh_form_os2web_settings_settings_form_alter(&$
     '#title' => ' Title for bullet points imported from PDF files',
     '#maxlength' => 200,
     '#description' => 'This will be used as bullet point title for bullet points imported from PDF files',
-    '#default_value' => variable_get('os2web_edoc_middelfart_esdh_empty_bullet_title', 'Indhold')
+    '#default_value' => variable_get('os2web_edoc_middelfart_esdh_empty_bullet_title', 'Indhold'),
   );
 }
 
@@ -139,20 +139,19 @@ function os2web_edoc_middelfart_esdh_os2web_help($sections) {
   // Content types.
   $sections['contenttype'] .= t('<p><b>Meeting node:</b> Add <a href="@url" target="_blank">meetings</a> directly.<br /><i><a href="@edoc" target="_blank">See the advanced documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf')
+    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf'),
   ));
   $sections['import'] .= t('<p><b>Import agenades:</b> <a href="@edoc" target="_blank">See the advanced documentation for the OS2web eDoc module import</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf')
+    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf'),
   ));
   $sections['documentation'] .= t('<p><b>PDF documentation for edoc:</b> <a href="@edoc" target="_blank">Documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf')
+    '@edoc' => file_create_url(drupal_get_path('module', 'os2web_edoc_middelfart_esdh') . '/os2web_edoc_modul_setup.pdf'),
   ));
   return $sections;
 
 }
-
 
 /**
  * Implements hook_help().

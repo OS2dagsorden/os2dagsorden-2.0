@@ -1,67 +1,69 @@
 <?php
 
 /**
- * os2dagsorden_create_agenda
+ * @file
+ * Os2dagsorden_create_agenda.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  Os2dagsorden_Create_Agenda
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package Os2dagsorden_Create_Agenda
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
  * Add to the form the field both used for simple and full agenda meeting creation.
  *
- * @param $form the form which should be modified
+ * @param $form
+ *   the form which should be modified
  *
  * @return $form the form with new field
-*/
-function os2dagsorden_create_agenda_meeting_form_add_general_fields($form){  
+ */
+function os2dagsorden_create_agenda_meeting_form_add_general_fields($form) {
   $form[] = array(
     '#markup' => '<div class="node">',
   );
 
   $form['title'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Title:'), 
-    '#size' => 60, 
-    '#maxlength' => 128, 
+    '#type' => 'textfield',
+    '#title' => t('Title:'),
+    '#size' => 60,
+    '#maxlength' => 128,
     '#required' => TRUE,
     '#description' => 'Full title of the meeting',
   );
-  
+
   $form['short_title'] = array(
-    '#type' => 'textfield', 
-    '#title' => t('Short title:'), 
-    '#size' => 40, 
-    '#maxlength' => 35, 
+    '#type' => 'textfield',
+    '#title' => t('Short title:'),
+    '#size' => 40,
+    '#maxlength' => 35,
     '#required' => TRUE,
     '#description' => 'Maximum 35 characters. <br/>Short title will be used in places with limited contatiner width, e.g, front page views',
   );
   $form['status'] = array(
     '#type' => 'select',
-    '#title' => t('Status:'), 
+    '#title' => t('Status:'),
     '#required' => TRUE,
     '#options' => array(
-	'Planlagt' => t('Planlagt'),
-	'Ændret' => t('Ændret'),
-	'Aflyst' => t('Aflyst'),
-	'Referat' => t('Referat'),
-	'Dagsorden' => t('Dagsorden'),
+      'Planlagt' => t('Planlagt'),
+      'Ændret' => t('Ændret'),
+      'Aflyst' => t('Aflyst'),
+      'Referat' => t('Referat'),
+      'Dagsorden' => t('Dagsorden'),
     ),
     '#multiple' => FALSE,
     '#default_value' => 'Planlagt',
   );
   $form['meeting_category'] = array(
-    '#type' => 'select', 
-    '#title' => t('Meeting category:'), 
+    '#type' => 'select',
+    '#title' => t('Meeting category:'),
     '#required' => TRUE,
     '#options' => array(
-	'pol' => t('Political'),
-	'org' => t('Organizational'),
+      'pol' => t('Political'),
+      'org' => t('Organizational'),
     ),
     '#multiple' => FALSE,
     '#default_value' => 'pol',
@@ -77,22 +79,22 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form){
   );
   $form['start_date'] = array(
     '#type' => 'date_popup',
-    '#title' => t('Start Date:'), 
-    '#size' => 10, 
+    '#title' => t('Start Date:'),
+    '#size' => 10,
     '#required' => TRUE,
     '#date_format' => 'd/m/Y H:i',
   );
   $form['end_date'] = array(
     '#type' => 'date_popup',
-    '#title' => t('End Date:'), 
-    '#size' => 10, 
+    '#title' => t('End Date:'),
+    '#size' => 10,
     '#required' => FALSE,
     '#date_format' => 'd/m/Y H:i',
   );
   $form[] = array(
     '#markup' => '</div>',
   );
-  
+
   $loc_voc = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_location');
   $loc_terms = taxonomy_get_tree($loc_voc->vid);
   $loc_select = array();
@@ -101,13 +103,13 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form){
   }
   $form['location'] = array(
     '#type' => 'select',
-    '#title' => t('Location:'), 
+    '#title' => t('Location:'),
     '#required' => FALSE,
     '#options' => $loc_select,
     '#multiple' => FALSE,
     '#empty_value' => 0,
   );
-  
+
   $com_voc = taxonomy_vocabulary_machine_name_load('os2web_meetings_tax_committee');
   $com_terms = taxonomy_get_tree($com_voc->vid);
   $com_select = array();
@@ -116,104 +118,112 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form){
   }
   $form['os2web_meetings_tax_committee'] = array(
     '#type' => 'select',
-    '#title' => t('Committee:'), 
+    '#title' => t('Committee:'),
     '#required' => TRUE,
     '#options' => $com_select,
     '#multiple' => FALSE,
   );
-  
+
   $user_select = array();
   $users = entity_load('user');
-  foreach($users as $user) {
+  foreach ($users as $user) {
     $user_select[$user->uid] = $user->field_user_full_name['und'][0]['value'] . " ($user->name)";
   }
   $form['participants'] = array(
     '#type' => 'select',
-    '#title' => t('Participants:'), 
+    '#title' => t('Participants:'),
     '#required' => FALSE,
     '#options' => $user_select,
     '#multiple' => TRUE,
     '#attributes' => array('class' => array('improved-multi-select')),
   );
-  
-  //finishing form
+
+  // Finishing form.
   $form['#attached']['css'] = array(
     drupal_get_path('module', 'os2dagsorden_create_agenda') . '/css/form_theme.css',
   );
-  
+
   return $form;
 }
 
 /**
  * Fill the general fields of the form with the values from meeting. Both used for simple and full agenda meeting creation.
  *
- * @param $form the form which should be filled
- * @param $node the meeting node, where the information should be taken from
+ * @param $form
+ *   the form which should be filled
+ * @param $node
+ *   the meeting node, where the information should be taken from
  *
  * @return $form the form with filled fields
-*/
-function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node){
-    $form['title']['#default_value'] = $node->title;
-    
-   /*if (field_get_items('node', $node, 'field_os2web_meetings_abbr')){
-      $short_title_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_abbr'));
-      $form['short_title']['#default_value'] = $short_title_field['safe_value'];
-    }*/
-    
-    $status_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_type'));
-    $form['status']['#default_value'] = $status_field['value'];
-    
-    if (field_get_items('node', $node, 'field_os2web_meetings_hex')){
-      $hex_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_hex'));
-      $form['hex_color']['#default_value'] = $hex_field['safe_value'];
+ */
+function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node) {
+  $form['title']['#default_value'] = $node->title;
+
+  /*if (field_get_items('node', $node, 'field_os2web_meetings_abbr')){
+  $short_title_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_abbr'));
+  $form['short_title']['#default_value'] = $short_title_field['safe_value'];
+  }*/
+
+  $status_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_type'));
+  $form['status']['#default_value'] = $status_field['value'];
+
+  if (field_get_items('node', $node, 'field_os2web_meetings_hex')) {
+    $hex_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_hex'));
+    $form['hex_color']['#default_value'] = $hex_field['safe_value'];
+  }
+
+  /*if (field_get_items('node', $node, 'field_os2web_meetings_category')){
+  $category_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_category'));
+  $form['meeting_category']['#default_value'] = $category_field['value'];
+  }*/
+
+  $date_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_date'));
+  $form['start_date']['#default_value'] = $date_field['value'];
+  if ($date_field['value2'] != $date_field['value']) {
+    $form['end_date']['#default_value'] = $date_field['value2'];
+  }
+
+  $committee_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_committee'));
+  $form['os2web_meetings_tax_committee']['#default_value'] = $committee_field['tid'];
+
+  if (field_get_items('node', $node, 'field_os2web_meetings_location')) {
+    $location_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_location'));
+    $form['location']['#default_value'] = $location_field['tid'];
+  }
+
+  if (field_get_items('node', $node, 'field_os2web_meetings_partic')) {
+    $participants_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_partic'));
+    $participants = explode(',', $participants_field['safe_value']);
+    foreach ($participants as $el => $value) {
+      // Array.
+      $value = explode(' ', $value);
+      // (name)
+      $value = end($value);
+      // Name.
+      $username = substr($value, 1, strlen($value) - 2);
+      $account = user_load_by_name($username);
+      $selection[] = $account->uid;
     }
-    
-    /*if (field_get_items('node', $node, 'field_os2web_meetings_category')){
-      $category_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_category'));
-      $form['meeting_category']['#default_value'] = $category_field['value'];
-    }*/
-    
-    $date_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_date'));
-    $form['start_date']['#default_value'] = $date_field['value'];
-    if ($date_field['value2'] != $date_field['value'])
-      $form['end_date']['#default_value'] = $date_field['value2'];
-    
-    $committee_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_committee'));
-    $form['os2web_meetings_tax_committee']['#default_value'] = $committee_field['tid'];
-    
-    if (field_get_items('node', $node, 'field_os2web_meetings_location')){
-      $location_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_location'));
-      $form['location']['#default_value'] = $location_field['tid'];
-    }
-    
-    if (field_get_items('node', $node, 'field_os2web_meetings_partic')){
-      $participants_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_partic'));
-      $participants = explode(',',$participants_field['safe_value']);
-      foreach ($participants as $el => $value){
-	$value = explode(' ', $value); //array
-	$value = end($value);//(name)
-	$username = substr($value, 1, strlen($value)-2);//name
-	$account = user_load_by_name($username);
-	$selection[] = $account->uid;
-      }
-      $form['participants']['#default_value'] = $selection;
-    }
-    
-    return $form;
+    $form['participants']['#default_value'] = $selection;
+  }
+
+  return $form;
 }
 
 /**
  * Populates the meeting node (either new or existing depending on the content) with the information taken from the form.
  *
- * @param $form       the form where information is taken from
- * @param $form_state the current state of the form
+ * @param $form
+ *   the form where information is taken from
+ * @param $form_state
+ *   the current state of the form
  *
  * @return populated but unsaved(!) node
-*/
-function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state){
+ */
+function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state) {
   $input = $form_state['input'];
-  
-  //input extraction
+
+  // Input extraction.
   $title = $input['title'];
   $short_title = $input['short_title'];
   $status = $input['status'];
@@ -227,47 +237,52 @@ function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state)
   $com_tid = $input['os2web_meetings_tax_committee'];
   $participants = $input['participants'];
 
-  drupal_set_message(print_r($form_state, true));
-  if (!$form_state['meeting_id']){
-    //node creating
+  drupal_set_message(print_r($form_state, TRUE));
+  if (!$form_state['meeting_id']) {
+    // Node creating.
     $node = new stdClass();
     $node->type = "meeting";
     $node->language = LANGUAGE_NONE;
-    node_object_prepare($node);    
-  } else {
+    node_object_prepare($node);
+  }
+  else {
     $node = node_load($form_state['meeting_id']);
   }
-  
-  //node population
+
+  // Node population.
   $node->title = $title;
   $node->field_os2web_meetings_abbr['und'][0]['value'] = $short_title;
   $node->field_os2web_meetings_type['und'][0]['value'] = $status;
   $start_datetime = date_create_from_format("d/m/Y H:i", $start_date . ' ' . $start_time);
   $node->field_os2web_meetings_date['und'][0]['value'] = $start_datetime->format('Y-m-d H:i:s');
   $node->field_os2web_meetings_committee['und'][0]['tid'] = $com_tid;
-  
-  //$node->field_os2web_meetings_category['und'][0]['value'] = $meeting_category;
+
+  // $node->field_os2web_meetings_category['und'][0]['value'] = $meeting_category;.
   $node->field_os2web_meetings_hex['und'][0]['value'] = $hex_color;
 
-  if (!empty($end_date)){
+  if (!empty($end_date)) {
     $end_datetime = date_create_from_format("d/m/Y H:i", $end_date . ' ' . $end_time);
     $node->field_os2web_meetings_date['und'][0]['value2'] = $end_datetime->format('Y-m-d H:i:s');
-  } else {//same as start date - default
+    // Same as start date - default.
+  }
+  else {
     $node->field_os2web_meetings_date['und'][0]['value2'] = $start_datetime->format('Y-m-d H:i:s');
   }
-  
+
   $node->field_os2web_meetings_location['und'][0]['tid'] = $loc_tid;
-  
-  if ($participants){
+
+  if ($participants) {
     $participant_str = '';
-    foreach ($participants as $participant => $value){
+    foreach ($participants as $participant => $value) {
       $user = user_load($value);
       $participant_str .= $user->field_user_full_name['und'][0]['value'] . " ($user->name), ";
     }
-    //removing last coma
-    $node->field_os2web_meetings_partic['und'][0]['value'] = substr($participant_str, 0, strlen($participant_str)-2);
-  } else 
+    // Removing last coma.
+    $node->field_os2web_meetings_partic['und'][0]['value'] = substr($participant_str, 0, strlen($participant_str) - 2);
+  }
+  else {
     $node->field_os2web_meetings_partic['und'][0]['value'] = '';
-  
+  }
+
   return $node;
 }
