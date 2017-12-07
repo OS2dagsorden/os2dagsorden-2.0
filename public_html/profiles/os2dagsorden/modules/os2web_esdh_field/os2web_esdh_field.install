@@ -1,0 +1,121 @@
+<?php
+/**
+ * @file
+ * Install the case field module
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function os2web_esdh_field_field_schema($field) {
+  if ($field['type'] == 'os2web_esdh_field_case_ident') {
+    return array(
+      'columns' => array(
+        'os2web_esdh_field_case_ident' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+      ),
+    );
+  }
+  if ($field['type'] == 'os2web_esdh_field_doc_ident') {
+    return array(
+      'columns' => array(
+        'os2web_esdh_field_doc_ident' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function os2web_esdh_field_schema() {
+  $schema['os2web_esdh_field_cm_documents'] = array(
+    'description' => 'This table keep track of files from Acadre PWS which needs to be created/updated',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'The file entry id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'defualt' => NULL,
+      ),
+      'did' => array(
+        'description' => 'The document identifier from PWS.',
+        'type' => 'varchar',
+        'length' => 256,
+        'not null' => TRUE,
+      ),
+      'job_info' => array(
+        'description' => 'Information object about the job.',
+        'type' => 'varchar',
+        'length' => 1024,
+        'serialize' => TRUE,
+      ),
+      'last_updated' => array(
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+      )
+    ),
+  );
+  return $schema;
+}
+
+/**
+ * Extends the case identifier field column to support multiple cases.
+ */
+function os2web_esdh_field_update_7002(&$sandbox) {
+  foreach (field_info_fields() as $field_name => $field) {
+    if ($field['type'] != 'os2web_esdh_field_doc_ident') {
+      // Not an entity reference field.
+      continue;
+    }
+
+    // Update the field settings.
+    $field = field_info_field($field_name);
+    unset($field['indexes']['target_entity']);
+    $field['indexes']['os2web_esdh_field_doc_ident'] = array('os2web_esdh_field_doc_ident');
+    field_update_field($field);
+
+    $table_name = _field_sql_storage_tablename($field);
+    $revision_name = _field_sql_storage_revision_tablename($field);
+
+    db_change_field($table_name, $field_name . '_os2web_esdh_field_doc_ident', $field_name . '_os2web_esdh_field_doc_ident', array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    ));
+    db_change_field($revision_name, $field_name . '_os2web_esdh_field_doc_ident', $field_name . '_os2web_esdh_field_doc_ident', array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    ));
+  }
+  $field = os2web_esdh_field_field_schema();
+  $field = $field['columns']['os2web_esdh_field_case_ident'];
+  error_log("Var: \$field = " . print_r($field, 1));
+  $ret = array();
+  $ret[] = db_change_field('field_data_field_case', 'field_case_case_ident', 'field_case_case_ident', $field);
+  $ret[] = db_change_field('field_revision_field_case', 'field_case_case_ident', 'field_case_case_ident', $field);
+  return $ret;
+}
+
+
+/**
+ * Create new database table os2web_esdh_field_cm_documents.
+ */
+function os2web_esdh_field_update_7003() {
+  if (!db_table_exists('os2web_esdh_field_cm_documents')) {
+    $schema = drupal_get_schema('os2web_esdh_field_cm_documents', TRUE);
+    db_create_table('os2web_esdh_field_cm_documents', $schema);
+  }
+}

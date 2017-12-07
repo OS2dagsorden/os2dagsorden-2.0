@@ -164,7 +164,7 @@ function os2dagsorden_fields_and_content_types_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_os2web_meetings_sp_shar_gr',
-    'label' => 'Deles med grupper',
+    'label' => 'Deles med groupper',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -798,7 +798,7 @@ function os2dagsorden_fields_and_content_types_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Comname');
   t('Deles med');
-  t('Deles med grupper');
+  t('Deles med groupper');
   t('Follows committees');
   t('Follows committees subscribed');
   t('Follows committees+');
