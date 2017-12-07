@@ -342,11 +342,6 @@ a.button {
 /*---------------------------- Omega globals override START ----------------------------*/
 
 /* ---------------------------- Table Styles START---------------------------- */
-.attachment-text table {
-  /* @FIXME: Don't use comments to remove code. Delete unused code.
-  /*max-width: 100% !important;
-  width: 100% !important;*/
-}
 .attachment-text img {
   padding-right: 22px;
 }
