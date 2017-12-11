@@ -1,16 +1,18 @@
 <?php
 
 /**
- * OS2Web_Print_Send_to_Friend
+ * @file
+ * OS2Web_Print_Send_to_Friend.
  *
  * PHP version 5
  *
  * @category OS2Web
- * @package  OS2Web_Print_Send_to_Friend
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Web_Print_Send_to_Friend
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
+
 module_load_include('inc', 'os2web_print_send_to_friend', '/includes/os2web_print_send_to_friend');
 module_load_include('inc', 'os2web_print_send_to_friend', '/handlers/database');
 
@@ -64,7 +66,6 @@ function os2web_print_send_to_friend_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
 
-
   return $items;
 }
 
@@ -101,7 +102,7 @@ function os2web_print_send_to_friend_monolog_handler_info() {
 }
 
 /**
- * Function that logs sending to friend event
+ * Function that logs sending to friend event.
  *
  * @param $message
  * @param array $variables
@@ -121,7 +122,8 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
     $level = os2dagsorden_logging_map_severity_level($severity);
 
     $logger->log($level, $message, $context);
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
 
     // Fail silently since we cannot log any messages or do anything that would
     // trigger another watchdog call.
@@ -129,30 +131,31 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
 }
 
 /**
- * Generates the filter form for sent to friend log values
+ * Generates the filter form for sent to friend log values.
  *
  * @param $form
  * @param $form_state
+ *
  * @return array
  */
 function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
   drupal_add_css(drupal_get_path('module', 'os2web_print_send_to_friend') . '/css/os2web_print_send_to_friend.css');
-  drupal_add_library('system', 'ui.datepicker');   
-  drupal_add_js("(function ($) { $('#date-from').datepicker(); $('#date-to').datepicker();})(jQuery);", 
+  drupal_add_library('system', 'ui.datepicker');
+  drupal_add_js("(function ($) { $('#date-from').datepicker(); $('#date-to').datepicker();})(jQuery);",
       array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
   $form = array();
-  $form ['filter-fields'] = array(
+  $form['filter-fields'] = array(
     '#type' => 'container',
-    '#attributes'=> array(
+    '#attributes' => array(
       'class' => array(
         'filter-fields',
       ),
-    )  
-  );  
+    ),
+  );
   $form['filter-fields']['user'] = array(
     '#type' => 'textfield',
     '#title' => t('User'),
-    '#size' => 60,  
+    '#size' => 60,
     '#maxlength' => 60,
     '#autocomplete_path' => 'user/autocomplete',
     '#default_value' => $user,
@@ -171,13 +174,13 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
     '#maxlength' => 60,
     '#default_value' => $message,
   );
-   $form ['filter-fields']['date'] = array(
+  $form['filter-fields']['date'] = array(
     '#type' => container,
-    '#attributes'=> array(
+    '#attributes' => array(
       'class' => array(
         'filter-date-fields',
       ),
-    )  
+    ),
   );
   $form['filter-fields']['date']['from'] = array(
     '#type' => 'textfield',
@@ -187,7 +190,7 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
     '#maxlength' => 60,
     '#field_prefix' => t('From'),
     '#default_value' => $from,
-   
+
   );
   $form['filter-fields']['date']['to'] = array(
     '#type' => 'textfield',
@@ -197,13 +200,13 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
     '#attributes' => array('id' => 'date-to'),
     '#field_prefix' => t('To'),
   );
-  $form ['buttons'] = array(
+  $form['buttons'] = array(
     '#type' => container,
-    '#attributes'=> array(
+    '#attributes' => array(
       'class' => array(
         'filter-buttons',
       ),
-    )  
+    ),
   );
   $form['buttons']['aply'] = array(
     '#type' => 'submit',
@@ -212,63 +215,68 @@ function os2web_print_send_to_friend_log_filter_form($form, &$form_state) {
   $form['buttons']['reset'] = array(
     '#type' => 'submit',
     '#value' => t('Clear'),
-    
+
   );
- if (db_table_exists('os2web_print_send_to_friend_log')) {
-  $headers = array(
+  if (db_table_exists('os2web_print_send_to_friend_log')) {
+    $headers = array(
     array('data' => t('Date'), 'field' => 'time', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'message'),
     array('data' => t('Text'), 'field' => 'text'),
-    array('data' => t('User'), 'field' => 'name'));
-  $query = db_select('os2web_print_send_to_friend_log', 'l');
-  $query->innerJoin('users', 'u', 'l.uid = u.uid');
-  $query->fields('l', array('time', 'message', 'text'));
-  $query->fields('u', array('name'));
-  if (isset($form_state['user']) && !empty($form_state['user'])) {
-    $query->condition('u.name', '%' . db_like($form_state['user']) . '%', 'LIKE');
+    array('data' => t('User'), 'field' => 'name'),
+    );
+    $query = db_select('os2web_print_send_to_friend_log', 'l');
+    $query->innerJoin('users', 'u', 'l.uid = u.uid');
+    $query->fields('l', array('time', 'message', 'text'));
+    $query->fields('u', array('name'));
+    if (isset($form_state['user']) && !empty($form_state['user'])) {
+      $query->condition('u.name', '%' . db_like($form_state['user']) . '%', 'LIKE');
+    }
+
+    if (isset($form_state['text']) && !empty($form_state['text'])) {
+      $query->condition('l.text', '%' . db_like($form_state['text']) . '%', 'LIKE');
+    }
+    if (isset($form_state['message']) && !empty($form_state['message'])) {
+      $query->condition('l.message', '%' . db_like($form_state['message']) . '%', 'LIKE');
+    }
+    if (isset($form_state['date']['from']) && isset($form_state['date']['to']) && !empty($form_state['date']['from']) && !empty($form_state['date']['to'])) {
+      $query->condition('l.time', array(strtotime($form_state['date']['from']), strtotime($form_state['date']['to'])), 'BETWEEN');
+    }
+    elseif (isset($form_state['date']['from']) && !empty($form_state['date']['from'])) {
+      $query->condition('l.time', strtotime($form_state['date']['from']), '>');
+    }
+    elseif (isset($form_state['date']['to']) && !empty($form_state['date']['to'])) {
+      $query->condition('l.time', strtotime($form_state['date']['to']), '<');
+    }
+
+    // Add table sort extender.
+    $query->extend('TableSort')
+      ->orderByHeader($headers);
+    $pager = $query->extend('PagerDefault')
+      ->limit(50);
+    $result = $pager->execute()
+      ->fetchAllAssoc('time');
+
+    $rows = array();
+
+    foreach ($result as $row) {
+      $row->time = date('d-m-Y H:i:s', $row->time);
+      $rows[] = array_values((array) $row);
+    }
+
+    $form['table'] = array(
+      '#theme' => 'table',
+      '#header' => $headers,
+      '#rows' => $rows,
+    );
   }
-
-  if (isset($form_state['text']) && !empty($form_state['text'])) {
-    $query->condition('l.text', '%' . db_like($form_state['text']) . '%', 'LIKE');
+  else {
+    drupal_set_message('There are not log entries yet');
   }
-  if (isset($form_state['message']) && !empty($form_state['message'])) {
-    $query->condition('l.message', '%' . db_like($form_state['message']) . '%', 'LIKE');
-  }
-  if (isset($form_state['date']['from']) && isset($form_state['date']['to']) && !empty($form_state['date']['from']) && !empty($form_state['date']['to']))
-    $query->condition('l.time', array(strtotime($form_state['date']['from']), strtotime($form_state['date']['to'])), 'BETWEEN');
-  elseif (isset($form_state['date']['from']) && !empty($form_state['date']['from']))
-    $query->condition('l.time', strtotime($form_state['date']['from']), '>');
-  elseif (isset($form_state['date']['to']) && !empty($form_state['date']['to']))
-    $query->condition('l.time', strtotime($form_state['date']['to']), '<');
-
-  $query->extend('TableSort') // Add table sort extender.
-    ->orderByHeader($headers);
-  $pager = $query->extend('PagerDefault')
-    ->limit(50);
-  $result = $pager->execute()
-    ->fetchAllAssoc('time');
-
-  $rows = array();
-
-  foreach ($result as $row) {
-    $row->time = date('d-m-Y H:i:s', $row->time);
-    $rows[] = array_values((array) $row);
-  }
-
-  $form['table'] = array(
-    '#theme' => 'table',
-    '#header' => $headers,
-    '#rows' => $rows,
-  );
- }
- else {
-   drupal_set_message('There are not log entries yet');
- }
   return $form;
 }
 
 /**
- * Clears form values
+ * Clears form values.
  *
  * @param $form
  * @param $form_state
@@ -280,7 +288,8 @@ function os2web_print_send_to_friend_log_filter_form_submit($form, &$form_state)
     $form_state['values']['message'] = "";
     $form_state['values']['from'] = "";
     $form_state['values']['to'] = "";
-  } else {
+  }
+  else {
     $form_state['user'] = $form_state['values']['user'];
     $form_state['text'] = $form_state['values']['text'];
     $form_state['message'] = $form_state['values']['message'];
@@ -297,27 +306,29 @@ function os2web_print_send_to_friend_requirements($phase) {
   if ($phase !== 'runtime') {
     return array();
   }
-   $t = get_t();
-   if (!module_exists('smtp'))
-     $requirements['os2web_print_send_to_friend_smtp_module'] = array(
-       'title' => $t('OS2Web Print or Send to Friend'),
-       'value' => $t('SMTP module'),
-       'severity' => REQUIREMENT_ERROR,
-       'description' => t('SMTP module is not exists')
-     );
-   else 
-     if (variable_get('smtp_on', '0') == 0)
-      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
-        'title' => $t('OS2Web Print or Send to Friend'),
-        'value' => $t('SMTP module'),
-        'severity' => REQUIREMENT_ERROR,
-        'description' => t('SMTP module is not active')
-      );
-     else 
-      $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
-        'title' => $t('OS2Web Print or Send to Friend'),
-        'value' => $t('SMTP module is active'),
-        'severity' => REQUIREMENT_OK
-      );
+  $t = get_t();
+  if (!module_exists('smtp')) {
+    $requirements['os2web_print_send_to_friend_smtp_module'] = array(
+      'title' => $t('OS2Web Print or Send to Friend'),
+      'value' => $t('SMTP module'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('SMTP module is not exists'),
+    );
+  }
+  elseif (variable_get('smtp_on', '0') == 0) {
+    $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+      'title' => $t('OS2Web Print or Send to Friend'),
+      'value' => $t('SMTP module'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('SMTP module is not active'),
+    );
+  }
+  else {
+    $requirements['os2web_print_send_to_friend_smtp_module_active'] = array(
+      'title' => $t('OS2Web Print or Send to Friend'),
+      'value' => $t('SMTP module is active'),
+      'severity' => REQUIREMENT_OK,
+    );
+  }
   return $requirements;
 }
