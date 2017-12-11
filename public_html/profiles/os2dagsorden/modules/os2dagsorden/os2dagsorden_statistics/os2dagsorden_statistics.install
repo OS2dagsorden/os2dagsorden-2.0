@@ -1,9 +1,13 @@
 <?php
+
 /**
  * @file
- * Implements install hooks
+ * Implements install hooks.
  */
 
+/**
+ *
+ */
 function os2dagsorden_statistics_schema() {
   $schema['os2dagsorden_statistics_content_tracker'] = array(
     'description' => 'Stores content access information for statistics.',
@@ -12,12 +16,12 @@ function os2dagsorden_statistics_schema() {
         'type' => 'serial',
         'not null' => TRUE,
         'description' => 'Primary Key: Unique log ID.',
-      ),      
+      ),
       'url' => array(
         'type' => 'text',
         'not null' => FALSE,
         'description' => 'Referrer URI.',
-      ),      
+      ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -31,14 +35,14 @@ function os2dagsorden_statistics_schema() {
         'not null' => FALSE,
         'default' => 0,
         'description' => 'Node ID.',
-      ),  
+      ),
       'committee' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
         'description' => 'Commitee ID.',
-      ),     
+      ),
       'timestamp' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -63,7 +67,7 @@ function os2dagsorden_statistics_schema() {
 }
 
 /**
- * Creates the db table
+ * Creates the db table.
  */
 function os2dagsorden_statistics_update_7001() {
   $schema = os2dagsorden_statistics_schema();
@@ -72,7 +76,7 @@ function os2dagsorden_statistics_update_7001() {
 }
 
 /**
- * Creates the db table
+ * Creates the db table.
  */
 function os2dagsorden_statistics_update_7002() {
   $schema = os2dagsorden_statistics_schema();
