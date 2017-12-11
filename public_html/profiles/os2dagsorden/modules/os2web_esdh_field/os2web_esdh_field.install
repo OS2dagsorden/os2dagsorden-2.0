@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Install the case field module
+ * Install the case field module.
  */
 
 /**
@@ -62,7 +63,7 @@ function os2web_esdh_field_schema() {
       'last_updated' => array(
         'type' => 'datetime',
         'mysql_type' => 'datetime',
-      )
+      ),
     ),
   );
   return $schema;
@@ -108,7 +109,6 @@ function os2web_esdh_field_update_7002(&$sandbox) {
   $ret[] = db_change_field('field_revision_field_case', 'field_case_case_ident', 'field_case_case_ident', $field);
   return $ret;
 }
-
 
 /**
  * Create new database table os2web_esdh_field_cm_documents.

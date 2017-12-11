@@ -120,7 +120,7 @@ function os2web_esdh_field_field_is_empty($item, $field) {
 function os2web_esdh_field_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
 
-    // Validate all esdh case fields
+    // Validate all esdh case fields.
     if (isset($item['os2web_esdh_field_case_ident'])) {
       $cases = explode(',', $item['os2web_esdh_field_case_ident']);
       foreach ($cases as $value) {
@@ -137,7 +137,7 @@ function os2web_esdh_field_field_validate($entity_type, $entity, $field, $instan
     }
 
     if (isset($item['os2web_esdh_field_doc_ident'])) {
-      // Validate all esdh doc fields
+      // Validate all esdh doc fields.
       $docids = explode(',', $item['os2web_esdh_field_doc_ident']);
       foreach ($docids as $docid) {
         $docid = trim($docid);
@@ -165,7 +165,7 @@ function os2web_esdh_field_field_formatter_view($entity_type, $entity, $field, $
         if ($item['os2web_esdh_field_case_ident']) {
           $cases = array();
           $ids = explode(',', $item['os2web_esdh_field_case_ident']);
-          // error_log("Var: \$ids = " . print_r($ids, 1));
+          // error_log("Var: \$ids = " . print_r($ids, 1));.
           foreach ($ids as $id) {
             $cases[] = trim($id);
           }
@@ -229,7 +229,8 @@ function theme_os2web_esdh_case($vars) {
         $docids = array_merge($docids, os2web_esdh_provider_invoke('cm', 'get_case_docs', $id));
       }
     }
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     // Show a polite message if the connection to Acadre is broken.
     $markup = '<div class="messages error"><ul><li>';
     $markup .= t('There was a problem connecting to the case service provider. Sorry for the inconvenience.');
@@ -275,7 +276,8 @@ function theme_os2web_esdh_document($vars) {
           l($document_meta['title'], $file_url, array('attributes' => array('target' => '_blank'))) . '<span class="documentdate">' . format_date(strtotime($document_meta['last_update']), 'custom', 'd/m/Y') . '</span>',
         );
       }
-    } else {
+    }
+    else {
       // Add the documet to be updated trough cron.
       _os2web_esdh_field_add_to_cron($docid);
     }
@@ -294,7 +296,7 @@ function theme_os2web_esdh_document($vars) {
  * Checks access conditions for a case.
  *
  * @param int $caseid
- *   Case id
+ *   Case id.
  *
  * @return bool
  *   True on access granted
@@ -319,7 +321,7 @@ function _os2web_esdh_field_case_access($caseid) {
  * Checks access conditions for a document.
  *
  * @param int $docid
- *   Document id
+ *   Document id.
  *
  * @return bool
  *   True on access granted
@@ -341,12 +343,13 @@ function _os2web_esdh_field_doc_access($docid) {
 
 /**
  * Helper function that compares two arrays.
+ *
  * @access protected
  *
  * @param array $a1
- *   First array
+ *   First array.
  * @param array $a2
- *   Second array
+ *   Second array.
  *
  * @return bool
  *   True if all keys in $a1 is equivilent in $a2
@@ -355,9 +358,10 @@ function _os2web_esdh_field_array_compare(array $a1, array $a2) {
   $result = TRUE;
   foreach ($a1 as $key => $value) {
     if (isset($a2[$key]) && $a2[$key] === $value) {
-      ($result = $result ) && TRUE;
-    } else {
-      ($result = $result ) && FALSE;
+      ($result = $result) && TRUE;
+    }
+    else {
+      ($result = $result) && FALSE;
     }
   }
   return $result;
@@ -384,7 +388,7 @@ function os2web_esdh_field_node_update($node) {
 /**
  * Helper function to call the PWS and put documents in queue for updates.
  *
- * @param  Object $node
+ * @param Object $node
  *   The node.
  */
 function _os2web_esdh_field_update_cm_documents_from_pws($node) {
@@ -417,7 +421,8 @@ function _os2web_esdh_field_update_cm_documents_from_pws($node) {
         // Document has the appropiate access settings.
         $documents = array_merge($documents, os2web_esdh_provider_invoke('cm', 'get_case_docs', $case_id));
       }
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       watchdog('os2web_esdh_field', $e, NULL, WATCHDOG_ERROR);
     }
   }
@@ -536,8 +541,9 @@ function os2web_esdh_field_cron_queue_info() {
 
 /**
  * Cron worker function to update a document from Acadre PWS.
- * @param  array $document
- *   The document
+ *
+ * @param array $document
+ *   The document.
  */
 function _os2web_esdh_field_update_document($document) {
   if (isset($document['did'])) {
@@ -559,7 +565,7 @@ function _os2web_esdh_field_update_document($document) {
 
           watchdog('os2web_esdh_field', 'Document (did: %did, fid: %fid) was updated from ESDH.', array(
             '%did' => $document['did'],
-            '%fid' => $file->fid
+            '%fid' => $file->fid,
           ), WATCHDOG_INFO);
           return TRUE;
         }
@@ -573,7 +579,8 @@ function _os2web_esdh_field_update_document($document) {
 /**
  * Helper function to get the file instance of a document.
  *
- * @param  $document_id int The document ID
+ * @param $document_id
+ *   int The document ID
  *
  * @return Object             The drupal file Object.
  */
@@ -590,7 +597,9 @@ function _os2web_esdh_field_get_file_by_did($document_id) {
 /**
  * Helper function to get the document by document id.
  *
- * @param  $document_id int The document ID
+ * @param $document_id
+ *   int The document ID
+ *
  * @return array             The document.
  */
 function _os2web_esdh_field_get_doc_by_did($document_id) {
@@ -606,7 +615,8 @@ function _os2web_esdh_field_get_doc_by_did($document_id) {
 /**
  * Helper function to delete an document from out table.
  *
- * @param  $document_id int The document ID
+ * @param $document_id
+ *   int The document ID
  */
 function _os2web_esdh_field_delete_doc_by_did($document_id) {
   db_delete('os2web_esdh_field_cm_documents')
@@ -619,8 +629,8 @@ function _os2web_esdh_field_delete_doc_by_did($document_id) {
  *
  * If the entry allready exists it will be updated to be processed again.
  *
- * @param  int $document_id
- *   The document ID
+ * @param int $document_id
+ *   The document ID.
  */
 function _os2web_esdh_field_add_to_cron($document_id) {
   $doc_in_db = db_select('os2web_esdh_field_cm_documents', 'd')
@@ -632,10 +642,11 @@ function _os2web_esdh_field_add_to_cron($document_id) {
     db_insert('os2web_esdh_field_cm_documents')->fields(array('did', 'job_info'))
       ->values(array(
         'did' => $document_id,
-        'job_info' => 'update'
+        'job_info' => 'update',
       ))
       ->execute();
-  } else {
+  }
+  else {
     db_update('os2web_esdh_field_cm_documents')
       ->fields(array(
         'job_info' => 'update',

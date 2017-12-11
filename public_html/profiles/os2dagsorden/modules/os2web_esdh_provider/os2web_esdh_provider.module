@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Implements pluginable interface for accessing ESDH systems.
@@ -193,8 +194,7 @@ function os2web_esdh_provider_node_delete($node) {
     }
 
     $meeting_xmlid = $node->field_os2web_meetings_system_id['und'][0]['value'];
-    //$agenda_sysid = $node->field_os2web_meetings_sub_id['und'][0]['value'];
-
+    // $agenda_sysid = $node->field_os2web_meetings_sub_id['und'][0]['value'];.
     os2web_esdh_provider_index_meeting_update_status($meeting_xmlid, NULL, IMPORT_STATUS_DELETED);
     os2web_esdh_provider_index_meeting_update_nid($meeting_xmlid, NULL, 0);
   }
@@ -233,34 +233,33 @@ function os2web_esdh_provider_queue_meetings() {
       $current_timestamp = time();
 
       // New Import QUEUE.
-      //$imported_meetings = array();
-      //$query = db_select('os2web_esdh_provider_import', 'i')->fields('i');
-      //$results = $query->execute();
-      //if ($results) {
+      // $imported_meetings = array();
+      // $query = db_select('os2web_esdh_provider_import', 'i')->fields('i');
+      // $results = $query->execute();
+      // if ($results) {
       //  while ($result = $results->fetchAssoc()) {
       //   $imported_meetings[$result['filename']] = $result['changed'];
       // }
-      //}
-
+      // }
       // Do the magic in a queue.
       foreach ($meetings as $meeting) {
-        //$filename = basename($meeting['uri']);
-        //$changed = filemtime($meeting['uri']);
-        //$import = FALSE;
-        //if (isset($imported_meetings[$filename])) {
+        // $filename = basename($meeting['uri']);
+        // $changed = filemtime($meeting['uri']);
+        // $import = FALSE;
+        // if (isset($imported_meetings[$filename])) {
         // if ($imported_meetings[$filename] != $changed) {
         //  $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-        //db_update('os2web_esdh_provider_import')
+        // db_update('os2web_esdh_provider_import')
         //  ->fields(array(
         //    'changed' => filemtime($meeting['uri']),
         //  ))
         //  ->condition('filename', basename($meeting['uri']), '=')
         //  ->execute();
-        //}
-        //}
-        //else {
+        // }
+        // }
+        // else {.
         $queue->createItem(array('meeting' => $meeting, 'force' => FALSE));
-        //db_insert('os2web_esdh_provider_import')
+        // db_insert('os2web_esdh_provider_import')
         //  ->fields(array(
         //    'filename' => basename($meeting['uri']),
         //    'changed' => filemtime($meeting['uri']),
@@ -327,7 +326,7 @@ function _os2web_esdh_provider_cron_queue_worker($args) {
  * and that only 1 implementation exists.
  *
  * @param string $api
- *   API Id
+ *   API Id.
  *
  * @return bool
  *   True is API is implmemented and available.
@@ -346,7 +345,7 @@ function os2web_esdh_provider_has_api($api) {
         if (!os2web_esdh_provider_supports($api, $method)) {
           watchdog('esdh provider', 'Incomplete API found during check: %api - method: %method', array(
             '%api' => $api,
-            '%method' => $method
+            '%method' => $method,
           ), WATCHDOG_ERROR);
           return FALSE;
         }
@@ -369,9 +368,9 @@ function os2web_esdh_provider_has_api($api) {
  * Check if the api supports a given method.
  *
  * @param string $api
- *   API identifier
+ *   API identifier.
  * @param string $method
- *   Method to invoke
+ *   Method to invoke.
  *
  * @return bool
  *   True if method is available
@@ -391,8 +390,7 @@ function os2web_esdh_provider_supports($api, $method) {
 /**
  * Invokes a method from an api.
  *
- * returns Forwarded return value from method
- *
+ * Returns Forwarded return value from method.
  */
 function os2web_esdh_provider_invoke() {
   /* Expects:
@@ -462,7 +460,8 @@ function os2web_esdh_provider_unpublish_meeting($nid) {
     $meeting = node_load($nid);
     node_unpublish_action($meeting);
     node_save($meeting);
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     watchdog('esdh_provider', 'Could not unpublish meeting %nid, %err', array(
       '%nid' => $nid,
       '%err' => $e->getMessage(),
@@ -577,7 +576,8 @@ function os2web_esdh_provider_default_bullet() {
 }
 
 /**
- * Checks ESDH Meeting import status, ESDH case/document backend check, AdLib PDF Conversion
+ * Checks ESDH Meeting import status, ESDH case/document backend check, AdLib PDF Conversion.
+ *
  * @param $checks
  */
 function os2web_esdh_provider_prod_check_alter(&$checks) {
@@ -596,6 +596,7 @@ function os2web_esdh_provider_prod_check_alter(&$checks) {
  * Checks the status of importer.
  *
  * @param string $caller
+ *
  * @return mixed
  */
 function _os2web_esdh_provider_import_check($caller = 'internal') {
@@ -630,9 +631,10 @@ function _os2web_esdh_provider_import_check($caller = 'internal') {
 }
 
 /**
- * Checks the status of PWS service
+ * Checks the status of PWS service.
  *
  * @param string $caller
+ *
  * @return mixed
  */
 function _os2web_esdh_provider_pws_check($caller = 'internal') {
@@ -659,9 +661,10 @@ function _os2web_esdh_provider_pws_check($caller = 'internal') {
 }
 
 /**
- * Checks the status of adlib service
+ * Checks the status of adlib service.
  *
  * @param string $caller
+ *
  * @return mixed
  */
 function _os2web_esdh_provider_adlib_check($caller = 'internal') {
@@ -771,6 +774,9 @@ function _os2web_esdh_provider_send_fatalerrormail($message) {
   return $mail_system->mail($message);
 }
 
+/**
+ *
+ */
 function os2web_esdh_provider_mail($key, &$message, $params) {
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['body'];
