@@ -2,11 +2,11 @@
 
 /**
  * @file
- * This file describes the Content pushing plugin as implemented by Acadre
+ * This file describes the Content pushing plugin as implemented by Acadre.
  */
 
 /**
- * Plugin definition with callbacks
+ * Plugin definition with callbacks.
  */
 $plugin = array(
   'description' => t('Acadre ESDH Case Pushing backend'),

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file describes the MM plugin as implemented by Acadre
+ * This file describes the MM plugin as implemented by Acadre.
  */
 
 // Set this to the publication-id ie. 1577 for file XML_1577.
@@ -14,7 +14,7 @@ define('ACADRE_MM_ACCESS_PERSON', 3);
 define('MM_REPUBLISH_SUBVERSION', TRUE);
 
 /**
- * Plugin definition with callbacks
+ * Plugin definition with callbacks.
  */
 $plugin = array(
   'description' => t('Acadre ESDH MM Backend'),
@@ -55,7 +55,8 @@ function os2web_acadre_esdh_mm_get_import_list() {
     $pub_id = (int) str_replace('XML_', '', $xml_file->name);
     if (is_numeric($pub_id)) {
       $uris[] = array('id' => $pub_id, 'uri' => $xml_file->uri);
-    } else {
+    }
+    else {
       $uris[] = array('id' => $xml_file->name, 'uri' => $xml_file->uri);
     }
   }
@@ -120,9 +121,9 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
         ) {
           $agenda_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
             implode('/', array(
-                $agendainfo['filesfolder'],
-                $agendainfo['xmlfilename']
-              )
+              $agendainfo['filesfolder'],
+              $agendainfo['xmlfilename'],
+            )
             );
           $agendainfo['agenda_uri'] = $agenda_uri;
           $imported = _os2web_acadre_esdh_import_meeting($agendainfo);
@@ -132,7 +133,8 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
             $imported['meeting_sub_id'] = _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int');
             $meetings[] = $imported;
           }
-        } else {
+        }
+        else {
           $message = '[XML_ID: !id] Agenda !sub_id, was not allowed to be published from xml !file. [publish]=!publish, [access]=!access, [filesfolder]=!filesfolder';
 
           $entries = array(
@@ -150,14 +152,15 @@ function os2web_acadre_esdh_mm_import_meeting($meeting) {
 
           // Publication not published or public.
           $meetings[] = array(
-              'meeting_id' => _get_value_from_xml($manifest->xpath("/root/table[@name='meeting']/fields/field/@sysid"), 'int'),
-              'meeting_sub_id' => _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int'),
-              'agenda_access' => $agendainfo['access'],
-              'publish' => FALSE,
-            ) + os2web_esdh_provider_default_meeting();
+            'meeting_id' => _get_value_from_xml($manifest->xpath("/root/table[@name='meeting']/fields/field/@sysid"), 'int'),
+            'meeting_sub_id' => _get_value_from_xml($xml_item->xpath('field/@sysid'), 'int'),
+            'agenda_access' => $agendainfo['access'],
+            'publish' => FALSE,
+          ) + os2web_esdh_provider_default_meeting();
         }
       }
-    } else {
+    }
+    else {
       watchdog('acadre MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
@@ -179,7 +182,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
   $debug = variable_get('os2web_esdh_provider_debug_info');
   $debug && error_log('MM Import - import meeting from XML - sysid=' . $info['sysid'] . ' - ' . timer_read('mm_import') . 'ms');
   $real_path = drupal_realpath($info['agenda_uri']);
-  $real_path = ($real_path !== FALSE)? _os2web_acadre_esdh_similar_file_exists($real_path) : FALSE;
+  $real_path = ($real_path !== FALSE) ? _os2web_acadre_esdh_similar_file_exists($real_path) : FALSE;
 
   if ($real_path !== FALSE) {
     $xml = simplexml_load_file($real_path);
@@ -187,17 +190,19 @@ function _os2web_acadre_esdh_import_meeting($info) {
     $committee_id = _get_value_from_xml($xml->xpath("//table[@name='committee']/fields/field[@name='sysid']"));
     if (variable_get('os2web_acadre_location_field', 'true') === 'true') {
       $location = _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='location']"));
-    } else {
+    }
+    else {
       $location = _get_value_from_xml($xml->xpath("//table[@name='location']/fields/field[@name='name']"));
     }
 
-    //Checking if meeting is in approved committees list
+    // Checking if meeting is in approved committees list.
     $is_meeting_approved = TRUE;
     if (variable_get('os2dagsorden_committees_positive_list_as_import_list', FALSE) && module_exists('os2dagsorden_settings')) {
       if ($committee == '' || !in_array($committee_id, os2dagsorden_settings_get_import_committees_sub_id())) {
         $is_meeting_approved = FALSE;
       }
-    } else {
+    }
+    else {
       $publish_committee = array_map('trim', explode(',', variable_get('os2web_meetings_approved_committee', ACADRE_MM_DEFAULT_APPROVED)));
       if ($committee == '' || !in_array($committee_id, $publish_committee)) {
         $is_meeting_approved = FALSE;
@@ -207,17 +212,17 @@ function _os2web_acadre_esdh_import_meeting($info) {
     if (!$is_meeting_approved) {
       watchdog('acadre MM', 'Ignored agenda from %committee (%committee_id).', array(
         '%committee' => $committee,
-        '%committee_id' => $committee_id
+        '%committee_id' => $committee_id,
       ));
       return FALSE;
     }
 
     if (variable_get('os2web_acadre_description_field', 'true') === 'true') {
       $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']"));
-    } else {
+    }
+    else {
       $description = _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='description']"));
     }
-
 
     $meeting = array(
       'title' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='name']")),
@@ -228,7 +233,7 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'publication_id' => _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='sysid']")),
       'creation_date' => strtotime(_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='producedate']"))),
       'description' => $description,
-      //_get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),
+      // _get_value_from_xml($xml->xpath("//table[@name='agenda']/fields/field[@name='name']")),.
       'meeting_date_start' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='date']")),
       'meeting_date_finish' => _get_value_from_xml($xml->xpath("//table[@name='meeting']/fields/field[@name='finish']")),
       'committee' => $committee,
@@ -262,18 +267,19 @@ function _os2web_acadre_esdh_import_meeting($info) {
     $doc_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
       implode('/', array(
         $info['filesfolder'],
-        $info['docfilename']
+        $info['docfilename'],
       ));
     $pdf_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
       implode('/', array(
         $info['filesfolder'],
-        pathinfo($info['docfilename'], PATHINFO_FILENAME) . '.pdf'
+        pathinfo($info['docfilename'], PATHINFO_FILENAME) . '.pdf',
       ));
 
     $real_path = drupal_realpath($pdf_uri);
     if ($real_path !== FALSE && file_exists($real_path)) {
       $uri = $pdf_uri;
-    } else {
+    }
+    else {
       $uri = $doc_uri;
     }
 
@@ -282,11 +288,11 @@ function _os2web_acadre_esdh_import_meeting($info) {
       'title' => $meeting['title'],
     );
 
-    //Full Doc with content:
+    // Full Doc with content:
     $full_doc_with_attachements_uri = variable_get('os2web_meetings_path', ACADRE_MM_IMPORT_DIR) .
       implode('/', array(
         $info['filesfolder'],
-        $info['pdffilename']
+        $info['pdffilename'],
       ));
 
     $full_doc_with_attachments_real_path = drupal_realpath($full_doc_with_attachements_uri);
@@ -340,7 +346,8 @@ function _os2web_acadre_esdh_import_meeting($info) {
     // Apply defaults, just in case we missed something.
     $meeting += os2web_esdh_provider_default_meeting();
     return $meeting;
-  } else {
+  }
+  else {
     // Requested file not found.
     watchdog('acadre MM', 'Failed to read agenda manifest file %uri', array('%uri' => $info['agenda_uri']), WATCHDOG_WARNING);
   }
@@ -351,9 +358,9 @@ function _os2web_acadre_esdh_import_meeting($info) {
  * Imports a single item for an agenda.
  *
  * @param array $info
- *   Import info array
+ *   Import info array.
  * @param SimpleXMLElement $xml
- *   Xml segment containing the item
+ *   Xml segment containing the item.
  *
  * @return array
  *   The imported item.
@@ -366,7 +373,7 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
   $name = _get_value_from_xml($xml->xpath("fields/field[@name='name']"));
   $access = _get_value_from_xml($xml->xpath("fields/field[@name='accessname']"));
   $case = _get_value_from_xml($xml->xpath("fields/field[@name='caseno']"));
-  //$case_id = _get_value_from_xml($xml->xpath("table/table/fields/field[@name='sysid']"));
+  // $case_id = _get_value_from_xml($xml->xpath("table/table/fields/field[@name='sysid']"));.
   $sysid = _get_value_from_xml($xml->xpath("fields/field[@name='sysid']"), 'int');
   $comname = _get_value_from_xml($xml->xpath("fields/field[@name='comname']"));
 
@@ -391,7 +398,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
       if (($bullet = _os2web_acadre_esdh_import_bullet($info, $bullet_xml)) !== FALSE) {
         if (is_int($bullet['sort']) && $bullet['sort'] > 0) {
           $item['bullets'][$bullet['sort'] - 1] = $bullet;
-        } else {
+        }
+        else {
           $item['bullets'][] = $bullet;
         }
       }
@@ -421,7 +429,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
                   );
                 }
               }
-            } else {
+            }
+            else {
               $enclosure_real_path = drupal_realpath($folder_path . '/' . $filename_in);
               if ($enclosure_real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($enclosure_real_path)) {
                 $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
@@ -434,7 +443,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
                 );
               }
             }
-          } else {
+          }
+          else {
             $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
             $item['enclosures'][] = array(
               'uri' => $uri,
@@ -474,7 +484,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
                 );
               }
             }
-          } else {
+          }
+          else {
             $enclosure_real_path = drupal_realpath($folder_path . '/' . $filename_in);
             if ($enclosure_real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($enclosure_real_path)) {
               $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
@@ -489,7 +500,8 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
             }
           }
 
-        } else {
+        }
+        else {
           $uri = _os2web_acadre_esdh_pdf_file_path($folder_path, $filename_in);
           $item['enclosures'][] = array(
             'sysid' => _get_value_from_xml($enclosure->xpath("fields/field[@name='sysid']"), 'int'),
@@ -511,9 +523,9 @@ function _os2web_acadre_esdh_import_item($info, $xml) {
  * Imports a single bullet for an agenda item.
  *
  * @param array $info
- *   Import info array
+ *   Import info array.
  * @param SimpleXMLElement $bullet_xml
- *   Xml segment containing the bullet
+ *   Xml segment containing the bullet.
  *
  * @return array
  *   The imported bullet.
@@ -597,8 +609,7 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
   field_attach_load('node', $nodes, FIELD_LOAD_CURRENT, array('field_id' => $fields['field_os2web_meetings_full_doc_c']['field_id']));
 
   // Should the sub_id or system_id be used in SORT
-  // to determine dagsorden/tillæg
-
+  // to determine dagsorden/tillæg.
   // Meetings as: $meetings[<meeting_id>][<system_id>][<node_id>] .
   $meetings = array();
 
@@ -621,10 +632,11 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
       // Duplicate meeting detected.
       watchdog('acadre MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array(
         '%mid' => $meeting_id['value'],
-        '%nid' => $node->nid
+        '%nid' => $node->nid,
       ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    } else {
+    }
+    else {
       $meetings[$meeting_id[0]['value']][$meeting_system_id[0]['value']] = $node->nid;
     }
   }
@@ -653,7 +665,8 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
         if (is_array($addendum_to)) {
           $addendum_to = array_shift($addendum_to);
           $addendum_to = array_shift($addendum_to);
-        } else {
+        }
+        else {
           $addendum_to = FALSE;
         }
 
@@ -664,17 +677,19 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
           // $node_to_access = node_load($node->nid);
           // node_access_acquire_grants($node_to_access);
         }
-      } else {
+      }
+      else {
         error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
-        // node_delete($node->nid);
+        // node_delete($node->nid);.
       }
       // Remove node from final nids_with_addendums.
       unset($nids_with_addendums[$node->nid]);
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        } else {
+        }
+        else {
           drush_log("Removed stale addendum $m_id..", 'ok');
         }
       }
@@ -700,9 +715,9 @@ function _os2web_acadre_esdh_mm_order_addendums($drush = FALSE) {
  * Checks if a there is a PDF version of a file with a given path.
  *
  * @param string $path
- *   The path of the original file
+ *   The path of the original file.
  * @param string $name
- *   The name of the original file
+ *   The name of the original file.
  *
  * @return string
  *   The path of the PDF version of the file (if exists), else old filepath
@@ -714,15 +729,17 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
   $real_path = drupal_realpath($pdf_path);
   if ($real_path !== FALSE && _os2web_acadre_esdh_similar_file_exists($real_path)) {
     return $pdf_path;
-  } else {
+  }
+  else {
     return $path . '/' . $name;
   }
 }
 
 /**
- * Improve the body HTML by stripping long URLs and substituting img references,
+ * Improve the body HTML by stripping long URLs and substituting img references,.
  *
  * @param $data
+ *
  * @return mixed
  */
 function _acadre_esdh_mm_improve_body_html($data) {
@@ -755,7 +772,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
         copy($file_realpath, $dest_dir_realpath . '/' . $filename);
         watchdog('acadre MM', 'Copying %from to %to', array(
           '%from' => $file_realpath,
-          '%to' => $dest_dir_realpath . '/' . $filename
+          '%to' => $dest_dir_realpath . '/' . $filename,
         ), WATCHDOG_DEBUG);
 
         $new_uri = file_create_url(variable_get('os2web_meetings_acadre_images_destination_folder') .
@@ -775,6 +792,7 @@ function _acadre_esdh_mm_improve_body_html($data) {
  * Removed the empty tags (tags having no content, or nbsp) from the provided text.
  *
  * @param $data
+ *
  * @return mixed
  */
 function _acadre_esdh_mm_remove_empty_tags($data) {
@@ -794,12 +812,14 @@ function _acadre_esdh_mm_remove_empty_tags($data) {
  *
  * @param $xml_raw
  * @param string $convert_to
+ *
  * @return int|string
  */
 function _get_value_from_xml($xml_raw, $convert_to = 'string') {
   if ($convert_to == 'string') {
     return trim((string) array_shift($xml_raw));
-  } elseif ($convert_to == 'int') {
+  }
+  elseif ($convert_to == 'int') {
     return (int) array_shift($xml_raw);
   }
 }

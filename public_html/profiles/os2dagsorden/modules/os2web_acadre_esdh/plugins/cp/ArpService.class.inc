@@ -20,7 +20,8 @@ class TraenPublishingDestinationSystemService {
     if ($wsdl) {
       $wsdl = str_replace('wsdl', '', $wsdl);
       $filename = 'plugins/cp/TraenPublishingDestinationSystemService' . check_plain($wsdl + 1) . '.wsdl';
-    } else {
+    }
+    else {
       $filename = 'plugins/cp/TraenPublishingDestinationSystemService.wsdl';
     }
     self::echoFile($filename);
@@ -33,7 +34,8 @@ class TraenPublishingDestinationSystemService {
     if ($xsd) {
       $xsd = str_replace('xsd', '', $xsd);
       $filename = 'plugins/cp/TraenPublishingDestinationSystemService' . check_plain($xsd + 1) . '.xsd';
-    } else {
+    }
+    else {
       $filename = 'plugins/cp/TraenPublishingDestinationSystemService.xsd';
     }
     self::echoFile($filename);
@@ -62,13 +64,21 @@ class TraenPublishingDestinationSystemService {
     exit;
   }
 
-  // *********** PUBLIC API ***************//
+  /**
+ * PUBLIC API .***************/ / .
+  * /
 
+  /**
+   *
+   */
   public function RecievedEntityLayout($data) {
     error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $data = ' . print_r($data, 1));
     return FALSE;
   }
 
+  /**
+   *
+   */
   public function RecievedItemUnPublished($data) {
     $success = FALSE;
     if (isset($data->entityItem->Key->Field->Value)) {
@@ -80,6 +90,9 @@ class TraenPublishingDestinationSystemService {
     return array('RecievedItemUnPublishedResult' => (bool) $success);
   }
 
+  /**
+   *
+   */
   public function RecievedConfiguration($data) {
     // Function used to handle the configuration.
     $function = 'os2web_cp_service_alter_configuration';
@@ -93,6 +106,9 @@ class TraenPublishingDestinationSystemService {
     return array('RecievedConfigurationResult' => TRUE);
   }
 
+  /**
+   *
+   */
   public function RecievedItemPublished($data) {
     switch (strtolower($data->entityItem->EntityName)) {
       case 'sag':
@@ -130,7 +146,8 @@ class TraenPublishingDestinationSystemService {
             'tag' => $rule->Tag,
           );
         }
-      } else {
+      }
+      else {
         foreach ($data->entityItem->TriggerRules as $rule) {
           if (trim($rule->ID) && trim($rule->Name) && trim($rule->Tag)) {
             $publication['rules'][$rule->ID] = array(
@@ -144,11 +161,15 @@ class TraenPublishingDestinationSystemService {
       $publication['status'] = $data->entityItem->Status;
 
       return array('RecievedItemPublishedResult' => (bool) call_user_func($function, $publication));
-    } else {
+    }
+    else {
       return array('RecievedItemPublishedResult' => FALSE);
     }
   }
 
+  /**
+   *
+   */
   public function __call($name, $arguments) {
     watchdog('os2web_acadre_esdh', 'Unsupported request recieved: %req', array('%req' => $name), WATCHDOG_NOTICE);
     error_log(basename(__FILE__) . ':' . __LINE__ . " Unsupported request recieved: $name");
