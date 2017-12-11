@@ -4,9 +4,11 @@
 
   <file>public_html/profiles/os2dagsorden/modules/os2dagsorden</file>
   <file>public_html/profiles/os2dagsorden/modules/os2intra_simplesaml</file>
+  <exclude-pattern>public_html/profiles/os2dagsorden/modules/os2intra_simplesaml/modules/*</exclude-pattern>
   <file>public_html/profiles/os2dagsorden/modules/os2logging</file>
   <file>public_html/profiles/os2dagsorden/modules/os2web_acadre_esdh</file>
   <file>public_html/profiles/os2dagsorden/modules/os2web_adlib_api</file>
+  <exclude-pattern>*simple_html_dom.php</exclude-pattern>
   <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_esdh</file>
   <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_fujitsu</file>
   <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_middelfart_esdh</file>
