@@ -1,14 +1,16 @@
 <?php
+
 /**
- * os2dagsorden_theme
+ * @file
+ * Os2dagsorden_theme.
  *
  * PHP version 5
  *
  * @category Themes
- * @package  Themes_os2dagsorden_theme
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @file
+ * @package Themes_os2dagsorden_theme
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ *
  * This file is empty by default because the base theme chain (Alpha & Omega) provides
  * all the basic functionality. However, in case you wish to customize the output that Drupal
  * generates through Alpha & Omega this file is a good place to do so.
@@ -22,7 +24,8 @@
  * Implementation of hook_preprocess_page.
  * Adds needed JS behaviour, loads the notes/speaker paper indicators, makes the security log entries.
  *
- * @param mixed $variables array
+ * @param mixed $variables
+ *   array.
  */
 function os2dagsorden_theme_preprocess_page(&$variables) {
   drupal_add_library('system', 'ui.draggable');
@@ -32,7 +35,8 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
   if (!os2dagsorden_access_helper_is_touch()) {
     $collapse_menu = variable_get('os2dagsorden_collapse_menu', TRUE);
     drupal_add_js('add_show_hide_menu_behaviour(' . $collapse_menu . ');', 'inline');
-  } else {
+  }
+  else {
     $collapse_menu_touch = variable_get('os2dagsorden_collapse_menu_touch', TRUE);
     drupal_add_js('add_show_hide_menu_behaviour(' . $collapse_menu_touch . ');', 'inline');
   }
@@ -43,9 +47,9 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
   os2dagsorden_theme_hide_menu_on_pages();
 
   drupal_add_js('add_indicator_help_text();', 'inline');
-  //DAGS-298 enabling print for iPad
-  //drupal_add_js('hide_print_buttons();', 'inline');
-  //drupal_add_js('resize_listener();', 'inline');
+  // DAGS-298 enabling print for iPad
+  // drupal_add_js('hide_print_buttons();', 'inline');
+  // drupal_add_js('resize_listener();', 'inline');.
   if (variable_get('os2dagsorden_show_search_block_title', 'true') === 'false') {
     drupal_add_js('hide_search_block_title()', 'inline');
   }
@@ -53,7 +57,7 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
   if (!empty($view)) {
     global $base_path;
     if ($view->name == 'meeting_details') {
-      //adding expand/collapse behaviour to meeting details view
+      // Adding expand/collapse behaviour to meeting details view.
       $os2dagsorden_expand_all_bullets = variable_get('os2dagsorden_expand_all_bullets', FALSE) ? TRUE : 'false';
       $expand_attachment = variable_get('os2dagsorden_expand_attachment', TRUE);
       $expand_attachment_onload = variable_get('os2dagsorden_expand_attachment_onload', FALSE);
@@ -64,14 +68,14 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
       drupal_add_js('open_all_bilag_case_bullet_points(' . $expand_bilags . ',' . $expand_cases . ')', 'inline');
       $variables['views'] = '';
 
-      //adding pagescroll
+      // Adding pagescroll.
       drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme') . '/css/pagescroller.skins.css');
       drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/jquery.pagescroller.js');
       drupal_add_js('addPagescroller();', 'inline');
     }
     if ($view->name == 'meeting_details' || $view->name == 'speaking_paper') {
 
-      //adding has notes indicator to attachment
+      // Adding has notes indicator to attachment.
       $annotations = os2dagsorden_annotator_get_notes_by_meeting_id(arg(1));
 
       $attachment_ids = array();
@@ -82,13 +86,13 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
       $attachment_ids = implode(",", $attachment_ids);
 
       drupal_add_js('ids = [' . $attachment_ids . ']; bullet_point_attachment_add_notes_indicator(ids)', 'inline');
-      //reforcing the help text to be added
+      // Reforcing the help text to be added.
       drupal_add_js('add_indicator_help_text();', 'inline');
 
-      //adding annotation
+      // Adding annotation.
       drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/annotator-full.min.js');
-      //drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch-no-add.min.js');
-      //drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.min.js');
+      // drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch-no-add.min.js');
+      // drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch.min.js');.
       $your_passed_info = array('create_note' => 'test');
       drupal_add_js(array('your_module_name' => $your_passed_info), 'setting');
       drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/lib/touch-plugin/annotator.touch-syddjurs.min.js');
@@ -99,7 +103,7 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
       drupal_add_js(drupal_get_path('module', 'os2dagsorden_annotator') . '/js/os2dagsorden_annotator_secure.js');
     }
     if ($view->name == 'speaking_paper') {
-      //adding expand/collapse behaviour bullet point details view
+      // Adding expand/collapse behaviour bullet point details view.
       drupal_add_js('bullet_point_details_init("' . $base_path . '?q=", ' . variable_get('os2dagsorden_expand_attachment', TRUE) . ', ' . variable_get('os2dagsorden_expand_attachment_onload', 'false') . ')', 'inline');
       drupal_add_js('open_all_bilag_case_bullet_points(' . variable_get('os2dagsorden_expand_bilags', "true") . ',' . variable_get('os2dagsorden_expand_cases', "false") . ')', 'inline');
 
@@ -107,13 +111,14 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
     if (variable_get('os2dagsorden_show_massive_expand_collapse_button', 'true') === 'false' && ($view->name == 'speaking_paper' || $view->name == 'meeting_details')) {
       drupal_add_js('hide_massive_expand_collapse_button();', 'inline');
     }
-  } else {
+  }
+  else {
     if ($variables['page']['content']['content']['content']['system_main']['content']['#attributes']['class'][1] == 'node-os2web_meetings_spaper-form') {
-      //in "creating speaker paper"
-      //hide extra fields
+      // In "creating speaker paper"
+      // hide extra fields.
       drupal_add_js("jQuery(document).ready(function(){jQuery('.form-item-field-os2web-meetings-sp-bullet-und-0-target-id').hide();});", "inline");
 
-      //setting breadcrumb
+      // Setting breadcrumb.
       $destination = $_GET['destination'];
       $destination = explode('/', $destination);
 
@@ -121,8 +126,8 @@ function os2dagsorden_theme_preprocess_page(&$variables) {
       $breadcrumb[] = l('Forsiden', $GLOBALS['base_url']);
       $breadcrumb[] .= l('Mødedetaljer', 'meeting/' . $destination[1]);
 
-      if (isset($destination[3])) //bullet point
-      {
+      // Bullet point.
+      if (isset($destination[3])) {
         $breadcrumb[] .= l('Dagsordenspunkt', 'meeting/' . $destination[1] . '/bullet-point/' . $destination[3]);
       }
 
@@ -156,9 +161,10 @@ function os2dagsorden_theme_breadcrumb($variables) {
 
 /**
  * Implementation of theming the calendar title.
- * Change the format of navigation title in calendar day view to be [weekday], [day]. [month] [year]
+ * Change the format of navigation title in calendar day view to be [weekday], [day]. [month] [year].
  *
- * @param mixed $params params
+ * @param mixed $params
+ *   params.
  *
  * @return string - reformatted title
  */
@@ -177,16 +183,19 @@ function os2dagsorden_theme_date_nav_title($params) {
       $title = $date_info->year;
       $date_arg = $date_info->year;
       break;
+
     case 'month':
       $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F Y' : 'F Y');
       $title = date_format_date($date_info->min_date, 'custom', $format);
       $date_arg = $date_info->year . '-' . date_pad($date_info->month);
       break;
+
     case 'day':
       $format = !empty($format) ? $format : (empty($date_info->mini) ? 'l, j. F Y' : 'l, F j');
       $title = date_format_date($date_info->min_date, 'custom', $format);
       $date_arg = $date_info->year . '-' . date_pad($date_info->month) . '-' . date_pad($date_info->day);
       break;
+
     case 'week':
       $format = !empty($format) ? $format : (empty($date_info->mini) ? 'F j, Y' : 'F j');
       $title = t('Week of @date', array('@date' => date_format_date($date_info->min_date, 'custom', $format)));
@@ -198,16 +207,18 @@ function os2dagsorden_theme_date_nav_title($params) {
     $attributes = array('title' => t('View full page month'));
     $url = date_pager_url($view, $granularity, $date_arg, TRUE);
     return l($title, $url, array('attributes' => $attributes));
-  } else {
+  }
+  else {
     return $title;
   }
 }
 
 /**
  * Format the time row headings in the week and day view.
- * Change the time format to be [hour].[minutes]
+ * Change the time format to be [hour].[minutes].
  *
- * @param mixed $vars vars
+ * @param mixed $vars
+ *   vars.
  *
  * @return string reformatted title
  */
@@ -224,16 +235,19 @@ function os2dagsorden_theme_calendar_time_row_heading($vars) {
   }
   if ($start_time == '00:00:00' && $next_start_time == '23:59:59') {
     $hour = t('All times');
-  } elseif ($start_time == '00:00:00') {
+  }
+  elseif ($start_time == '00:00:00') {
     $date = date_create($curday_date . ' ' . $next_start_time);
     $hour = t('Before @time', array('@time' => date_format($date, $format_hour)));
-  } else {
+  }
+  else {
     $date = date_create($curday_date . ' ' . $start_time);
     $hour = date_format($date, $format_hour);
   }
   if (!empty($date)) {
     $ampm = date_format($date, $format_ampm);
-  } else {
+  }
+  else {
     $ampm = '';
   }
   return array('hour' => $hour, 'ampm' => $ampm);
@@ -243,9 +257,10 @@ function os2dagsorden_theme_calendar_time_row_heading($vars) {
  * Changes the format of the exposed form - meetings search.
  * Also removes the unneeded links on log in page.
  *
- * @param mixed $form form
- * @param mixed $form_state form state
- *
+ * @param mixed $form
+ *   form.
+ * @param mixed $form_state
+ *   form state.
  */
 function os2dagsorden_theme_form_alter(&$form, &$form_state) {
   if ($form['#id'] == 'views-exposed-form-meetings-search-page') {
@@ -271,7 +286,8 @@ function os2dagsorden_theme_form_alter(&$form, &$form_state) {
         $_SESSION['views']['meetings_search']['page']['to_date']['value']['date'] = $old_value;
       }
     }
-  } else {
+  }
+  else {
     if ($form['#id'] == 'user-login-form') {
       $form['name']['#description'] = "";
       $form['pass']['#description'] = "";
@@ -284,10 +300,11 @@ function os2dagsorden_theme_form_alter(&$form, &$form_state) {
  * Preprocess HTML hook.
  * Fixes the IE compatibility problem.
  *
- * @param $var array of variables
+ * @param $var
+ *   array of variables
  */
 function os2dagsorden_theme_preprocess_html(&$vars) {
-  // Setup IE meta tag to force IE rendering mode
+  // Setup IE meta tag to force IE rendering mode.
   $meta_ie_render_engine = array(
     '#type' => 'html_tag',
     '#tag' => 'meta',
@@ -308,35 +325,43 @@ function os2dagsorden_theme_preprocess_html(&$vars) {
     '#weight' => '-99999',
   );
 
-  //<meta name="format-detection" content="telephone=no">
-
-  // Add header meta tag for IE to head
+  // <meta name="format-detection" content="telephone=no">
+  // Add header meta tag for IE to head.
   drupal_add_html_head($meta_ie_render_engine, 'meta_ie_render_engine');
   drupal_add_html_head($format_detection, 'format-detection');
 }
 
+/**
+ *
+ */
 function os2dagsorden_theme_menu_local_task($variables) {
   $link = $variables['element']['#link'];
   $href = explode('/', $link['href']);
   $node = node_load($href[1]);
 
-  if ($link['path'] === 'node/%/edit' && $node->type !== 'os2web_page') //disabling edit tab, if only node type is not page
-  {
+  // Disabling edit tab, if only node type is not page.
+  if ($link['path'] === 'node/%/edit' && $node->type !== 'os2web_page') {
     return '';
-  } else {
-    if ($link['path'] === 'node/%/view') //disabling view tab
-    {
+  }
+  else {
+    // Disabling view tab.
+    if ($link['path'] === 'node/%/view') {
       return '';
-    } else {
+    }
+    else {
       if ($link['path'] === 'user/%/edit' || $link['path'] === 'user/%/view' || $link['path'] === 'user/%/simple_edit') {
         return '';
-      } else {
+      }
+      else {
         return theme_menu_local_task($variables);
       }
     }
   }
 }
 
+/**
+ *
+ */
 function os2dagsorden_theme_hide_menu_on_pages() {
   if (os2dagsorden_access_helper_is_touch()) {
     $pages = variable_get('os2dagsorden_collapse_menu_touch_pages', 'meetings/print');
@@ -347,7 +372,7 @@ function os2dagsorden_theme_hide_menu_on_pages() {
         return;
       }
     }
-    //no pages forcing menu to be hidden, can add orientation listener
+    // No pages forcing menu to be hidden, can add orientation listener.
     drupal_add_js('add_tablet_orientation_listener();', 'inline');
   }
 }

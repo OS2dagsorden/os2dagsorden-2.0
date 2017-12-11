@@ -1,9 +1,12 @@
 /* This file will hold styles that are loaded using the same media query as the wide grid. */
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_text_full_container,
-.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_container .attachment_text_full_container.attachment_text_max_size{
+.attachment_text_container .attachment_text_trimmed_container,
+.attachment_text_container .attachment_text_full_container,
+.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size,
+.attachment_text_container .attachment_text_full_container.attachment_text_max_size {
   max-width: none;
 }
 
-.attachment_text_container .attachment_text_max_size .attachment-text, .attachment_text_container .attachment-text{
+.attachment_text_container .attachment_text_max_size .attachment-text,
+.attachment_text_container .attachment-text {
   max-width: none;
 }

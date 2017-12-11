@@ -1,72 +1,69 @@
-body{
-	background: none;
+body {
+  background: none;
 }
 
-#section-header{
-	background: none;
+#section-header {
+  background: none;
 }
 
 /*-----------------Search exp-meetings------*/
 #edit-from-date-value-datepicker-popup-0,
 #edit-from-date-value-datepicker-popup-1 {
-  border : 1px solid #b9b9b9;
+  border: 1px solid #b9b9b9;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
- 
 }
 #edit-to-date-value-datepicker-popup-0,
 #edit-to-date-value-datepicker-popup-1 {
-  border : 1px solid #b9b9b9;
+  border: 1px solid #b9b9b9;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
- 
 }
 #edit-field-os2web-meetings-committee-tid {
-  border : 1px solid #b9b9b9;
+  border: 1px solid #b9b9b9;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
 }
 #edit-search-params {
-  border : 1px solid #b9b9b9;
+  border: 1px solid #b9b9b9;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border-top-right-radius: 3px;
 }
 #block-views-exp-meetings-search-page {
-  margin-bottom : 10px !important;
+  margin-bottom: 10px !important;
 }
 
-#block-views-exp-meetings-search-page .help-button{
-	display: none;
+#block-views-exp-meetings-search-page .help-button {
+  display: none;
 }
 /*LOGO region*/
-.region-branding-inner{
-	min-width:170px;
-	min-height: 50px;
+.region-branding-inner {
+  min-width: 170px;
+  min-height: 50px;
 }
 .page-meetings-search div.view-meetings-search {
-  padding : 10px;
+  padding: 10px;
 }
-.views-meeting-search-field-title{
-	width:20%;
+.views-meeting-search-field-title {
+  width: 20%;
 }
-.views-meeting-search-field-date{
-		width:18%;
+.views-meeting-search-field-date {
+  width: 18%;
 }
-.views-meeting-search-field-commitee{
-		width:18%;
+.views-meeting-search-field-commitee {
+  width: 18%;
 }
 @media screen and (max-width: 300px) {
- 
-  .not-front #region-content
-  {
+
+  .not-front #region-content {
     padding-top: 290px;
   }
   .page-meeting-notes.toolbar #block-views-exp-meetings-search-page,
@@ -75,273 +72,280 @@ body{
   }
   .page-meeting-notes.toolbar #block-views-exp-meetings-search-page,
   .not-front #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : 0px;
+    position: absolute;
+    top: 0px;
   }
   .not-front.page-calendar-field-date.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meetings-search.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-bullet-point.toolbar #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : -290px;
+    position: absolute;
+    top: -290px;
   }
- 
+
   .page-meetings-search .view-meetings-search .view-header .help-button {
-    top : 310px;
+    top: 310px;
   }
- 
+
 }
- 
+
 @media screen and (min-width: 300px) and (max-width: 36.5em) {
   #block-views-exp-meetings-search-page #edit-from-date-wrapper {
-     width:35%;
-   }
- 
-  #block-views-exp-meetings-search-page #edit-to-date-wrapper {
-     width:35%;
-   }
- 
-  #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper {
-    width:35%;
-   }
- 
-  #block-views-exp-meetings-search-page #edit-search-params-wrapper {
-    width:35%;
-   }
-  #block-views-exp-meetings-search-page .views-submit-button {
-    bottom : 10px;
-    position :absolute;
-    right : 0px;
+    width: 35%;
   }
- 
+
+  #block-views-exp-meetings-search-page #edit-to-date-wrapper {
+    width: 35%;
+  }
+
+  #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper {
+    width: 35%;
+  }
+
+  #block-views-exp-meetings-search-page #edit-search-params-wrapper {
+    width: 35%;
+  }
+  #block-views-exp-meetings-search-page .views-submit-button {
+    bottom: 10px;
+    position: absolute;
+    right: 0px;
+  }
+
   .not-front #block-views-exp-meetings-search-page .views-submit-button {
-    bottom : 20px;
+    bottom: 20px;
   }
   .not-front.page-calendar-field-date.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meetings-search.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-bullet-point.toolbar #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : -160px;
+    position: absolute;
+    top: -160px;
   }
   .page-meeting-notes.toolbar #block-views-exp-meetings-search-page,
   .page-meeting-bullet-point-bullet-point-attachment.toolbar #block-views-exp-meetings-search-page {
     top: 0px !important;
   }
- 
+
   .not-front #region-content {
     padding-top: 160px;
   }
-  
+
   .not-front #block-views-exp-meetings-search-page {
-  position : absolute;
-  top : 0px;
+    position: absolute;
+    top: 0px;
   }
-   .page-meetings-search .view-meetings-search .view-header .help-button {
-    top : 180px;
+  .page-meetings-search .view-meetings-search .view-header .help-button {
+    top: 180px;
   }
 }
- 
+
 @media screen and (min-width: 36.5em) {
-   .not-front #region-content {
-   padding-top: 60px;
-
-
+  .not-front #region-content {
+    padding-top: 60px;
   }
- 
+
   #block-views-exp-meetings-search-page .views-exposed-form {
-    border-left : none;
+    border-left: none;
     border-right: none;
     border-bottom: none;
-    box-shadow:none;
-    padding-top : 0px;
+    box-shadow: none;
+    padding-top: 0px;
   }
- 
-   #block-views-exp-meetings-search-page #edit-from-date-wrapper {
-     width:15%;
-   }
- 
-   #block-views-exp-meetings-search-page #edit-to-date-wrapper {
-     width:15%;
-   }
- 
-   #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper{
-    width:18%;
-   }
- 
-   #block-views-exp-meetings-search-page #edit-search-params-wrapper {
-    width:18%;
-   }
+
+  #block-views-exp-meetings-search-page #edit-from-date-wrapper {
+    width: 15%;
+  }
+
+  #block-views-exp-meetings-search-page #edit-to-date-wrapper {
+    width: 15%;
+  }
+
+  #block-views-exp-meetings-search-page #edit-field-os2web-meetings-committee-tid-wrapper {
+    width: 18%;
+  }
+
+  #block-views-exp-meetings-search-page #edit-search-params-wrapper {
+    width: 18%;
+  }
   #block-views-exp-meetings-search-page .views-submit-button {
-    bottom : 6px;
-    padding-right : 0;
+    bottom: 6px;
+    padding-right: 0;
     padding-top: 0;
-    position :absolute;
+    position: absolute;
     right: 0;
   }
- 
+
   #block-views-exp-meetings-search-page h2.block-title {
-    border-bottom: 6px solid #CBCBCB;
+    border-bottom: 6px solid #cbcbcb;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
   }
- 
+
   #block-views-exp-meetings-search-page .views-exposed-widgets {
-    margin-bottom : 1px;
- 
+    margin-bottom: 1px;
   }
   #block-views-exp-meetings-search-page .block-inner {
-    margin-bottom : 3px;
+    margin-bottom: 3px;
   }
   #block-views-exp-meetings-search-page .description {
-    bottom : 43px;
-    left:120px;
-    position : absolute;
- 
+    bottom: 43px;
+    left: 120px;
+    position: absolute;
   }
   #block-views-exp-meetings-search-page .block-title {
     width: 10%;
     float: left;
     margin-top: 10px;
-    margin-right : 5px;
+    margin-right: 5px;
   }
-  .not-front.page-calendar-field-date.toolbar #block-views-exp-meetings-search-page,   
+  .not-front.page-calendar-field-date.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meetings-search.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-.toolbar #block-views-exp-meetings-search-page,
   .not-front.page-meeting-bullet-point.toolbar #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : -70px;
+    position: absolute;
+    top: -70px;
     width: 100%;
   }
   .page-meeting-notes.toolbar #block-views-exp-meetings-search-page,
   .page-meeting-bullet-point-bullet-point-attachment.toolbar #block-views-exp-meetings-search-page {
     top: -10px !important;
   }
- 
+
   .not-front #block-views-exp-meetings-search-page {
-    position : absolute;
-    top : -10px;
- 
+    position: absolute;
+    top: -10px;
   }
- .page-meeting-bullet-point-bullet-point-attachment .node .help-button,
- .page-meetings-search .view-meetings-search .view-header .help-button {
-    top : 70px;
+  .page-meeting-bullet-point-bullet-point-attachment .node .help-button,
+  .page-meetings-search .view-meetings-search .view-header .help-button {
+    top: 70px;
   }
-  .page-meetings-search.toolbar .view-meetings-search .view-header .help-button{
-    top : 10px;
+  .page-meetings-search.toolbar .view-meetings-search .view-header .help-button {
+    top: 10px;
   }
-}  
-/*-----------------------------  End of Search exp- meetings -----------------*/  
+}
+/*-----------------------------  End of Search exp- meetings -----------------*/
 
 /*---------------------------- Small Fixes Start ----------------------------*/
-#region-footer-first{
-    background: url('../img/footer_logo.jpg') no-repeat center 5px;
+#region-footer-first {
+  background: url('../img/footer_logo.jpg') no-repeat center 5px;
 }
 
-table.views-table tr td .attachment_text_trimmed_container a:link, table.views-table tr td .attachment_text_trimmed_container a:visited , 
-table.views-table tr td .attachment_text_full_container a:link, table.views-table tr td .attachment_text_full_container a:visited {
-	font-family: inherit;
+table.views-table tr td .attachment_text_trimmed_container a:link,
+table.views-table tr td .attachment_text_trimmed_container a:visited ,
+table.views-table tr td .attachment_text_full_container a:link,
+table.views-table tr td .attachment_text_full_container a:visited {
+  font-family: inherit;
 }
 
 /* Moving calendar block 10px uptop */
-#block-views-events-block-1{
-  	margin-top: -10px;
+#block-views-events-block-1 {
+  margin-top: -10px;
 }
 /*---------------------------- Small Fixes Start ----------------------------*/
 
 /*---------------------------- Sidepane menu Start ----------------------------*/
-div.content ul.menu li a{
-   	font-family: inherit;   
-   	padding: 5px 5px 5px 50px;
-	font-size: 15px;
+div.content ul.menu li a {
+  font-family: inherit;
+  padding: 5px 5px 5px 50px;
+  font-size: 15px;
 }
 
 #region-sidebar-second .region-sidebar-second-inner.fixed {
-  	position: fixed;
-  	width: inherit;
-  	top: 50px;
+  position: fixed;
+  width: inherit;
+  top: 50px;
 }
- 
-.side-menu-go-top{
-  	position: relative;
+
+.side-menu-go-top {
+  position: relative;
 }
- 
-#region-sidebar-second .region-sidebar-second-inner .side-menu-go-top{
-  	display: none;
+
+#region-sidebar-second .region-sidebar-second-inner .side-menu-go-top {
+  display: none;
 }
- 
-#region-sidebar-second .region-sidebar-second-inner.fixed .side-menu-go-top{
-  	display: inherit;
+
+#region-sidebar-second .region-sidebar-second-inner.fixed .side-menu-go-top {
+  display: inherit;
 }
 /*---------------------------- Sidepane menu End ----------------------------*/
 
 /*---------------------------- User logout Start ----------------------------*/
 .user-logout-textbox {
-	font-family: inherit;
+  font-family: inherit;
 }
 /*---------------------------- User logout End ----------------------------*/
 
 /*---------------------------- Views Start ----------------------------*/
 
-.view-header h3, .view-content h3{
-    font-family: inherit;
-    font-size: 15px;
-    text-transform: none;
+.view-header h3,
+.view-content h3 {
+  font-family: inherit;
+  font-size: 15px;
+  text-transform: none;
 }
 
-div.date-heading h3 a, div.date-heading h3{
-    font-family: inherit;
+div.date-heading h3 a,
+div.date-heading h3 {
+  font-family: inherit;
 }
 
 /*---------------------------- Views End ----------------------------*/
 
 /*---------------------------- Blocks START ----------------------------*/
-h2.block-title, h1.title{
-	font-family: inherit;
-	font-size: 15px;
-	text-transform: none;
+h2.block-title,
+h1.title {
+  font-family: inherit;
+  font-size: 15px;
+  text-transform: none;
 }
 
 .front #region-content .block {
-    background-color: #FFF;
+  background-color: #fff;
 }
 
-.front #region-content .block div.view { 
-    padding: 10px
+.front #region-content .block div.view {
+  padding: 10px
 }
 /*---------------------------- Blocks END ----------------------------*/
 
 /*---------------------------- Omega globals override START ----------------------------*/
-a:link, a:visited,
-.month a:link, .month a:visited {
-    color: #007aaf;
+a:link,
+a:visited,
+.month a:link,
+.month a:visited {
+  color: #007aaf;
 }
 
-a.form-submit, a.button {
-    color: inherit;
+a.form-submit,
+a.button {
+  color: inherit;
 }
 
-.form-submit, .view .date-nav-wrapper .date-next a,
-.view .date-nav-wrapper .date-prev a, .button, #breadcrumb .breadcrumb a, .breadcrumb .breadcrumb-active,
+.form-submit,
+.view .date-nav-wrapper .date-next a,
+.view .date-nav-wrapper .date-prev a,
+.button,
+#breadcrumb .breadcrumb a,
+.breadcrumb .breadcrumb-active,
 .pager li a {
-	font-family: inherit;
-	text-transform: none;
+  font-family: inherit;
+  text-transform: none;
 }
 
 .controls-right {
-  	margin: 7px 7px 7px 0;
-  	padding: 5px 0 5px 0;
-}
- 
-.controls-left {
-  	margin: 7px 0 7px 7px;
-  	padding: 5px 0 5px 0;
+  margin: 7px 7px 7px 0;
+  padding: 5px 0 5px 0;
 }
 
-.controls-right.breadcrumb-level{
-    position: relative;
-    right: 0;
-    top: 0;
+.controls-left {
+  margin: 7px 0 7px 7px;
+  padding: 5px 0 5px 0;
+}
+
+.controls-right.breadcrumb-level {
+  position: relative;
+  right: 0;
+  top: 0;
 }
 /*---------------------------- Omega globals override START ----------------------------*/
 
@@ -352,39 +356,40 @@ a.form-submit, a.button {
 }
 table.views-table tr td a,
 table.views-table tr td a:hover {
-	font-family: inherit;
-	background-color: white;
-	color: #007aaf;
-	padding: inherit;
-	text-shadow: inherit;
-	border-left: none;
-    border-top: none;
-    border-right: none; 
-    border-bottom:none;
+  font-family: inherit;
+  background-color: white;
+  color: #007aaf;
+  padding: inherit;
+  text-shadow: inherit;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
 }
 
-th a, th a:link, th a:visited {
-    color: #FFF;
+th a,
+th a:link,
+th a:visited {
+  color: #fff;
 }
 .bullet-point-print-link {
   background: url('../img/icon-print-bullet-point.png') no-repeat 50% top;;
-height: 16px;
-width: 16px;
-display: block;
-float: right;
+  height: 16px;
+  width: 16px;
+  display: block;
+  float: right;
 /*margin-top: -20px;
 margin-right: 44px;*/
 }
 
 table .bullet-point-print-link-container {
- width: 20px;
-min-width: 20px;
-height: 30px;
+  width: 20px;
+  min-width: 20px;
+  height: 30px;
 }
 
-.print-meeting-link  {
-	
-	font-weight: normal;
+.print-meeting-link {
+  font-weight: normal;
 }
 
 
@@ -392,22 +397,22 @@ height: 30px;
 
 /* ---------------------------- Meeting details attachment text START---------------------------- */
 
-.attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_full_trimmed_container{
+.attachment_text_container .attachment_text_trimmed_container,
+.attachment_text_container .attachment_full_trimmed_container {
   max-width: 400px;
 }
- 
-.attachment_text_container .attachment-text{
+
+.attachment_text_container .attachment-text {
   max-width: 440px;
 }
 
-.attachment-text table, 
+.attachment-text table,
 .attachment-text tbody,
-.attachment-text tfoot, 
-.attachment-text thead, 
-.attachment-text tr, 
-.attachment-text th, 
-.attachment-text td 
-{
-  	border: 1px solid black;
+.attachment-text tfoot,
+.attachment-text thead,
+.attachment-text tr,
+.attachment-text th,
+.attachment-text td {
+  border: 1px solid black;
 }
 /* ---------------------------- Meeting details attachment text END ---------------------------- */
