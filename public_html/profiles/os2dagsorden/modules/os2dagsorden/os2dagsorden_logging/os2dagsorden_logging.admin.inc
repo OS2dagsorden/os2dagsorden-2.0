@@ -5,18 +5,19 @@
  * Administrative settings for the Os2dagsorden Logging module.
  */
 
-
 /**
  * Implementation of settings form  OS2dagsorden logging system.
  *
- * @param $form       the settings form
- * @param $form_state the state of the form
+ * @param $form
+ *   the settings form
+ * @param $form_state
+ *   the state of the form
  *
  * @return settings form.
  */
 function os2dagsorden_logging_settings_settings_form($form, $form_state) {
   $type_array;
-  $query = db_select('watchdog','w')->fields('w', array('type'))->distinct()->orderBy('type', 'ASC');
+  $query = db_select('watchdog', 'w')->fields('w', array('type'))->distinct()->orderBy('type', 'ASC');
   $result = $query->execute();
   foreach ($result as $res) {
     $type_array[$res->type] = $res->type;
@@ -28,15 +29,15 @@ function os2dagsorden_logging_settings_settings_form($form, $form_state) {
     '#title' => t('Import logging settings'),
   );
   $form['os2dagsorden_logging_import']['os2dagsorden_logging_message_type'] = array(
-     '#type' => 'select',
-  	    '#multiple' => TRUE,
-	    '#title' => t('Watchdog message type'),
-        '#description' => t('Select the watchdog log type to monitor.'),
-	    '#required' => FALSE,
-	    '#options' => $type_array,
-        '#size' => 10,
-        '#default_value' => variable_get('os2dagsorden_logging_message_type', array("acadre MM"=> "acadre MM", "esdh provider" => "esdh provider")),
-   );
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#title' => t('Watchdog message type'),
+    '#description' => t('Select the watchdog log type to monitor.'),
+    '#required' => FALSE,
+    '#options' => $type_array,
+    '#size' => 10,
+    '#default_value' => variable_get('os2dagsorden_logging_message_type', array("acadre MM" => "acadre MM", "esdh provider" => "esdh provider")),
+  );
   $form['os2dagsorden_logging_import']['os2dagsorden_logging_contexts'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Include contexts in record'),
@@ -64,15 +65,13 @@ function os2dagsorden_logging_settings_settings_form($form, $form_state) {
     '#collapsed' => TRUE,
     '#title' => t('Send to friend logging settings'),
   );
-   $form['os2dagsorden_logging_send_to_friend']['os2dagsorden_logging_day_limit'] = array(
+  $form['os2dagsorden_logging_send_to_friend']['os2dagsorden_logging_day_limit'] = array(
     '#type' => 'textfield',
     '#title' => t('"Send to friend" log messages  clearing interval'),
     '#default_value' => variable_get('os2dagsorden_logging_day_limit', 100),
     '#size' => 10,
     '#field_prefix' => 'Keep log messages for',
-    '#field_suffix' => 'days'
+    '#field_suffix' => 'days',
   );
- return system_settings_form($form);
+  return system_settings_form($form);
 }
-
-

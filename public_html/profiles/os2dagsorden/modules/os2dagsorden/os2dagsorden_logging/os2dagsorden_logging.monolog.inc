@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * os2dagsorden_logging.monolog.inc
