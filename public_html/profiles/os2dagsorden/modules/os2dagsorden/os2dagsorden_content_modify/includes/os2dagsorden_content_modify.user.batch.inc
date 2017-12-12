@@ -1,11 +1,18 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Generates multiple users edit form, limited to committees manipulating only.
  *
- * @param $form       mixed the form
- * @param $form_state mixed the state of the form
- * @param $uids       array the array of uid of users to modify
+ * @param $form
+ *   mixed the form
+ * @param $form_state
+ *   mixed the state of the form
+ * @param $uids
+ *   array the array of uid of users to modify
  *
  * @return form
  */
@@ -33,20 +40,19 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
   $form[] = array(
     '#markup' => '</div>',
   );
-   $form[] = array(
+  $form[] = array(
     '#markup' => '<div class="form-item"><b>' . t('Træk udvalg fra kassen under Mulige udvalg til Følger-kassen.') . '</b></div>',
   );
   if (!os2dagsorden_access_helper_is_touch()) {
 
     _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls($form);
-    
-   //render drag and drop functionality
-    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, explode(',', $uids));
-    
-    
 
-  } else {
-    //fallback to default controls
+    // Render drag and drop functionality.
+    _os2dagsorden_content_modify_render_drag_and_drop_controls($form, explode(',', $uids));
+
+  }
+  else {
+    // Fallback to default controls.
     _os2dagsorden_content_modify_render_default_controls($form, explode(',', $uids));
   }
 
@@ -67,7 +73,8 @@ function os2dagsorden_content_modify_user_batch_edit_form($form, $form_state, $u
 }
 
 /**
- * Renders the drag and drop controls for add/remove committee functionality
+ * Renders the drag and drop controls for add/remove committee functionality.
+ *
  * @param $form
  */
 function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_controls(&$form) {
@@ -85,11 +92,12 @@ function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_con
     '#type' => 'hidden',
     '#attributes' => array(
       'id' => 'remove_com_hidden',
-    )
+    ),
   );
 
   $form[] = array(
-    '#markup' => "</div>", //<div class="select-committee">
+  // <div class="select-committee">.
+    '#markup' => "</div>",
   );
 
   $form[] = array(
@@ -100,15 +108,17 @@ function _os2dagsorden_content_modify_render_drag_and_drop_remove_committees_con
 /**
  * Submit for user bach form. Updates user profiles.
  *
- * @param $form       mixed the form
- * @param $form_state mixed state of the form
+ * @param $form
+ *   mixed the form
+ * @param $form_state
+ *   mixed state of the form
  *
  * @return none
  */
 function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
   $input = $form_state['input'];
 
-  //input extraction
+  // Input extraction.
   extract($input);
 
   if (!$member_of) {
@@ -143,12 +153,12 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
   foreach ($uids as $uid) {
     $user = user_load($uid);
 
-    //user committees
+    // User committees.
     if (is_array($member_of)) {
       $existing_tids = os2dagsorden_access_helper_get_user_member_of_committees($uid);
 
       $user->field_user_committee['und'] = array();
-      //readding existing tids, if not removed, and not added to any other box
+      // Readding existing tids, if not removed, and not added to any other box.
       foreach ($existing_tids as $tid) {
 
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($follows, $follows_plus, $follows_plus_plus))) {
@@ -156,7 +166,7 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
         }
       }
 
-      //newly added committes
+      // Newly added committes.
       foreach ($member_of as $tid) {
         if (!empty($tid) && !in_array($tid, $existing_tids) && !in_array($tid, $remove_committees)) {
           $user->field_user_committee['und'][]['tid'] = $tid;
@@ -164,14 +174,14 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
       }
     }
 
-    //user follows committees
+    // User follows committees.
     if (is_array($follows)) {
       $existing_tids = os2dagsorden_access_helper_get_user_follow_committees($uid);
       $existing_follow_subscribed_tids = os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid);
 
       $user->field_follows_committee['und'] = array();
       $user->field_follows_committee_subsc['und'] = array();
-      //readding existing tids, if not removed, and not added to any other box
+      // Readding existing tids, if not removed, and not added to any other box.
       foreach ($existing_tids as $tid) {
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($member_of, $follows_plus, $follows_plus_plus))) {
           $user->field_follows_committee['und'][]['tid'] = $tid;
@@ -182,7 +192,7 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
         }
       }
 
-      //newly added committes
+      // Newly added committes.
       foreach ($follows as $tid) {
         if (!empty($tid) && !in_array($tid, $existing_tids) && !in_array($tid, $remove_committees)) {
           $user->field_follows_committee['und'][]['tid'] = $tid;
@@ -193,19 +203,19 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
       }
     }
 
-    //user follows plus committees
+    // User follows plus committees.
     if (is_array($follows_plus)) {
       $existing_tids = os2dagsorden_access_helper_get_user_follow_plus_committees($uid);
 
       $user->field_follows_committee_plus['und'] = array();
-      //readding existing tids, if not removed, and not added to any other box
+      // Readding existing tids, if not removed, and not added to any other box.
       foreach ($existing_tids as $tid) {
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($member_of, $follows, $follows_plus_plus))) {
           $user->field_follows_committee_plus['und'][]['tid'] = $tid;
         }
       }
 
-      //newly added committes
+      // Newly added committes.
       foreach ($follows_plus as $tid) {
         if (!empty($tid) && !in_array($tid, $existing_tids) && !in_array($tid, $remove_committees)) {
           $user->field_follows_committee_plus['und'][]['tid'] = $tid;
@@ -213,19 +223,19 @@ function os2dagsorden_content_modify_user_batch_submit($form, $form_state) {
       }
     }
 
-    //user follows ++ committees
+    // User follows ++ committees.
     if (is_array($follows_plus_plus)) {
       $existing_tids = os2dagsorden_access_helper_get_user_follow_pp_committees($uid);
 
       $user->field_follows_committee_pp['und'] = array();
-      //readding existing tids, if not removed, and not added to any other box
+      // Readding existing tids, if not removed, and not added to any other box.
       foreach ($existing_tids as $tid) {
         if (!in_array($tid, $remove_committees) && !in_array($tid, array_merge($member_of, $follows, $follows_plus))) {
           $user->field_follows_committee_pp['und'][]['tid'] = $tid;
         }
       }
 
-      //newly added committes
+      // Newly added committes.
       foreach ($follows_plus_plus as $tid) {
         if (!empty($tid) && !in_array($tid, $existing_tids) && !in_array($tid, $remove_committees)) {
           $user->field_follows_committee_pp['und'][]['tid'] = $tid;

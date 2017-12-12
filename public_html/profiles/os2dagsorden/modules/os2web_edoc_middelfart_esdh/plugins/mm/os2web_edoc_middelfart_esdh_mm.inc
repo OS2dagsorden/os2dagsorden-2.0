@@ -2,11 +2,11 @@
 
 /**
  * @file
- * This file describes the MM plugin as implemented by eDoc
+ * This file describes the MM plugin as implemented by eDoc.
  */
 
 /**
- * Plugin definition with callbacks
+ * Plugin definition with callbacks.
  */
 $plugin = array(
   'description' => t('eDoc ESDH MM Backend'),
@@ -41,7 +41,7 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
     $meeting_date = NULL;
     $committee = NULL;
 
-    //loading meeting manifest
+    // Loading meeting manifest.
     $real_path = drupal_realpath($xml_file->uri);
     if ($real_path !== FALSE && is_file($real_path)) {
       libxml_use_internal_errors(TRUE);
@@ -58,8 +58,8 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
         $isPublished = (string) array_shift($isPublished);
         $isPublished = (strcmp($isPublished, 'true') == 0) ? TRUE : FALSE;
 
-        //skipping if the last modified date is smaller, meaning older file
-        //in this way we get only the newest agendas
+        // Skipping if the last modified date is smaller, meaning older file
+        // in this way we get only the newest agendas.
         if (isset($uris[$meeting_id])) {
           if (filemtime($real_path) < $uris[$meeting_id]['lastModified']) {
             continue;
@@ -70,7 +70,7 @@ function os2web_edoc_middelfart_esdh_mm_get_import_list() {
           'id' => $meeting_id,
           'uri' => $xml_file->uri,
           'publish' => $isPublished,
-          'lastModified' => filemtime($real_path)
+          'lastModified' => filemtime($real_path),
         );
       }
     }
@@ -101,7 +101,7 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
 
-    //this meeting must be unpublished
+    // This meeting must be unpublished.
     if (!$agenda['publish']) {
 
       $meeting_id = $manifest->xpath('/Root/edoc:Notification/edoc:MeetingIdentifier');
@@ -115,17 +115,18 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
         'meeting_sub_id' => $meeting_id,
         'path' => drupal_realpath($file),
       );
-    } else {//this meeting will be published
-      //loading agenda manifest
+      // This meeting will be published.
+    }
+    else {
+      // Loading agenda manifest.
       $path_to_xml = $manifest->xpath('/Root/edoc:Notification/edoc:PathToXml');
       $path_to_xml = (string) array_shift($path_to_xml);
       $path_to_xml = str_replace('\\', '/', $path_to_xml);
 
       $agenda_real_path = dirname($real_path) . $path_to_xml;
-      $agenda_relative_path = str_replace(drupal_realpath(variable_get('os2web_edoc_middelfart_esdh_mm_path'))
-        , variable_get('os2web_edoc_middelfart_esdh_mm_path'), $agenda_real_path);
+      $agenda_relative_path = str_replace(drupal_realpath(variable_get('os2web_edoc_middelfart_esdh_mm_path')), variable_get('os2web_edoc_middelfart_esdh_mm_path'), $agenda_real_path);
 
-      //if agenda cannot be loaded
+      // If agenda cannot be loaded.
       if ($real_path == FALSE || !is_file($real_path)) {
         return $meetings;
       }
@@ -142,11 +143,11 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
         }
       }
       if (is_object($agenda_manifest)) {
-        //Collecting agendas
+        // Collecting agendas.
         $meeting_agendas = $agenda_manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:Agenda");
         foreach ($meeting_agendas as $meeting_agenda) {
 
-          // Collecting agenda data
+          // Collecting agenda data.
           $committee_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Name');
           $committee = (string) array_shift($committee_xpath);
 
@@ -158,23 +159,25 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
 
           $meeting_id = $manifest->xpath('/Root/edoc:Notification/edoc:MeetingIdentifier');
           $meeting_id = (string) array_shift($meeting_id);
-          $meeting_id = _os2web_edoc_middelfart_esdh_generate_id($meeting_id); //generated meeting_id
+          // Generated meeting_id.
+          $meeting_id = _os2web_edoc_middelfart_esdh_generate_id($meeting_id);
 
           $meeting_type_xpath = $agenda_manifest->xpath('/Root/edoc:OutputTypeEnumName');
           $meeting_type = (string) array_shift($meeting_type_xpath);
           if (strcasecmp($meeting_type, 'Minute') == 0) {
             $meeting_type = 'Referat';
-          } else {
+          }
+          else {
             $meeting_type = 'Dagsorden';
           }
 
-          //$acadre_version = (string) array_shift(explode('.', $meeting_pdf));
+          // $acadre_version = (string) array_shift(explode('.', $meeting_pdf));.
           $agenda_access = 'Lukket';
 
           $location_xpath = $agenda_manifest->xpath('/Root/edoc:Committee/edoc:Meeting/edoc:MeetingLocation');
           $location = (string) array_shift($location_xpath);
 
-          // Collecting agenda items
+          // Collecting agenda items.
           $meeting_agendas_items = $meeting_agenda->xpath('edoc:AgendaElements');
 
           // Fix dates.
@@ -203,31 +206,32 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
             'meeting_type' => $meeting_type,
             'type' => $meeting_type,
             'meeting_state' => $meeting_type,
-            //'meeting_pdf' => $meeting_pdf,
-            //'acadre_version' => $acadre_version,
+            // 'meeting_pdf' => $meeting_pdf,
+            // 'acadre_version' => $acadre_version,.
             'agenda_xml' => $agenda_real_path,
             'agenda_access' => $agenda_access,
           );
 
-          //collect participants
+          // Collect participants.
           $meeting_participants = $agenda_manifest->xpath("/Root/edoc:Committee/edoc:Meeting/edoc:MeetingParticipants/edoc:MeetingParticipant");
           foreach ($meeting_participants as $meeting_participant) {
             $participate_xpath = $meeting_participant->xpath("edoc:Participate");
             $name_xpath = $meeting_participant->xpath("edoc:Name");
             if ((string) array_shift($participate_xpath) == 'true') {
               $meeting['participants'][] = (string) array_shift($name_xpath);
-            } else {
+            }
+            else {
               $meeting['participants_cancellation'][] = (string) array_shift($name_xpath);
             }
           }
 
-          // Error logging to watchdog if the agenda item list is empty
+          // Error logging to watchdog if the agenda item list is empty.
           if (empty($meeting_agendas_items)) {
             watchdog('eDoc MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
           }
 
           foreach ($meeting_agendas_items as $meeting_agenda_item) {
-            // Importing each agenda item through the ESDH provider module
+            // Importing each agenda item through the ESDH provider module.
             $imported = _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda($meeting, $meeting_agenda_item);
             if (is_array($imported)) {
               $imported['publish'] = $agenda['publish'];
@@ -235,7 +239,8 @@ function os2web_edoc_middelfart_esdh_mm_import_meeting($agenda) {
             }
           }
         }
-      } else {
+      }
+      else {
         // Error logging to watchdog if the XML failde to parse. Check if all illegal characters are in the remove list.
         watchdog('eDoc MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
       }
@@ -287,7 +292,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda(&$meeting, $agend
  *   Meeting array.
  *
  * @param SimpleXMLElement $xml
- *   Xml segment containing the item
+ *   Xml segment containing the item.
  *
  * @return array
  *   The imported item.
@@ -304,8 +309,8 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
   $neutralTitle_xpath = $xml->xpath('edoc:HandlingItem/edoc:NeutralTitle');
   $xml_item['name'] = (string) array_shift($neutralTitle_xpath);
 
-  //$xml_item['document_type'] = (string) $xml_item_document->PublishingType;
-  //$xml_item['agenda_type'] = (string) $meeting->AgendaType;
+  // $xml_item['document_type'] = (string) $xml_item_document->PublishingType;
+  // $xml_item['agenda_type'] = (string) $meeting->AgendaType;.
   $identifier_xpath = $xml->xpath('edoc:HandlingItem/edoc:Identifier');
   $xml_item['documentid'] = (string) array_shift($identifier_xpath);
   $accessIsPublic_xpath = $xml->xpath('edoc:AccessIsPublic');
@@ -321,7 +326,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
 
   $item = array(
     'id' => $xml_item['number'],
-    //generated id - because there is not unique ID for the bullet point
+    // Generated id - because there is not unique ID for the bullet point.
     'sysid' => _os2web_edoc_middelfart_esdh_generate_id($xml_item['documentid']),
     'case_nr' => $xml_item['case_nr'],
     'case_id' => $xml_item['case_id'],
@@ -329,13 +334,13 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
     'access' => $xml_item['access'],
     'bullets' => array(),
     'enclosures' => array(),
-//    'doc' => array(
-//      'uri' => implode('/', array(
-//        trim($meeting['uri'], "/"),
-//        $xml_item['pdf']
-//      )),
-//      'title' => $xml_item['name'],
-//    ),
+  // 'doc' => array(
+  //      'uri' => implode('/', array(
+  //        trim($meeting['uri'], "/"),
+  //        $xml_item['pdf']
+  //      )),
+  //      'title' => $xml_item['name'],
+  //    ),.
   );
 
   if ($item['access'] !== 'Lukket' || variable_get('os2web_edoc_middelfart_esdh_import_closed_agenda', FALSE)) {
@@ -371,7 +376,7 @@ function _os2web_edoc_middelfart_esdh_mm_import_meeting_agenda_item($meeting, $x
       $item['enclosures'][] = array(
         'uri' => implode('/', array(
           trim($meeting['uri']),
-          str_replace('\\', '/', $enclosure_item['uri'])
+          str_replace('\\', '/', $enclosure_item['uri']),
         )),
         'title' => trim($enclosure_item['title']),
         'sysid' => $enclosure_item['sysid'],
@@ -432,7 +437,7 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
     return;
   }
   $nodes = $nodes_result['node'];
-  #error_log(print_r($nodes, 1));
+  // error_log(print_r($nodes, 1));
   // Load necessary fields into the node object.
   $fields = field_info_instances('node', 'meeting');
   field_attach_load('node', $nodes, FIELD_LOAD_CURRENT, array('field_id' => $fields['field_os2web_meetings_addendum']['field_id']));
@@ -461,10 +466,11 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
       // Duplicate meeting detected.
       watchdog('eDoc MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array(
         '%mid' => $meeting_id['value'],
-        '%nid' => $node->nid
+        '%nid' => $node->nid,
       ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    } else {
+    }
+    else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -493,28 +499,31 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
         if (is_array($addenum_to)) {
           $addenum_to = array_shift($addenum_to);
           $addenum_to = array_shift($addenum_to);
-        } else {
+        }
+        else {
           $addenum_to = FALSE;
         }
 
         // Save time by only updating what is needed.
         if ($addenum_to != $primary->nid) {
-          #error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
-          ##error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));
+          // error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $primary = ' . print_r($primary->nid, 1));
+          // error_log(basename(__FILE__) . ':' . __LINE__ . ' Var: $addenum_to = ' . print_r($addenum_to, 1));.
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      } else {
-        #error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
-        #error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
-        // node_delete($node->nid);
+      }
+      else {
+        // error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
+        // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
+        // node_delete($node->nid);.
       }
       // Remove node from final nids_with_addendums.
       unset($nids_with_addendums[$node->nid]);
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        } else {
+        }
+        else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }
@@ -541,21 +550,26 @@ function _os2web_edoc_middelfart_esdh_mm_order_addenums($drush = FALSE) {
  *
  * @param $meeting_date
  * @param $committee
+ *
  * @return int|string
  */
 function _os2web_edoc_middelfart_esdh_generate_id($string) {
-  $meeting_id = sprintf("%u", crc32($string)); //generated meeting_id
+  // Generated meeting_id.
+  $meeting_id = sprintf("%u", crc32($string));
   if ($meeting_id > 2147483647) {
-    $meeting_id = substr($meeting_id, 0, 9); //mysql int out of range fix
+    // Mysql int out of range fix.
+    $meeting_id = substr($meeting_id, 0, 9);
   }
   return $meeting_id;
 }
 
 /**
- * Improve the body HTML by substituting img references,
+ * Improve the body HTML by substituting img references,.
  *
- * @param $data -string - the body text
- * @param $meeting_uri - string - the uri of the meeting folder
+ * @param $data
+ *   -string - the body text
+ * @param $meeting_uri
+ *   - string - the uri of the meeting folder
  *
  * @return mixed
  */
@@ -571,7 +585,7 @@ function _os2web_edoc_esdh_mm_improve_body_html($data, $meeting_uri) {
         $file = str_replace('"', '', $file);
         $uri_parts = explode('/', $file);
 
-        //saving the file location information
+        // Saving the file location information.
         $filename = trim(array_pop($uri_parts));
         $folder_name = array_pop($uri_parts);
 
@@ -585,10 +599,10 @@ function _os2web_edoc_esdh_mm_improve_body_html($data, $meeting_uri) {
 
         watchdog('acadre MM', 'Copying %from to %to', array(
           '%from' => $file_realpath,
-          '%to' => $copy_destination . '/' . $filename
+          '%to' => $copy_destination . '/' . $filename,
         ), WATCHDOG_DEBUG);
 
-        //since drupal can end up with different URL because of FILE_EXISTS_RENAME flag, we need to catch it
+        // Since drupal can end up with different URL because of FILE_EXISTS_RENAME flag, we need to catch it.
         $destination_file_uri = file_unmanaged_copy($file_realpath, $copy_destination);
 
         // Modify url.

@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * This file cleansup variables from the settings module
+ * This file cleansup variables from the settings module.
  *
  * @author Jesper Mathiassen <jm@bellcom.dk>
  * @copyright Bellcom Open Source aps.

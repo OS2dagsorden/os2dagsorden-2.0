@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file implements a facade class for using the AdLib webservice
+ * This file implements a facade class for using the AdLib webservice.
  */
 
 define('ADLIB_JOBTYPE_PDF', 0);
@@ -11,14 +11,16 @@ define('ADLIB_DISABLED', !variable_get('os2web_adlib_api_allowed_ip_host', 0));
 
 
 /**
- * Description of AdLibWS
+ * Description of AdLibWS.
  *
  * @author jm
  */
 class AdLibWS {
 
   protected $client;
-  // Private static $base_path = 'd:\\wwwroot\\';
+  /**
+   * Private static $base_path = 'd:\\wwwroot\\';.
+   */
   protected static $basePath = 'C:\\InetPub\\wwwroot\\';
   protected static $baseUrl = 'http://10.1.1.180/';
 
@@ -61,8 +63,10 @@ class AdLibWS {
       }
       try {
         $this->client = new SoapClient($url, $options);
-        //error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Created SOAP client.");
-      } catch (Exception $exc) {
+        // @FIXME Don't use comments to remove code. Delete unused code.
+        // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Created SOAP client.");.
+      }
+      catch (Exception $exc) {
         watchdog('adlib_api', 'Error creating AdLib client, message: %var', array('%var' => $exc->getMessage()), WATCHDOG_ERROR);
       }
     }
@@ -72,7 +76,7 @@ class AdLibWS {
    * Starts a job on the adlib server.
    *
    * @param array $file_info
-   *   Fileinfo structure
+   *   Fileinfo structure.
    */
   public function addJob($file_info, $type = ADLIB_JOBTYPE_PDF, $priority = 3) {
     if (ADLIB_DISABLED) {
@@ -117,11 +121,12 @@ class AdLibWS {
     ));
     $result = simplexml_load_string($this->client->addJob(array(
       'jobInfo' => $job_info,
-      'jobTicket' => $job_ticket
+      'jobTicket' => $job_ticket,
     ))->AddJobResult);
     if (is_object($result) && isset($result->JobSettings['JobID'])) {
       return $result;
-    } else {
+    }
+    else {
       $message_xpath = $result->xpath('//@Message');
       $msg = (string) array_pop($message_xpath);
       if ($msg == '') {
@@ -136,7 +141,7 @@ class AdLibWS {
    * Invokes deleteJob.
    *
    * @param string $id
-   *   Job id
+   *   Job id.
    *
    * @return object
    *   Result and status
@@ -160,7 +165,7 @@ class AdLibWS {
    * Invokes deleteFolder.
    *
    * @param string $id
-   *   Folder id
+   *   Folder id.
    *
    * @return object
    *   False on error
@@ -190,7 +195,8 @@ class AdLibWS {
       $result = simplexml_load_string($result);
       if (is_object($result)) {
         return $result->xpath('//Server');
-      } else {
+      }
+      else {
         return 'Invalid response from AdLib.';
       }
     }
@@ -201,7 +207,7 @@ class AdLibWS {
    * Invokes getJobStatus.
    *
    * @param string $id
-   *   Job id
+   *   Job id.
    *
    * @return object
    *   Result and status
@@ -223,21 +229,25 @@ class AdLibWS {
       if (strncmp('<', $result, 1) === 0) {
         $return->status = (string) simplexml_load_string($result)->CurrentJobStatus['Status'];
         $return->result = simplexml_load_string($result);
-      } else {
+      }
+      else {
         $return->status = 'Not found';
         $return->result = $result;
       }
-    } else {
+    }
+    else {
       $return->status = 'Not found';
     }
     if ($return->status === '') {
       $message = (string) $return->result->ServerInfo[0]->Error['Message'];
       error_log(basename(__FILE__) . ':' . __LINE__ . ' AdLib Error: ' . $message);
       $return->status = 'Not Available';
-    } elseif ($return->status === 'Pending') {
-      // error_log("ConnectorStatus is " . $return->result->CurrentJobStatus['ConnectorStatus']);
-    } else {
-      // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Looked up status for job: " . $id . " Status: " . $return->status);
+    }
+    elseif ($return->status === 'Pending') {
+      // error_log("ConnectorStatus is " . $return->result->CurrentJobStatus['ConnectorStatus']);.
+    }
+    else {
+      // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Looked up status for job: " . $id . " Status: " . $return->status);.
     }
     return $return;
   }
@@ -265,9 +275,9 @@ class AdLibWS {
    * This method uploads a file to AdLib server.
    *
    * @param string $filename
-   *   Filename
+   *   Filename.
    * @param mixed $data
-   *   Binary contents of data
+   *   Binary contents of data.
    * @param string $folder
    *   Optional. Adlib folder, if ommited, new folder is created.
    *
@@ -322,11 +332,12 @@ class AdLibWS {
         'job_type' => $jobtype,
         'out_filename' => pathinfo($filename, PATHINFO_FILENAME) . '.' . $jobext,
       );
-    } else {
+    }
+    else {
       error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Failed to upload: " . $filename);
       watchdog('adlib_api', 'Upload of %filename failed with message: %msg', array(
         '%file' => $filename,
-        '%msg' => $result
+        '%msg' => $result,
       ), WATCHDOG_ERROR);
       $folder = explode('\\', $folder);
       $this->deleteJobFolder($folder[1]);
@@ -338,7 +349,7 @@ class AdLibWS {
    * Encrypts filename, making is safe for use on AdLib.
    *
    * @param string $fname
-   *   File name
+   *   File name.
    *
    * @return string
    *   Encrypted file name

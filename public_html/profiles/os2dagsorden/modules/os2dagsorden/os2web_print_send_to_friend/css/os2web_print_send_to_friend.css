@@ -1,13 +1,21 @@
-html body{
+html body {
   min-width: 0px !important;
 }
 
-#region-page-top, #section-header, #breadcrumb, #region-sidebar-first, #region-sidebar-second, #zone-user-wrapper, #zone-menu-wrapper, #section-footer, #zone-postscript-wrapper{
+#region-page-top,
+#section-header,
+#breadcrumb,
+#region-sidebar-first,
+#region-sidebar-second,
+#zone-user-wrapper,
+#zone-menu-wrapper,
+#section-footer,
+#zone-postscript-wrapper {
   display: none;
 }
 
-.container-12{
-  background: #FFF !important;
+.container-12 {
+  background: #fff !important;
   width: 300px !important;
   margin-left: 0px !important;
 }
@@ -30,28 +38,28 @@ input[type="text"] {
 }
 
 .vegas-overlay {
-  background: #FFF !important;
+  background: #fff !important;
   opacity: 1 !important;
 }
 
 #os2web-print-send-to-friend-log-filter-form  .filter-fields .form-item.form-type-textfield {
-    display: inline-block;
-    margin-right: 30px;
+  display: inline-block;
+  margin-right: 30px;
 }
 #os2web-print-send-to-friend-log-filter-form  .filter-fields .form-item.form-type-textfield input[type="text"] {
-   width: 350px; 
+  width: 350px;
 }
 #os2web-print-send-to-friend-log-filter-form .filter-buttons {
-    display: block;
-    float: left;
+  display: block;
+  float: left;
 }
 #os2web-print-send-to-friend-log-filter-form .filter-buttons input[type="submit"] {
-    float: left;  
-    margin-bottom: 40px;
+  float: left;
+  margin-bottom: 40px;
 }
-#os2web-print-send-to-friend-log-filter-form  .filter-fields .filter-date-fields .form-item.form-type-textfield{
-  margin-right: 10px;  
+#os2web-print-send-to-friend-log-filter-form  .filter-fields .filter-date-fields .form-item.form-type-textfield {
+  margin-right: 10px;
 }
 #os2web-print-send-to-friend-log-filter-form  .filter-fields .filter-date-fields .form-item.form-type-textfield input[type="text"] {
-   width: 150px; 
+  width: 150px;
 }

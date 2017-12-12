@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="loop">
+  <description>PHP CodeSniffer configuration for OS2dagsorden</description>
+
+  <file>public_html/profiles/os2dagsorden/modules/os2dagsorden</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2intra_simplesaml</file>
+  <exclude-pattern>public_html/profiles/os2dagsorden/modules/os2intra_simplesaml/modules/*</exclude-pattern>
+  <file>public_html/profiles/os2dagsorden/modules/os2logging</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_acadre_esdh</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_adlib_api</file>
+  <exclude-pattern>*simple_html_dom.php</exclude-pattern>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_esdh</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_fujitsu</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_edoc_middelfart_esdh</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_esdh_field</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_esdh_provider</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_meetings_content_types</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_pdf_conversion_manager</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_qbrick</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_rules</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_sbsys_aarhus</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_sbsys_esdh</file>
+  <file>public_html/profiles/os2dagsorden/modules/os2web_sbsys_ishoj_esdh</file>
+
+  <file>public_html/profiles/os2dagsorden/themes/os2dagsorden_theme</file>
+  <file>public_html/profiles/os2dagsorden/themes/os2dagsorden_theme_ballerup</file>
+  <file>public_html/profiles/os2dagsorden/themes/os2dagsorden_theme_fredensborg</file>
+  <file>public_html/profiles/os2dagsorden/themes/os2dagsorden_theme_ringsted</file>
+
+  <exclude-pattern>*/contrib/*</exclude-pattern>
+  <exclude-pattern>*/libraries/*</exclude-pattern>
+
+  <exclude-pattern>*.features.*</exclude-pattern>
+  <exclude-pattern>*.pages_default.inc</exclude-pattern>
+  <exclude-pattern>*.strongarm.inc</exclude-pattern>
+  <exclude-pattern>*.views_default.inc</exclude-pattern>
+
+  <exclude-pattern>README.txt</exclude-pattern>
+
+  <!-- Show progress -->
+  <arg value="p"/>
+
+  <rule ref="Drupal"/>
+</ruleset>

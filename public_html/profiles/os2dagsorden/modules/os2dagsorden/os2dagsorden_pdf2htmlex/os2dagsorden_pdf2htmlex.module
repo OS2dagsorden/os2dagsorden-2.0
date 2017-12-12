@@ -1,20 +1,26 @@
 <?php
 
 /**
- * os2dagsorden_pdf2htmlex
+ * @file
+ * Os2dagsorden_pdf2htmlex.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_Pdf2htmlex
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Dagsorden_Pdf2htmlex
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
-define('DEFAULT_PDF_HTML_ZOOM', 1.25); // default zoom for convertion
-define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/')); // default zoom for convertion
-define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);//number of files to handle at once
-define('MIN_PDF2HTMLEX_VERSION', '0.6'); //min pdf2htmlex version
+
+// Default zoom for convertion.
+define('DEFAULT_PDF_HTML_ZOOM', 1.25);
+// Default zoom for convertion.
+define('DEFAULT_TEMP_DIR', variable_get('file_temporary_path', '/tmp/'));
+// Number of files to handle at once.
+define('DEFAULT_PDF_HTML_TRANS_LIMIT', 500);
+// Min pdf2htmlex version.
+define('MIN_PDF2HTMLEX_VERSION', '0.6');
 
 /**
  * Implements hook_menu().
@@ -22,12 +28,12 @@ define('MIN_PDF2HTMLEX_VERSION', '0.6'); //min pdf2htmlex version
  * @return array
  */
 function os2dagsorden_pdf2htmlex_menu() {
-    $items = array();
-    $items['os2dagsorden/run_pdf_html'] = array(
-	'page callback' => 'os2dagsorden_pdf2htmlex_do_convert',
-	'access arguments' => array('administer os2web'),
-	'type' => MENU_CALLBACK,
-    );
+  $items = array();
+  $items['os2dagsorden/run_pdf_html'] = array(
+    'page callback' => 'os2dagsorden_pdf2htmlex_do_convert',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_CALLBACK,
+  );
 
   $items['admin/reports/pdf2htmlex'] = array(
     'title' => 'PDF to HTML',
@@ -40,11 +46,11 @@ function os2dagsorden_pdf2htmlex_menu() {
 }
 
 /**
- * Report page
+ * Report page.
  *
  * @return mixed
  */
-function os2dagsorden_pdf2htmlex_report(){
+function os2dagsorden_pdf2htmlex_report() {
   /*
    * PROGRESS:
    * NULL - scheduled,
@@ -54,14 +60,14 @@ function os2dagsorden_pdf2htmlex_report(){
    * Not converted (the conversion failed for some reasons)
    */
 
-  //rechedule
-  if(!empty($_GET['fid'])){
+  // Rechedule.
+  if (!empty($_GET['fid'])) {
     $fid = $_GET['fid'];
     db_update('os2dagsorden_pdf2htmlex_files')
       ->fields(array(
-        'progress' => null,
-        'filename' => null,
-        'created_filepath' => null,
+        'progress' => NULL,
+        'filename' => NULL,
+        'created_filepath' => NULL,
       ))
       ->condition('fid', $fid, '=')
       ->execute();
@@ -69,10 +75,10 @@ function os2dagsorden_pdf2htmlex_report(){
     drupal_goto('admin/reports/pdf2htmlex');
   }
 
-  //table output
-    $or = db_or();
-    $or->condition('progress', 'Completed','!=');
-    $or->condition('progress', NULL);
+  // Table output.
+  $or = db_or();
+  $or->condition('progress', 'Completed', '!=');
+  $or->condition('progress', NULL);
 
   $result = db_select('os2dagsorden_pdf2htmlex_files', 'o')
     ->fields('o')
@@ -80,27 +86,29 @@ function os2dagsorden_pdf2htmlex_report(){
     ->execute()
     ->fetchAllAssoc('fid');
 
-  if($result == false){
+  if ($result == FALSE) {
     $content['pdf2htmlex-novalues'] = array(
       '#type' => 'markup',
       '#markup' => t('No files to convert.'),
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     );
-  }else{
+  }
+  else {
     $headers = array('File entry fid', 'Destination nid', 'File name', 'HTML path', 'Status', '');
     $rows = array();
 
     foreach ($result as $row) {
       global $base_path;
-      $row->did = '<a href="' . $base_path . 'node/' . $row->did . '">' . $row->did .'</a>';
-      if($row->progress == "") $row->progress = "Scheduled";
-      $r =(array)$row;
-      //action
+      $row->did = '<a href="' . $base_path . 'node/' . $row->did . '">' . $row->did . '</a>';
+      if ($row->progress == "") {
+        $row->progress = "Scheduled";
+      }
+      $r = (array) $row;
+      // Action.
       $r[] = '<a href="?fid=' . $row->fid . '">rechedule</a>';
       $rows[] = array_values($r);
     }
-
 
     $content['pdf2htmlex-table'] = array(
       '#theme' => 'table',
@@ -118,44 +126,46 @@ function os2dagsorden_pdf2htmlex_report(){
  *
  * @return string
  */
-function os2dagsorden_pdf2htmlex_do_convert(){
-    global $debug_info;
-    os2dagsorden_pdf2htmlex_cron();
-    return '<div><textarea cols="150" rows=50>' . print_r($debug_info, 1) . '</textarea>';
+function os2dagsorden_pdf2htmlex_do_convert() {
+  global $debug_info;
+  os2dagsorden_pdf2htmlex_cron();
+  return '<div><textarea cols="150" rows=50>' . print_r($debug_info, 1) . '</textarea>';
 
-//    reschedule all
-//     $nodes = entity_load('node', FALSE, array('type' => 'os2web_meetings_bullet_attach'));
-//     foreach ($nodes as $node){
-//       if (!empty($node->field_os2web_meetings_bpa_file)){
-// 	print_r($node->nid . ' ' . $node->field_os2web_meetings_bpa_file['und'][0]['fid']);
-// 	$file = file_load($node->field_os2web_meetings_bpa_file['und'][0]['fid']);
-// 	if (strcmp($file->filemime,'application/pdf') == 0){
-// 	  os2dagsorden_pdf2htmlex_schedule($node->field_os2web_meetings_bpa_file['und'][0]['fid'], $node->nid);
-// 	  print_r("<br/>");	
-// 	}
-//       }
-//     }
+  // Reschedule all
+  //     $nodes = entity_load('node', FALSE, array('type' => 'os2web_meetings_bullet_attach'));
+  //     foreach ($nodes as $node){
+  //       if (!empty($node->field_os2web_meetings_bpa_file)){
+  // print_r($node->nid . ' ' . $node->field_os2web_meetings_bpa_file['und'][0]['fid']);
+  // $file = file_load($node->field_os2web_meetings_bpa_file['und'][0]['fid']);
+  // if (strcmp($file->filemime,'application/pdf') == 0){
+  // os2dagsorden_pdf2htmlex_schedule($node->field_os2web_meetings_bpa_file['und'][0]['fid'], $node->nid);
+  // print_r("<br/>");
+  // }
+  //       }
+  //     }.
 }
 
 /**
- * Schedules the future convertion
+ * Schedules the future convertion.
  *
- * @param int $fid file id
- * @param int $did node id
- *
+ * @param int $fid
+ *   file id.
+ * @param int $did
+ *   node id.
  */
 function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
   try {
     db_insert('os2dagsorden_pdf2htmlex_files')
-    ->fields(array(
-      'fid' => $fid,
-      'did' => $did,
-      //'created_filepath' => $file_path,
-      'filename' => NULL,
-      'progress' => NULL,
-    ))
-    ->execute();
-  } catch (Exception $e) {
+      ->fields(array(
+        'fid' => $fid,
+        'did' => $did,
+      // 'created_filepath' => $file_path,.
+        'filename' => NULL,
+        'progress' => NULL,
+      ))
+      ->execute();
+  }
+  catch (Exception $e) {
     watchdog('pdf2htmlEX', 'Cannot schedule a file: fid: %fid, did: %did, e: %e', array('%fid' => $fid, '%did' => $did, '%e' => $e->getMessage()), WATCHDOG_ERROR);
   }
 }
@@ -165,6 +175,7 @@ function os2dagsorden_pdf2htmlex_schedule($fid, $did) {
  *
  * @param $op
  * @param null $job
+ *
  * @return array
  */
 function os2dagsorden_pdf2htmlex_cronapi($op, $job = NULL) {
@@ -185,123 +196,129 @@ function os2dagsorden_pdf2htmlex_cronapi($op, $job = NULL) {
  * @return none
  */
 function os2dagsorden_pdf2htmlex_cron() {
-    setlocale(LC_CTYPE, "en_US.UTF-8");
+  setlocale(LC_CTYPE, "en_US.UTF-8");
 
-    //make convertion
-    $query = db_select('os2dagsorden_pdf2htmlex_files', 'f');
-    $query->fields('f',array('fid','did'))
+  // Make convertion.
+  $query = db_select('os2dagsorden_pdf2htmlex_files', 'f');
+  $query->fields('f', array('fid', 'did'))
     ->isNull('f.progress')
-    ->range(0,DEFAULT_PDF_HTML_TRANS_LIMIT);
-    $result = $query->execute();
+    ->range(0, DEFAULT_PDF_HTML_TRANS_LIMIT);
+  $result = $query->execute();
 
-    while($record = $result->fetchAssoc()) {
-        os2dagsorden_pdf2htmlex_convert($record['fid'], $record['did']);
+  while ($record = $result->fetchAssoc()) {
+    os2dagsorden_pdf2htmlex_convert($record['fid'], $record['did']);
+  }
+
+  // Go through the finished tasks.
+  $query = db_select('os2dagsorden_pdf2htmlex_files', 'f');
+  $query->fields('f')
+    ->condition('progress', 'Converted')
+    ->range(0, DEFAULT_PDF_HTML_TRANS_LIMIT);
+  $result = $query->execute();
+
+  while ($record = $result->fetchAssoc()) {
+    $destination = node_load($record['did']);
+
+    if (empty($destination)) {
+      db_update('os2dagsorden_pdf2htmlex_files')
+        ->fields(array(
+          'progress' => 'Not found',
+        ))
+        ->condition('fid', $record['fid'])
+        ->condition('did', $record['did'])
+        ->execute();
+
+      continue;
     }
-    
-    //go through the finished tasks
-    $query = db_select('os2dagsorden_pdf2htmlex_files', 'f');
-    $query->fields('f')
-	  ->condition('progress', 'Converted')
-	  ->range(0,DEFAULT_PDF_HTML_TRANS_LIMIT);
-    $result = $query->execute();
 
-    while($record = $result->fetchAssoc()) {
-	$destination = node_load($record['did']);
-	
-	if (empty($destination)){
-	  db_update('os2dagsorden_pdf2htmlex_files')
-	  ->fields(array(
-	    'progress' => 'Not found',
-	  ))
-	  ->condition('fid', $record['fid'])
-	  ->condition('did',$record['did'])
-	  ->execute();
-	  
-	  continue;
-	}
-	
-	$data = file_get_contents($record['created_filepath']);
-	
-	//convert the real path back to drupal path
-	$file_path_real = explode('/',$record['created_filepath']);
-	$filename = array_pop($file_path_real);
-	$acadre_dir = array_pop($file_path_real);
-	
-	//$path = 'private://' . $acadre_dir . '/' . $filename ;
-	$path = $record['created_filepath'];
-        
-	 if (variable_get('pdf2html_rendering_path') && file_exists(drupal_realpath(variable_get('pdf2html_rendering_path')))){//is set
-            $purl= drupal_realpath(variable_get('pdf2html_rendering_path'));
-            $uri = str_replace($purl, variable_get('pdf2html_rendering_path'), $path);      
-       } else {
-          if (strpos($path,drupal_realpath('private://') . '/')===FALSE)
-            $uri=str_replace(drupal_realpath('public://') . '/', 'public://',  $path);
-         else
-           $uri=str_replace(drupal_realpath('private://') . '/',  'private://',$path);
-       }
-	$fid = db_select('file_managed', 'fm')
-                        ->fields('fm', array('fid'))
-                        ->condition('uri', $uri)
-                        ->execute()->fetchField();
+    $data = file_get_contents($record['created_filepath']);
 
-        if ($fid) {
-	    $file = file_load($fid);
-	    $file->display = 1;
-	} else {
-	  $file = new stdClass();
-	  $file->uri = $uri;
-	  $file->display = 1;
-	  $file->filename = $filename;
-	  $file->filemime = file_get_mimetype($record['created_filepath']);
-	  $file->uid = 1;
-	  $file->status = FILE_STATUS_PERMANENT;
-	  
-	  $file = file_save($file);
-	}
-	
-	$destination->field_os2web_meetings_bpa_html[LANGUAGE_NONE][0] = (array) $file;
-        $destination->field_os2web_meetings_bpa_pages[LANGUAGE_NONE][0]['value'] = _os2dagsorden_pdf2htmlex_calc_page_amount($data);
-        
-        //saving the destination (bullet point id)
-        node_save($destination);	
-        
-        //update the meeting, if needed
-        _os2dagsorden_pdf2htmlex_set_status_published_plus($destination);
-	
-	//updating database entry
-	db_update('os2dagsorden_pdf2htmlex_files')
-	  ->fields(array(
-	    'progress' => 'Completed',
-	  ))
-	  ->condition('fid', $record['fid'])
-	  ->condition('did',$record['did'])
-	  ->execute();
+    // Convert the real path back to drupal path.
+    $file_path_real = explode('/', $record['created_filepath']);
+    $filename = array_pop($file_path_real);
+    $acadre_dir = array_pop($file_path_real);
+
+    // $path = 'private://' . $acadre_dir . '/' . $filename ;.
+    $path = $record['created_filepath'];
+
+    // Is set.
+    if (variable_get('pdf2html_rendering_path') && file_exists(drupal_realpath(variable_get('pdf2html_rendering_path')))) {
+      $purl = drupal_realpath(variable_get('pdf2html_rendering_path'));
+      $uri = str_replace($purl, variable_get('pdf2html_rendering_path'), $path);
     }
+    else {
+      if (strpos($path, drupal_realpath('private://') . '/') === FALSE) {
+        $uri = str_replace(drupal_realpath('public://') . '/', 'public://', $path);
+      }
+      else {
+        $uri = str_replace(drupal_realpath('private://') . '/', 'private://', $path);
+      }
+    }
+    $fid = db_select('file_managed', 'fm')
+      ->fields('fm', array('fid'))
+      ->condition('uri', $uri)
+      ->execute()->fetchField();
+
+    if ($fid) {
+      $file = file_load($fid);
+      $file->display = 1;
+    }
+    else {
+      $file = new stdClass();
+      $file->uri = $uri;
+      $file->display = 1;
+      $file->filename = $filename;
+      $file->filemime = file_get_mimetype($record['created_filepath']);
+      $file->uid = 1;
+      $file->status = FILE_STATUS_PERMANENT;
+
+      $file = file_save($file);
+    }
+
+    $destination->field_os2web_meetings_bpa_html[LANGUAGE_NONE][0] = (array) $file;
+    $destination->field_os2web_meetings_bpa_pages[LANGUAGE_NONE][0]['value'] = _os2dagsorden_pdf2htmlex_calc_page_amount($data);
+
+    // Saving the destination (bullet point id)
+    node_save($destination);
+
+    // Update the meeting, if needed.
+    _os2dagsorden_pdf2htmlex_set_status_published_plus($destination);
+
+    // Updating database entry.
+    db_update('os2dagsorden_pdf2htmlex_files')
+      ->fields(array(
+        'progress' => 'Completed',
+      ))
+      ->condition('fid', $record['fid'])
+      ->condition('did', $record['did'])
+      ->execute();
+  }
 }
 
 /**
  * Calculate the amount of the pages in HTML file.
  *
- * @param string $html html code
+ * @param string $html
+ *   html code.
  *
  * @return page amount
  */
-function _os2dagsorden_pdf2htmlex_calc_page_amount($html){
+function _os2dagsorden_pdf2htmlex_calc_page_amount($html) {
   ini_set('max_execution_time', 0);
   $doc = new DOMDocument();
-  libxml_use_internal_errors(true);
+  libxml_use_internal_errors(TRUE);
   $doc->loadHTML($html);
   libxml_clear_errors();
-  
+
   $finder = new DomXPath($doc);
-  //pdf2html older version (~ v0.6)
+  // pdf2html older version (~ v0.6)
   $nodes = $finder->query('//div[@id="pdf-main"]/div');
 
-  //pdf2html newer version (~ v0.10)
-  if ($nodes->length == 0){
+  // pdf2html newer version (~ v0.10)
+  if ($nodes->length == 0) {
     $nodes = $finder->query('//div[@id="page-container"]/div');
   }
-  
+
   $pages = 0;
   foreach ($nodes as $node) {
     $pages++;
@@ -313,17 +330,23 @@ function _os2dagsorden_pdf2htmlex_calc_page_amount($html){
  * Improvment of the HTML code, produced by pdf2htmlEX
  * At the moment only removes the empty paragraph tags.
  *
- * @param string $data html code
+ * @param string $data
+ *   html code.
  *
  * @return data
  */
-function _os2dagsorden_pdf2htmlex_improve_html($data){
-  $data = str_replace("<p>&nbsp;</p>", "", $data); //removing unneeded paragraphs
-  $data = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $data);//removing scripts tags
-  $data = preg_replace('#::selection{(.*?)}#is', '', $data);//removing ::selection css specification
-  $data = preg_replace('#::-moz-selection{(.*?)}#is', '', $data);//removing ::-moz-selection css specification
-  $data = preg_replace( '/[\x{200B}-\x{200D}]/u', "", $data ); //removing ZERO WIDTH SPACE character
-  
+function _os2dagsorden_pdf2htmlex_improve_html($data) {
+  // Removing unneeded paragraphs.
+  $data = str_replace("<p>&nbsp;</p>", "", $data);
+  // Removing scripts tags.
+  $data = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $data);
+  // Removing ::selection css specification.
+  $data = preg_replace('#::selection{(.*?)}#is', '', $data);
+  // Removing ::-moz-selection css specification.
+  $data = preg_replace('#::-moz-selection{(.*?)}#is', '', $data);
+  // Removing ZERO WIDTH SPACE character.
+  $data = preg_replace('/[\x{200B}-\x{200D}]/u', "", $data);
+
   return $data;
 }
 
@@ -331,14 +354,16 @@ function _os2dagsorden_pdf2htmlex_improve_html($data){
  * Call to console pdf2htmlEX programm ro convert PDF to html.
  * Updates the record progress to Converted on success, and file_not_found is the file is missing.
  *
- * @param int $fid file id
- * @param int $did node id
+ * @param int $fid
+ *   file id.
+ * @param int $did
+ *   node id.
  *
  * @return none
  */
 function os2dagsorden_pdf2htmlex_convert($fid, $did) {
-  // deleting entry if the did is not pointing anywhere
-  if (!node_load($did)){
+  // Deleting entry if the did is not pointing anywhere.
+  if (!node_load($did)) {
     db_delete('os2dagsorden_pdf2htmlex_files')
       ->condition('fid', $fid)
       ->condition('did', $did)
@@ -347,109 +372,118 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
     return;
   }
 
-
   $file = file_load($fid);
-  
-  $file_path_real = drupal_realpath($file->uri);//with file name
+
+  // With file name.
+  $file_path_real = drupal_realpath($file->uri);
   $file_pathinfo = pathinfo($file_path_real);
 
-  if (variable_get('pdf2html_rendering_path') && file_exists(drupal_realpath(variable_get('pdf2html_rendering_path')))){//is set
+  // Is set.
+  if (variable_get('pdf2html_rendering_path') && file_exists(drupal_realpath(variable_get('pdf2html_rendering_path')))) {
     $uri_parts = pathinfo($file->uri);
-    $dest_dir_real = drupal_realpath(variable_get('pdf2html_rendering_path')) . '/' . preg_replace("#(private|public):///?#is",'',  $uri_parts['dirname']);
-  } else {
+    $dest_dir_real = drupal_realpath(variable_get('pdf2html_rendering_path')) . '/' . preg_replace("#(private|public):///?#is", '', $uri_parts['dirname']);
+  }
+  else {
     $dest_dir_real = $file_pathinfo['dirname'];
   }
-  
-  if (isset($file)){
-    $path = $dest_dir_real . '/' . $file_pathinfo['filename'] . '.html';//filename.html
+
+  if (isset($file)) {
+    // filename.html.
+    $path = $dest_dir_real . '/' . $file_pathinfo['filename'] . '.html';
 
     $success = FALSE;
 
-    //check if already convered
-    if(!file_exists($path)){
-	setlocale(LC_CTYPE, "en_DK.UTF-8");//one has to know the exact locale of the system, otherwise uncomment the lines
-	$shell_file_path_real = escapeshellarg($file_path_real);
-	$shell_dest_dir_real = escapeshellarg($dest_dir_real);
-      //$shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";
-      //$shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";
+    // Check if already convered.
+    if (!file_exists($path)) {
+      // One has to know the exact locale of the system, otherwise uncomment the lines.
+      setlocale(LC_CTYPE, "en_DK.UTF-8");
+      $shell_file_path_real = escapeshellarg($file_path_real);
+      $shell_dest_dir_real = escapeshellarg($dest_dir_real);
+      // $shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";
+      // $shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";.
+      shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
+      drupal_set_message(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
 
-	shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
-	drupal_set_message(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
+      // Successful conversion?
+      if (file_exists($path)) {
+        $data = file_get_contents($path);
 
-        //successful conversion?
-	if (file_exists($path)) {
-	    $data = file_get_contents($path);
+        // Rewritting with improved HTML code.
+        $fh = fopen($path, 'w');
+        fwrite($fh, _os2dagsorden_pdf2htmlex_improve_html($data));
+        fclose($fh);
 
-	    //rewritting with improved HTML code
-	    $fh = fopen($path, 'w');
-	    fwrite($fh, _os2dagsorden_pdf2htmlex_improve_html($data));
-	    fclose($fh);
-
-	    $success = TRUE;
-	}  else {
-	    db_update('os2dagsorden_pdf2htmlex_files')
-	    ->fields(array(
-	      'progress' => 'Not converted',
-	    ))
-	    ->condition('fid', $fid)
-	    ->condition('did', $did)
-	    ->execute();
-	}
-    } else
-	$success = TRUE;
-
-    if ($success){
-	//updating database entry
-	db_update('os2dagsorden_pdf2htmlex_files')
-	  ->fields(array(
-	  'filename' => $file->filename,
-	  'created_filepath' => $path,
-	  'progress' => 'Converted',
-	  ))
-	  ->condition('fid', $fid)
-	  ->condition('did', $did)
-	  ->execute();
+        $success = TRUE;
+      }
+      else {
+        db_update('os2dagsorden_pdf2htmlex_files')
+          ->fields(array(
+            'progress' => 'Not converted',
+          ))
+          ->condition('fid', $fid)
+          ->condition('did', $did)
+          ->execute();
+      }
     }
-  } else {
+    else {
+      $success = TRUE;
+    }
+
+    if ($success) {
+      // Updating database entry.
+      db_update('os2dagsorden_pdf2htmlex_files')
+        ->fields(array(
+          'filename' => $file->filename,
+          'created_filepath' => $path,
+          'progress' => 'Converted',
+        ))
+        ->condition('fid', $fid)
+        ->condition('did', $did)
+        ->execute();
+    }
+  }
+  else {
     db_update('os2dagsorden_pdf2htmlex_files')
       ->fields(array(
-	'progress' => 'Not found',
+        'progress' => 'Not found',
       ))
       ->condition('fid', $fid)
       ->condition('did', $did)
       ->execute();
-  }   
+  }
 }
 
 /**
  * Changes the status of the parent meeting of the given bullet point attachment to Dagsorden+/Referat+
  * if all of the attachments of all of the corresponding bullet points of that meeting are converted to HTML.
  * Does that by checking if all of the attachments of all of the corresponding bullet points of that meeting are converted to HTML.
- * 
- * 
+ *
  * @author Stanislav Kutasevits <stan@bellcom.dk>
- * @param string $node bullet points attachment
+ * @param string $node
+ *   bullet points attachment.
  *
  * @return TRUE or false
  */
 function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
-  //getting corresponding bullet point
+  // Getting corresponding bullet point.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->fieldCondition('field_os2web_meetings_attach', 'target_id', $node->nid, '=');
   $result = $query->execute();
 
-  if (isset($result['node'])) { //if success
+  // If success.
+  if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     $bullet_point = reset(entity_load('node', $nids));
-    //getting corresponding meeting
+    // Getting corresponding meeting.
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
       ->fieldCondition('field_os2web_meetings_bullets', 'target_id', $bullet_point->nid, '=');
 
     $result = $query->execute();
 
-    if (isset($result['node'])) { //if success
+    // If success.
+    if (isset($result['node'])) {
       $nids = array_keys($result['node']);
       $meeting = reset(entity_load('node', $nids));
 
@@ -457,7 +491,8 @@ function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
         if (os2dagsorden_access_helper_meeting_fully_converted($meeting)) {
           if (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Dagsorden') == 0) {
             $meeting->field_os2web_meetings_type['und'][0]['value'] = "Dagsorden_plus";
-          } elseif (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0) {
+          }
+          elseif (strcmp($meeting->field_os2web_meetings_type['und'][0]['value'], 'Referat') == 0) {
             $meeting->field_os2web_meetings_type['und'][0]['value'] = "Referat_plus";
           }
           node_submit($meeting);
@@ -473,50 +508,61 @@ function _os2dagsorden_pdf2htmlex_set_status_published_plus($node) {
  *
  * Is used in the places where only preview of the document is shown.
  *
- * @param string $html html
- * @param int    $meeting_id       nid of the meeting
- * @param int    $bullet_point_id  nid of the bullet point
- * @param int    $bilag_id         nid of the bullet point attachment
+ * @param string $html
+ *   html.
+ * @param int $meeting_id
+ *   nid of the meeting.
+ * @param int $bullet_point_id
+ *   nid of the bullet point.
+ * @param int $bilag_id
+ *   nid of the bullet point attachment.
  *
  * @return html with selected pages left
  */
-function os2dagsorden_pdf2htmlex_print_first_page($html, $meeting_id, $bullet_point_id, $bilag_id){
-    $doc = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $doc->loadHTML('<?xml encoding="UTF-8">' . $html);
-    libxml_clear_errors();
-    
-    $finder = new DomXPath($doc);
-    
-    //pdf2html older version (~ v0.6)
-    $nodes = $finder->query('//div[@id="pdf-main"]/div');
-    
-    //pdf2html newer version (~ v0.10)
-    if ($nodes->length == 0){
-	$nodes = $finder->query('//div[@id="page-container"]/div');
-    }
-   
-    $i = 1;
-    foreach ($nodes as $node) {
-      if ($i > 1)//keeping the first page
-	$node->parentNode->removeChild($node);
-      $i++;
-    }
-    $html = $doc->saveHTML();
-    
-    $start = strrpos($html, '<style type="text/css">');//last style - document specific
-    $end = strrpos($html, '</style>');//last style - document specific
-    $style_cut = substr($html, $start, $end+count('<style>')-$start);
-   
-    $styles_specific = explode(PHP_EOL, $style_cut);
-    for ($i = 0; $i < count($styles_specific); $i++){
-      if (substr($styles_specific[$i], 0, 1) === '.' || substr($styles_specific[$i], 0, 1) === '#')//id or class
-	$styles_specific[$i] = '.bpa-' . $meeting_id . '-' . $bullet_point_id . '-' . $bilag_id . ' ' . $styles_specific[$i];
-    }
-    $style_specific = implode(PHP_EOL, $styles_specific);
-    $html = substr_replace($html, $style_specific, $start, $end+count('<style>')-$start); //replacing the last style with updated
+function os2dagsorden_pdf2htmlex_print_first_page($html, $meeting_id, $bullet_point_id, $bilag_id) {
+  $doc = new DOMDocument();
+  libxml_use_internal_errors(TRUE);
+  $doc->loadHTML('<?xml encoding="UTF-8">' . $html);
+  libxml_clear_errors();
 
-    return $html;
+  $finder = new DomXPath($doc);
+
+  // pdf2html older version (~ v0.6)
+  $nodes = $finder->query('//div[@id="pdf-main"]/div');
+
+  // pdf2html newer version (~ v0.10)
+  if ($nodes->length == 0) {
+    $nodes = $finder->query('//div[@id="page-container"]/div');
+  }
+
+  $i = 1;
+  foreach ($nodes as $node) {
+    // Keeping the first page.
+    if ($i > 1) {
+      $node->parentNode->removeChild($node);
+    }
+    $i++;
+  }
+  $html = $doc->saveHTML();
+
+  // Last style - document specific.
+  $start = strrpos($html, '<style type="text/css">');
+  // Last style - document specific.
+  $end = strrpos($html, '</style>');
+  $style_cut = substr($html, $start, $end + count('<style>') - $start);
+
+  $styles_specific = explode(PHP_EOL, $style_cut);
+  for ($i = 0; $i < count($styles_specific); $i++) {
+    // Id or class.
+    if (substr($styles_specific[$i], 0, 1) === '.' || substr($styles_specific[$i], 0, 1) === '#') {
+      $styles_specific[$i] = '.bpa-' . $meeting_id . '-' . $bullet_point_id . '-' . $bilag_id . ' ' . $styles_specific[$i];
+    }
+  }
+  $style_specific = implode(PHP_EOL, $styles_specific);
+  // Replacing the last style with updated.
+  $html = substr_replace($html, $style_specific, $start, $end + count('<style>') - $start);
+
+  return $html;
 }
 
 /**
@@ -524,63 +570,69 @@ function os2dagsorden_pdf2htmlex_print_first_page($html, $meeting_id, $bullet_po
  *
  * Is used in the places where only preview of the document is shown.
  *
- * @param string $html      html
- * @param int    $startPage start page number (incl)
- * @param int    $endPage   end page number (incl)
+ * @param string $html
+ *   html.
+ * @param int $startPage
+ *   start page number (incl)
+ * @param int $endPage
+ *   end page number (incl)
  *
  * @return html with selected pages left
  */
-function os2dagsorden_pdf2htmlex_hide_unused_pages($html, $startPage, $endPage){
-    $doc = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $doc->loadHTML('<?xml encoding="UTF-8">' . $html);
-    libxml_clear_errors();
-    
-    $finder = new DomXPath($doc);
+function os2dagsorden_pdf2htmlex_hide_unused_pages($html, $startPage, $endPage) {
+  $doc = new DOMDocument();
+  libxml_use_internal_errors(TRUE);
+  $doc->loadHTML('<?xml encoding="UTF-8">' . $html);
+  libxml_clear_errors();
 
-    //pdf2html older version (~ v0.6)
-    $nodes = $finder->query('//div[@id="pdf-main"]/div');
+  $finder = new DomXPath($doc);
 
-    //pdf2html newer version (~ v0.10)
-    if ($nodes->length == 0){
-	$nodes = $finder->query('//div[@id="page-container"]/div');
+  // pdf2html older version (~ v0.6)
+  $nodes = $finder->query('//div[@id="pdf-main"]/div');
+
+  // pdf2html newer version (~ v0.10)
+  if ($nodes->length == 0) {
+    $nodes = $finder->query('//div[@id="page-container"]/div');
+  }
+
+  $i = 1;
+  foreach ($nodes as $node) {
+    // If outside the allowed borders.
+    if ($i < $startPage || $i > $endPage) {
+      $node->removeAttribute("style");
+      $node->setAttribute("style", "display: none;");
+      foreach ($node->childNodes as $child) {
+        if ($child instanceof DOMElement) {
+          $child->removeAttribute("style");
+          foreach ($child->childNodes as $child_child) {
+            if ($child_child instanceof DOMElement) {
+              $child_child->removeAttribute("style");
+            }
+          }
+        }
+      }
     }
-
-    $i = 1;
-    foreach ($nodes as $node) {
-      if ($i < $startPage || $i > $endPage){//if outside the allowed borders
-	  $node->removeAttribute("style");
-	  $node->setAttribute("style", "display: none;");
-	  foreach($node->childNodes as $child) {
-	    if ($child instanceof DOMElement) {
-	      $child->removeAttribute("style");
-	      foreach($child->childNodes as $child_child){
-		  if ($child_child instanceof DOMElement)
-		    $child_child->removeAttribute("style");
-	      }
-	    }
-	  }
-	}
-      $i++;
-    }
-    return $doc->saveHTML();
+    $i++;
+  }
+  return $doc->saveHTML();
 }
+
 /**
- * Schedules the future pdf convertion for bullet point attachments files
+ * Schedules the future pdf convertion for bullet point attachments files.
  *
- * @param int $fid file id
- *
- *
+ * @param int $fid
+ *   file id.
  */
-function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'node')
-         ->fieldCondition('field_os2web_meetings_bpa_file', 'fid', $fid, '=');
-    $res = $query->execute();
-    if (!empty($res['node'])) {
-        foreach (array_keys($res['node']) as $nid)
-          os2dagsorden_pdf2htmlex_schedule($fid, $nid);
+function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->fieldCondition('field_os2web_meetings_bpa_file', 'fid', $fid, '=');
+  $res = $query->execute();
+  if (!empty($res['node'])) {
+    foreach (array_keys($res['node']) as $nid) {
+      os2dagsorden_pdf2htmlex_schedule($fid, $nid);
     }
+  }
 }
 
 /**
@@ -588,8 +640,8 @@ function os2dagsorden_pdf2htmlex_schedule_if_bpa($fid){
  */
 function os2dagsorden_pdf2htmlex_file_delete($file) {
   db_delete('os2dagsorden_pdf2htmlex_files')
-      ->condition('fid', $file->fid)
-      ->execute();
+    ->condition('fid', $file->fid)
+    ->execute();
 }
 
 /**
@@ -597,6 +649,6 @@ function os2dagsorden_pdf2htmlex_file_delete($file) {
  */
 function os2dagsorden_pdf2htmlex_node_delete($node) {
   db_delete('os2dagsorden_pdf2htmlex_files')
-      ->condition('did', $node->nid)
-      ->execute();
+    ->condition('did', $node->nid)
+    ->execute();
 }

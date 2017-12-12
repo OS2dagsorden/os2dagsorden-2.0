@@ -2,11 +2,11 @@
 
 /**
  * @file
- * This file describes the CM plugin as implemented by Acadre
+ * This file describes the CM plugin as implemented by Acadre.
  */
 
 /**
- * Plugin definition with callbacks
+ * Plugin definition with callbacks.
  */
 $plugin = array(
   'description' => t('Acadre ESDH CM Backend'),
@@ -35,6 +35,7 @@ function ops2web_acadre_esdh_test($stuff) {
  * Called often, so static cache is acceptable.
  *
  * @access public
+ *
  * @return bool
  *   True if the service is available.
  */
@@ -64,7 +65,6 @@ function ops2web_acadre_esdh_available() {
  *
  * @return array
  *   Document structure
- *
  */
 function ops2web_acadre_esdh_get_document($doc_id) {
   $pws = _ops2web_acadre_esdh_get_pws_instance();
@@ -78,7 +78,8 @@ function ops2web_acadre_esdh_get_document($doc_id) {
 
   if ($doc_data === FALSE) {
     return FALSE;
-  } elseif (is_object($doc_data)) {
+  }
+  elseif (is_object($doc_data)) {
     $doc = array(
       'id' => $doc_id,
       'case_reference' => $doc_data->Record->CaseFileReference,
@@ -135,7 +136,8 @@ function ops2web_acadre_esdh_get_document_file($doc_id) {
   if ($doc_id > 0) {
     $file = $pws->getDocData($doc_id);
     return $file;
-  } else {
+  }
+  else {
     return (object) NULL;
   }
 }
@@ -200,7 +202,7 @@ function ops2web_acadre_esdh_get_case_data($case_id) {
  * Looks up a document query string.
  *
  * @param string $search_id
- *   Query string
+ *   Query string.
  *
  * @return int
  *   Document ID
@@ -214,7 +216,7 @@ function ops2web_acadre_esdh_lookup_doc($search_id) {
  * Looks up a case query string.
  *
  * @param string $search_id
- *   Query string
+ *   Query string.
  *
  * @return int
  *   Case ID
