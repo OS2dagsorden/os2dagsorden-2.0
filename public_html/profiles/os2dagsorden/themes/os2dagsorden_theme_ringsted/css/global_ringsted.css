@@ -349,6 +349,7 @@ a.button {
 
 /* ---------------------------- Table Styles START---------------------------- */
 .attachment-text table {
+  /* @FIXME Don't use comments to remove code. Delete unused code. */
   /*max-width: 100% !important;
   width: 100% !important;*/
 }

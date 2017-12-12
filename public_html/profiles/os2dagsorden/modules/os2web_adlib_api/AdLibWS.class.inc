@@ -63,6 +63,7 @@ class AdLibWS {
       }
       try {
         $this->client = new SoapClient($url, $options);
+        // @FIXME Don't use comments to remove code. Delete unused code.
         // error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: Created SOAP client.");.
       }
       catch (Exception $exc) {

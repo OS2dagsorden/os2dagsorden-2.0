@@ -175,6 +175,7 @@ function os2web_sbsys_aarhus_mm_import_meeting($meeting) {
         'participants_cancellation' => $participants_cancellation,
       );
 
+      // @FIXME Don't use comments to remove code. Delete unused code.
       // var_dump($meeting);
       /* stan@bellcom.dk 06.10 - importing multiple agendas */
       $meeting_agendas = array();
