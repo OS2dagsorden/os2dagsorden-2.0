@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Bitter');
+@import url('https://fonts.googleapis.com/css?family=Proxima Nova');
 
-$font-headings: 'Bitter', serif;
-$font-paragraphs: Arial, sans-serif;
-$font-button: Arial, sans-serif;
+
+$font-basic: 'Proxima Nova';
+
+$font-size-headings: 20px;
+$font-size-body: 14px;
+$font-size-table-header: 18px;
+$font-size-button: 16px;
