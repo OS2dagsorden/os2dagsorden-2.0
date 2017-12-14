@@ -24,6 +24,7 @@
 .attachment_text_full_container.attachment-text li {
   list-style: disc inside none;
   margin-left: 35px;
+  text-indent: -1.5em;
 }
 
 .attachment_text_full_container p {
