@@ -1,6 +1,6 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Bitter");
-@import url("https://fonts.google.com/specimen/Source+Sans+Pro");
+@import url("https://fonts.googleapis.com/css?family=Proxima Nova");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 #section-header {
   background: #9c1a5e; }
@@ -24,14 +24,14 @@
     }*/ }
   .user-logout-block .user-logout-textbox {
     color: #FFF;
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     font-weight: 400;
     font-size: 1em; }
   .user-logout-block .button {
     margin: 0 5px; }
   .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
     color: #FFF;
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     font-weight: 100;
     text-shadow: none;
     text-transform: none;
@@ -179,7 +179,7 @@
   border-radius: 3px;
   color: #FFF;
   padding: 5px 20px 5px 20px;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-size: 16px;
   text-decoration: none;
   cursor: pointer;
@@ -192,7 +192,7 @@
     background: #ae477d;
     color: #FFF;
     padding: 5px 10px 5px 10px;
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     font-size: 13px;
     text-decoration: none;
     text-transform: uppercase;
@@ -200,7 +200,7 @@
     .form-submit.nav-button:hover {
       background: #9c1a5e;
       padding: 5px 10px 5px 10px;
-      font-family: "Source Sans Pro";
+      font-family: "Proxima Nova";
       font-size: 13px;
       text-decoration: none;
       text-transform: uppercase;
@@ -220,7 +220,7 @@
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
   background: #FFF;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-size: 14px; }
 
 #region-footer-first, #region-postscript-first {
@@ -288,7 +288,7 @@ div.content ul.menu li {
   div.content ul.menu li a {
     display: block;
     color: #373636;
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     border: 1px solid #e3d6d6;
     border-radius: 3px;
     font-size: 20px;
@@ -513,7 +513,7 @@ ul li.leaf {
 .view-header h3, .view-content h3 {
   color: #373636;
   text-transform: capitalize;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-weight: 100;
   font-size: 18px;
   background-color: #f7f1f1;
@@ -569,7 +569,7 @@ div.attachment {
 /*---------------------------- Blocks START ----------------------------*/
 h2.block-title, h1.title {
   color: #373636;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-weight: bold;
   font-size: 20px;
   margin-top: 0;
@@ -675,7 +675,7 @@ div.block-inner {
 .calendar-calendar {
   padding-bottom: 10px; }
   .calendar-calendar table.mini {
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     font-size: 12px; }
     .calendar-calendar table.mini thead {
       border: 1px solid #FFF; }
@@ -862,7 +862,7 @@ pager li.pager-first {
   border-width: 0px;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-size: 16px;
   text-decoration: none;
   cursor: pointer; }
@@ -988,7 +988,7 @@ table tr th {
   background: #f7f1f1;
   border: none;
   color: #373636;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-weight: bold;
   font-size: 14px; }
   table tr th a {
@@ -1013,7 +1013,7 @@ table.views-table tr {
       color: #373636;
       padding: 8px;
       /*     vertical-align:center; */
-      font-family: "Source Sans Pro";
+      font-family: "Proxima Nova";
       font-weight: normal;
       font-size: 14px;
       text-decoration: none;
@@ -1095,7 +1095,7 @@ table .speaker-paper-link-container {
   background: #FFF;
   border: 1px solid #fbf8f8;
   border-top: 0px;
-  font-family: "Source Sans Pro"; }
+  font-family: "Proxima Nova"; }
   .view-meeting-details .form-submit {
     padding: 10px 50px 10px 50px;
     font-size: 16px; }
@@ -1118,7 +1118,7 @@ table .speaker-paper-link-container {
       font-weight: bold;
       width: 243px;
       font-size: 16px;
-      font-family: "Source Sans Pro";
+      font-family: "Proxima Nova";
       text-transform: none; }
   .view-meeting-details .view-content {
     background: #f7f1f1;
@@ -1226,7 +1226,7 @@ table .speaker-paper-link-container {
           color: #001D2F;
           padding: 3px 10px 3px 10px;
           line-height: 30px;
-          font-family: "Source Sans Pro";
+          font-family: "Proxima Nova";
           font-weight: bold;
           font-size: 14px;
           text-decoration: none;
@@ -1517,7 +1517,7 @@ a.annotator-wrapper {
     border-style: solid;
     border-width: 0px;
     padding: 5px 10px 5px 10px;
-    font-family: "Source Sans Pro";
+    font-family: "Proxima Nova";
     font-size: 16px;
     text-decoration: none;
     cursor: pointer; }
@@ -1806,7 +1806,7 @@ div.note {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Source Sans Pro";
+  font-family: "Proxima Nova";
   font-size: 13px;
   text-decoration: none;
   text-transform: uppercase;
