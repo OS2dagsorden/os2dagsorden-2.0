@@ -1,7 +1,7 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Bitter");
-@import url("https://fonts.googleapis.com/css?family=Proxima Nova");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700");
 #section-header {
   background: #ae477d; }
 
@@ -24,14 +24,14 @@
     }*/ }
   .user-logout-block .user-logout-textbox {
     color: #FFF;
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     font-weight: 400;
     font-size: 1em; }
   .user-logout-block .button {
     margin: 0 5px; }
   .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
     color: #FFF;
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     font-weight: 100;
     text-shadow: none;
     text-transform: none;
@@ -179,7 +179,7 @@
   border-radius: 3px;
   color: #FFF;
   padding: 5px 20px 5px 20px;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-size: 16px;
   text-decoration: none;
   cursor: pointer;
@@ -192,7 +192,7 @@
     background: #9c1a5e;
     color: #FFF;
     padding: 5px 10px 5px 10px;
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     font-size: 13px;
     text-decoration: none;
     text-transform: uppercase;
@@ -200,7 +200,7 @@
     .form-submit.nav-button:hover {
       background: #ae477d;
       padding: 5px 10px 5px 10px;
-      font-family: "Proxima Nova";
+      font-family: "Source Sans Pro";
       font-size: 13px;
       text-decoration: none;
       text-transform: uppercase;
@@ -220,7 +220,7 @@
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
   background: #FFF;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-size: 14px; }
 
 #region-footer-first, #region-postscript-first {
@@ -288,7 +288,7 @@ div.content ul.menu li {
   div.content ul.menu li a {
     display: block;
     color: #373636;
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     border: 1px solid #e3d6d6;
     border-radius: 3px;
     font-weight: 100;
@@ -388,7 +388,7 @@ ul li.leaf {
   cursor: pointer; }
   .help-button:after {
     content: '!';
-    left: 9px;
+    left: 8px;
     position: absolute;
     top: 1px;
     margin: auto; }
@@ -513,7 +513,7 @@ ul li.leaf {
 .view-header h3, .view-content h3 {
   color: #373636;
   text-transform: capitalize;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-weight: 100;
   font-size: 18px;
   background-color: #f7f1f1;
@@ -540,6 +540,20 @@ div.date-heading h3 {
   border-radius: 3px;
   border: 1px solid #f7f1f1;
   padding: 5px 5px 0 5px; }
+
+.node.brugerroller {
+  background: none;
+  border: none; }
+  .node.brugerroller ul, .node.brugerroller ul#available_committee {
+    background: #f7f1f1;
+    padding: 5px 20px; }
+  .node.brugerroller ul#available_committee {
+    min-height: 95%;
+    margin-bottom: 0px;
+    border-color: #f7f1f1; }
+
+h1.title.brugerroller {
+  margin-top: 15px; }
 
 .node-form {
   padding: 5px 15px; }
@@ -569,7 +583,7 @@ div.attachment {
 /*---------------------------- Blocks START ----------------------------*/
 h2.block-title, h1.title {
   color: #373636;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-weight: bold;
   font-size: 20px;
   margin-top: 0;
@@ -675,7 +689,7 @@ div.block-inner {
 .calendar-calendar {
   padding-bottom: 10px; }
   .calendar-calendar table.mini {
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     font-size: 12px; }
     .calendar-calendar table.mini thead {
       border: 1px solid #FFF; }
@@ -862,7 +876,7 @@ pager li.pager-first {
   border-width: 0px;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-size: 16px;
   text-decoration: none;
   cursor: pointer; }
@@ -988,7 +1002,7 @@ table tr th {
   background: #f7f1f1;
   border: none;
   color: #373636;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-weight: bold;
   font-size: 14px; }
   table tr th a {
@@ -998,48 +1012,49 @@ table tr th {
       color: #FFF;
       font-weight: bold; }
 
-table.views-table tr {
-  border-color: rgba(255, 255, 255, 0.7);
-  border-style: solid;
-  border-bottom-width: 1px; }
-  table.views-table tr:last-child {
-    border: none; }
-  table.views-table tr td {
-    padding: 8px 0; }
-    table.views-table tr td a {
+table.views-table {
+  border: none;
+  margin-bottom: 0px; }
+
+table.views-table tbody tr {
+  border-bottom: 1px solid white; }
+  table.views-table tbody tr:last-child {
+    border-bottom: none; }
+  table.views-table tbody tr td {
+    padding: 8px 0;
+    background: none; }
+    table.views-table tbody tr td.views-field.views-field-php-4 {
+      padding-left: 10px;
+      padding-right: 10px; }
+    table.views-table tbody tr td a {
       display: block;
       position: relative;
       background: rgba(255, 255, 255, 0.7);
       color: #373636;
       padding: 8px;
       /*     vertical-align:center; */
-      font-family: "Proxima Nova";
+      font-family: "Source Sans Pro";
       font-weight: normal;
       font-size: 14px;
       text-decoration: none;
-      border-color: rgba(255, 255, 255, 0.7);
-      border-style: solid;
-      border-top-width: 1px;
-      border-bottom-width: 1px;
-      border-radius: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis; }
-      table.views-table tr td a:hover {
+      table.views-table tbody tr td a:hover {
         text-decoration: none; }
-    table.views-table tr td .bilag a {
+    table.views-table tbody tr td .bilag a {
       line-height: 20px;
       font-weight: normal;
       padding-left: 3px;
       overflow: hidden;
       text-overflow: ellipsis; }
-      table.views-table tr td .bilag a:hover {
+      table.views-table tbody tr td .bilag a:hover {
         line-height: 20px;
         font-weight: normal;
         padding-left: 3px;
         overflow: hidden;
         text-overflow: ellipsis; }
-    table.views-table tr td .bilag .hide_show_attachment_text {
+    table.views-table tbody tr td .bilag .hide_show_attachment_text {
       padding: 3px 10px; }
 
 td, th {
@@ -1095,7 +1110,7 @@ table .speaker-paper-link-container {
   background: #FFF;
   border: 1px solid #fbf8f8;
   border-top: 0px;
-  font-family: "Proxima Nova"; }
+  font-family: "Source Sans Pro"; }
   .view-meeting-details .form-submit {
     padding: 10px 50px 10px 50px;
     font-size: 16px; }
@@ -1118,7 +1133,7 @@ table .speaker-paper-link-container {
       font-weight: bold;
       width: 243px;
       font-size: 16px;
-      font-family: "Proxima Nova";
+      font-family: "Source Sans Pro";
       text-transform: none; }
   .view-meeting-details .view-content {
     background: #f7f1f1;
@@ -1166,7 +1181,7 @@ table .speaker-paper-link-container {
           color: #001D2F;
           padding: 3px 10px 3px 10px;
           line-height: 30px;
-          font-family: "Proxima Nova";
+          font-family: "Source Sans Pro";
           font-weight: bold;
           font-size: 14px;
           text-decoration: none;
@@ -1188,8 +1203,8 @@ table .speaker-paper-link-container {
     background: none;
     border: none;
     /*.view-content {
-      background: $color-background-primary;
-    }*/ }
+        background: $color-background-primary;
+      }*/ }
 
 /*bullet point details table*/
 div.speaker-paper-print {
@@ -1457,7 +1472,7 @@ a.annotator-wrapper {
     border-style: solid;
     border-width: 0px;
     padding: 5px 10px 5px 10px;
-    font-family: "Proxima Nova";
+    font-family: "Source Sans Pro";
     font-size: 16px;
     text-decoration: none;
     cursor: pointer; }
@@ -1671,7 +1686,6 @@ a.annotator-wrapper {
   margin: auto;
   position: relative; }
   .arrows-reverse > img {
-    width: 100%;
     height: auto;
     margin: auto;
     position: absolute;
@@ -1746,7 +1760,7 @@ div.note {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Proxima Nova";
+  font-family: "Source Sans Pro";
   font-size: 13px;
   text-decoration: none;
   text-transform: uppercase;
