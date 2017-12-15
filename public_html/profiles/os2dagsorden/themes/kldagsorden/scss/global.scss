@@ -139,20 +139,28 @@ div.content ul.menu li {
     }
   }
   #menu-print-kalendar {
-    background: $color-background-secondary url('../img/icon_print.png') no-repeat 45px 50%;
+    background: $color-background-secondary;
     padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in;
     &:hover, &.active:hover {
-      background: $color-branding-secondary url('../img/icon_print_white.png') no-repeat 45px 50%;
+      background: $color-branding-secondary;
       background-size: 20px;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active {
       background-size: 20px;
-      background: $color-branding-secondary url('../img/icon_print_white.png') no-repeat 45px 50%;
+      background: $color-branding-secondary;
       color: $color-white;
+    }
+     &:before {      
+      content: "\E916";
+      font-family: $font-icons; 
+      font-size: $font-size-headings;
+      position: absolute;
+      top: 10px;
+      left: 45px;     
     }
   }
   #menu-sog {
@@ -162,19 +170,26 @@ div.content ul.menu li {
     }
   }
   #menu-simple-user-edit {
-    background: $color-background-secondary url('../img/icon_simple_user_edit.png') no-repeat 45px 50%;
+    background: $color-background-secondary;
     background-size: 20px;
     padding-left: 75px;
     transition: background-color .1s ease-in;
+    position:relative;
+    &:before {      
+      content: "\E8B8";
+      font-family: $font-icons; 
+      font-size: $font-size-headings;
+      position: absolute;
+      top: 10px;
+      left: 45px;     
+    }
     &:hover {
-      background: $color-branding-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 45px 50%;
-      background-size: 20px;
+      background: $color-branding-secondary;     
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active, &.active:hover {
-      background: $color-branding-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 45px 50%;
-      background-size: 20px;
+      background: $color-branding-secondary;
       color: $color-white;
     }
   }
@@ -512,7 +527,7 @@ div {
 .view .date-nav-wrapper .pager {
   .date-prev a, .date-next a {
     color: rgba($color-white, 0.7);
-    font-size: font-size-button;
+    font-size: $font-size-button;
     text-decoration: none;
     background-color: rgba($color-white, 0.7);
     border: 1px solid rgba($color-white, 0.7);
@@ -539,18 +554,20 @@ div {
     }
   }
   .date-prev a:after {
-    content: "<";
-    left: 19px;
-    top: 4px;
+    content: "\E314";
+    font-family: $font-icons;    
+    left: 16px;
+    top: 5px;
     position: absolute;
     &:hover {
       color: $color-white;
     }
   }
   .date-next a:after {
-    content: ">";
-    right: 19px;
-    top: 4px;
+    content: "\E315";
+    font-family: $font-icons; 
+    right: 16px;
+    top: 5px;
     position: absolute;
   }
 }

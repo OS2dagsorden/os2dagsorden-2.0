@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Bitter");
 @import url("https://fonts.googleapis.com/css?family=Proxima Nova");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 #section-header {
   background: #ae477d; }
 
@@ -10,42 +11,56 @@
   top: -15px;
   padding: 15px 0  5px 5px; }
 
-.user-logout-block .user-logout-textbox {
-  color: #FFF;
-  font-family: "Proxima Nova";
-  font-weight: 400;
-  font-size: 1em; }
-
-.user-logout-block .button {
-  margin: 0 5px; }
-
-.user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
-  color: #FFF;
-  font-family: "Proxima Nova";
-  font-weight: 100;
-  text-shadow: none;
-  text-transform: none;
-  font-size: 16px;
-  border: 1px solid #9c1a5e;
-  border-radius: 3px;
-  padding: 5px 10px 5px 10px;
-  background: #9c1a5e; }
-
-.user-logout-block .settings-btn {
-  background: #9c1a5e url("../img/icon_settings.png") no-repeat 10px 50%;
-  padding: 5px 10px 5px 30px;
-  background-size: 15px; }
-
-.user-logout-block .user-logout-btn {
-  background: #9c1a5e url("../img/icon_log_out.png") no-repeat 10px 50%;
-  white-space: nowrap;
-  padding: 5px 10px 5px 30px; }
-
-.user-logout-block .user-guide-btn {
-  background: #9c1a5e url("../img/icon_user_manual.png") no-repeat 5px 50%;
-  padding: 5px 10px 5px 35px;
-  white-space: nowrap;
-  background-size: 25px 100%; }
+.user-logout-block {
+  /* .settings-btn {
+        background: $color-branding-secondary url('../img/icon_settings.png') no-repeat 10px 50%;
+        padding: 5px 10px 5px 30px;
+        background-size: 15px;
+    }*/
+  /*.user-logout-btn {
+        background: $color-branding-secondary url('../img/icon_log_out.png') no-repeat 10px 50%;
+        white-space: nowrap;
+        padding: 5px 10px 5px 30px;
+    }*/ }
+  .user-logout-block .user-logout-textbox {
+    color: #FFF;
+    font-family: "Proxima Nova";
+    font-weight: 400;
+    font-size: 1em; }
+  .user-logout-block .button {
+    margin: 0 5px; }
+  .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
+    color: #FFF;
+    font-family: "Proxima Nova";
+    font-weight: 100;
+    text-shadow: none;
+    text-transform: none;
+    font-size: 16px;
+    border: 1px solid #9c1a5e;
+    border-radius: 3px;
+    padding: 5px 10px 5px 25px;
+    background: #9c1a5e;
+    display: inline-block;
+    position: relative; }
+  .user-logout-block .settings-btn:before {
+    content: "\E8B8";
+    font-family: "Material Icons";
+    font-size: 16px;
+    position: absolute;
+    top: 4px;
+    left: 5px; }
+  .user-logout-block .user-logout-btn:before {
+    content: "\E5C8";
+    font-family: "Material Icons";
+    font-size: 16px;
+    position: absolute;
+    top: 4px;
+    left: 5px; }
+  .user-logout-block .user-guide-btn {
+    background: #9c1a5e url("../img/icon_user_manual.png") no-repeat 5px 50%;
+    padding: 5px 10px 5px 35px;
+    white-space: nowrap;
+    background-size: 25px 100%; }
 
 .front.not-logged-in .zone-content-wrapper {
   padding-top: 30px; }
@@ -299,36 +314,49 @@ div.content ul.menu li {
       background-size: 20px;
       background: #d7d9da url("../img/icon_home.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-print-kalendar {
-    background: #e3d6d6 url("../img/icon_print.png") no-repeat 45px 50%;
+    background: #e3d6d6;
     padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in; }
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
-      background: #9c1a5e url("../img/icon_print_white.png") no-repeat 45px 50%;
+      background: #9c1a5e;
       background-size: 20px;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-print-kalendar.active {
       background-size: 20px;
-      background: #9c1a5e url("../img/icon_print_white.png") no-repeat 45px 50%;
+      background: #9c1a5e;
       color: #FFF; }
+    div.content ul.menu li #menu-print-kalendar:before {
+      content: "\E916";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      top: 10px;
+      left: 45px; }
   div.content ul.menu li #menu-sog {
     background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
       background: #d7d9da url("../img/icon_search.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-simple-user-edit {
-    background: #e3d6d6 url("../img/icon_simple_user_edit.png") no-repeat 45px 50%;
+    background: #e3d6d6;
     background-size: 20px;
     padding-left: 75px;
-    transition: background-color .1s ease-in; }
+    transition: background-color .1s ease-in;
+    position: relative; }
+    div.content ul.menu li #menu-simple-user-edit:before {
+      content: "\E8B8";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      top: 10px;
+      left: 45px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
-      background: #9c1a5e url("../img/icon_simple_user_edit_white.png") no-repeat 45px 50%;
-      background-size: 20px;
+      background: #9c1a5e;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-simple-user-edit.active, div.content ul.menu li #menu-simple-user-edit.active:hover {
-      background: #9c1a5e url("../img/icon_simple_user_edit_white.png") no-repeat 45px 50%;
-      background-size: 20px;
+      background: #9c1a5e;
       color: #FFF; }
 
 /* general for all links with not pictures */
@@ -606,7 +634,7 @@ div.block-inner {
 
 .view .date-nav-wrapper .pager .date-prev a, .view .date-nav-wrapper .pager .date-next a {
   color: rgba(255, 255, 255, 0.7);
-  font-size: font-size-button;
+  font-size: 16px;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -629,17 +657,19 @@ div.block-inner {
     text-shadow: none; }
 
 .view .date-nav-wrapper .pager .date-prev a:after {
-  content: "<";
-  left: 19px;
-  top: 4px;
+  content: "\E314";
+  font-family: "Material Icons";
+  left: 16px;
+  top: 5px;
   position: absolute; }
   .view .date-nav-wrapper .pager .date-prev a:after:hover {
     color: #FFF; }
 
 .view .date-nav-wrapper .pager .date-next a:after {
-  content: ">";
-  right: 19px;
-  top: 4px;
+  content: "\E315";
+  font-family: "Material Icons";
+  right: 16px;
+  top: 5px;
   position: absolute; }
 
 .calendar-calendar {

@@ -28,18 +28,36 @@
         font-size: $font-size-button;
         border: $border-button;
         border-radius: $border-radius;
-        padding: 5px 10px 5px 10px;
+        padding: 5px 10px 5px 25px;
         background: $color-branding-secondary;
+        display: inline-block;
+        position: relative;
     }
-    .settings-btn {
+   /* .settings-btn {
         background: $color-branding-secondary url('../img/icon_settings.png') no-repeat 10px 50%;
         padding: 5px 10px 5px 30px;
         background-size: 15px;
+    }*/
+    .settings-btn:before{
+      content: "\E8B8";
+      font-family: $font-icons; 
+      font-size: $font-size-button;
+      position: absolute;
+      top: 4px;
+      left: 5px;    
     }
-    .user-logout-btn {
+    /*.user-logout-btn {
         background: $color-branding-secondary url('../img/icon_log_out.png') no-repeat 10px 50%;
         white-space: nowrap;
         padding: 5px 10px 5px 30px;
+    }*/
+     .user-logout-btn:before{
+      content: "\E5C8";
+      font-family: $font-icons; 
+      font-size: $font-size-button;
+      position: absolute;
+      top: 4px;
+      left: 5px;    
     }
     .user-guide-btn {
         background: $color-branding-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
