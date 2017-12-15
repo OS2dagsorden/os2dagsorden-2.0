@@ -394,6 +394,25 @@ div.date-heading h3 {
   border: $border-block-body;
   padding: 5px 5px 0 5px;
 }
+
+.node.brugerroller{
+  background: none;
+  border: none;
+  ul,  ul#available_committee{
+    background: $color-background-primary;
+    padding: 5px 20px;
+  }
+  ul#available_committee{
+    min-height: 95%;
+    margin-bottom: 0px;
+    border-color: $color-background-primary;
+  }
+}
+
+h1.title.brugerroller{
+  margin-top: 15px;
+}
+
 .node-form {
   padding: 5px 15px;
 }
