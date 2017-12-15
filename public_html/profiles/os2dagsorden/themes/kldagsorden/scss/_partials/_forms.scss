@@ -90,7 +90,7 @@
     }
 }
 .form-submit {
-    background-color: $color-branding-secondary;
+    background-color: $color-branding-primary;
     border: $border-color-secondary;
     border-radius: $border-radius;
     color: $color-white;
@@ -102,7 +102,7 @@
     font-weight: bold;
     transition: background-color .1s ease-in;
     &:hover {
-        background-color: $color-branding-primary;
+        background-color: $color-branding-secondary;
         transition: background-color .3s ease-out;
     }
     &.nav-button {

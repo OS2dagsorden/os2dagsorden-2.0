@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700");
 #section-header {
-  background: #ae477d; }
+  background: #9c1a5e; }
 
 .content div.user-logout-block {
   position: absolute;
@@ -36,10 +36,10 @@
     text-shadow: none;
     text-transform: none;
     font-size: 16px;
-    border: 1px solid #9c1a5e;
+    border: 1px solid #ae477d;
     border-radius: 3px;
     padding: 5px 10px 5px 25px;
-    background: #9c1a5e;
+    background: #ae477d;
     display: inline-block;
     position: relative; }
   .user-logout-block .settings-btn:before {
@@ -57,7 +57,7 @@
     top: 4px;
     left: 5px; }
   .user-logout-block .user-guide-btn {
-    background: #9c1a5e url("../img/icon_user_manual.png") no-repeat 5px 50%;
+    background: #ae477d url("../img/icon_user_manual.png") no-repeat 5px 50%;
     padding: 5px 10px 5px 35px;
     white-space: nowrap;
     background-size: 25px 100%; }
@@ -95,7 +95,7 @@
   border-radius: 3px; }
 
 #user-login-form .form-actions input:hover {
-  background: #ae477d; }
+  background: #9c1a5e; }
 
 .form-item, .views-exposed-widget {
   margin-bottom: 1em;
@@ -175,7 +175,7 @@
 
 .form-submit {
   background-color: #9c1a5e;
-  border: 1px solid #9c1a5e;
+  border: 1px solid #ae477d;
   border-radius: 3px;
   color: #FFF;
   padding: 5px 20px 5px 20px;
@@ -189,7 +189,7 @@
     background-color: #ae477d;
     transition: background-color .3s ease-out; }
   .form-submit.nav-button {
-    background: #9c1a5e;
+    background: #ae477d;
     color: #FFF;
     padding: 5px 10px 5px 10px;
     font-family: "Source Sans Pro";
@@ -198,7 +198,7 @@
     text-transform: uppercase;
     cursor: pointer; }
     .form-submit.nav-button:hover {
-      background: #ae477d;
+      background: #9c1a5e;
       padding: 5px 10px 5px 10px;
       font-family: "Source Sans Pro";
       font-size: 13px;
@@ -209,7 +209,7 @@
     margin-right: 10px; }
 
 .ui-state-default {
-  border: 1px solid #9c1a5e;
+  border: 1px solid #ae477d;
   border-radius: 3px; }
 
 .select-committee ul.droptrue {
@@ -291,14 +291,13 @@ div.content ul.menu li {
     font-family: "Source Sans Pro";
     border: 1px solid #e3d6d6;
     border-radius: 3px;
-    font-weight: 100;
     font-size: 20px;
     text-decoration: none;
     padding: 10px 10px 10px 50px;
-    background: #9c1a5e; }
+    background: #ae477d; }
     div.content ul.menu li a:hover, div.content ul.menu li a.active {
-      background: #9c1a5e;
-      border: 1px solid #9c1a5e; }
+      background: #ae477d;
+      border: 1px solid #ae477d; }
   div.content ul.menu li #menu-byradet {
     background: #e3d6d6 url("../img/icon_byradet.png") no-repeat 45px 50%;
     padding-left: 75px;
@@ -319,13 +318,13 @@ div.content ul.menu li {
     background-size: 20px;
     transition: background-color .1s ease-in; }
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
-      background: #9c1a5e;
+      background: #ae477d;
       background-size: 20px;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-print-kalendar.active {
       background-size: 20px;
-      background: #9c1a5e;
+      background: #ae477d;
       color: #FFF; }
     div.content ul.menu li #menu-print-kalendar:before {
       content: "\E916";
@@ -352,11 +351,11 @@ div.content ul.menu li {
       top: 10px;
       left: 45px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
-      background: #9c1a5e;
+      background: #ae477d;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-simple-user-edit.active, div.content ul.menu li #menu-simple-user-edit.active:hover {
-      background: #9c1a5e;
+      background: #ae477d;
       color: #FFF; }
 
 /* general for all links with not pictures */
@@ -391,7 +390,8 @@ ul li.leaf {
     left: 8px;
     position: absolute;
     top: 1px;
-    margin: auto; }
+    margin: auto;
+    font-weight: bold; }
 
 #ToolTipDiv {
   Position: absolute;
@@ -658,7 +658,7 @@ div.block-inner {
   display: block;
   padding: 0; }
   .view .date-nav-wrapper .pager .date-prev a:hover, .view .date-nav-wrapper .pager .date-next a:hover {
-    color: #9c1a5e; }
+    color: #ae477d; }
   .view .date-nav-wrapper .pager .date-prev a:after, .view .date-nav-wrapper .pager .date-next a:after {
     color: #373636; }
   .view .date-nav-wrapper .pager .date-prev a:after:hover, .view .date-nav-wrapper .pager .date-next a:after:hover {
@@ -1165,7 +1165,67 @@ table .speaker-paper-link-container {
   .view-meeting-details .attachment .bullet-point-attachments .view-content {
     background: #FFF; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
-      border-radius: 3px; }
+      border-radius: 3px;
+      color: transparent;
+      width: 35px;
+      height: 35px;
+      z-index: 9999; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .button:before {
+      content: "\E5CF";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      color: #FFF;
+      cursor: pointer;
+      top: 8px;
+      left: 8px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .button.opened:before {
+      content: "\E5CE";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      color: #FFF;
+      cursor: pointer;
+      top: 8px;
+      left: 8px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text:before {
+      content: "arrow_downward";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      color: #FFF;
+      cursor: pointer;
+      top: 8px;
+      left: 8px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text.opened:before {
+      content: "arrow_upward";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: absolute;
+      color: #FFF;
+      cursor: pointer;
+      top: 8px;
+      left: 8px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container {
+      position: relative; }
+      .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button:before {
+        content: "\E5CF";
+        font-family: "Material Icons";
+        font-size: 20px;
+        position: absolute;
+        color: #FFF;
+        cursor: pointer;
+        top: 15px;
+        left: 8px; }
+      .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button.opened:before {
+        content: "\E5CE";
+        font-family: "Material Icons";
+        font-size: 20px;
+        position: absolute;
+        color: #FFF;
+        cursor: pointer;
+        top: 15px;
+        left: 8px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
       background: #FFF; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr {
@@ -1478,7 +1538,7 @@ a.annotator-wrapper {
     cursor: pointer; }
 
 .button-active {
-  background: #ae477d;
+  background: #9c1a5e;
   color: #FFF; }
 
 /* ---------------------------- Breadcrumbs END---------------------------- */
@@ -1627,7 +1687,7 @@ a.annotator-wrapper {
   z-index: 1; }
 
 .form-save-submit {
-  background: #9c1a5e url("../img/icon_save.png") no-repeat 5px 50%;
+  background: #ae477d url("../img/icon_save.png") no-repeat 5px 50%;
   padding: 5px 10px 5px 25px; }
 
 .form-add-submit {
@@ -1809,14 +1869,14 @@ div.note {
   display: block; }
 
 .dropdown:hover .dropbtn {
-  background: #701344;
+  background: #8a3863;
   color: #FFF; }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /* ---------------------------- Dropdown Button END ---------------------------- */
 /* Add content */
 .content dl.node-type-list dt a {
-  background-color: #9c1a5e;
+  background-color: #ae477d;
   color: #FFF;
   padding: 10px 20px;
   width: 100%;
@@ -1828,7 +1888,7 @@ div.note {
     display: inline-block;
     margin-right: 7px; }
   .content dl.node-type-list dt a:hover {
-    background-color: #ae477d;
+    background-color: #9c1a5e;
     transition: background-color .3s ease-out; }
 
 .content dl.node-type-list dt, .content dl.node-type-list dd {
