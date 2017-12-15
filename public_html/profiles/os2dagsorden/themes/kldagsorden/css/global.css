@@ -1,48 +1,42 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Bitter");
-@import url("https://fonts.googleapis.com/css?family=Proxima Nova");
 #section-header {
-  background: #ae477d; }
+  background: #28408C; }
 
 .content div.user-logout-block {
   position: absolute;
-  right: 30px;
+  right: 0;
   top: -15px;
   padding: 15px 0  5px 5px; }
 
 .user-logout-block .user-logout-textbox {
   color: #FFF;
-  font-family: "Proxima Nova";
+  font-family: "Bitter", serif;
   font-weight: 400;
   font-size: 1em; }
 
-.user-logout-block .button {
-  margin: 0 5px; }
-
 .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
   color: #FFF;
-  font-family: "Proxima Nova";
-  font-weight: 100;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
   text-shadow: none;
-  text-transform: none;
-  font-size: 16px;
-  border: 1px solid #9c1a5e;
-  border-radius: 3px;
+  border-color: #FFF;
+  border-style: solid;
+  border-width: 0px;
   padding: 5px 10px 5px 10px;
-  background: #9c1a5e; }
+  background: #426BB3; }
 
 .user-logout-block .settings-btn {
-  background: #9c1a5e url("../img/icon_settings.png") no-repeat 10px 50%;
-  padding: 5px 10px 5px 30px;
-  background-size: 15px; }
+  background: #426BB3 url("../img/icon_settings.png") no-repeat 5px 50%;
+  padding: 5px 10px 5px 25px; }
 
 .user-logout-block .user-logout-btn {
-  background: #9c1a5e url("../img/icon_log_out.png") no-repeat 10px 50%;
+  background: #426BB3 url("../img/icon_log_out.png") no-repeat 5px 50%;
   white-space: nowrap;
-  padding: 5px 10px 5px 30px; }
+  padding: 5px 10px 5px 25px; }
 
 .user-logout-block .user-guide-btn {
-  background: #9c1a5e url("../img/icon_user_manual.png") no-repeat 5px 50%;
+  background: #426BB3 url("../img/icon_user_manual.png") no-repeat 5px 50%;
   padding: 5px 10px 5px 35px;
   white-space: nowrap;
   background-size: 25px 100%; }
@@ -64,8 +58,7 @@
   min-height: 400px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid #f7f1f1;
-  border-radius: 3px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   background: #FFF; }
   #block-user-login .block-title {
     text-align: center; }
@@ -74,13 +67,7 @@
 
 #user-login-form input.form-text {
   display: block;
-  width: 100%;
-  background: #f7f1f1;
-  padding: 10px;
-  border-radius: 3px; }
-
-#user-login-form .form-actions input:hover {
-  background: #ae477d; }
+  width: 100%; }
 
 .form-item, .views-exposed-widget {
   margin-bottom: 1em;
@@ -92,7 +79,7 @@
   .form-item input.form-text, .views-exposed-widget input.form-text {
     font-size: 1.0em;
     line-height: 1em;
-    border: 1px solid #fbf8f8;
+    border: 1px solid #e0e0e0;
     padding: 5px 10px;
     border-radius: 2px;
     background-color: #FFF;
@@ -102,7 +89,7 @@
   .form-item select.form-select, .views-exposed-widget select.form-select {
     font-size: 1.0em;
     line-height: 1em;
-    border: 1px solid #fbf8f8;
+    border: 1px solid #e0e0e0;
     padding: 5px 10px;
     border-radius: 2px;
     background-color: #FFF;
@@ -159,33 +146,32 @@
       margin-left: 0; } }
 
 .form-submit {
-  background-color: #9c1a5e;
-  border: 1px solid #9c1a5e;
-  border-radius: 3px;
+  background-color: #426BB3;
+  border: none;
   color: #FFF;
   padding: 5px 20px 5px 20px;
-  font-family: "Proxima Nova";
-  font-size: 16px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
   text-decoration: none;
+  text-transform: uppercase;
   cursor: pointer;
-  font-weight: bold;
   transition: background-color .1s ease-in; }
   .form-submit:hover {
-    background-color: #ae477d;
+    background-color: #28408C;
     transition: background-color .3s ease-out; }
   .form-submit.nav-button {
-    background: #9c1a5e;
+    background: #426BB3;
     color: #FFF;
     padding: 5px 10px 5px 10px;
-    font-family: "Proxima Nova";
+    font-family: Arial, sans-serif;
     font-size: 13px;
     text-decoration: none;
     text-transform: uppercase;
     cursor: pointer; }
     .form-submit.nav-button:hover {
-      background: #ae477d;
+      background: #28408C;
       padding: 5px 10px 5px 10px;
-      font-family: "Proxima Nova";
+      font-family: Arial, sans-serif;
       font-size: 13px;
       text-decoration: none;
       text-transform: uppercase;
@@ -193,20 +179,12 @@
   .form-actions.form-wrapper .form-submit {
     margin-right: 10px; }
 
-.ui-state-default {
-  border: 1px solid #9c1a5e;
-  border-radius: 3px; }
-
-.select-committee ul.droptrue {
-  border: 1px solid #f7f1f1;
-  border-radius: 3px; }
-
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
   background: #FFF;
-  font-family: "Proxima Nova";
-  font-size: 14px; }
+  font-family: Arial, sans-serif;
+  font-size: 16px; }
 
 #region-footer-first, #region-postscript-first {
   min-height: 40px; }
@@ -272,74 +250,53 @@ div.content ul.menu li {
   padding: 0; }
   div.content ul.menu li a {
     display: block;
-    color: #373636;
-    font-family: "Proxima Nova";
-    border: 1px solid #e3d6d6;
-    border-radius: 3px;
+    color: #001D2F;
+    font-family: "Bitter", serif;
     font-weight: 100;
     font-size: 20px;
     text-decoration: none;
     padding: 10px 10px 10px 50px;
-    background: #9c1a5e; }
+    background: #426BB3; }
     div.content ul.menu li a:hover, div.content ul.menu li a.active {
-      background: #9c1a5e;
-      border: 1px solid #9c1a5e; }
+      background: #28408C; }
   div.content ul.menu li #menu-byradet {
-    background: #e3d6d6 url("../img/icon_byradet.png") no-repeat 45px 50%;
-    padding-left: 75px;
-    background-size: 20px; }
+    background: #ECEEEF url("../img/icon_byradet.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-byradet.active {
-      background-size: 20px;
-      background: #d7d9da url("../img/icon_byradet.png") no-repeat 45px 50%; }
+      background: #d7d9da url("../img/icon_byradet.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-home {
-    background: #e3d6d6 url("../img/icon_home.png") no-repeat 45px 50%;
-    padding-left: 75px;
-    background-size: 20px; }
+    background: #ECEEEF url("../img/icon_home.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-home.active {
-      background-size: 20px;
       background: #d7d9da url("../img/icon_home.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-print-kalendar {
-    background: #e3d6d6 url("../img/icon_print.png") no-repeat 45px 50%;
-    padding-left: 75px;
-    background-size: 20px;
+    background: #ECEEEF url("../img/icon_print.png") no-repeat 15px 50%;
     transition: background-color .1s ease-in; }
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
-      background: #9c1a5e url("../img/icon_print_white.png") no-repeat 45px 50%;
-      background-size: 20px;
+      background: #426BB3 url("../img/icon_print_white.png") no-repeat 15px 50%;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-print-kalendar.active {
-      background-size: 20px;
-      background: #9c1a5e url("../img/icon_print_white.png") no-repeat 45px 50%;
+      background: #28408C url("../img/icon_print_white.png") no-repeat 15px 50%;
       color: #FFF; }
   div.content ul.menu li #menu-sog {
-    background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%; }
+    background: #ECEEEF url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
       background: #d7d9da url("../img/icon_search.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-simple-user-edit {
-    background: #e3d6d6 url("../img/icon_simple_user_edit.png") no-repeat 45px 50%;
-    background-size: 20px;
-    padding-left: 75px;
+    background: #ECEEEF url("../img/icon_simple_user_edit.png") no-repeat 15px 50%;
     transition: background-color .1s ease-in; }
     div.content ul.menu li #menu-simple-user-edit:hover {
-      background: #9c1a5e url("../img/icon_simple_user_edit_white.png") no-repeat 45px 50%;
-      background-size: 20px;
+      background: #426BB3 url("../img/icon_simple_user_edit_white.png") no-repeat 15px 50%;
       color: #FFF;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-simple-user-edit.active, div.content ul.menu li #menu-simple-user-edit.active:hover {
-      background: #9c1a5e url("../img/icon_simple_user_edit_white.png") no-repeat 45px 50%;
-      background-size: 20px;
+      background: #28408C url("../img/icon_simple_user_edit_white.png") no-repeat 15px 50%;
       color: #FFF; }
 
 /* general for all links with not pictures */
 /* specific for each link */
-#block-views-exp-meetings-search-page h2, #block-views-exp-meetings-search-page #os2dagsorden-search-form h2 {
-  background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%;
-  background-size: 20px;
+#block-views-exp-meetings-search-page h2, #os2dagsorden-search-form h2 {
+  background: #ECEEEF url("../img/icon_search.png") no-repeat 15px 50%;
   padding-left: 45px; }
-
-#block-views-exp-meetings-search-page .container-inline-date .form-item .form-item {
-  width: 100%; }
 
 ul li.leaf {
   list-style-image: none;
@@ -349,21 +306,13 @@ ul li.leaf {
 /*---------------------------- Indicator Icons Start ----------------------------*/
 .help-button {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 15px;
+  min-width: 30px;
+  min-height: 30px;
+  top: 10px;
   right: 10px;
   float: right;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
+  background: url("../img/icon_help.png") no-repeat 50% top;
   cursor: pointer; }
-  .help-button:after {
-    content: '!';
-    left: 9px;
-    position: absolute;
-    top: 1px;
-    margin: auto; }
 
 #ToolTipDiv {
   Position: absolute;
@@ -483,12 +432,12 @@ ul li.leaf {
 /*---------------------------- Show hide menu End ----------------------------*/
 /*---------------------------- Views Start ----------------------------*/
 .view-header h3, .view-content h3 {
-  color: #373636;
-  text-transform: capitalize;
-  font-family: "Proxima Nova";
+  color: #001D2F;
+  text-transform: uppercase;
+  font-family: "Bitter", serif;
   font-weight: 100;
-  font-size: 18px;
-  background-color: #f7f1f1;
+  font-size: 16px;
+  background-color: #ECEEEF;
   padding: 5px 10px;
   margin-top: 5px;
   margin-bottom: 5px; }
@@ -508,10 +457,9 @@ div.date-heading h3 {
     background: none; }
 
 .view-id-events, .view-id-user_committee, .view-id-user_follow_committees, .view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_, .block-views-exp-meetings-search-page .views-exposed-form, .node-form, .node, .view-display-id-page {
-  background: #f7f1f1;
-  border-radius: 3px;
-  border: 1px solid #f7f1f1;
-  padding: 5px 5px 0 5px; }
+  background: #ECEEEF;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 5px; }
 
 .node-form {
   padding: 5px 15px; }
@@ -520,8 +468,7 @@ div.date-heading h3 {
   padding: 5px 15px 0 15px; }
 
 div.attachment {
-  padding-top: 30px;
-  background: #f7f1f1; }
+  margin-top: 30px; }
 
 .view-footer {
   padding-top: 20px;
@@ -540,17 +487,16 @@ div.attachment {
 /*---------------------------- Views End ----------------------------*/
 /*---------------------------- Blocks START ----------------------------*/
 h2.block-title, h1.title {
-  color: #373636;
-  font-family: "Proxima Nova";
-  font-weight: bold;
+  color: #001D2F;
+  text-transform: uppercase;
+  font-family: "Bitter", serif;
+  font-weight: 100;
   font-size: 20px;
   margin-top: 0;
-  background: #e3d6d6;
-  border-radius: 3px;
-  border: 1px solid #e3d6d6;
-  padding: 12px 5px 10px 12px;
+  background: #ECEEEF;
+  padding: 5px 5px 3px 15px;
   margin-bottom: 0;
-  border-bottom: 1px solid #fbf8f8; }
+  border-bottom: 1px solid #e0e0e0; }
 
 div.front-page-info-block, .node {
   padding: 10px; }
@@ -602,106 +548,66 @@ div.block-inner {
 
 .block-views .view .date-nav-wrapper .date-next {
   left: auto;
-  right: 0; }
+  right: 10px; }
 
 .view .date-nav-wrapper .pager .date-prev a, .view .date-nav-wrapper .pager .date-next a {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: font-size-button;
+  color: inherit;
+  font-size: 16px;
+  text-decoration: none; }
+
+.calendar-calendar tr td.today, .calendar-calendar tr.odd td.today, .calendar-calendar tr.even td.today {
+  background: none; }
+
+.calendar-calendar .mini tr td.today a {
+  background-color: #001D2F;
+  color: #feffff;
+  font-weight: bold;
+  border-radius: 5px; }
+
+.calendar-calendar .has-events a {
   text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  display: block;
+  background-color: #f9d4ed;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 3px 3px 3px 8px; }
+
+.calendar-calendar .has-no-events div.mini-day-off {
+  padding: 3px 3px 1px 8px; }
+
+.calendar-calendar td .inner div.day a {
+  color: #001D2F; }
+
+.calendar-calendar .month-view .full tr td.today, .calendar-calendar .month-view .full tr.odd td.today, .calendar-calendar .month-view .full tr.even td.today {
+  background: none repeat scroll 0 0 transparent;
+  border-left: 2px solid #001D2F;
+  border-right: 2px solid #001D2F; }
+
+.calendar-calendar .month-view .full tr td.single-day.today {
+  border-bottom: 2px solid #001D2F; }
+
+.calendar-calendar .month-view .full td.date-box.today {
+  border-color: #001D2F;
+  border-style: solid;
+  border-width: 2px 2px 0; }
+
+.calendar-calendar tr td.today, .calendar-calendar tr.odd td.today, .calendar-calendar tr.even td.today, .calendar-calendar tr td.today a {
+  color: #001D2F; }
+
+.calendar-calendar td {
+  color: #777777;
+  vertical-align: bottom; }
+
+.calendar-calendar .month-view .full td .inner div.day {
+  width: 100%;
   padding: 0; }
-  .view .date-nav-wrapper .pager .date-prev a:hover, .view .date-nav-wrapper .pager .date-next a:hover {
-    color: #9c1a5e; }
-  .view .date-nav-wrapper .pager .date-prev a:after, .view .date-nav-wrapper .pager .date-next a:after {
-    color: #373636; }
-  .view .date-nav-wrapper .pager .date-prev a:after:hover, .view .date-nav-wrapper .pager .date-next a:after:hover {
-    background-color: #e3d6d6;
-    color: #e3d6d6;
-    text-shadow: none; }
-  .view .date-nav-wrapper .pager .date-prev a:hover, .view .date-nav-wrapper .pager .date-next a:hover {
-    background-color: #e3d6d6;
-    color: #e3d6d6;
-    text-shadow: none; }
+  .calendar-calendar .month-view .full td .inner div.day a {
+    background-color: #f9d4ed;
+    border-radius: 5px;
+    padding: 0;
+    text-decoration: none; }
 
-.view .date-nav-wrapper .pager .date-prev a:after {
-  content: "<";
-  left: 19px;
-  top: 4px;
-  position: absolute; }
-  .view .date-nav-wrapper .pager .date-prev a:after:hover {
-    color: #FFF; }
-
-.view .date-nav-wrapper .pager .date-next a:after {
-  content: ">";
-  right: 19px;
-  top: 4px;
-  position: absolute; }
-
-.calendar-calendar {
-  padding-bottom: 10px; }
-  .calendar-calendar table.mini {
-    font-family: "Proxima Nova";
-    font-size: 12px; }
-    .calendar-calendar table.mini thead {
-      border: 1px solid #FFF; }
-    .calendar-calendar table.mini th.days {
-      background: #f7f1f1;
-      text-transform: uppercase;
-      border: none; }
-    .calendar-calendar table.mini tr {
-      border: none; }
-      .calendar-calendar table.mini tr td {
-        text-align: center;
-        background: #f7f1f1; }
-      .calendar-calendar table.mini tr td.empty {
-        background: #f7f1f1; }
-      .calendar-calendar table.mini tr td.today, .calendar-calendar table.mini tr.odd td.today, .calendar-calendar table.mini tr.even td.today {
-        background: none;
-        text-align: center; }
-    .calendar-calendar table.mini .mini tr td.today a {
-      color: #feffff;
-      font-weight: bold;
-      border-radius: 5px; }
-    .calendar-calendar table.mini .has-events a {
-      text-decoration: none;
-      background-color: #f9d4ed;
-      font-weight: bold;
-      border-radius: 5px;
-      padding: 3px 3px 3px 8px; }
-    .calendar-calendar table.mini .has-no-events div.mini-day-off {
-      padding: 3px 3px 1px 8px; }
-    .calendar-calendar table.mini td .inner div.day a {
-      color: #373636; }
-    .calendar-calendar table.mini .month-view .full tr td.today, .calendar-calendar table.mini .month-view .full tr.odd td.today, .calendar-calendar table.mini .month-view .full tr.even td.today {
-      background: none repeat scroll 0 0 transparent;
-      border-left: 2px solid #373636;
-      border-right: 2px solid #373636; }
-    .calendar-calendar table.mini .month-view .full tr td.single-day.today {
-      border-bottom: 2px solid #373636; }
-    .calendar-calendar table.mini .month-view .full td.date-box.today {
-      border-color: #373636;
-      border-style: solid;
-      border-width: 2px 2px 0; }
-    .calendar-calendar table.mini tr td.today, .calendar-calendar table.mini tr.odd td.today, .calendar-calendar table.mini tr.even td.today, .calendar-calendar table.mini tr td.today a {
-      color: #373636; }
-    .calendar-calendar table.mini td {
-      color: #777777;
-      vertical-align: bottom; }
-    .calendar-calendar table.mini .month-view .full td .inner div.day {
-      width: 100%;
-      padding: 0; }
-      .calendar-calendar table.mini .month-view .full td .inner div.day a {
-        background-color: #f9d4ed;
-        border-radius: 5px;
-        padding: 0;
-        text-decoration: none; }
-    .calendar-calendar table.mini .inner a {
-      display: block; }
+.calendar-calendar .inner a {
+  display: block; }
 
 /*.calendar-calendar .has-events,*/
 /*removing description of Date fields in Sog block*/
@@ -737,11 +643,11 @@ div.block-inner {
 /*---------------------------- Date override END ----------------------------*/
 /*---------------------------- Omega globals override START ----------------------------*/
 a:link, a:visited {
-  color: #373636;
+  color: #001D2F;
   text-decoration: none; }
 
 .month a:link, .month a:visited {
-  color: #373636;
+  color: #001D2F;
   text-decoration: none; }
 
 a.form-submit, a.button {
@@ -817,7 +723,7 @@ pager li.pager-first {
 .view .date-nav-wrapper .date-next a, .view .date-nav-wrapper .date-prev a {
   /* Fallback */
   background: #d7d9da;
-  color: #373636;
+  color: #001D2F;
   border-radius: 0;
   padding: 5px 10px 5px 10px;
   font-family: Arial,Helvetica,sans-serif;
@@ -825,16 +731,19 @@ pager li.pager-first {
   text-decoration: none;
   text-transform: uppercase;
   cursor: pointer; }
+  .view .date-nav-wrapper .date-next a:hover, .view .date-nav-wrapper .date-prev a:hover {
+    background: #bdc0c1; }
 
-.button {
-  background: #9c1a5e;
+.button, #breadcrumb .breadcrumb a, .breadcrumb .breadcrumb-active {
+  background: #426BB3;
   border-style: solid;
   border-width: 0px;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Proxima Nova";
-  font-size: 16px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
   text-decoration: none;
+  text-transform: uppercase;
   cursor: pointer; }
 
 .pager li a {
@@ -900,7 +809,7 @@ pager li.pager-first {
 .controls-right.breadcrumb-level {
   position: absolute;
   right: 0;
-  top: -51px; }
+  top: -41px; }
 
 /*----------------------------Omega globals override END----------------------------*/
 /*----------------------------Tabs override start----------------------------*/
@@ -937,7 +846,7 @@ ul.primary li a {
 ul.primary li.active a {
   color: #feffff;
   font-weight: bold;
-  background-color: #373636;
+  background-color: #001D2F;
   border-style: none;
   padding: 5px 20px 5px 20px; }
 
@@ -955,12 +864,12 @@ table {
   font-size: 1em; }
 
 table tr th {
-  background: #f7f1f1;
-  border: none;
-  color: #373636;
-  font-family: "Proxima Nova";
-  font-weight: bold;
-  font-size: 14px; }
+  background: #ECEEEF;
+  border-bottom-style: none;
+  border-top-style: none;
+  color: #001D2F;
+  font-family: "Bitter", serif;
+  font-weight: bold; }
   table tr th a {
     color: #FFF;
     font-weight: bold; }
@@ -968,49 +877,60 @@ table tr th {
       color: #FFF;
       font-weight: bold; }
 
-table.views-table tr {
-  border-color: rgba(255, 255, 255, 0.7);
+table.views-table tr td a {
+  display: block;
+  position: relative;
+  background-color: #ecf0fa;
+  color: #001D2F;
+  padding: 3px 10px 3px 10px;
+  /*     vertical-align:center; */
+  line-height: 30px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  text-decoration: none;
+  border-color: #e5e5e5;
   border-style: solid;
-  border-bottom-width: 1px; }
-  table.views-table tr:last-child {
-    border: none; }
-  table.views-table tr td {
-    padding: 8px 0; }
-    table.views-table tr td a {
-      display: block;
-      position: relative;
-      background: rgba(255, 255, 255, 0.7);
-      color: #373636;
-      padding: 8px;
-      /*     vertical-align:center; */
-      font-family: "Proxima Nova";
-      font-weight: normal;
-      font-size: 14px;
-      text-decoration: none;
-      border-color: rgba(255, 255, 255, 0.7);
-      border-style: solid;
-      border-top-width: 1px;
-      border-bottom-width: 1px;
-      border-radius: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis; }
-      table.views-table tr td a:hover {
-        text-decoration: none; }
-    table.views-table tr td .bilag a {
-      line-height: 20px;
-      font-weight: normal;
-      padding-left: 3px;
-      overflow: hidden;
-      text-overflow: ellipsis; }
-      table.views-table tr td .bilag a:hover {
-        line-height: 20px;
-        font-weight: normal;
-        padding-left: 3px;
-        overflow: hidden;
-        text-overflow: ellipsis; }
-    table.views-table tr td .bilag .hide_show_attachment_text {
-      padding: 3px 10px; }
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+  table.views-table tr td a:hover {
+    display: block;
+    position: relative;
+    background-color: #ecf0fa;
+    color: #001D2F;
+    padding: 3px 10px 3px 10px;
+    /*     vertical-align:center; */
+    line-height: 30px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    text-decoration: none;
+    border-color: #e5e5e5;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
+table.views-table tr td .bilag a {
+  line-height: 20px;
+  font-weight: normal;
+  padding-left: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+  table.views-table tr td .bilag a:hover {
+    line-height: 20px;
+    font-weight: normal;
+    padding-left: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
+table.views-table tr td .bilag .hide_show_attachment_text {
+  padding: 3px 10px; }
 
 td, th {
   padding: 0 0 0 0;
@@ -1021,6 +941,7 @@ table tbody tr th {
 
 tr th {
   padding: 4px 9px;
+  border-right: 1px solid #ECEEEF;
   text-align: left;
   /* LTR */ }
 
@@ -1063,104 +984,16 @@ table .speaker-paper-link-container {
 /*meeting details table*/
 .view-meeting-details {
   background: #FFF;
-  border: 1px solid #fbf8f8;
-  border-top: 0px;
-  font-family: "Proxima Nova"; }
-  .view-meeting-details .form-submit {
-    padding: 10px 50px 10px 50px;
-    font-size: 16px; }
-  .view-meeting-details .view-header {
-    margin-bottom: 10px;
-    margin-top: 10px; }
-    .view-meeting-details .view-header .dropbtn.form-submit {
-      background: #FFF;
-      color: #373636;
-      text-transform: none;
-      font-size: 16px;
-      border-color: #f7f1f1; }
-    .view-meeting-details .view-header .dropdown-content {
-      background: #f7f1f1;
-      top: 25px;
-      border-width: 1px;
-      color: #373636;
-      border-color: #f7f1f1;
-      border-radius: 3px;
-      font-weight: bold;
-      width: 243px;
-      font-size: 16px;
-      font-family: "Proxima Nova";
-      text-transform: none; }
-  .view-meeting-details .view-content {
-    background: #f7f1f1;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-weight: normal; }
-    .view-meeting-details .view-content table.views-table thead tr {
-      border: none; }
-    .view-meeting-details .view-content table.views-table tr {
-      background: #FFF;
-      border: 1px solid #FFF;
-      border-radius: 3px; }
-      .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
-        padding: 8px;
-        font-size: 16px;
-        font-weight: bold; }
-      .view-meeting-details .view-content table.views-table tr td {
-        font-weight: normal; }
-  .view-meeting-details .attachment .view-content table.views-table thead tr th {
-    background: #FFF; }
-  .view-meeting-details .attachment .view-content table.views-table tr {
-    border: none; }
-    .view-meeting-details .attachment .view-content table.views-table tr td {
-      background: #f7f1f1;
-      border: none; }
-  .view-meeting-details .attachment .bullet-point-attachments .view-header h3 {
-    font-weight: bold;
-    font-size: 18px; }
-  .view-meeting-details .attachment .bullet-point-attachments .view-content {
-    background: #FFF; }
-    .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
-      border-radius: 3px; }
-    .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
-      background: #FFF; }
-    .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr {
-      border: none; }
-      .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td {
-        background: #FFF;
-        border: none;
-        padding: 8px 0; }
-        .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td a {
-          display: block;
-          position: relative;
-          background-color: #FFF;
-          color: #001D2F;
-          padding: 3px 10px 3px 10px;
-          line-height: 30px;
-          font-family: "Proxima Nova";
-          font-weight: bold;
-          font-size: 14px;
-          text-decoration: none;
-          border-color: #f7f1f1;
-          border-style: solid;
-          border-top-width: 1px;
-          border-bottom-width: 1px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis; }
-        .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td .ul-item-list-dagsordenspunkt a {
-          background-color: #f7f1f1; }
-  .view-meeting-details .attachment table.views-table tr td a
-.view-header {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: 18px; }
-  .view-meeting-details .attachment .view-meeting-details {
+  border: 1px solid #e0e0e0;
+  border-top: 0px; }
+  .view-meeting-details .view-meeting-details {
     background: none;
-    border: none;
-    /*.view-content {
-      background: $color-background-primary;
-    }*/ }
+    border: none; }
 
+/*.view-content {
+  border: $border-solid;
+  margin-bottom: 10px;
+}*/
 /*bullet point details table*/
 div.speaker-paper-print {
   float: right;
@@ -1419,21 +1252,27 @@ a.annotator-wrapper {
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
 /* ---------------------------- Breadcrumbs START---------------------------- */
 #breadcrumb .breadcrumb {
-  margin-bottom: 15px;
-  margin-top: 15px; }
-  #breadcrumb .breadcrumb a, #breadcrumb .breadcrumb .breadcrumb-active {
-    text-decoration: none;
-    color: #373636;
-    border-style: solid;
-    border-width: 0px;
-    padding: 5px 10px 5px 10px;
-    font-family: "Proxima Nova";
-    font-size: 16px;
-    text-decoration: none;
-    cursor: pointer; }
+  padding-bottom: 15px; }
+  #breadcrumb .breadcrumb a {
+    background: none;
+    text-decoration: underline;
+    color: #001D2F; }
+  #breadcrumb .breadcrumb .breadcrumb-active {
+    display: inline-block;
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: bottom;
+    top: 3px;
+    position: relative;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background: none;
+    color: #484745;
+    cursor: default; }
 
 .button-active {
-  background: #ae477d;
+  background: #28408C;
   color: #FFF; }
 
 /* ---------------------------- Breadcrumbs END---------------------------- */
@@ -1480,7 +1319,7 @@ a.annotator-wrapper {
 .grid-18  .attachment_text_container .attachment-text{
  overflow-y: hidden;
   max-width: 425px;
-
+ 
 }
 
 .grid-24  .attachment_text_container .attachment-text{
@@ -1497,8 +1336,7 @@ a.annotator-wrapper {
   width: 100%; }
   .attachment_text_container .attachment_text_full_container .attachment-text {
     overflow: auto;
-    padding: 5px;
-    font-size: 14px; }
+    padding: 5px; }
 
 .attachment_text_container .attachment_text_trimmed_container {
   width: 100%; }
@@ -1582,7 +1420,7 @@ a.annotator-wrapper {
   z-index: 1; }
 
 .form-save-submit {
-  background: #9c1a5e url("../img/icon_save.png") no-repeat 5px 50%;
+  background: #426BB3 url("../img/icon_save.png") no-repeat 5px 50%;
   padding: 5px 10px 5px 25px; }
 
 .form-add-submit {
@@ -1716,7 +1554,7 @@ div.note {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   color: #FFF;
   padding: 5px 10px 5px 10px;
-  font-family: "Proxima Nova";
+  font-family: Arial, sans-serif;
   font-size: 13px;
   text-decoration: none;
   text-transform: uppercase;
@@ -1765,14 +1603,14 @@ div.note {
   display: block; }
 
 .dropdown:hover .dropbtn {
-  background: #701344;
+  background: #34558e;
   color: #FFF; }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /* ---------------------------- Dropdown Button END ---------------------------- */
 /* Add content */
 .content dl.node-type-list dt a {
-  background-color: #9c1a5e;
+  background-color: #426BB3;
   color: #FFF;
   padding: 10px 20px;
   width: 100%;
@@ -1784,7 +1622,7 @@ div.note {
     display: inline-block;
     margin-right: 7px; }
   .content dl.node-type-list dt a:hover {
-    background-color: #ae477d;
+    background-color: #28408C;
     transition: background-color .3s ease-out; }
 
 .content dl.node-type-list dt, .content dl.node-type-list dd {
@@ -1805,7 +1643,7 @@ div.note {
 
 /* member of in sidebar */
 .views-field.views-field-field-os2web-meetings-com-shname {
-  border: 1px solid #fbf8f8;
+  border: 1px solid #e0e0e0;
   display: inline-block;
   margin-bottom: 3px;
   padding: 3px 5px;

@@ -34,7 +34,7 @@
     .filter-wrapper &{
         padding: 0;
     }
-
+    
 }
 
 /* Title, Meeting ID, Meeting sub ID */
@@ -90,34 +90,33 @@
     }
 }
 .form-submit {
-    background-color: $color-branding-secondary;
-    border: $border-color-secondary;
-    border-radius: $border-radius;
+    background-color: $color-secondary;
+    border: none;
     color: $color-white;
     padding: 5px 20px 5px 20px;
-    font-family: $font-basic;
-    font-size: 16px;
+    font-family: $font-button;
+    font-size: 13px;
     text-decoration: none;
+    text-transform: uppercase;
     cursor: pointer;
-    font-weight: bold;
     transition: background-color .1s ease-in;
     &:hover {
-        background-color: $color-branding-primary;
+        background-color: $color-primary;
         transition: background-color .3s ease-out;
     }
     &.nav-button {
-        background: $color-branding-secondary;
+        background: $color-secondary;
         color: $color-white;
         padding: 5px 10px 5px 10px;
-        font-family: $font-basic;
+        font-family: $font-button;
         font-size: 13px;
         text-decoration: none;
         text-transform: uppercase;
         cursor: pointer;
         &:hover {
-            background: $color-branding-primary;
+            background: $color-primary;
             padding: 5px 10px 5px 10px;
-            font-family: $font-basic;
+            font-family: $font-button;
             font-size: 13px;
             text-decoration: none;
             text-transform: uppercase;
@@ -127,13 +126,4 @@
     .form-actions.form-wrapper & {
         margin-right: 10px;
     }
-}
-.ui-state-default {
-  border: 1px solid $color-branding-secondary;
-  border-radius: $border-radius;
-}
-
-.select-committee ul.droptrue {
-  border: 1px solid $color-background-primary;
-  border-radius: $border-radius;
 }

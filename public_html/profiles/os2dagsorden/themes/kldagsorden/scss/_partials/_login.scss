@@ -19,10 +19,8 @@
     min-height: 400px;
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid $color-background-primary;
-    border-radius: $border-radius;
-    //box-shadow: 0 0 20px rgba(0, 0, 0, .25);
-    background: $color-white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .25);
+    background: $color-background-primary;
     .block-title {
         text-align: center;
     }
@@ -35,11 +33,5 @@
   input.form-text {
     display: block;
     width: 100%;
-    background: $color-background-primary;
-    padding: 10px;
-    border-radius: 3px;
-  }
-  .form-actions input:hover {
-    background: $color-branding-primary;
   }
 }

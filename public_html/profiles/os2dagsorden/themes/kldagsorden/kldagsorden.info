@@ -3,13 +3,6 @@ description = ''
 core = '7.x'
 engine = 'phptemplate'
 screenshot = 'screenshot.png'
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Stylesheets
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-stylesheets[all][] = 'css/global.css'
-
 base theme = 'os2dagsorden_theme'
 regions[page_top] = 'Page Top'
 regions[page_bottom] = 'Page Bottom'
@@ -91,6 +84,7 @@ settings[alpha_css][omega-text.css] = 'omega-text.css'
 settings[alpha_css][omega-branding.css] = 'omega-branding.css'
 settings[alpha_css][omega-menu.css] = 'omega-menu.css'
 settings[alpha_css][omega-visuals.css] = 'omega-visuals.css'
+settings[alpha_css][global.css] = 'global.css'
 settings[alpha_css][omega-forms.css] = '0'
 settings[alpha_exclude][sites/all/modules/calendar/css/calendar_multiday.css] = '0'
 settings[alpha_exclude][modules/comment/comment.css] = '0'
