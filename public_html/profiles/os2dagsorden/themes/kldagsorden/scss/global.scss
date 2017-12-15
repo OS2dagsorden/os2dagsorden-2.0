@@ -233,7 +233,7 @@ ul li.leaf {
   cursor: pointer;
   &:after{
     content: '!';
-    left: 9px;
+    left: 8px;
     position: absolute;
     top: 1px;
     margin: auto
@@ -409,8 +409,27 @@ div.date-heading h3 {
   border: $border-block-body;
   padding: 5px 5px 0 5px;
 }
+
+.node.brugerroller{
+  background: none;
+  border: none;
+  ul,  ul#available_committee{
+    background: $color-background-primary;
+    padding: 5px 20px;
+  }
+  ul#available_committee{
+    min-height: 95%;
+    margin-bottom: 0px;
+    border-color: $color-background-primary;
+  }
+}
+
+h1.title.brugerroller{
+  margin-top: 15px;
+}
+
 .node-form {
-    padding: 5px 15px;
+  padding: 5px 15px;
 }
 
 .block-views-exp-meetings-search-page div.views-exposed-form {
@@ -999,40 +1018,40 @@ table {
       }
     }
   }
-  &.views-table tr {
-    border-color: rgba($color-white, 0.7);
-    border-style: solid;
-    border-bottom-width: 1px;
-    &:last-child {
-      border: none;
+  &.views-table{
+    border: none;
+    margin-bottom: 0px;
+  }
+  &.views-table tbody tr {
+    border-bottom: 1px solid white;
+    &:last-child{
+      border-bottom: none;
     }
-
     td {
-    padding: 8px 0;
-
-        a {
-         display: block;
-         position: relative;
-         background: rgba($color-white, 0.7);
-         color: $color-font-primary;
-         padding: 8px;
-         /*     vertical-align:center; */
-         font-family: $font-basic;
-         font-weight: normal;
-         font-size: 14px;
-         text-decoration: none;
-         border-color: rgba($color-white, 0.7);
-         border-style: solid;
-         border-top-width: 1px;
-         border-bottom-width: 1px;
-         border-radius: $border-radius;
-         white-space: nowrap;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         &:hover {
-           text-decoration: none;
-         }
-       }
+      padding: 8px 0;
+      background: none;
+      &.views-field.views-field-php-4{
+        padding-left:10px;
+        padding-right: 10px;
+      }
+      a {
+        display: block;
+        position: relative;
+        background: rgba($color-white, 0.7);
+        color: $color-font-primary;
+        padding: 8px;
+        /*     vertical-align:center; */
+        font-family: $font-basic;
+        font-weight: normal;
+        font-size: 14px;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:hover {
+          text-decoration: none;
+        }
+      }
 
       .bilag {
         a {
@@ -1129,81 +1148,81 @@ table {
   border-top: 0px;
   font-family: $font-basic;
   .form-submit {
-      padding: 10px 50px 10px 50px;
+    padding: 10px 50px 10px 50px;
+    font-size: $font-size-button;
+  }
+  .view-header {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    .dropbtn.form-submit {
+      background: $color-white;
+      color: $color-font-primary;
+      text-transform: none;
       font-size: $font-size-button;
+      border-color: $color-background-primary;
     }
-    .view-header {
-      margin-bottom: 10px;
-      margin-top: 10px;
-      .dropbtn.form-submit {
-        background: $color-white;
-        color: $color-font-primary;
-        text-transform: none;
-        font-size: $font-size-button;
-        border-color: $color-background-primary;
-      }
-      .dropdown-content {
-        background: $color-background-primary;
-        top: 25px;
-        border-width: 1px;
-        color: $color-font-primary;
-        border-color: $color-background-primary;
-        border-radius: $border-radius;
-        font-weight: bold;
-        width: 243px;
-        font-size: $font-size-button;
-        font-family: $font-basic;
-        text-transform: none;
-      }
-    }
-  .view-content {
+    .dropdown-content {
       background: $color-background-primary;
-      padding-left: 10px;
-      padding-right: 10px;
-      font-weight: normal;
-      table.views-table {
-        thead tr {
-          border: none;
+      top: 25px;
+      border-width: 1px;
+      color: $color-font-primary;
+      border-color: $color-background-primary;
+      border-radius: $border-radius;
+      font-weight: bold;
+      width: 243px;
+      font-size: $font-size-button;
+      font-family: $font-basic;
+      text-transform: none;
+    }
+  }
+  .view-content {
+    background: $color-background-primary;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: normal;
+    table.views-table {
+      thead tr {
+        border: none;
 
+      }
+      tr {
+        background: $color-white;
+        border: 1px solid $color-white;
+        border-radius: $border-radius;
+        th, td {
+          padding: 8px;
+          font-size: $font-size-button;
+          font-weight: bold;
+        }
+        td{
+          font-weight: normal;
+        }
+      }
+    }
+  }
+  .attachment{
+    .view-content {
+      table.views-table {
+        thead tr th{
+          background: $color-white;
         }
         tr {
-          background: $color-white;
-          border: 1px solid $color-white;
-          border-radius: $border-radius;
-            th, td {
-              padding: 8px;
-              font-size: $font-size-button;
-              font-weight: bold;
-            }
-            td{
-              font-weight: normal;
-            }
+          border: none;
+          td {
+            background: $color-background-primary;
+            border: none;
+          }
         }
       }
     }
-    .attachment{
-      .view-content {
-        table.views-table {
-          thead tr th{
-             background: $color-white;
-          }
-          tr {
-            border: none;
-            td {
-              background: $color-background-primary;
-              border: none;
-            }
-          }
+    .bullet-point-attachments {
+      .view-header {
+        h3 {
+          font-weight: bold;
+          font-size: $font-size-table-header;
         }
       }
-      .bullet-point-attachments {
-        .view-header {
-          h3 {
-            font-weight: bold;
-            font-size: $font-size-table-header;
-          }
-        }
-        .view-content {
+      .view-content {
         background: $color-white;
 
         .button {
@@ -1211,7 +1230,7 @@ table {
         }
         table.views-table {
           thead tr th{
-             background: $color-white;
+            background: $color-white;
           }
           tr {
             border: none;
@@ -1230,13 +1249,13 @@ table {
                 font-weight: bold;
                 font-size: $font-size-body;
                 text-decoration: none;
-                 border-color: $color-background-primary;
+                border-color: $color-background-primary;
                 border-style: solid;
                 border-top-width: 1px;
                 border-bottom-width: 1px;
-                 white-space: nowrap;
-                 overflow: hidden;
-                 text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
               }
               .ul-item-list-dagsordenspunkt {
                 a {
@@ -1250,20 +1269,20 @@ table {
     }
 
     table.views-table tr td a
-  .view-header {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-size: $font-size-table-header;
-  }
+    .view-header {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: $font-size-table-header;
+    }
 
-  .view-meeting-details {
-    background: none;
-    border: none;
-    /*.view-content {
-      background: $color-background-primary;
-    }*/
+    .view-meeting-details {
+      background: none;
+      border: none;
+      /*.view-content {
+        background: $color-background-primary;
+      }*/
 
-  }
+    }
   }
 
 }
@@ -1863,7 +1882,6 @@ a.annotator-wrapper {
   margin: auto;
   position: relative;
   > img {
-    width: 100%;
     height: auto;
     margin: auto;
     position: absolute;
