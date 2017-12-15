@@ -15,8 +15,8 @@
 
 body {
   background: $color-white;
-  font-family: $font-paragraphs;
-  font-size: 16px;
+  font-family: $font-basic;
+  font-size: $font-size-body;
 }
 
 #region-footer-first, #region-postscript-first {
@@ -105,41 +105,53 @@ div.content ul.menu li {
   a {
     display: block;
     color: $color-font-primary;
-    font-family: $font-headings;
-
+    font-family: $font-basic;
+    border: $border-block-header;
+    border-radius: $border-radius;
     font-weight: 100;
     font-size: 20px;
     text-decoration: none;
     padding: 10px 10px 10px 50px;
-    background: $color-secondary;
+    background: $color-branding-secondary;
     &:hover, &.active {
-      background: $color-primary;
+      background: $color-branding-secondary;
+      border: $border-color-secondary;
     }
   }
   margin: 0 0 10px 0;
   padding: 0;
   #menu-byradet {
-    background: $color-background-secondary url('../img/icon_byradet.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_byradet.png') no-repeat 45px 50%;
+    padding-left: 75px;
+    background-size: 20px;
     &.active {
-      background: $color-grey url('../img/icon_byradet.png') no-repeat 15px 50%;
+      background-size: 20px;
+      background: $color-grey url('../img/icon_byradet.png') no-repeat 45px 50%;
     }
   }
   #menu-home {
-    background: $color-background-secondary url('../img/icon_home.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_home.png') no-repeat 45px 50%;
+    padding-left: 75px;
+    background-size: 20px;
     &.active {
+      background-size: 20px;
       background: $color-grey url('../img/icon_home.png') no-repeat 15px 50%;
     }
   }
   #menu-print-kalendar {
-    background: $color-background-secondary url('../img/icon_print.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_print.png') no-repeat 45px 50%;
+    padding-left: 75px;
+    background-size: 20px;
     transition: background-color .1s ease-in;
     &:hover, &.active:hover {
-      background: $color-secondary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary url('../img/icon_print_white.png') no-repeat 45px 50%;
+      background-size: 20px;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active {
-      background: $color-primary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      background-size: 20px;
+      background: $color-branding-secondary url('../img/icon_print_white.png') no-repeat 45px 50%;
       color: $color-white;
     }
   }
@@ -150,15 +162,19 @@ div.content ul.menu li {
     }
   }
   #menu-simple-user-edit {
-    background: $color-background-secondary url('../img/icon_simple_user_edit.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_simple_user_edit.png') no-repeat 45px 50%;
+    background-size: 20px;
+    padding-left: 75px;
     transition: background-color .1s ease-in;
     &:hover {
-      background: $color-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 45px 50%;
+      background-size: 20px;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active, &.active:hover {
-      background: $color-primary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 45px 50%;
+      background-size: 20px;
       color: $color-white;
     }
   }
@@ -168,9 +184,15 @@ div.content ul.menu li {
 
 /* specific for each link */
 
-#block-views-exp-meetings-search-page h2, #os2dagsorden-search-form h2 {
-  background: $color-background-secondary url('../img/icon_search.png') no-repeat 15px 50%;
-  padding-left: 45px;
+#block-views-exp-meetings-search-page {
+  h2, #os2dagsorden-search-form h2 {
+    background: $color-background-secondary url('../img/icon_search.png') no-repeat 15px 50%;
+    background-size: 20px;
+    padding-left: 45px;
+  }
+  .container-inline-date .form-item .form-item {
+    width: 100%;
+  }
 }
 
 ul li.leaf {
@@ -184,13 +206,23 @@ ul li.leaf {
 
 .help-button {
   position: absolute;
-  min-width: 30px;
-  min-height: 30px;
-  top: 10px;
+  width: 20px;
+  height: 20px;
+  top: 15px;
   right: 10px;
   float: right;
-  background: url('../img/icon_help.png') no-repeat 50% top;
+  background-color: rgba($color-white, 0.7);
+  border: 1px solid rgba($color-white, 0.7);
+  border-radius: 50%;
+  //background: url('../img/icon_help.png') no-repeat 50% top;
   cursor: pointer;
+  &:after{
+    content: '!';
+    left: 8px;
+    position: absolute;
+    top: 1px;
+    margin: auto
+  }
 }
 
 #ToolTipDiv {
@@ -328,11 +360,11 @@ ul li.leaf {
 
 .view-header h3, .view-content h3 {
   color: $color-font-primary;
-  text-transform: uppercase;
-  font-family: $font-headings;
+  text-transform: capitalize;
+  font-family: $font-basic;
   font-weight: 100;
-  font-size: 16px;
-  background-color: $color-background-secondary;
+  font-size: 18px;
+  background-color: $color-background-primary;
   padding: 5px 10px;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -341,6 +373,7 @@ ul li.leaf {
 .block-views-exp-meetings-search-page .views-exposed-form .views-exposed-widget .form-submit {
   margin-top: 0;
 }
+
 
 div.date-heading h3 {
   a {
@@ -356,12 +389,32 @@ div.date-heading h3 {
 }
 
 .view-id-events, .view-id-user_committee, .view-id-user_follow_committees, .view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_, .block-views-exp-meetings-search-page .views-exposed-form, .node-form, .node, .view-display-id-page {
-  background: $color-background-secondary;
-  border-bottom: $border-solid;
-  padding: 5px;
+  background: $color-background-primary;
+  border-radius: $border-radius;
+  border: $border-block-body;
+  padding: 5px 5px 0 5px;
 }
+
+.node.brugerroller{
+  background: none;
+  border: none;
+  ul,  ul#available_committee{
+    background: $color-background-primary;
+    padding: 5px 20px;
+  }
+  ul#available_committee{
+    min-height: 95%;
+    margin-bottom: 0px;
+    border-color: $color-background-primary;
+  }
+}
+
+h1.title.brugerroller{
+  margin-top: 15px;
+}
+
 .node-form {
-    padding: 5px 15px;
+  padding: 5px 15px;
 }
 
 .block-views-exp-meetings-search-page div.views-exposed-form {
@@ -369,7 +422,8 @@ div.date-heading h3 {
 }
 
 div.attachment {
-  margin-top: 30px;
+  padding-top: 30px;
+  background: $color-background-primary;
 }
 
 .view-footer {
@@ -397,13 +451,14 @@ div.attachment {
 
 h2.block-title, h1.title {
   color: $color-font-primary;
-  text-transform: uppercase;
-  font-family: $font-headings;
-  font-weight: 100;
-  font-size: 20px;
+  font-family: $font-basic;
+  font-weight: bold;
+  font-size: $font-size-headings;
   margin-top: 0;
   background: $color-background-secondary;
-  padding: 5px 5px 3px 15px;
+  border-radius: $border-radius;
+  border: $border-block-header;
+  padding: 12px 5px 10px 12px;
   margin-bottom: 0;
   border-bottom: $border-solid;
 }
@@ -470,80 +525,140 @@ div {
 
 .block-views .view .date-nav-wrapper .date-next {
   left: auto;
-  right: 10px;
+  right: 0;
 }
 
 .view .date-nav-wrapper .pager {
   .date-prev a, .date-next a {
-    color: inherit;
-    font-size: 16px;
+    color: rgba($color-white, 0.7);
+    font-size: font-size-button;
     text-decoration: none;
+    background-color: rgba($color-white, 0.7);
+    border: 1px solid rgba($color-white, 0.7);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: block;
+    padding: 0;
+    &:hover {
+      color:  $color-branding-secondary;
+    }
+    &:after {
+      color:  #373636;
+    }
+    &:after:hover {
+      background-color: $color-background-secondary;
+      color: $color-background-secondary;
+      text-shadow: none;
+    }
+    &:hover{
+      background-color: $color-background-secondary;
+      color: $color-background-secondary;
+      text-shadow: none;
+    }
+  }
+  .date-prev a:after {
+    content: "<";
+    left: 19px;
+    top: 4px;
+    position: absolute;
+    &:hover {
+      color: $color-white;
+    }
+  }
+  .date-next a:after {
+    content: ">";
+    right: 19px;
+    top: 4px;
+    position: absolute;
   }
 }
 
 .calendar-calendar {
-  tr {
-    td.today, &.odd td.today, &.even td.today {
-      background: none;
+  padding-bottom: 10px;
+  table.mini {
+    font-family: $font-basic;
+    font-size: 12px;
+    thead {
+      border: 1px solid $color-white;
     }
-  }
-  .mini tr td.today a {
-    background-color: $color-font-primary;
-    color: #feffff;
-    font-weight: bold;
-    border-radius: 5px;
-  }
-  .has-events a {
-    text-decoration: none;
-    background-color: #f9d4ed;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 3px 3px 3px 8px;
-  }
-  .has-no-events div.mini-day-off {
-    padding: 3px 3px 1px 8px;
-  }
-  td .inner div.day a {
-    color: $color-font-primary;
-  }
-  .month-view .full {
+    th.days {
+      background: $color-background-primary;
+      text-transform: uppercase;
+      border: none;
+    }
     tr {
+      border: none;
+      td {
+        text-align: center;
+        background: $color-background-primary;
+      }
+      td.empty {
+        background: $color-background-primary;
+      }
       td.today, &.odd td.today, &.even td.today {
-        background: none repeat scroll 0 0 transparent;
-        border-left: 2px solid $color-font-primary;
-        border-right: 2px solid $color-font-primary;
-      }
-      td.single-day.today {
-        border-bottom: 2px solid $color-font-primary;
+        background: none;
+        text-align: center;
       }
     }
-    td.date-box.today {
-      border-color: $color-font-primary;
-      border-style: solid;
-      border-width: 2px 2px 0;
+    .mini tr td.today a {
+      //background-color: $color-font-primary;
+      color: #feffff;
+      font-weight: bold;
+      border-radius: 5px;
     }
-  }
-  tr {
-    td.today, &.odd td.today, &.even td.today, td.today a {
+    .has-events a {
+      text-decoration: none;
+      background-color: #f9d4ed;
+      font-weight: bold;
+      border-radius: 5px;
+      padding: 3px 3px 3px 8px;
+    }
+    .has-no-events div.mini-day-off {
+      padding: 3px 3px 1px 8px;
+    }
+    td .inner div.day a {
       color: $color-font-primary;
     }
-  }
-  td {
-    color: #777777;
-    vertical-align: bottom;
-  }
-  .month-view .full td .inner div.day {
-    width: 100%;
-    padding: 0;
-    a {
-      background-color: #f9d4ed;
-      border-radius: 5px;
-      padding: 0;
-      text-decoration: none;
+    .month-view .full {
+      tr {
+        td.today, &.odd td.today, &.even td.today {
+          background: none repeat scroll 0 0 transparent;
+          border-left: 2px solid $color-font-primary;
+          border-right: 2px solid $color-font-primary;
+        }
+        td.single-day.today {
+          border-bottom: 2px solid $color-font-primary;
+        }
+      }
+      td.date-box.today {
+        border-color: $color-font-primary;
+        border-style: solid;
+        border-width: 2px 2px 0;
+      }
     }
-  }
-  .inner a {
-    display: block;
+    tr {
+      td.today, &.odd td.today, &.even td.today, td.today a {
+        color: $color-font-primary;
+      }
+    }
+    td {
+      color: #777777;
+      vertical-align: bottom;
+    }
+    .month-view .full td .inner div.day {
+      width: 100%;
+      padding: 0;
+      a {
+        background-color: #f9d4ed;
+        border-radius: 5px;
+        padding: 0;
+        text-decoration: none;
+      }
+    }
+    .inner a {
+      display: block;
+    }
   }
 }
 
@@ -708,22 +823,19 @@ pager li.pager-first {
     text-decoration: none;
     text-transform: uppercase;
     cursor: pointer;
-    &:hover {
-      background: darken($color-grey, 10%);
-    }
+
   }
 }
 
-.button, #breadcrumb .breadcrumb a, .breadcrumb .breadcrumb-active {
-  background: $color-secondary;
+.button {
+  background: $color-branding-secondary;
   border-style: solid;
   border-width: 0px;
   color: $color-white;
   padding: 5px 10px 5px 10px;
-  font-family: $font-button;
-  font-size: 13px;
+  font-family: $font-basic;
+  font-size: $font-size-button;
   text-decoration: none;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -801,7 +913,7 @@ pager li.pager-first {
 .controls-right.breadcrumb-level {
   position: absolute;
   right: 0;
-  top: -41px;
+  top: -51px;
 }
 
 /*----------------------------Omega globals override END----------------------------*/
@@ -873,12 +985,13 @@ table {
 
 table {
   tr th {
-    background: $color-background-secondary;
-    border-bottom-style: none;
-    border-top-style: none;
+    background: $color-background-primary;
+    border: none;
     color: $color-font-primary;
-    font-family: $font-headings;
+    font-family: $font-basic;
     font-weight: bold;
+    font-size: $font-size-body;
+
     a {
       color: $color-white;
       font-weight: bold;
@@ -888,65 +1001,59 @@ table {
       }
     }
   }
-  &.views-table tr td {
-    a {
-      display: block;
-      position: relative;
-      background-color: lighten($color-primary, 60%);
-      color: $color-font-primary;
-      padding: 3px 10px 3px 10px;
-      /*     vertical-align:center; */
-      line-height: 30px;
-      font-family: $font-paragraphs;
-      font-weight: bold;
-      font-size: 13px;
-      text-decoration: none;
-      border-color: #e5e5e5;
-      border-style: solid;
-      border-top-width: 1px;
-      border-bottom-width: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      &:hover {
+  &.views-table{
+    border: none;
+    margin-bottom: 0px;
+  }
+  &.views-table tbody tr {
+    border-bottom: 1px solid white;
+    &:last-child{
+      border-bottom: none;
+    }
+    td {
+      padding: 8px 0;
+      background: none;
+      &.views-field.views-field-php-4{
+        padding-left:10px;
+        padding-right: 10px;
+      }
+      a {
         display: block;
         position: relative;
-        background-color: lighten($color-primary, 60%);
-        
+        background: rgba($color-white, 0.7);
         color: $color-font-primary;
-        padding: 3px 10px 3px 10px;
+        padding: 8px;
         /*     vertical-align:center; */
-        line-height: 30px;
-        font-family: Arial,Helvetica,sans-serif;
-        font-weight: bold;
-        font-size: 13px;
+        font-family: $font-basic;
+        font-weight: normal;
+        font-size: 14px;
         text-decoration: none;
-        border-color: #e5e5e5;
-        border-style: solid;
-        border-top-width: 1px;
-        border-bottom-width: 1px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-    }
-    .bilag {
-      a {
-        line-height: 20px;
-        font-weight: normal;
-        padding-left: 3px;
-        overflow: hidden;
-        text-overflow: ellipsis;
         &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .bilag {
+        a {
           line-height: 20px;
           font-weight: normal;
           padding-left: 3px;
           overflow: hidden;
           text-overflow: ellipsis;
+          &:hover {
+            line-height: 20px;
+            font-weight: normal;
+            padding-left: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
-      }
-      .hide_show_attachment_text {
-        padding: 3px 10px;
+        .hide_show_attachment_text {
+          padding: 3px 10px;
+        }
       }
     }
   }
@@ -963,7 +1070,7 @@ table tbody tr th {
 
 tr th {
   padding: 4px 9px;
-  border-right: 1px solid $color-background-secondary;
+  //border-right: 1px solid $color-background-secondary;
   text-align: left;
   /* LTR */
 }
@@ -1019,18 +1126,150 @@ table {
 
 /*meeting details table*/
 .view-meeting-details {
-  background: $color-background-primary;
+  background: $color-white;
   border: $border-solid;
   border-top: 0px;
-  .view-meeting-details {
-    background: none;
-    border: none;
+  font-family: $font-basic;
+  .form-submit {
+    padding: 10px 50px 10px 50px;
+    font-size: $font-size-button;
   }
+  .view-header {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    .dropbtn.form-submit {
+      background: $color-white;
+      color: $color-font-primary;
+      text-transform: none;
+      font-size: $font-size-button;
+      border-color: $color-background-primary;
+    }
+    .dropdown-content {
+      background: $color-background-primary;
+      top: 25px;
+      border-width: 1px;
+      color: $color-font-primary;
+      border-color: $color-background-primary;
+      border-radius: $border-radius;
+      font-weight: bold;
+      width: 243px;
+      font-size: $font-size-button;
+      font-family: $font-basic;
+      text-transform: none;
+    }
+  }
+  .view-content {
+    background: $color-background-primary;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: normal;
+    table.views-table {
+      thead tr {
+        border: none;
+
+      }
+      tr {
+        background: $color-white;
+        border: 1px solid $color-white;
+        border-radius: $border-radius;
+        th, td {
+          padding: 8px;
+          font-size: $font-size-button;
+          font-weight: bold;
+        }
+        td{
+          font-weight: normal;
+        }
+      }
+    }
+  }
+  .attachment{
+    .view-content {
+      table.views-table {
+        thead tr th{
+          background: $color-white;
+        }
+        tr {
+          border: none;
+          td {
+            background: $color-background-primary;
+            border: none;
+          }
+        }
+      }
+    }
+    .bullet-point-attachments {
+      .view-header {
+        h3 {
+          font-weight: bold;
+          font-size: $font-size-table-header;
+        }
+      }
+      .view-content {
+        background: $color-white;
+
+        .button {
+          border-radius: $border-radius;
+        }
+        table.views-table {
+          thead tr th{
+            background: $color-white;
+          }
+          tr {
+            border: none;
+            td {
+              background: $color-white;
+              border: none;
+              padding: 8px 0;
+              a {
+                display: block;
+                position: relative;
+                background-color: $color-white;
+                color: #001D2F;
+                padding: 3px 10px 3px 10px;
+                line-height: 30px;
+                font-family: $font-basic;
+                font-weight: bold;
+                font-size: $font-size-body;
+                text-decoration: none;
+                border-color: $color-background-primary;
+                border-style: solid;
+                border-top-width: 1px;
+                border-bottom-width: 1px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              .ul-item-list-dagsordenspunkt {
+                a {
+                  background-color: $color-background-primary;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    table.views-table tr td a
+    .view-header {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: $font-size-table-header;
+    }
+
+    .view-meeting-details {
+      background: none;
+      border: none;
+      /*.view-content {
+        background: $color-background-primary;
+      }*/
+
+    }
+  }
+
 }
-/*.view-content {
-  border: $border-solid;
-  margin-bottom: 10px;
-}*/
+
 
 /*bullet point details table*/
 
@@ -1349,32 +1588,25 @@ a.annotator-wrapper {
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
 
 /* ---------------------------- Breadcrumbs START---------------------------- */
-
 #breadcrumb .breadcrumb {
-  padding-bottom: 15px;
-  a {
-    background: none;
-    text-decoration: underline;
+  margin-bottom: 15px;
+  margin-top: 15px;
+
+  a, .breadcrumb-active {
+    text-decoration: none;
     color: $color-font-primary;
-  }
-  .breadcrumb-active {
-    display: inline-block;
-    max-width: 150px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    vertical-align: bottom;
-    top: 3px;
-    position: relative;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    background: none;
-    color: $color-font-secondary;
-    cursor: default;
+    border-style: solid;
+    border-width: 0px;
+    padding: 5px 10px 5px 10px;
+    font-family: $font-basic;
+    font-size: $font-size-button;
+    text-decoration: none;
+    cursor: pointer;
   }
 }
 
 .button-active {
-  background: $color-primary;
+  background: $color-branding-primary;
   color: $color-white;
 }
 
@@ -1432,7 +1664,7 @@ a.annotator-wrapper {
 .grid-18  .attachment_text_container .attachment-text{
  overflow-y: hidden;
   max-width: 425px;
- 
+
 }
 
 .grid-24  .attachment_text_container .attachment-text{
@@ -1452,6 +1684,7 @@ a.annotator-wrapper {
     .attachment-text {
       overflow: auto;
       padding: 5px;
+      font-size: $font-size-body;
     }
     width: 100%;
   }
@@ -1560,7 +1793,7 @@ a.annotator-wrapper {
 }
 
 .form-save-submit {
-  background: $color-secondary url('../img/icon_save.png') no-repeat 5px 50%;
+  background: $color-branding-secondary url('../img/icon_save.png') no-repeat 5px 50%;
   padding: 5px 10px 5px 25px;
 }
 
@@ -1632,7 +1865,6 @@ a.annotator-wrapper {
   margin: auto;
   position: relative;
   > img {
-    width: 100%;
     height: auto;
     margin: auto;
     position: absolute;
@@ -1726,7 +1958,7 @@ div.note {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   color: $color-white;
   padding: 5px 10px 5px 10px;
-  font-family: $font-button;
+  font-family: $font-basic;
   font-size: 13px;
   text-decoration: none;
   text-transform: uppercase;
@@ -1788,7 +2020,7 @@ div.note {
     display: block;
   }
   .dropbtn {
-    background: darken($color-secondary, 10%);
+    background: darken($color-branding-secondary, 10%);
     color: $color-white;
   }
 }
@@ -1801,7 +2033,7 @@ div.note {
 .content {
   dl.node-type-list {
     dt a {
-      background-color: $color-secondary;
+      background-color: $color-branding-secondary;
       color: $color-white;
       padding: 10px 20px;
       width: 100%;
@@ -1814,7 +2046,7 @@ div.note {
         margin-right: 7px;
       }
       &:hover {
-        background-color: $color-primary;
+        background-color: $color-branding-primary;
         transition: background-color .3s ease-out;
       }
     }
@@ -1829,10 +2061,10 @@ div.note {
     }
     dd {
       clear: both;
-      padding-top: 0; 
+      padding-top: 0;
       padding-left: 37px;
       padding-bottom: 0;
-      margin-bottom: 5px; 
+      margin-bottom: 5px;
     }
   }
 }

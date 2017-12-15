@@ -65,6 +65,16 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
     ),
   );
 
+  $form[] = array(
+    '#markup' => '</div>',//<div class="node clearfix">
+  );
+  $form[] = array(
+    '#markup' => '<h1 class="title brugerroller">' . t('Brugerroller') . '</h1>',
+  );
+  $form[] = array(
+    '#markup' => '<div class="node brugerroller clearfix">',
+  );
+  
   $form['user_roles'] = array(
     '#access' => (user_access('administer users')),
     '#type' => 'checkboxes',
@@ -73,7 +83,6 @@ function os2dagsorden_content_modify_user_edit_form($form, $form_state, $uid) {
       'administrator+' => t('Administrator+')  . '<i>' . t(' (adgang til redigering af udvalg og brugere)').'</i>',
       'administrator++' => t('Administrator++') . '<i>' . t(' (rettigheder til al konfiguration og alle settings)').'</i>',
     ),
-    '#title' => '<b>' . t('Brugerroller') . '</b>',
     '#description' => t('Hvilke roller tilsættes til brugeren'),
   );
 
@@ -328,7 +337,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     //printing arrows reverse
     $form[]['#markup'] =
       '<div class="arrows-reverse">
-      <img src = "' . base_path() . drupal_get_path('theme', 'os2dagsorden_theme') . '/img/img_arrows_reverse.png">
+      <img src = "' . base_path() . path_to_theme() . '/img/img_arrows_reverse.png">
       </div>';
 
     //printing available committees
