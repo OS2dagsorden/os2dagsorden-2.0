@@ -6,7 +6,6 @@ version = 7.x-1.0
 project = os2dagsorden_admin_views
 dependencies[] = admin_views
 dependencies[] = ctools
-dependencies[] = ultimate_cron
 dependencies[] = views
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:2
