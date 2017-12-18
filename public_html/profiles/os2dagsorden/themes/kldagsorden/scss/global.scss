@@ -408,7 +408,7 @@ div.date-heading h3 {
   background: $color-background-primary;
   border-radius: $border-radius;
   border: $border-block-body;
-  padding: 5px 5px 0 5px;
+  padding: 5px 7px 0 7px;
 }
 
 .node.brugerroller{
@@ -474,7 +474,7 @@ h2.block-title, h1.title {
   background: $color-background-secondary;
   border-radius: $border-radius;
   border: $border-block-header;
-  padding: 12px 5px 10px 12px;
+  padding: 11px 5px 10px 11px;
   margin-bottom: 0;
   border-bottom: $border-solid;
 }
@@ -1029,11 +1029,29 @@ table {
       border-bottom: none;
     }
     td {
-      padding: 8px 0;
+      padding: 7px 0;
       background: none;
       &.views-field.views-field-php-4{
-        padding-left:10px;
-        padding-right: 10px;
+        padding-left:7px;
+        padding-right: 7px;
+         a {
+          border:  1px solid rgba($color-white, 0.7);          
+          border-radius: $border-radius;
+         }
+      }
+      &.views-field.views-field-php-3{
+        a {
+          border:  1px solid rgba($color-white, 0.7);          
+          border-radius: $border-radius;
+         }
+      }  
+      &.views-field-field-os2web-meetings-type a{
+        border:  1px solid rgba($color-white, 0.7);
+        border-radius: $border-radius 0 0 $border-radius  ;
+      }
+      &.views-field-field-os2web-meetings-date a{
+        border:  1px solid rgba($color-white, 0.7);
+        border-radius: 0  $border-radius $border-radius 0;
       }
       a {
         display: block;
@@ -1049,6 +1067,11 @@ table {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        border-style: solid;
+        border-color: rgba(255, 255, 255, 0.7);
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        
         &:hover {
           text-decoration: none;
         }
@@ -1191,7 +1214,7 @@ table {
         border: 1px solid $color-white;
         border-radius: $border-radius;
         th, td {
-          padding: 8px;
+          padding: 7px;
           font-size: $font-size-button;
           font-weight: bold;
         }
@@ -1254,24 +1277,32 @@ table {
             left: 8px;
           }
           .button.hide_show_all_attachments_text:before{
-            content: "arrow_downward";
-            font-family: $font-icons; 
-            font-size: $font-size-headings;
+            background: url('../img/arrow_right_black_down.png') no-repeat 50% top;
             position: absolute;
             color: $color-white;
+            font-family: $font-icons; 
+            font-size: $font-size-headings;
             cursor: pointer;
-            top: 8px;
+            top: 12px;
             left: 8px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
           }
-          .button.hide_show_all_attachments_text.opened:before{
-            content: "arrow_upward";
-            font-family: $font-icons; 
-            font-size: $font-size-headings;
+          .button.hide_show_all_attachments_text.opened:before{           
+            background: url('../img/arrow_right_black.png') no-repeat 50% top;
             position: absolute;
             color: $color-white;
+            font-family: $font-icons; 
+            font-size: $font-size-headings;
             cursor: pointer;
-            top: 8px;
+            top: 12px;
             left: 8px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
           }
          
          td.hide_show_button_container { 
@@ -1306,7 +1337,7 @@ table {
             td {
               background: $color-white;
               border: none;
-              padding: 8px 0;
+              padding: 7px 0;
               a {
                 display: block;
                 position: relative;

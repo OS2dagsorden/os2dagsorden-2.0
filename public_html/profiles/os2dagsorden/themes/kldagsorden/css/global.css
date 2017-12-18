@@ -9,7 +9,7 @@
   position: absolute;
   right: 30px;
   top: -15px;
-  padding: 15px 0  5px 5px; }
+  padding: 4px 0  5px 5px; }
 
 .user-logout-block {
   /* .settings-btn {
@@ -28,7 +28,7 @@
     font-weight: 400;
     font-size: 1em; }
   .user-logout-block .button {
-    margin: 0 5px; }
+    margin: 0 0 0 7px; }
   .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
     color: #FFF;
     font-family: "Source Sans Pro";
@@ -539,7 +539,7 @@ div.date-heading h3 {
   background: #f7f1f1;
   border-radius: 3px;
   border: 1px solid #f7f1f1;
-  padding: 5px 5px 0 5px; }
+  padding: 5px 7px 0 7px; }
 
 .node.brugerroller {
   background: none;
@@ -590,7 +590,7 @@ h2.block-title, h1.title {
   background: #e3d6d6;
   border-radius: 3px;
   border: 1px solid #e3d6d6;
-  padding: 12px 5px 10px 12px;
+  padding: 11px 5px 10px 11px;
   margin-bottom: 0;
   border-bottom: 1px solid #fbf8f8; }
 
@@ -1021,11 +1021,23 @@ table.views-table tbody tr {
   table.views-table tbody tr:last-child {
     border-bottom: none; }
   table.views-table tbody tr td {
-    padding: 8px 0;
+    padding: 7px 0;
     background: none; }
     table.views-table tbody tr td.views-field.views-field-php-4 {
-      padding-left: 10px;
-      padding-right: 10px; }
+      padding-left: 7px;
+      padding-right: 7px; }
+      table.views-table tbody tr td.views-field.views-field-php-4 a {
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 3px; }
+    table.views-table tbody tr td.views-field.views-field-php-3 a {
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 3px; }
+    table.views-table tbody tr td.views-field-field-os2web-meetings-type a {
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 3px 0 0 3px; }
+    table.views-table tbody tr td.views-field-field-os2web-meetings-date a {
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 0 3px 3px 0; }
     table.views-table tbody tr td a {
       display: block;
       position: relative;
@@ -1039,7 +1051,11 @@ table.views-table tbody tr {
       text-decoration: none;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis; }
+      text-overflow: ellipsis;
+      border-style: solid;
+      border-color: rgba(255, 255, 255, 0.7);
+      border-top-width: 1px;
+      border-bottom-width: 1px; }
       table.views-table tbody tr td a:hover {
         text-decoration: none; }
     table.views-table tbody tr td .bilag a {
@@ -1147,7 +1163,7 @@ table .speaker-paper-link-container {
       border: 1px solid #FFF;
       border-radius: 3px; }
       .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
-        padding: 8px;
+        padding: 7px;
         font-size: 16px;
         font-weight: bold; }
       .view-meeting-details .view-content table.views-table tr td {
@@ -1189,23 +1205,31 @@ table .speaker-paper-link-container {
       top: 8px;
       left: 8px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text:before {
-      content: "arrow_downward";
-      font-family: "Material Icons";
-      font-size: 20px;
+      background: url("../img/arrow_right_black_down.png") no-repeat 50% top;
       position: absolute;
       color: #FFF;
+      font-family: "Material Icons";
+      font-size: 20px;
       cursor: pointer;
-      top: 8px;
-      left: 8px; }
+      top: 12px;
+      left: 8px;
+      background-size: 10px;
+      content: "";
+      width: 20px;
+      height: 20px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text.opened:before {
-      content: "arrow_upward";
-      font-family: "Material Icons";
-      font-size: 20px;
+      background: url("../img/arrow_right_black.png") no-repeat 50% top;
       position: absolute;
       color: #FFF;
+      font-family: "Material Icons";
+      font-size: 20px;
       cursor: pointer;
-      top: 8px;
-      left: 8px; }
+      top: 12px;
+      left: 8px;
+      background-size: 10px;
+      content: "";
+      width: 20px;
+      height: 20px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container {
       position: relative; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button:before {
@@ -1233,7 +1257,7 @@ table .speaker-paper-link-container {
       .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td {
         background: #FFF;
         border: none;
-        padding: 8px 0; }
+        padding: 7px 0; }
         .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td a {
           display: block;
           position: relative;
