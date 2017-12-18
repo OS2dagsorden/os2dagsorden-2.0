@@ -113,7 +113,8 @@
     background-color: #FFF;
     box-sizing: border-box;
     display: block;
-    width: 100%; }
+    width: 100%;
+    border-radius: 3px; }
   .form-item select.form-select, .views-exposed-widget select.form-select {
     font-size: 1.0em;
     line-height: 1em;
@@ -123,7 +124,8 @@
     background-color: #FFF;
     box-sizing: border-box;
     display: block;
-    width: 100%; }
+    width: 100%;
+    border-radius: 3px; }
   .form-item .date-padding, .views-exposed-widget .date-padding {
     float: none; }
   .filter-wrapper .form-item, .filter-wrapper .views-exposed-widget {
@@ -517,7 +519,7 @@ ul li.leaf {
   font-weight: 100;
   font-size: 18px;
   background-color: #f7f1f1;
-  padding: 5px 10px;
+  padding: 5px 7px;
   margin-top: 5px;
   margin-bottom: 5px; }
 
@@ -541,12 +543,27 @@ div.date-heading h3 {
   border: 1px solid #f7f1f1;
   padding: 5px 7px 0 7px; }
 
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field.views-field-php-3 a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field.views-field-php-3 a {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 3px; }
+
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field.views-field-php-4 a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field.views-field-php-4 a {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 3px; }
+
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field-field-os2web-meetings-type a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field-field-os2web-meetings-type a {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 3px 0 0 3px; }
+
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field-field-os2web-meetings-date a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field-field-os2web-meetings-date a {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 0 3px 3px 0; }
+
 .node.brugerroller {
   background: none;
-  border: none; }
-  .node.brugerroller ul, .node.brugerroller ul#available_committee {
-    background: #f7f1f1;
-    padding: 5px 20px; }
+  border: 1px solid ul, ul #available_committee;
+    border-background: #f7f1f1;
+    border-padding: 5px 20px; }
   .node.brugerroller ul#available_committee {
     min-height: 95%;
     margin-bottom: 0px;
@@ -1026,18 +1043,6 @@ table.views-table tbody tr {
     table.views-table tbody tr td.views-field.views-field-php-4 {
       padding-left: 7px;
       padding-right: 7px; }
-      table.views-table tbody tr td.views-field.views-field-php-4 a {
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 3px; }
-    table.views-table tbody tr td.views-field.views-field-php-3 a {
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 3px; }
-    table.views-table tbody tr td.views-field-field-os2web-meetings-type a {
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 3px 0 0 3px; }
-    table.views-table tbody tr td.views-field-field-os2web-meetings-date a {
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 0 3px 3px 0; }
     table.views-table tbody tr td a {
       display: block;
       position: relative;
@@ -1153,8 +1158,8 @@ table .speaker-paper-link-container {
       text-transform: none; }
   .view-meeting-details .view-content {
     background: #f7f1f1;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 7px;
+    padding-right: 7px;
     font-weight: normal; }
     .view-meeting-details .view-content table.views-table thead tr {
       border: none; }
@@ -1163,13 +1168,17 @@ table .speaker-paper-link-container {
       border: 1px solid #FFF;
       border-radius: 3px; }
       .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
-        padding: 7px;
+        padding: 10px;
         font-size: 16px;
-        font-weight: bold; }
+        font-weight: bold;
+        text-transform: none; }
       .view-meeting-details .view-content table.views-table tr td {
         font-weight: normal; }
   .view-meeting-details .attachment .view-content table.views-table thead tr th {
-    background: #FFF; }
+    background: #FFF;
+    border-width: 1px;
+    border-color: #FFF;
+    border-radius: 3px; }
   .view-meeting-details .attachment .view-content table.views-table tr {
     border: none; }
     .view-meeting-details .attachment .view-content table.views-table tr td {
@@ -1177,9 +1186,13 @@ table .speaker-paper-link-container {
       border: none; }
   .view-meeting-details .attachment .bullet-point-attachments .view-header h3 {
     font-weight: bold;
-    font-size: 18px; }
+    font-size: 18px;
+    margin-left: 7px;
+    padding: 10px; }
   .view-meeting-details .attachment .bullet-point-attachments .view-content {
-    background: #FFF; }
+    background: #FFF;
+    padding-left: 0;
+    padding-right: 0; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
       border-radius: 3px;
       color: transparent;
@@ -1207,9 +1220,6 @@ table .speaker-paper-link-container {
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text:before {
       background: url("../img/arrow_right_black_down.png") no-repeat 50% top;
       position: absolute;
-      color: #FFF;
-      font-family: "Material Icons";
-      font-size: 20px;
       cursor: pointer;
       top: 12px;
       left: 8px;
@@ -1275,7 +1285,8 @@ table .speaker-paper-link-container {
           border-bottom-width: 1px;
           white-space: nowrap;
           overflow: hidden;
-          text-overflow: ellipsis; }
+          text-overflow: ellipsis;
+          border-radius: 3px 3px 0 0; }
         .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td .ul-item-list-dagsordenspunkt a {
           background-color: #f7f1f1; }
   .view-meeting-details .attachment table.views-table tr td a

@@ -153,13 +153,13 @@ div.content ul.menu li {
       background: $color-branding-secondary;
       color: $color-white;
     }
-     &:before {      
+     &:before {
       content: "\E916";
-      font-family: $font-icons; 
+      font-family: $font-icons;
       font-size: $font-size-headings;
       position: absolute;
       top: 10px;
-      left: 45px;     
+      left: 45px;
     }
   }
   #menu-sog {
@@ -174,16 +174,16 @@ div.content ul.menu li {
     padding-left: 75px;
     transition: background-color .1s ease-in;
     position:relative;
-    &:before {      
+    &:before {
       content: "\E8B8";
-      font-family: $font-icons; 
+      font-family: $font-icons;
       font-size: $font-size-headings;
       position: absolute;
       top: 10px;
-      left: 45px;     
+      left: 45px;
     }
     &:hover {
-      background: $color-branding-secondary;     
+      background: $color-branding-secondary;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
@@ -237,7 +237,7 @@ ul li.leaf {
     top: 1px;
     margin: auto;
     font-weight: bold;
-      
+
   }
 }
 
@@ -381,7 +381,7 @@ ul li.leaf {
   font-weight: 100;
   font-size: 18px;
   background-color: $color-background-primary;
-  padding: 5px 10px;
+  padding: 5px 7px;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -410,10 +410,38 @@ div.date-heading h3 {
   border: $border-block-body;
   padding: 5px 7px 0 7px;
 }
+.view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ {
+  table {
+    &.views-table{
+      tr td {
+        &.views-field.views-field-php-3 {
+          a {
+            border:  1px solid rgba($color-white, 0.7);
+            border-radius: $border-radius;
+          }
+        }
+        &.views-field.views-field-php-4 {
+          a {
+            border:  1px solid rgba($color-white, 0.7);
+            border-radius: $border-radius;
+          }
+        }
+        &.views-field-field-os2web-meetings-type a{
+          border:  1px solid rgba($color-white, 0.7);
+          border-radius: $border-radius 0 0 $border-radius  ;
+        }
+        &.views-field-field-os2web-meetings-date a{
+          border:  1px solid rgba($color-white, 0.7);
+          border-radius: 0  $border-radius $border-radius 0;
+        }
+     }
+    }
+  }
+}
 
 .node.brugerroller{
   background: none;
-  border: none;
+  border: 1px solid
   ul,  ul#available_committee{
     background: $color-background-primary;
     padding: 5px 20px;
@@ -575,7 +603,7 @@ div {
   }
   .date-prev a:after {
     content: "\E314";
-    font-family: $font-icons;    
+    font-family: $font-icons;
     left: 16px;
     top: 5px;
     position: absolute;
@@ -585,7 +613,7 @@ div {
   }
   .date-next a:after {
     content: "\E315";
-    font-family: $font-icons; 
+    font-family: $font-icons;
     right: 16px;
     top: 5px;
     position: absolute;
@@ -1034,24 +1062,6 @@ table {
       &.views-field.views-field-php-4{
         padding-left:7px;
         padding-right: 7px;
-         a {
-          border:  1px solid rgba($color-white, 0.7);          
-          border-radius: $border-radius;
-         }
-      }
-      &.views-field.views-field-php-3{
-        a {
-          border:  1px solid rgba($color-white, 0.7);          
-          border-radius: $border-radius;
-         }
-      }  
-      &.views-field-field-os2web-meetings-type a{
-        border:  1px solid rgba($color-white, 0.7);
-        border-radius: $border-radius 0 0 $border-radius  ;
-      }
-      &.views-field-field-os2web-meetings-date a{
-        border:  1px solid rgba($color-white, 0.7);
-        border-radius: 0  $border-radius $border-radius 0;
       }
       a {
         display: block;
@@ -1071,7 +1081,7 @@ table {
         border-color: rgba(255, 255, 255, 0.7);
         border-top-width: 1px;
         border-bottom-width: 1px;
-        
+
         &:hover {
           text-decoration: none;
         }
@@ -1201,8 +1211,8 @@ table {
   }
   .view-content {
     background: $color-background-primary;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 7px;
+    padding-right: 7px;
     font-weight: normal;
     table.views-table {
       thead tr {
@@ -1214,9 +1224,10 @@ table {
         border: 1px solid $color-white;
         border-radius: $border-radius;
         th, td {
-          padding: 7px;
+          padding: 10px;
           font-size: $font-size-button;
           font-weight: bold;
+          text-transform: none;
         }
         td{
           font-weight: normal;
@@ -1229,6 +1240,9 @@ table {
       table.views-table {
         thead tr th{
           background: $color-white;
+          border-width: 1px;
+          border-color: $color-white;
+          border-radius: $border-radius;
         }
         tr {
           border: none;
@@ -1244,11 +1258,15 @@ table {
         h3 {
           font-weight: bold;
           font-size: $font-size-table-header;
+          margin-left: 7px;
+          padding: 10px;
         }
       }
+
       .view-content {
         background: $color-white;
-
+        padding-left: 0;
+        padding-right: 0;
         .button {
           border-radius: $border-radius;
           color: transparent;
@@ -1258,17 +1276,17 @@ table {
           }
         .button:before{
             content: "\E5CF";
-            font-family: $font-icons; 
+            font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
             color: $color-white;
             cursor: pointer;
             top: 8px;
-            left: 8px;              
+            left: 8px;
           }
           .button.opened:before {
             content: "\E5CE";
-            font-family: $font-icons; 
+            font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
             color: $color-white;
@@ -1279,9 +1297,6 @@ table {
           .button.hide_show_all_attachments_text:before{
             background: url('../img/arrow_right_black_down.png') no-repeat 50% top;
             position: absolute;
-            color: $color-white;
-            font-family: $font-icons; 
-            font-size: $font-size-headings;
             cursor: pointer;
             top: 12px;
             left: 8px;
@@ -1290,11 +1305,11 @@ table {
             width: 20px;
             height: 20px
           }
-          .button.hide_show_all_attachments_text.opened:before{           
+          .button.hide_show_all_attachments_text.opened:before{
             background: url('../img/arrow_right_black.png') no-repeat 50% top;
             position: absolute;
             color: $color-white;
-            font-family: $font-icons; 
+            font-family: $font-icons;
             font-size: $font-size-headings;
             cursor: pointer;
             top: 12px;
@@ -1304,22 +1319,22 @@ table {
             width: 20px;
             height: 20px
           }
-         
-         td.hide_show_button_container { 
+
+         td.hide_show_button_container {
           position: relative;
           .button:before{
             content: "\E5CF";
-            font-family: $font-icons; 
+            font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
             color: $color-white;
             cursor: pointer;
             top: 15px;
-            left: 8px;              
+            left: 8px;
           }
           .button.opened:before {
             content: "\E5CE";
-            font-family: $font-icons; 
+            font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
             color: $color-white;
@@ -1356,6 +1371,7 @@ table {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                border-radius: $border-radius $border-radius 0 0;
               }
               .ul-item-list-dagsordenspunkt {
                 a {

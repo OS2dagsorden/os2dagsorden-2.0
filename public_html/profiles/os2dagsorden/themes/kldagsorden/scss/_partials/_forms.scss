@@ -1,6 +1,6 @@
 .form-item, .views-exposed-widget {
     margin-bottom: 1em;
-    width: 100%;
+    width: 100%;   
     label {
         display: inline-block;
         font-size: 1.1em;
@@ -16,6 +16,7 @@
         box-sizing:border-box;
         display: block;
         width: 100%;
+        border-radius: $border-radius;
     }
     select.form-select {
         font-size: 1.0em;
@@ -27,6 +28,7 @@
         box-sizing:border-box;
         display: block;
         width: 100%;
+        border-radius: $border-radius;
     }
     .date-padding {
         float: none;
