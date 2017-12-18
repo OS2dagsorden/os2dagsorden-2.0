@@ -64,11 +64,15 @@ $info['preview_html'] = '';
 $info['gradients'] = array();
 
 // Color areas to fill (x, y, width, height).
-$info['fill'] = array();
+$info['fill'] = array(
+    'color-background-primary' => array(0, 0, 101, 72),
+  );
 
 // Coordinates of all the theme slices (x, y, width, height)
 // with their filename as used in the stylesheet.
-$info['slices'] = array();
+$info['slices'] = array(
+    'img/img_arrows_reverse.png' => array(0, 0, 101, 72),
+  );
 
 // Base file for image generation.
 $info['base_image'] = 'color/base.png';

@@ -1974,22 +1974,20 @@ a.annotator-wrapper {
 /* ---------------------------- arrows_reverse START ---------------------------- */
 
 .arrows-reverse {
-  display: none;
+  
+  
+  background-image: url(/profiles/os2dagsorden/themes/kldagsorden/img/img_arrows_reverse.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  background-color: green;
+  
   /*displaying starting from default-normal*/
   width: 250px;
   min-height: 367px;
   float: left;
   margin: auto;
   position: relative;
-  > img {
-    height: auto;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
 }
 
 /* ---------------------------- arrows_reverse END ---------------------------- */
