@@ -64,7 +64,9 @@ $info['preview_html'] = '';
 $info['gradients'] = array();
 
 // Color areas to fill (x, y, width, height).
-$info['fill'] = array();
+$info['fill'] = array(
+    'color-background-secondary' => array(0, 0, 101, 72),
+  );
 
 // Coordinates of all the theme slices (x, y, width, height)
 // with their filename as used in the stylesheet.

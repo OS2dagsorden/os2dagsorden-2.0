@@ -1990,7 +1990,10 @@ a.annotator-wrapper {
 /* ---------------------------- arrows_reverse START ---------------------------- */
 
 .arrows-reverse {
-  display: none;
+  background-image: url(/profiles/os2dagsorden/themes/kldagsorden/img/img_arrows_reverse.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  
   /*displaying starting from default-normal*/
   width: 250px;
   min-height: 367px;
