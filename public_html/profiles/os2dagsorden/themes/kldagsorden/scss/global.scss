@@ -142,6 +142,7 @@ div.content ul.menu li {
     padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in;
+    position:relative;
     &:hover, &.active:hover {
       background: $color-branding-secondary;
       background-size: 20px;

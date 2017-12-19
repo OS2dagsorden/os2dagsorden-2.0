@@ -336,7 +336,8 @@ div.content ul.menu li {
     background: #e3d6d6;
     padding-left: 75px;
     background-size: 20px;
-    transition: background-color .1s ease-in; }
+    transition: background-color .1s ease-in;
+    position: relative; }
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
       background: #ae477d;
       background-size: 20px;
