@@ -65,7 +65,7 @@ $info['gradients'] = array();
 
 // Color areas to fill (x, y, width, height).
 $info['fill'] = array(
-    'color-background-primary' => array(0, 0, 101, 72),
+    'color-background-secondary' => array(0, 0, 101, 72),
   );
 
 // Coordinates of all the theme slices (x, y, width, height)
