@@ -18,6 +18,7 @@
     }
     .button {
       margin: 0 0 0 7px;
+      -webkit-appearance: none; 
     }
     .settings-btn, .user-logout-btn, .user-guide-btn{
         color: $color-white;

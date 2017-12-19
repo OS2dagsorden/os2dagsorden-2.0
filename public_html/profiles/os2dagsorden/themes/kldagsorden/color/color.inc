@@ -26,7 +26,7 @@ $info['schemes'] = array(
 
     // Scheme colors
     'colors' => array(
-      'color-body' => '#FFF',
+      'color-body' => '#fff',
       'color-branding-secondary' => '#ae477d',
       'color-branding-primary' => '#9c1a5e',
       'color-background-primary' => '#f7f1f1',
@@ -42,7 +42,7 @@ $info['schemes'] = array(
 
     // Scheme colors
     'colors' => array(
-      'color-body' => '#FFF',
+      'color-body' => '#fff',
       'color-branding-secondary' => '#2d8bc0',
       'color-branding-primary' => '#2c8abe',      
       'color-background-primary' => '#fbfcfd',

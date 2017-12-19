@@ -28,7 +28,8 @@
     font-weight: 400;
     font-size: 1em; }
   .user-logout-block .button {
-    margin: 0 0 0 7px; }
+    margin: 0 0 0 7px;
+    -webkit-appearance: none; }
   .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
     color: #FFF;
     font-family: "Source Sans Pro";
@@ -179,6 +180,7 @@
   background-color: #9c1a5e;
   border: 1px solid #ae477d;
   border-radius: 3px;
+  -webkit-appearance: none;
   color: #FFF;
   padding: 5px 20px 5px 20px;
   font-family: "Source Sans Pro";
@@ -210,6 +212,9 @@
   .form-actions.form-wrapper .form-submit {
     margin-right: 10px; }
 
+.form-actions input:hover {
+  background: #ae477d; }
+
 .ui-state-default {
   border: 1px solid #ae477d;
   border-radius: 3px; }
@@ -217,6 +222,19 @@
 .select-committee ul.droptrue {
   border: 1px solid #f7f1f1;
   border-radius: 3px; }
+
+.form-textarea-wrapper textarea {
+  border-radius: 3px;
+  border: 1px solid #FFF; }
+
+.chosen-container-multi .chosen-choices {
+  background-image: none;
+  background-color: #FFF;
+  border-radius: 3px;
+  border: 1px solid #FFF; }
+
+.chosen-container-active .chosen-choices {
+  border-color: #e3d6d6; }
 
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
@@ -505,10 +523,10 @@ ul li.leaf {
   z-index: 1; }
 
 .content #show_hide_menu_container #show_hide_menu_button {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
   border-width: 0;
-  text-shadow: none; }
+  text-shadow: none;
+  background-color: #ae477d;
+  border-radius: 3px; }
 
 /*---------------------------- Show hide menu End ----------------------------*/
 /*---------------------------- Views Start ----------------------------*/
@@ -543,21 +561,20 @@ div.date-heading h3 {
   border: 1px solid #f7f1f1;
   padding: 5px 7px 0 7px; }
 
-.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field.views-field-php-3 a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field.views-field-php-3 a {
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(4) a, .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(5) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(4) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(5) a {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 3px; }
 
-.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field.views-field-php-4 a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field.views-field-php-4 a {
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 3px; }
-
-.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field-field-os2web-meetings-type a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field-field-os2web-meetings-type a {
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(1) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(1) a {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 3px 0 0 3px; }
 
-.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td.views-field-field-os2web-meetings-date a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td.views-field-field-os2web-meetings-date a {
+.view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(3) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(3) a {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 0 3px 3px 0; }
+
+.view-id-kommende_m_der_i_mine_udvalg table.views-table th:nth-child(4), .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table th:nth-child(4) {
+  padding-left: 18px; }
 
 .node.brugerroller {
   background: none; }
@@ -665,7 +682,7 @@ div.block-inner {
 
 .view .date-nav-wrapper .pager .date-prev a, .view .date-nav-wrapper .pager .date-next a {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
+  font-size: 0;
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -690,6 +707,7 @@ div.block-inner {
 .view .date-nav-wrapper .pager .date-prev a:after {
   content: "\E314";
   font-family: "Material Icons";
+  font-size: 16px;
   left: 16px;
   top: 5px;
   position: absolute; }
@@ -699,6 +717,7 @@ div.block-inner {
 .view .date-nav-wrapper .pager .date-next a:after {
   content: "\E315";
   font-family: "Material Icons";
+  font-size: 16px;
   right: 16px;
   top: 5px;
   position: absolute; }
@@ -722,8 +741,9 @@ div.block-inner {
       .calendar-calendar table.mini tr td.empty {
         background: #f7f1f1; }
       .calendar-calendar table.mini tr td.today, .calendar-calendar table.mini tr.odd td.today, .calendar-calendar table.mini tr.even td.today {
-        background: none;
-        text-align: center; }
+        background: #fff;
+        text-align: center;
+        border-radius: 5px; }
     .calendar-calendar table.mini .mini tr td.today a {
       color: #feffff;
       font-weight: bold;
@@ -896,7 +916,8 @@ pager li.pager-first {
   font-family: "Source Sans Pro";
   font-size: 16px;
   text-decoration: none;
-  cursor: pointer; }
+  cursor: pointer;
+  -webkit-appearance: none; }
 
 .pager li a {
   /* Fallback */
@@ -1034,13 +1055,13 @@ table.views-table {
   margin-bottom: 0px; }
 
 table.views-table tbody tr {
-  border-bottom: 1px solid white; }
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7); }
   table.views-table tbody tr:last-child {
     border-bottom: none; }
   table.views-table tbody tr td {
     padding: 7px 0;
     background: none; }
-    table.views-table tbody tr td.views-field.views-field-php-4 {
+    table.views-table tbody tr td:nth-child(4) {
       padding-left: 7px;
       padding-right: 7px; }
     table.views-table tbody tr td a {
@@ -1160,35 +1181,50 @@ table .speaker-paper-link-container {
     background: #f7f1f1;
     padding-left: 7px;
     padding-right: 7px;
-    font-weight: normal; }
+    font-weight: normal;
+    border-radius: 3px 3px 0 0; }
     .view-meeting-details .view-content table.views-table thead tr {
       border: none; }
-    .view-meeting-details .view-content table.views-table tr {
-      background: #FFF;
-      border: 1px solid #FFF;
-      border-radius: 3px; }
-      .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
-        padding: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        text-transform: none; }
-      .view-meeting-details .view-content table.views-table tr td {
-        font-weight: normal; }
-  .view-meeting-details .attachment .view-content table.views-table thead tr th {
+    .view-meeting-details .view-content table.views-table tr td {
+      background: #FFF; }
+      .view-meeting-details .view-content table.views-table tr td:nth-child(1) {
+        border-radius: 3px 0 0 3px; }
+      .view-meeting-details .view-content table.views-table tr td:nth-last-child(1) {
+        border-radius: 0 3px 3px 0; }
+    .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: none; }
+    .view-meeting-details .view-content table.views-table tr td {
+      font-weight: normal;
+      padding: 10px 10px 7px 10px; }
+    .view-meeting-details .view-content table.views-table tr th {
+      padding: 10px; }
+  .view-meeting-details .attachment .view-meeting-details {
     background: #FFF;
-    border-width: 1px;
-    border-color: #FFF;
-    border-radius: 3px; }
-  .view-meeting-details .attachment .view-content table.views-table tr {
     border: none; }
-    .view-meeting-details .attachment .view-content table.views-table tr td {
-      background: #f7f1f1;
+  .view-meeting-details .attachment .view-content {
+    border-radius: 0; }
+    .view-meeting-details .attachment .view-content table.views-table thead tr th {
+      background: #FFF;
+      border-width: 1px;
+      border-color: #FFF;
+      border-radius: 3px; }
+    .view-meeting-details .attachment .view-content table.views-table tr {
       border: none; }
-  .view-meeting-details .attachment .bullet-point-attachments .view-header h3 {
-    font-weight: bold;
-    font-size: 18px;
-    margin-left: 7px;
-    padding: 10px; }
+      .view-meeting-details .attachment .view-content table.views-table tr td {
+        background: #f7f1f1;
+        border: none; }
+  .view-meeting-details .attachment .bullet-point-attachments .view-header {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+    background: #f7f1f1;
+    border-radius: 0 0 3px 3px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-header h3 {
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 7px;
+      padding: 10px; }
   .view-meeting-details .attachment .bullet-point-attachments .view-content {
     background: #FFF;
     padding-left: 0;
@@ -1294,12 +1330,6 @@ table .speaker-paper-link-container {
     margin-top: 10px;
     margin-bottom: 10px;
     font-size: 18px; }
-  .view-meeting-details .attachment .view-meeting-details {
-    background: none;
-    border: none;
-    /*.view-content {
-        background: $color-background-primary;
-      }*/ }
 
 /*bullet point details table*/
 div.speaker-paper-print {
@@ -1722,18 +1752,17 @@ a.annotator-wrapper {
   z-index: 1; }
 
 .form-save-submit {
-  background: #ae477d url("../img/icon_save.png") no-repeat 5px 50%;
-  padding: 5px 10px 5px 25px; }
+  padding: 5px 20px 5px 20px; }
 
 .form-add-submit {
-  background: #c0c0c0 url("../img/icon_add.png") no-repeat 5px 50%;
-  background: url("../img/icon_add.png") no-repeat 5px 50%, linear-gradient(top, #fcfcfc 0%, #c0c0c0 100%);
-  background: url("../img/icon_add.png") no-repeat 5px 50%, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e7e7e7), to(#c0c0c0));
-  background: url("../img/icon_add.png") no-repeat 5px 50%, -webkit-linear-gradient(top, #fcfcfc, #c0c0c0);
-  background: url("../img/icon_add.png") no-repeat 5px 50%, -moz-linear-gradient(top, #fcfcfc, #c0c0c0);
-  background: url("../img/icon_add.png") no-repeat 5px 50%, -ms-linear-gradient(top, #fcfcfc, #c0c0c0);
-  background: url("../img/icon_add.png") no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);
-  padding: 5px 10px 5px 25px; }
+  /* background: #c0c0c0 url('../img/icon_add.png') no-repeat 5px 50%;
+  background: url('../img/icon_add.png') no-repeat 5px 50%, linear-gradient(top, #fcfcfc 0%, #c0c0c0 100%);
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e7e7e7), to(#c0c0c0));
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -webkit-linear-gradient(top, #fcfcfc, #c0c0c0);
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -moz-linear-gradient(top, #fcfcfc, #c0c0c0);
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -ms-linear-gradient(top, #fcfcfc, #c0c0c0);
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);*/
+  padding: 5px 20px 5px 20px; }
 
 .form-back {
   background: #c0c0c0 url("../img/icon_back.png") no-repeat 5px 50%;
@@ -1944,3 +1973,9 @@ div.note {
   padding: 3px 5px;
   width: 100%;
   box-sizing: border-box; }
+
+.block-views .view-user-logout-menu li div {
+  display: inline-block !important; }
+
+.block-views .view-user-logout-menu li div.right {
+  float: none !important; }
