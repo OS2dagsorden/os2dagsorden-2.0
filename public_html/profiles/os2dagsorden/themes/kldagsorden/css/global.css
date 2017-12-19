@@ -560,10 +560,10 @@ div.date-heading h3 {
   border-radius: 0 3px 3px 0; }
 
 .node.brugerroller {
-  background: none;
-  border: 1px solid ul, ul #available_committee;
-    border-background: #f7f1f1;
-    border-padding: 5px 20px; }
+  background: none; }
+  .node.brugerroller ul, .node.brugerroller ul#available_committee {
+    background: #f7f1f1;
+    padding: 5px 20px; }
   .node.brugerroller ul#available_committee {
     min-height: 95%;
     margin-bottom: 0px;
