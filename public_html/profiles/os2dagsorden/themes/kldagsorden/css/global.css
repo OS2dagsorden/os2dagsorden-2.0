@@ -567,11 +567,13 @@ div.date-heading h3 {
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(1) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(1) a {
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 3px 0 0 3px; }
+  border-radius: 3px 0 0 3px;
+  border-left-width: 0; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(3) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(3) a {
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 0 3px 3px 0; }
+  border-radius: 0 3px 3px 0;
+  border-right-width: 0; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table th:nth-child(4), .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table th:nth-child(4) {
   padding-left: 18px; }
@@ -1189,7 +1191,7 @@ table .speaker-paper-link-container {
       background: #FFF; }
       .view-meeting-details .view-content table.views-table tr td:nth-child(1) {
         border-radius: 3px 0 0 3px; }
-      .view-meeting-details .view-content table.views-table tr td:nth-last-child(1) {
+      .view-meeting-details .view-content table.views-table tr td:nth-last-child() {
         border-radius: 0 3px 3px 0; }
     .view-meeting-details .view-content table.views-table tr th, .view-meeting-details .view-content table.views-table tr td {
       font-size: 16px;
@@ -1217,14 +1219,16 @@ table .speaker-paper-link-container {
         border: none; }
   .view-meeting-details .attachment .bullet-point-attachments .view-header {
     margin-bottom: 0;
-    padding-bottom: 10px;
+    margin-top: 0;
     background: #f7f1f1;
     border-radius: 0 0 3px 3px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-header h3 {
       font-weight: bold;
       font-size: 18px;
       margin-left: 7px;
-      padding: 10px; }
+      padding: 10px;
+      margin-bottom: 0;
+      margin-top: 0; }
   .view-meeting-details .attachment .bullet-point-attachments .view-content {
     background: #FFF;
     padding-left: 0;
