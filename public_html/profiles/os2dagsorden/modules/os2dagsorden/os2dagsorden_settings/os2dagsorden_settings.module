@@ -40,6 +40,15 @@ function os2dagsorden_settings_menu() {
         'type' => MENU_NORMAL_ITEM,
         'file' => 'os2dagsorden_settings.admin.inc',
     );
+    $items['admin/config/os2dagsorden/theme_settings'] = array(
+        'title' => 'Design changes and colors',
+        'description' => 'Design changes and colors',
+        'page arguments' => array('os2dagsorden_settings_theme_settings'),
+        'page callback' => 'drupal_get_form',
+        'access arguments' => array('administer os2web'),
+        'type' => MENU_NORMAL_ITEM,
+        'file' => 'os2dagsorden_settings.admin.inc',
+    );
     $items['admin/config/os2dagsorden/flush_calendar_preferences'] = array(
         'title' => 'Calendar preferences flushing',
         'description' => 'Clicking on this link all the calendar preferences (pol/org) will be flushed. The preferences are retrieved again from SOFD, once "Importer cron" is run',
