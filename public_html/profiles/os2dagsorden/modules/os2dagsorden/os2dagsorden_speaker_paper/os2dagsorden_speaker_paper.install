@@ -1,16 +1,17 @@
 <?php
 
 /**
- * os2dagsorden_speaker_paper
+ * @file
+ * Os2dagsorden_speaker_paper.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_Spekaer_Paper
- * @file     Install file
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Dagsorden_Spekaer_Paper
+ *  Install file
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
@@ -42,8 +43,10 @@ function os2dagsorden_speaker_paper_schema() {
       ),
       'date' => array(
         'description' => 'Date of when the email has been sent',
-        'mysql_type' => 'datetime', // The equivalent MySQL data type
-        'pgsql_type' => 'timestamp', // The equivalent PostgreSQL data
+    // The equivalent MySQL data type.
+        'mysql_type' => 'datetime',
+    // The equivalent PostgreSQL data.
+        'pgsql_type' => 'timestamp',
       ),
     ),
     'primary key' => array('message_id'),

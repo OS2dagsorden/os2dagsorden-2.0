@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Code for the OS2Logging feature.
@@ -6,12 +7,12 @@
 
 include_once 'os2logging.features.inc';
 
+use Monolog\Processor\WebProcessor;
 use Monolog\Logger;
 
-/*
+/**
  * Implements HOOK_menu()
  */
-
 function os2logging_menu() {
   $items = array();
 
@@ -37,6 +38,9 @@ function os2logging_menu() {
   return $items;
 }
 
+/**
+ *
+ */
 function os2logging_monolog_channel_info() {
   $channels = array();
 
@@ -49,10 +53,9 @@ function os2logging_monolog_channel_info() {
   return $channels;
 }
 
-/*
+/**
  * Implements HOOK_node_load()
  */
-
 function os2logging_node_load($nodes, $types) {
   global $user;
 
@@ -60,18 +63,21 @@ function os2logging_node_load($nodes, $types) {
 
   if (is_array($chosen_node_types)) {
     $logger = monolog('os2logging');
-    $logger->pushProcessor(new \Monolog\Processor\WebProcessor);
+    $logger->pushProcessor(new WebProcessor());
     foreach ($nodes as $nid => $node) {
       if (in_array($node->type, $chosen_node_types)) {
         $message = sprintf("node type:%s id:%d was loaded by user( uid:%s name:%s  e-mail:%s) \n\r", $node->type, $node->nid, $user->uid, $user->name, $user->email);
         $logger->log(Logger::INFO, $message, array());
 
-        //watchdog('mytype', 'TEST', NULL, WATCHDOG_INFO, NULL);
+        // watchdog('mytype', 'TEST', NULL, WATCHDOG_INFO, NULL);.
       }
     }
   }
 }
 
+/**
+ *
+ */
 function os2logging_settings_form($form, $form_state) {
   $node_types = node_type_get_types();
 
@@ -94,6 +100,9 @@ function os2logging_settings_form($form, $form_state) {
   return system_settings_form($form);
 }
 
+/**
+ *
+ */
 function os2logging_settings_form_submit($form, &$form_state) {
   $node_types = node_type_get_types();
   $chosen_node_types = array();
@@ -107,6 +116,9 @@ function os2logging_settings_form_submit($form, &$form_state) {
   variable_set('os2logging_log_file_path', $form_state['values']['os2logging-file-path']);
 }
 
+/**
+ *
+ */
 function _os2logging_node_type_chosen($node_type) {
   $types_list = variable_get('os2logging_chosen_node_types');
   return (is_array($types_list) && in_array($node_type, $types_list));
@@ -123,7 +135,8 @@ function os2logging_help($path, $arg) {
       $filepath = dirname(__FILE__) . '/README.md';
       if (file_exists($filepath)) {
         $readme = file_get_contents($filepath);
-      } else {
+      }
+      else {
         $filepath = dirname(__FILE__) . '/README.txt';
         if (file_exists($filepath)) {
           $readme = file_get_contents($filepath);
@@ -138,10 +151,12 @@ function os2logging_help($path, $arg) {
 
         if (function_exists($info['process callback'])) {
           $output = $info['process callback']($readme, NULL);
-        } else {
+        }
+        else {
           $output = '<pre>' . $readme . '</pre>';
         }
-      } else {
+      }
+      else {
         $output = '<pre>' . $readme . '</pre>';
       }
 
@@ -165,7 +180,6 @@ function os2logging_watchdog(array $log_entry) {
     // @see http://drupal.org/node/1990282
     if (variable_get('monolog_type_as_channel', 1)) {
 
-
       if (monolog_channel_info_load($log_entry['type'])) {
 
         $logger = monolog($log_entry['type']);
@@ -183,7 +197,8 @@ function os2logging_watchdog(array $log_entry) {
         }
       }
     }
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     // Fail silently since we cannot log any messages or do anything that would
     // trigger another watchdog call.
   }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * This module implements SBSYS ESDH backend for use in os2web
+ * This module implements SBSYS ESDH backend for use in os2web.
  */
 
-include_once('os2web_sbsys_aarhus.features.inc');
+include_once 'os2web_sbsys_aarhus.features.inc';
 
 define('MM_IMPORT_DIR', 'public://sbsys');
 define('MM_DEFAULT_APPROVED', '11');
@@ -15,7 +15,7 @@ define('MM_DEFAULT_BANNED_REGEX', '/&#x.*;/');
 /**
  * Implements hook_ctools_plugin_directory().
  *
- * Register as provider of esdh plugins
+ * Register as provider of esdh plugins.
  */
 function os2web_sbsys_aarhus_ctools_plugin_directory($module, $plugin) {
   if ($module == 'os2web_esdh_provider') {
@@ -92,20 +92,19 @@ function os2web_sbsys_aarhus_os2web_help($sections) {
   // Content types.
   $sections['contenttype'] .= t('<p><b>Meeting node:</b> Add <a href="@url" target="_blank">meetings</a> directly.<br /><i><a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf')
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf'),
   ));
   $sections['import'] .= t('<p><b>Import agenades:</b> <a href="@sbsys" target="_blank">See the advanced documentation for the OS2web eDoc module import</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf')
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf'),
   ));
   $sections['documentation'] .= t('<p><b>PDF documentation for sbsys:</b> <a href="@sbsys" target="_blank">Documentation for the OS2web eDoc module</a>(.pdf)</i></p>', array(
     '@url' => url('node/add/os2web_meetings_meeting'),
-    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf')
+    '@sbsys' => file_create_url(drupal_get_path('module', 'os2web_sbsys_aarhus') . '/os2web_sbsys_modul_setup.pdf'),
   ));
   return $sections;
 
 }
-
 
 /**
  * Implements hook_help().

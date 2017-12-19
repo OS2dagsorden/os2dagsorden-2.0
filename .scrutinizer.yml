@@ -1,0 +1,32 @@
+tools:
+    php_code_sniffer:
+        config:
+            standard: Drupal
+        extensions:
+            - module
+            - inc
+            - install
+            - test
+            - profile
+            - theme
+    js_hint:
+        use_native_config: true
+
+# @see https://scrutinizer-ci.com/blog/introducing-build-failure-conditions
+build_failure_conditions:
+    # No new issues allowed.
+    - 'issues.new.exists'
+
+# @see https://scrutinizer-ci.com/docs/reviews/excluding_files_from_analysis
+filter:
+    paths:
+        - 'public_html/profiles/os2dagsorden/os2dagsorden.*'
+        - 'public_html/profiles/os2dagsorden/*/os2*'
+
+    excluded_paths:
+        - '*/contrib/*'
+        - '*/libraries/*'
+        - '*.features.*'
+        - '*.pages_default.inc'
+        - '*.strongarm.inc'
+        - '*.views_default.inc'

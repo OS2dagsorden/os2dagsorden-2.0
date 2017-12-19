@@ -1,16 +1,19 @@
 <?php
+
 /**
- * os2dagsorden_acadre_service_importer
+ * @file
+ * Os2dagsorden_acadre_service_importer.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_acadre_service_importer
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Dagsorden_acadre_service_importer
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
-//define('DEFAULT_ACADRE_VIEWS_IMPORT_DIR', 'public://acadre_views');
+
+// define('DEFAULT_ACADRE_VIEWS_IMPORT_DIR', 'public://acadre_views');.
 module_load_include('inc', 'os2dagsorden_acadre_service_importer', '/includes/os2dagsorden_acadre_service_importer_committees');
 module_load_include('inc', 'os2dagsorden_acadre_service_importer', '/includes/os2dagsorden_acadre_service_importer_meetings');
 
@@ -20,31 +23,31 @@ module_load_include('inc', 'os2dagsorden_acadre_service_importer', '/includes/os
  * @return array of links.
  */
 function os2dagsorden_acadre_service_importer_menu() {
-    $items = array();
+  $items = array();
 
-    $items['os2dagsorden/sync'] = array(
-        'page callback' => 'os2dagsorden_acadre_service_importer_sync',
-        'access arguments' => array('administer os2web'),
-        'type' => MENU_CALLBACK,
-    );
+  $items['os2dagsorden/sync'] = array(
+    'page callback' => 'os2dagsorden_acadre_service_importer_sync',
+    'access arguments' => array('administer os2web'),
+    'type' => MENU_CALLBACK,
+  );
 
-    return $items;
+  return $items;
 }
 
 /**
- * Callback to start import
+ * Callback to start import.
  */
-function os2dagsorden_acadre_service_importer_sync(){
-    os2dagsorden_acadre_service_importer_import_committees();
-    os2dagsorden_acadre_service_importer_import_meetings();
+function os2dagsorden_acadre_service_importer_sync() {
+  os2dagsorden_acadre_service_importer_import_committees();
+  os2dagsorden_acadre_service_importer_import_meetings();
 }
 
 /**
  * Implements hook_cron().
  */
-function os2dagsorden_acadre_service_importer_cron(){
-    os2dagsorden_acadre_service_importer_import_committees();
-    os2dagsorden_acadre_service_importer_import_meetings();
+function os2dagsorden_acadre_service_importer_cron() {
+  os2dagsorden_acadre_service_importer_import_committees();
+  os2dagsorden_acadre_service_importer_import_meetings();
 }
 
 /**
@@ -52,16 +55,16 @@ function os2dagsorden_acadre_service_importer_cron(){
  *
  * @return none
  */
-function os2dagsorden_acadre_service_importer_import_committees(){
-    $url = curl_init(variable_get('os2dagsorden_acadre_service_committees_url'));
+function os2dagsorden_acadre_service_importer_import_committees() {
+  $url = curl_init(variable_get('os2dagsorden_acadre_service_committees_url'));
 
-    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
-    $committees_raw = curl_exec($url);
+  curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+  $committees_raw = curl_exec($url);
 
-    if($committees_raw !== False){
-        $committees = new SimpleXMLElement($committees_raw);
-        _os2dagsorden_acadre_service_importer_process_committees($committees);
-    }
+  if ($committees_raw !== FALSE) {
+    $committees = new SimpleXMLElement($committees_raw);
+    _os2dagsorden_acadre_service_importer_process_committees($committees);
+  }
 }
 
 /**
@@ -70,14 +73,14 @@ function os2dagsorden_acadre_service_importer_import_committees(){
  * @return none
  */
 function os2dagsorden_acadre_service_importer_import_meetings() {
-    $url = curl_init(variable_get('os2dagsorden_acadre_service_meetings_url'));
+  $url = curl_init(variable_get('os2dagsorden_acadre_service_meetings_url'));
 
-    curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
-    $meetings_raw = curl_exec($url);
-    if($meetings_raw !== False){
-        $meetings = new SimpleXMLElement($meetings_raw);
-        _os2dagsorden_acadre_service_importer_process_meetings($meetings);
-    }
+  curl_setopt($url, CURLOPT_RETURNTRANSFER, TRUE);
+  $meetings_raw = curl_exec($url);
+  if ($meetings_raw !== FALSE) {
+    $meetings = new SimpleXMLElement($meetings_raw);
+    _os2dagsorden_acadre_service_importer_process_meetings($meetings);
+  }
 }
 
 /**
@@ -87,13 +90,13 @@ function os2dagsorden_acadre_service_importer_requirements($phase) {
   if ($phase !== 'runtime') {
     return array();
   }
-   $t = get_t();
-   
-   if (!empty(variable_get('os2dagsorden_acadre_service_meetings _url', ''))) {
-     $requirements['os2dagsorden_acadre_service_importer_meetings_url'] = array(
-     'title' => $t('OS2Dagsorden meetings importer webservice.')
-    );  
-    if(!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_acadre_service_meetings_url'))) {
+  $t = get_t();
+
+  if (!empty(variable_get('os2dagsorden_acadre_service_meetings _url', ''))) {
+    $requirements['os2dagsorden_acadre_service_importer_meetings_url'] = array(
+      'title' => $t('OS2Dagsorden meetings importer webservice.'),
+    );
+    if (!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_acadre_service_meetings_url'))) {
       $requirements['os2dagsorden_acadre_service_importer_meetings_url']['value'] = $t('Not accessible');
       $requirements['os2dagsorden_acadre_service_importer_meetings_url']['severity'] = REQUIREMENT_ERROR;
       $requirements['os2dagsorden_acadre_service_importer_meetings_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_acadre_service_meetings_url')));
@@ -104,11 +107,11 @@ function os2dagsorden_acadre_service_importer_requirements($phase) {
       $requirements['os2dagsorden_acadre_service_importer_meetings_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_acadre_service_meetings_url')));
     }
   }
-  if(!empty(variable_get('os2dagsorden_acadre_service_committees_url'))){
-   $requirements['os2dagsorden_acadre_service_importer_committees_url'] = array(
-       'title' => $t('OS2Dagsorden committees importer webservice.')
-   );
-   if(!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_acadre_service_committees_url'))){
+  if (!empty(variable_get('os2dagsorden_acadre_service_committees_url'))) {
+    $requirements['os2dagsorden_acadre_service_importer_committees_url'] = array(
+      'title' => $t('OS2Dagsorden committees importer webservice.'),
+    );
+    if (!_os2dagsorden_acadre_service_importer_webservice_url_exists(variable_get('os2dagsorden_acadre_service_committees_url'))) {
       $requirements['os2dagsorden_acadre_service_importer_committees_url']['value'] = $t('Not accessible');
       $requirements['os2dagsorden_acadre_service_importer_committees_url']['severity'] = REQUIREMENT_ERROR;
       $requirements['os2dagsorden_acadre_service_importer_committees_url']['description'] = t('Webservice %variable  is not accessible', array('%variable' => variable_get('os2dagsorden_acadre_service_committees_url')));
@@ -118,25 +121,28 @@ function os2dagsorden_acadre_service_importer_requirements($phase) {
       $requirements['os2dagsorden_acadre_service_importer_committees_url']['severity'] = REQUIREMENT_OK;
       $requirements['os2dagsorden_acadre_service_importer_committees_url']['description'] = t('Webservice %variable  is accessible', array('%variable' => variable_get('os2dagsorden_acadre_service_committees_url')));
     }
-  }  
+  }
   return $requirements;
 }
 
-/*
- * check if webservice URL is available
+/**
+ * Check if webservice URL is available.
  */
-function _os2dagsorden_acadre_service_importer_webservice_url_exists($url=NULL) {
-  if($url == NULL) return false;
+function _os2dagsorden_acadre_service_importer_webservice_url_exists($url = NULL) {
+  if ($url == NULL) {
+    return FALSE;
+  }
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_TIMEOUT, 5);
   curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   $data = curl_exec($ch);
   $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   curl_close($ch);
-  if($httpcode>=200 && $httpcode<300){
-    return true;
-  } else {
-    return false;
+  if ($httpcode >= 200 && $httpcode < 300) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
   }
 }

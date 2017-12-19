@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 include_once 'os2dagsorden_logging.features.inc';
 
 use Monolog\Logger;
@@ -46,7 +50,7 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
   try {
     if (in_array($log_entry['type'], variable_get('os2dagsorden_logging_message_type', array(
       "acadre MM" => "acadre MM",
-      "esdh provider" => "esdh provider"
+      "esdh provider" => "esdh provider",
     )))
     ) {
 
@@ -67,12 +71,12 @@ function os2dagsorden_logging_watchdog(array $log_entry) {
       $level = os2dagsorden_logging_map_severity_level($log_entry['severity']);
       $logger->log($level, $message, $context);
     }
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     // Fail silently since we cannot log any messages or do anything that would
     // trigger another watchdog call.
   }
 }
-
 
 /**
  * Ensure that required subsystems and modules are loaded if watchdog messages
@@ -177,6 +181,7 @@ function os2dagsorden_logging_cron() {
  *
  * @param $op
  * @param null $job
+ *
  * @return array
  */
 function os2dagsorden_logging_cronapi($op, $job = NULL) {
@@ -202,7 +207,7 @@ function os2dagsorden_logging_requirements($phase) {
         if ($handler_name == 'rotating_file_handler') {
           $requirements['os2dagsorden_logging_log_dir_' . $channel_name] = array(
             'title' => $t('OS2Dagsorden Logging'),
-            'value' => $t('Log file directory')
+            'value' => $t('Log file directory'),
           );
           if (!(is_dir(drupal_realpath(dirname($options['filepath']))) && is_writable(drupal_realpath(dirname($options['filepath']))))) {
             $requirements['os2dagsorden_logging_log_dir_' . $channel_name]['severity'] = REQUIREMENT_ERROR;

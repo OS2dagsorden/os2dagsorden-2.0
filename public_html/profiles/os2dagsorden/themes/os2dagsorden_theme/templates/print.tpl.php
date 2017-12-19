@@ -76,7 +76,8 @@
   <base href='<?php print $url ?>' />
   <title><?php print $print_title; ?></title>
   <?php print $scripts; ?>
-  <?php if (isset($sendtoprinter)) print $sendtoprinter; ?>
+  <?php if (isset($sendtoprinter)) {print $sendtoprinter;
+  } ?>
   <?php print $robots_meta; ?>
   <?php if (theme_get_setting('toggle_favicon')): ?>
     <link rel='shortcut icon' href='<?php print theme_get_setting('favicon') ?>' type='image/x-icon' />
@@ -84,28 +85,44 @@
   <?php print $css; ?>
 </head>
 <body>
-<?php //if (!empty($message)): ?>
-<!--  <div class="print-message">--><?php //print $message; ?><!--</div><p />-->
-<?php //endif; ?>
-<?php //if ($print_logo): ?>
-<!--  <div class="print-logo">--><?php //print $print_logo; ?><!--</div>-->
-<?php //endif; ?>
-<!--<div class="print-site_name">--><?php //print theme('print_published'); ?><!--</div>-->
+<?php
+// If (!empty($message)): ?>
+<!--  <div class="print-message">--><?php
+// Print $message;. ?><!--</div><p />-->
+<?php
+// endif;. ?>
+<?php
+// If ($print_logo): ?>
+<!--  <div class="print-logo">--><?php
+// Print $print_logo;. ?><!--</div>-->
+<?php
+// endif;. ?>
+<!--<div class="print-site_name">--><?php
+// Print theme('print_published');. ?><!--</div>-->
 <!--<p />-->
-<!--<div class="print-breadcrumb">--><?php //print theme('print_breadcrumb', array('node' => $node)); ?><!--</div>-->
+<!--<div class="print-breadcrumb">--><?php
+// Print theme('print_breadcrumb', array('node' => $node));. ?><!--</div>-->
 <!--<hr class="print-hr" />-->
-<?php //if (!isset($node->type)): ?>
-<!--  <h2 class="print-title">--><?php //print $print_title; ?><!--</h2>-->
-<?php //endif; ?>
+<?php
+// If (!isset($node->type)): ?>
+<!--  <h2 class="print-title">--><?php
+// Print $print_title;. ?><!--</h2>-->
+<?php
+// endif;. ?>
 <div class="print-content"><?php print $content; ?></div>
-<!--<div class="print-footer">--><?php //print theme('print_footer'); ?><!--</div>-->
+<!--<div class="print-footer">--><?php
+// Print theme('print_footer');. ?><!--</div>-->
 <!--<hr class="print-hr" />-->
-<?php //if ($sourceurl_enabled): ?>
+<?php
+// If ($sourceurl_enabled): ?>
 <!--  <div class="print-source_url">-->
-<!--    --><?php //print theme('print_sourceurl', array('url' => $source_url, 'node' => $node, 'cid' => $cid)); ?>
+<!--    --><?php
+// Print theme('print_sourceurl', array('url' => $source_url, 'node' => $node, 'cid' => $cid));. ?>
 <!--  </div>-->
-<?php //endif; ?>
-<!--<div class="print-links">--><?php //print theme('print_url_list'); ?><!--</div>-->
+<?php
+// endif;. ?>
+<!--<div class="print-links">--><?php
+// Print theme('print_url_list');. ?><!--</div>-->
 <?php print $footer_scripts; ?>
 </body>
 </html>

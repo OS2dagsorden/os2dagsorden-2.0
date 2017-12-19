@@ -4,7 +4,7 @@
  * @file
  * This file implements the importing functions
  * of the MM functionality and depends on a
- * plugin to do the actual filereads
+ * plugin to do the actual filereads.
  */
 
 module_load_include('inc', 'os2web_esdh_provider', 'includes/os2web_esdh_provider.queue');
@@ -15,7 +15,7 @@ $PROCESSING_BP = 0;
  * Pretty sizes.
  *
  * @param int $size
- *   Size in bytes
+ *   Size in bytes.
  *
  * @return string
  *   Pretty size
@@ -29,7 +29,7 @@ function hr_size($size) {
  * Internal logger.
  *
  * @param string $msg
- *   Message to log
+ *   Message to log.
  */
 function err_debug($msg = FALSE) {
   if (variable_get('os2web_esdh_provider_debug_info')) {
@@ -43,7 +43,7 @@ function err_debug($msg = FALSE) {
  * Imports meeting metadata into a node.
  *
  * @param string $meeting_id
- *   Meeting id
+ *   Meeting id.
  *
  * @return int
  *   Node id
@@ -60,7 +60,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   if ($nid) {
     watchdog('acadre MM', '[XML_ID: !id ] Found existing meeting node nid: !nid', array(
       '!id' => $PROCESSING_MEETING_ID,
-      '!nid' => $nid
+      '!nid' => $nid,
     ), WATCHDOG_DEBUG);
     $PROCESSING_MEETING_NID = $nid;
   }
@@ -73,9 +73,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     if ($nid) {
       watchdog('acadre MM', '[XML_ID: !id] Latest meeting version is already imported into nid: !nid. Skipping manifest', array(
         '!id' => $PROCESSING_MEETING_ID,
-        '!nid' => $nid
+        '!nid' => $nid,
       ), WATCHDOG_INFO);
-    } else {
+    }
+    else {
       watchdog('acadre MM', '[XML_ID: !id] No agendas to import. Skipping manifest', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_INFO);
     }
     lock_release(__FUNCTION__ . $meeting_id['id']);
@@ -101,7 +102,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   $number_of_meetings = count($meetings);
   watchdog('acadre MM', '[XML_ID: !id] Number of agendas: !number', array(
     '!id' => $PROCESSING_MEETING_ID,
-    '!number' => $number_of_meetings
+    '!number' => $number_of_meetings,
   ), WATCHDOG_DEBUG);
   for ($i = 0; $i < $number_of_meetings; $i++) {
     os2web_esdh_provider_index_meeting($nid, $meeting_id, $meetings[$i]);
@@ -116,7 +117,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         ),
         WATCHDOG_INFO);
       unset($meetings[$i]);
-    } else {
+    }
+    else {
       watchdog('acadre MM', '[XML_ID: !id] Agenda !meeting_sub_id is allowed be published. [publish]=!publish, [access]=!access',
         array(
           '!id' => $PROCESSING_MEETING_ID,
@@ -134,12 +136,12 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     // Meeting needs to be unpublished.
     watchdog('acadre MM', '[XML_ID: !id] Starting deleting node with nid: !nid', array(
       '!id' => $PROCESSING_MEETING_ID,
-      '!nid' => $nid
+      '!nid' => $nid,
     ), WATCHDOG_DEBUG);
     node_delete($nid);
     watchdog('acadre MM', '[XML_ID: !id] Deleted node nid: !nid .', array(
       '!id' => $PROCESSING_MEETING_ID,
-      '!nid' => $nid
+      '!nid' => $nid,
     ), WATCHDOG_NOTICE);
     lock_release(__FUNCTION__ . $meeting_id['id']);
     watchdog('acadre MM', '[XML_ID: !id] Finished meeting import', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_NOTICE);
@@ -160,7 +162,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         '!id' => $PROCESSING_MEETING_ID,
         '!meeting_sub_id' => $meeting['meeting_sub_id'],
         '!number' => count($meeting['items']),
-        '!force' => intval($force)
+        '!force' => intval($force),
       ), WATCHDOG_DEBUG);
 
     // Meeting already exist.
@@ -172,17 +174,20 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       if ($force) {
         $republish = TRUE;
         $reason = 'FORCE';
-      } elseif (defined('MM_REPUBLISH_MEETINGS') && MM_REPUBLISH_MEETINGS) {
+      }
+      elseif (defined('MM_REPUBLISH_MEETINGS') && MM_REPUBLISH_MEETINGS) {
         // Republish by setting.
         $republish = TRUE;
         $reason = 'MM_REPUBLISH_MEETINGS';
-      } elseif (defined('MM_REPUBLISH_SUBVERSION') && MM_REPUBLISH_SUBVERSION) {
+      }
+      elseif (defined('MM_REPUBLISH_SUBVERSION') && MM_REPUBLISH_SUBVERSION) {
         // Republish if meeting_sub_id changed.
         if ($node->field_os2web_meetings_sub_id[LANGUAGE_NONE][0]['value'] < $meeting['meeting_sub_id']) {
           $republish = TRUE;
           $reason = 'MM_REPUBLISH_SUBVERSION';
         }
-      } elseif ($meeting['type'] === 'Referat' &&
+      }
+      elseif ($meeting['type'] === 'Referat' &&
         ($node->field_os2web_meetings_type[LANGUAGE_NONE][0]['value'] === 'Dagsorden' ||
           $node->field_os2web_meetings_type[LANGUAGE_NONE][0]['value'] === 'Dagsorden_plus')
       ) {
@@ -190,7 +195,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         // This means that the one already exist is a Dagsorden.
         $republish = TRUE;
         $reason = 'DAGSORDEN -> REFERAT';
-      } elseif (filemtime($meeting['path']) > $node->changed) {
+      }
+      elseif (filemtime($meeting['path']) > $node->changed) {
         $republish = TRUE;
         $reason = 'NEW REFERAT VERSION';
       }
@@ -200,18 +206,20 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         watchdog('acadre MM', '[XML_ID: !id] Republishing into !nid. Reason: !reason', array(
           '!id' => $PROCESSING_MEETING_ID,
           '!nid' => $nid,
-          '!reason' => $reason
+          '!reason' => $reason,
         ), WATCHDOG_INFO);
-      } else {
+      }
+      else {
         watchdog('acadre MM', '[XML_ID: !id] Meeting already imported in !nid. No republish. Skipping.', array(
           '!id' => $PROCESSING_MEETING_ID,
-          '!nid' => $nid
+          '!nid' => $nid,
         ), WATCHDOG_NOTICE);
         watchdog('acadre MM', '[XML_ID: !id] Finished meeting import', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_NOTICE);
         os2web_esdh_provider_index_meeting_update_committee_tid($meeting_id['id'], $meeting['meeting_sub_id'], $node->field_os2web_meetings_committee['und'][0]['tid']);
         continue;
       }
-    } else {
+    }
+    else {
       // Check if there is an sofd version of this node
       // (acadre and syddjurs systems only).
       if (module_exists('os2dagsorden_esdh_provider')) {
@@ -224,17 +232,17 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] No node was found, creating a new node', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_DEBUG);
       $node = new stdClass();
     }
-    //$unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');
+    // $unpublished_status = variable_get('os2dagsorden_meetings_unpublished_status');.
     $node->type = "os2web_meetings_meeting";
     $node->language = LANGUAGE_NONE;
     $node->uid = 1;
-    //if unpublished
-    //if ($unpublished_status == 1)
-
+    // If unpublished
+    // if ($unpublished_status == 1)
     node_object_prepare($node);
     if (strlen($meeting['title']) >= 255) {
       $node->title = mb_substr($meeting['title'], 0, 250) . '...';
-    } else {
+    }
+    else {
       $node->title = $meeting['title'];
     }
 
@@ -272,10 +280,9 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       $node->path = $path_alias;
       watchdog('acadre MM', '[XML_ID: !id] Meeting path: !path', array(
         '!id' => $PROCESSING_MEETING_ID,
-        '!path' => $path_alias
+        '!path' => $path_alias,
       ), WATCHDOG_DEBUG);
     }
-
 
     // If field has a format, you need to define it. Here we define a default
     // filtered_html format for a body field.
@@ -310,7 +317,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     if (!$committee_term) {
       if (module_exists('os2dagsorden_esdh_provider')) {
         $committee_term = osdagsorden_esdh_provider_import_or_return_committee($meeting['committee_id'], $meeting['committee']);
-      } else {
+      }
+      else {
         $committee_term = _acadre_esdh_import_term($meeting['committee'], 'os2web_meetings_tax_committee');
       }
     }
@@ -320,10 +328,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       array(
         '!id' => $PROCESSING_MEETING_ID,
         '!term_name' => $committee_term->name,
-        '!tid' => $committee_term->tid
+        '!tid' => $committee_term->tid,
       ), WATCHDOG_DEBUG);
 
-    // location term
+    // Location term.
     if ($meeting['location']) {
       $location_term = _acadre_esdh_import_term($meeting['location'], 'os2web_meetings_tax_location');
       $node->field_os2web_meetings_location[LANGUAGE_NONE][0]['tid'] = $location_term->tid;
@@ -331,45 +339,47 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         array(
           '!id' => $PROCESSING_MEETING_ID,
           '!term_name' => $location_term->name,
-          '!tid' => $location_term->tid
+          '!tid' => $location_term->tid,
         ), WATCHDOG_DEBUG);
     }
 
     $node->status = _os2web_esdh_provider_get_meeting_publish_status($committee_term->tid);
 
-    //adding description
+    // Adding description.
     if (!empty($meeting['full_doc'])) {
       if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc']))) {
         if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0) {
           $node->field_os2web_meetings_full_doc_c[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings closed description: !uri ', array(
             '!id' => $PROCESSING_MEETING_ID,
-            '!uri' => $file->uri
+            '!uri' => $file->uri,
           ), WATCHDOG_DEBUG);
-        } else {
+        }
+        else {
           $node->field_os2web_meetings_full_doc[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings open description: !uri ', array(
             '!id' => $PROCESSING_MEETING_ID,
-            '!uri' => $file->uri
+            '!uri' => $file->uri,
           ), WATCHDOG_DEBUG);
         }
       }
     }
 
-    //adding full doc with attachments
+    // Adding full doc with attachments.
     if (!empty($meeting['full_doc_with_attachments'])) {
       if (FALSE !== ($file = _os2web_esdh_provider_import_file($meeting['full_doc_with_attachments']))) {
         if (isset($meeting['agenda_access']) && strcmp($meeting['agenda_access'], 'Lukket') == 0) {
           $node->field_os2web_meetings_att_doc_c[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings closed full doc with attachments: !uri ', array(
             '!id' => $PROCESSING_MEETING_ID,
-            '!uri' => $file->uri
+            '!uri' => $file->uri,
           ), WATCHDOG_DEBUG);
-        } else {
+        }
+        else {
           $node->field_os2web_meetings_att_doc[$node->language][0] = (array) $file;
           watchdog('acadre MM', '[XML_ID: !id] Meetings open full doc with attachments: !uri ', array(
             '!id' => $PROCESSING_MEETING_ID,
-            '!uri' => $file->uri
+            '!uri' => $file->uri,
           ), WATCHDOG_DEBUG);
         }
       }
@@ -396,7 +406,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       watchdog('acadre MM', '[XML_ID: !id] Imported bullet points !list ',
         array('!id' => $PROCESSING_MEETING_ID, '!list' => print_r($item_nids, TRUE)), WATCHDOG_DEBUG);
 
-      $nids_to_delete = null;
+      $nids_to_delete = NULL;
 
       if (module_exists('os2dagsorden_esdh_provider')) {
         if (is_array($nids_to_delete) && is_array($item_nids)) {
@@ -408,7 +418,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
       if (!empty($nids_to_delete)) {
         watchdog('acadre MM', '[XML_ID: !id] Deleting those bullet points: !list ', array(
           '!id' => $PROCESSING_MEETING_ID,
-          '!list' => print_r($nids_to_delete, TRUE)
+          '!list' => print_r($nids_to_delete, TRUE),
         ), WATCHDOG_DEBUG);
         node_delete_multiple($nids_to_delete);
       }
@@ -419,7 +429,8 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
           if (!os2dagsorden_access_helper_check_bullet_point_is_part_of_meeting($node->nid, $nid)) {
             $node->field_os2web_meetings_bullets[LANGUAGE_NONE][]['target_id'] = $nid;
           }
-        } else {
+        }
+        else {
           $node->field_os2web_meetings_bullets[LANGUAGE_NONE][]['target_id'] = $nid;
         }
       }
@@ -431,9 +442,10 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     $node->created = $meeting['creation_date'];
     node_save($node);
     $nid = $node->nid;
-    if ($node->status == 0) { //if unpublished
+    // If unpublished.
+    if ($node->status == 0) {
       global $base_url;
-      //variable_get('os2dagsorden_meeting_unpublished_state_emails', '');
+      // variable_get('os2dagsorden_meeting_unpublished_state_emails', '');.
       $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
       $status = $node->field_os2web_meetings_type['und'][0]['value'];
       $target_email = _os2web_esdh_provider_meeting_unpublished_state_emails($committee_id, $status);
@@ -448,11 +460,11 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
         $subject_template = variable_get('os2dagsorden_meeting_unpublished_state_subject');
         $body_template = variable_get('os2dagsorden_meeting_unpublished_state_body');
 
-        //composing search/replace
+        // Composing search/replace.
         $search = array('!committe', '!meeting_name', '!meeting_date', '!meeting_type', '!meeting_url', PHP_EOL);
         $replace = array($cName, $mName, $mDate, $published_item, $mLink, '<br/>');
 
-        //making replacements
+        // Making replacements.
         $subject = str_replace($search, $replace, $subject_template);
         $subject = ucfirst($subject);
         $body = str_replace($search, $replace, $body_template);
@@ -469,7 +481,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
     watchdog('acadre MM', '[XML_ID: !id] Agenda %aid is imported into node %nid .', array(
       '!id' => $meeting_id['id'],
       '%aid' => $meeting['meeting_sub_id'],
-      '%nid' => $node->nid
+      '%nid' => $node->nid,
     ), WATCHDOG_NOTICE);
     $nids[] = $node->nid;
     watchdog('acadre MM', '[XML_ID: !id] Finished meeting import', array('!id' => $PROCESSING_MEETING_ID), WATCHDOG_NOTICE);
@@ -480,13 +492,14 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
   if ($republish) {
     _os2web_esdh_provider_send_statusmail(t('!id successfully imported into node !nid.', array(
       '!id' => $meeting_id['id'],
-      '!nid' => $node->nid
+      '!nid' => $node->nid,
     )));
 
     variable_set('os2web_esdh_provider_last_import', time());
     lock_release(__FUNCTION__ . $meeting_id['id']);
     return $nids;
-  } else {
+  }
+  else {
     lock_release(__FUNCTION__ . $meeting_id['id']);
   }
   return;
@@ -494,6 +507,7 @@ function _os2web_esdh_provider_import_meeting($meeting_id, $force = FALSE, &$con
 
 /**
  * Imports item metadata into nodes.
+ *
  * @access protected
  *
  * @param array $items
@@ -520,7 +534,7 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
         }
       }
 
-      //try find bullet from the tillægsagenda
+      // Try find bullet from the tillægsagenda.
       if (!$node && $PROCESSING_MEETING_NID && TRUE) {
         $node = os2dagsorden_esdh_provider_find_and_reassign_additional_agenda_bullet($PROCESSING_BP, $PROCESSING_MEETING_NID);
         if ($node) {
@@ -567,19 +581,21 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
         $node->field_os2web_meetings_bul_pers[LANGUAGE_NONE][0]['value'] = 1;
       }
 
-      //allowing overriding of the content only if the agenda == lukket
+      // Allowing overriding of the content only if the agenda == lukket.
       if (module_exists('os2dagsorden_esdh_provider') && $PROCESSING_MEETING_ACCESS == 'Lukket') {
         $node = _os2web_esdh_import_handle_bullets($node, $item);
-      } else {
+      }
+      else {
         watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] BP content will not be imported/overwritten, because BP access:
         !access and meeting access: !meeting_access', array(
           '!id' => $PROCESSING_MEETING_ID,
           '!sysid' => $PROCESSING_BP,
           '!access' => $item['access'],
-          '!meeting_access' => $PROCESSING_MEETING_ACCESS
+          '!meeting_access' => $PROCESSING_MEETING_ACCESS,
         ), WATCHDOG_INFO);
       }
-    } else {
+    }
+    else {
       $node->field_os2web_meetings_bul_closed[LANGUAGE_NONE][0]['value'] = 0;
       $node->field_os2web_meetings_bul_pers[LANGUAGE_NONE][0]['value'] = 0;
       $node = _os2web_esdh_import_handle_bullets($node, $item);
@@ -596,10 +612,11 @@ function _os2web_esdh_provider_import_items($items, $existing_bullets = NULL) {
 
 /**
  * Imports bullet metadata into nodes.
+ *
  * @access protected
  *
  * @param array $bullets
- *   List of bullets
+ *   List of bullets.
  *
  * @return array
  *   List of imported node ids
@@ -618,7 +635,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
         '!id' => $PROCESSING_MEETING_ID,
         '!sysid' => $PROCESSING_BP,
         '!bpa' => $bullet['sysid'],
-        '!title' => $bullet['title']
+        '!title' => $bullet['title'],
       ), WATCHDOG_INFO);
     $node = NULL;
     $bullet['body'] = os2web_esdh_provider_filter_html_tags($bullet['body']);
@@ -631,7 +648,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
               '!id' => $PROCESSING_MEETING_ID,
               '!sysid' => $PROCESSING_BP,
               '!bpa' => $bullet['sysid'],
-              '!nid' => $node->nid
+              '!nid' => $node->nid,
             ), WATCHDOG_INFO);
         }
       }
@@ -672,7 +689,7 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
         '!id' => $PROCESSING_MEETING_ID,
         '!sysid' => $PROCESSING_BP,
         '!bpa' => $bullet['sysid'],
-        '!nid' => $node->nid
+        '!nid' => $node->nid,
       ), WATCHDOG_INFO);
   }
   return $nids;
@@ -680,10 +697,11 @@ function _os2web_esdh_provider_import_bullets($bullets, $existing_attachments = 
 
 /**
  * Imports a file metadata into a managed drupal file.
+ *
  * @access protected
  *
  * @param array $file_meta
- *   File metadata
+ *   File metadata.
  *
  * @return object
  *   Drupal standard file object
@@ -699,7 +717,8 @@ function _os2web_esdh_provider_import_file($file_meta) {
   $pinfo = pathinfo($uri_in);
   if ($file_meta['title'] !== '') {
     $fname = $file_meta['title'];
-  } else {
+  }
+  else {
     $fname = $pinfo['filename'];
   }
 
@@ -714,14 +733,13 @@ function _os2web_esdh_provider_import_file($file_meta) {
           '!id' => $PROCESSING_MEETING_ID,
           '!sysid' => $PROCESSING_BP,
           '!file_counter' => $file_counter,
-          '!uri_out' => $uri_out
+          '!uri_out' => $uri_out,
         ), WATCHDOG_DEBUG);
     } while (_os2web_esdh_provider_similar_file_exists(drupal_realpath($uri_out)));
   }
 
   $new_pinfo = pathinfo($uri_out);
   $uri_pdf = $pinfo['dirname'] . '/' . $new_pinfo['filename'] . '.pdf';
-
 
   err_debug('Start import file ' . $uri_out . ' ');
   watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Started importing file !uri and !title into !uri_out',
@@ -730,7 +748,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
       '!sysid' => $PROCESSING_BP,
       '!uri' => $file_meta['uri'],
       '!title' => $fname,
-      '!uri_out' => $uri_out
+      '!uri_out' => $uri_out,
     ), WATCHDOG_DEBUG);
 
   $uri = FALSE;
@@ -742,11 +760,13 @@ function _os2web_esdh_provider_import_file($file_meta) {
     // We have an already converted pdf file.
     $uri = $uri_pdf;
     $convert = FALSE;
-  } elseif ($uri_out_real_path !== FALSE && _os2web_esdh_provider_similar_file_exists($uri_out_real_path)) {
+  }
+  elseif ($uri_out_real_path !== FALSE && _os2web_esdh_provider_similar_file_exists($uri_out_real_path)) {
     // File already copied.
     $convert = TRUE;
     $uri = $uri_out;
-  } else {
+  }
+  else {
     // Completely unprocessed file.
     $uri_old = $uri_in;
     if ($uri_in_real_path !== FALSE) {
@@ -755,20 +775,22 @@ function _os2web_esdh_provider_import_file($file_meta) {
         $pi = pathinfo($uri_out);
         if (isset($pi['extension'])) {
           $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255)) . '.' . $pi['extension'];
-        } else {
+        }
+        else {
           $uri_out = $pi['dirname'] . '/' . substr($pi['filename'], 0, strlen($pi['filename']) - (strlen($uri_out) - 255));
         }
       }
     }
-    
+
     if ($uri_in === FALSE || FALSE === file_unmanaged_copy($uri_in, $uri_out, FILE_EXISTS_REPLACE)) {
       // Bummed out on copy.
       watchdog('acadre MM', 'File copy failed for %infile -> %outfile. Check folder permissions.', array(
         '%infile' => $uri_old,
-        '%outfile' => $uri_out
+        '%outfile' => $uri_out,
       ), WATCHDOG_WARNING);
       return FALSE;
-    } else {
+    }
+    else {
       $convert = TRUE;
       $uri = $uri_out;
     }
@@ -777,7 +799,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
   if (FALSE === $uri || empty($uri)) {
     watchdog('acadre MM', 'Processing of %infile failed. If exists, check permissions.', array(
       '%infile',
-      $uri_in
+      $uri_in,
     ), WATCHDOG_WARNING);
     return FALSE;
   }
@@ -785,7 +807,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
   if (!(defined('MM_USE_ALTERNATIVE_FILE_URI_SCHEME') && MM_USE_ALTERNATIVE_FILE_URI_SCHEME) && file_uri_scheme($uri) != 'public' && file_uri_scheme($uri) != 'private') {
     watchdog('acadre MM', 'Invalid scheme for uri %uri, Possibly absolut path ? ' . $uri, array(
       '%uri',
-      $uri
+      $uri,
     ), WATCHDOG_ERROR);
     error_log("Var: \$uri = " . print_r($uri, 1));
     error_log("Var: \$uri_in = " . print_r($uri_in, 1));
@@ -826,7 +848,7 @@ function _os2web_esdh_provider_import_file($file_meta) {
     os2web_adlib_api_convert_to_pdf($file->fid);
     watchdog('os2web_adlib_api', 'File %filename (fid: %fid) queued for PDF conversion.', array(
       '%filename' => $file->filename,
-      '%fid' => $file->fid
+      '%fid' => $file->fid,
     ), WATCHDOG_INFO);
   }
 
@@ -838,8 +860,10 @@ function _os2web_esdh_provider_import_file($file_meta) {
 /**
  * This function is a handler for item bullets. Groups all items and deletes the items which are to be replaced.
  *
- * @param mixed $node item node
- * @param array $item array containing information about bullets and enclosures
+ * @param mixed $node
+ *   item node.
+ * @param array $item
+ *   array containing information about bullets and enclosures.
  *
  * @return object $node item node with filled information about bullet/enclosures
  */
@@ -856,7 +880,7 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
       array(
         '!id' => $PROCESSING_MEETING_ID,
         '!sysid' => $PROCESSING_BP,
-        '!list' => print_r($bullet_nids, TRUE)
+        '!list' => print_r($bullet_nids, TRUE),
       ), WATCHDOG_DEBUG);
 
     if (module_exists('os2dagsorden_esdh_provider')) {
@@ -877,10 +901,10 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
             array(
               '!id' => $PROCESSING_MEETING_ID,
               '!sysid' => $PROCESSING_BP,
-              '!list' => print_r($attachments_to_delete, TRUE)
+              '!list' => print_r($attachments_to_delete, TRUE),
             ), WATCHDOG_DEBUG);
 
-          //if any of the attachment had attached notes, we try to save the notes
+          // If any of the attachment had attached notes, we try to save the notes.
           os2dagsorden_esdh_provider_reassign_notes($attachments_to_delete, $bullet_nids);
 
           node_delete_multiple($attachments_to_delete);
@@ -891,7 +915,8 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
     foreach ($bullet_nids as $nid) {
       $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = $nid;
     }
-  } else {
+  }
+  else {
     $node->field_os2web_meetings_attach[LANGUAGE_NONE] = array();
   }
   // Gather enclosures.
@@ -900,16 +925,17 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
       if ($file = _os2web_esdh_provider_import_file($enclosure)) {
         watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] Imported file !file',
           array('!id' => $PROCESSING_MEETING_ID, '!sysid' => $PROCESSING_BP, '!file' => $file->uri), WATCHDOG_DEBUG);
-        //$node->field_os2web_meetings_enclosures[LANGUAGE_NONE][] = (array) $file;
+        // $node->field_os2web_meetings_enclosures[LANGUAGE_NONE][] = (array) $file;.
         if (module_exists('os2dagsorden_esdh_provider')) {
           $node->field_os2web_meetings_attach[LANGUAGE_NONE][]['target_id'] = os2dagsorden_esdh_provider_process_enclosure($enclosure, $file);
         }
-      } else {
+      }
+      else {
         watchdog('acadre MM', '[XML_ID: !id] [BP: !sysid] There was an error importing file !uri ',
           array(
             '!id' => $PROCESSING_MEETING_ID,
             '!sysid' => $PROCESSING_BP,
-            '!uri' => $enclosure['uri']
+            '!uri' => $enclosure['uri'],
           ), WATCHDOG_ERROR);
       }
     }
@@ -926,7 +952,7 @@ function _os2web_esdh_import_handle_bullets($node, $item) {
  *   the term.
  *
  * @param string $vocab
- *   Vocabulary machine name
+ *   Vocabulary machine name.
  *
  * @return object
  *   Drupal standard Term object
@@ -942,7 +968,6 @@ function _acadre_esdh_import_term($term_name, $vocab) {
     $term_name = $term_name['esdh_name'];
   }
 
-
   err_debug('Start import term');
 
   $vid = db_select('taxonomy_vocabulary', 'tv')
@@ -955,7 +980,7 @@ function _acadre_esdh_import_term($term_name, $vocab) {
   $term->vid = $vid;
   $term->name = $term_name;
 
-  $tid = null;
+  $tid = NULL;
 
   // Searching for an existing term based on the provided ESDH ID.
   if (!empty($term_esdh_id_field) && !empty($term_esdh_id) && $term_esdh_id > 0) {
@@ -1056,7 +1081,7 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
  * Sanetizes filename, removing illegal characters.
  *
  * @param string $filename
- *   Filename
+ *   Filename.
  *
  * @return string
  *   Sanetized filename with same extension.
@@ -1064,11 +1089,12 @@ function _os2web_esdh_provider_node_tab_page($nid, $op = FALSE) {
 function _os2web_esdh_provider_sanetize_filename($filename) {
   if (module_exists('transliteration')) {
     $filename = transliteration_clean_filename($filename);
-  } else {
+  }
+  else {
     // Replace whitespace.
     // $filename = str_replace(' ', '_', $filename);
     // Remove remaining unsafe characters.
-    // $filename = preg_replace('![^0-9A-Za-z_.- ]!', '', $filename);
+    // $filename = preg_replace('![^0-9A-Za-z_.- ]!', '', $filename);.
     $filename = preg_replace('![/"]!', '-', $filename);
     // Remove multiple consecutive non-alphabetical characters.
     $filename = preg_replace('/(_)_+|(\.)\.+|(-)-+/', '\\1\\2\\3', $filename);
@@ -1078,7 +1104,8 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
   $pi = pathinfo($filename);
   if (isset($pi['extension'])) {
     return mb_substr(trim($pi['filename']), 0, 160) . '.' . $pi['extension'];
-  } else {
+  }
+  else {
     return mb_substr(trim($pi['filename']), 0, 160);
   }
 }
@@ -1087,7 +1114,7 @@ function _os2web_esdh_provider_sanetize_filename($filename) {
  * Case insensitive fileexists(). Code from comments on php.net.
  *
  * @param string $filename
- *   Filename
+ *   Filename.
  *
  * @return mixed
  *   False if file not found, case corrected filename if found.
@@ -1125,14 +1152,16 @@ function _os2web_esdh_provider_import($id = FALSE) {
   }
   if ($meeting_id === FALSE) {
     _os2web_esdh_provider_import_output();
-  } else {
+  }
+  else {
     $nids = _os2web_esdh_provider_import_meeting($meeting_id, TRUE);
     if (os2web_esdh_provider_supports('mm', 'post_import_process')) {
       os2web_esdh_provider_invoke('mm', 'post_import_process');
     }
     if (count($nids) > 0) {
       _os2web_esdh_provider_import_output($id, $nids);
-    } else {
+    }
+    else {
       _os2web_esdh_provider_import_output($id);
     }
   }
@@ -1147,7 +1176,8 @@ function _os2web_esdh_provider_import_output($id = NULL, $nids = NULL) {
   }
   if (isset($nids) && empty($nids)) {
     $msg = 'Meeting ' . $id . ' imported, but no nodes created.';
-  } else {
+  }
+  else {
     $urls = array();
     foreach ($nids as $nid) {
       $urls[] = url('node/' . $nid, array('absolute' => TRUE));
@@ -1168,7 +1198,7 @@ function _os2web_esdh_provider_import_output($id = NULL, $nids = NULL) {
  *   The message to send.
  *
  * @param bool $is_error
- *   Wheter the message is an error
+ *   Wheter the message is an error.
  *
  * @return bool
  *   True on success
@@ -1181,7 +1211,8 @@ function _os2web_esdh_provider_send_statusmail($message, $is_error = FALSE) {
     $mail_body = t('MM Import') . "\n";
     if ($is_error) {
       $mail_body .= t('Status') . ": " . t('Error') . "\n";
-    } else {
+    }
+    else {
       $mail_body .= t('Status') . ": " . t('Success') . "\n";
     }
     $mail_body .= t('Time spend') . ": " . number_format(timer_read('mm_import') / 1000, 2) . "sec.\n";
@@ -1221,7 +1252,8 @@ function _os2web_esdh_provider_bpa_body_format() {
   if (empty($cache)) {
     if (defined('MM_BPA_BODY_FORMAT') && filter_format_exists(MM_BPA_BODY_FORMAT)) {
       $cache = MM_BPA_BODY_FORMAT;
-    } else {
+    }
+    else {
       $cache = 'filtered_html';
     }
   }
@@ -1243,7 +1275,8 @@ function os2web_esdh_provider_clear_cache($success, $results, $operations) {
     }
     $message = ' Import processed.';
     drupal_set_message($message);
-  } else {
+  }
+  else {
     // An error occurred.
     // $operations contains the operations that remained unprocessed.
     $error_operation = reset($operations);
@@ -1252,14 +1285,14 @@ function os2web_esdh_provider_clear_cache($success, $results, $operations) {
         '%error_operation' => $error_operation[0],
         '@arguments' => print_r($error_operation[1], TRUE),
       )
-    );
+      );
     drupal_set_message($message, 'error');
   }
   drupal_goto('admin/config/os2web/esdh_provider');
 }
 
-/*
- * Removed inline styles from html tags
+/**
+ * Removed inline styles from html tags.
  */
 function os2web_esdh_provider_filter_html_tags($data) {
   $tags = explode(',', variable_get('os2dagsorden_filtered_tags', ''));
@@ -1270,7 +1303,7 @@ function os2web_esdh_provider_filter_html_tags($data) {
       $data = str_replace($match, $filtred_data, $data);
     }
   }
-  //remove all a tags with attribute Name="Acadre..
+  // Remove all a tags with attribute Name="Acadre..
   while (preg_match('/(<a name=Acadre(.*?)>((.*?\\s*?))+<\\/a>\\s*)+/', $data, $aTags) > 0) {
     $str = _os2web_esdh_provider_strip_tags($aTags[0], 'a');
     $data = str_replace($aTags[0], $str, $data);
@@ -1279,13 +1312,13 @@ function os2web_esdh_provider_filter_html_tags($data) {
   $stripped_tags = explode(',', variable_get('os2dagsorden_stripped_tags', ''));
   $data = _os2web_esdh_provider_strip_tags($data, $stripped_tags);
 
-  //remove all img tags that link missing files
+  // Remove all img tags that link missing files.
   if (variable_get('os2dagsorden_clean_image_tags', TRUE)) {
     $data = _os2web_esdh_provider_remove_img_tags($data);
   }
-  //replace all <p></p> and <p>&nbsp;</p> tags with <br />
+  // Replace all <p></p> and <p>&nbsp;</p> tags with <br />.
   $data = preg_replace('#(<p>((<span>)*?)(|&nbsp;)((<\/span>)*?)<\/p>\s*)+#i', '<br />', $data);
-  //replace multiple &nbsp; tags with...
+  // Replace multiple &nbsp; tags with...
   $data = preg_replace('/(\x{00A0}|&nbsp;){2,}/u', variable_get('os2dagsorden_tab_tag', '&nbsp;'), $data);
   return $data;
 }
@@ -1294,13 +1327,14 @@ function os2web_esdh_provider_filter_html_tags($data) {
  * Removes the src attribute from img tags.
  *
  * @param $data
+ *
  * @return mixed
  */
 function _os2web_esdh_provider_remove_img_tags($data) {
   preg_match_all('/<img[^>]+>/i', $data, $imgTags);
   $count = count($imgTags[0]);
   for ($i = 0; $i < $count; $i++) {
-    // get the source string
+    // Get the source string.
     preg_match('/src="([^"]+)/i', $imgTags[0][$i], $imgage);
 
     $file_headers = @get_headers(array_pop($imgage));
@@ -1318,7 +1352,9 @@ function _os2web_esdh_provider_remove_img_tags($data) {
  *
  * @param $str
  * @param $tags
- * @param bool $stripContent , if true the content will be also stripped.
+ * @param bool $stripContent
+ *   , if true the content will be also stripped.
+ *
  * @return mixed
  */
 function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = FALSE) {
@@ -1342,16 +1378,18 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = FALSE) {
 }
 
 /**
- * Return meeting import status by committee
+ * Return meeting import status by committee.
  *
  * @param $tid
+ *
  * @return int
  */
 function _os2web_esdh_provider_get_meeting_publish_status($tid) {
   $term = taxonomy_term_load($tid);
   if (isset($term->field_os2web_meetings_com_unpub['und'][0]['value']) && $term->field_os2web_meetings_com_unpub['und'][0]['value'] == 1) {
     return 0;
-  } else {
+  }
+  else {
     return 1;
   }
 }
@@ -1361,6 +1399,7 @@ function _os2web_esdh_provider_get_meeting_publish_status($tid) {
  *
  * @param $tid
  * @param $meeting_type
+ *
  * @return string
  */
 function _os2web_esdh_provider_meeting_unpublished_state_emails($tid, $meeting_type) {
@@ -1368,7 +1407,8 @@ function _os2web_esdh_provider_meeting_unpublished_state_emails($tid, $meeting_t
   $term = taxonomy_term_load($tid);
   if (strcasecmp($meeting_type, 'Dagsorden') == 0) {
     $committee_admin = $term->field_os2web_meetings_com_dag_ad;
-  } else {
+  }
+  else {
     $committee_admin = $term->field_os2web_meetings_com_ref_ad;
   }
   if (isset($committee_admin['und'])) {

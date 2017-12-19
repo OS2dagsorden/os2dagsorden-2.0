@@ -1,35 +1,39 @@
 <?php
+
 /**
- * os2dagsorden_speaker_paper
+ * @file
+ * Os2dagsorden_speaker_paper.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_Speaker_Paper
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Dagsorden_Speaker_Paper
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
+
 module_load_include('inc', 'os2dagsorden_speaker_paper', '/includes/os2dagsorden_speaker_paper.util');
 
 /**
  * Hook to node_insert
- * The function will send the email to the user, with which this speaker paper has been shared
+ * The function will send the email to the user, with which this speaker paper has been shared.
  *
- * @param $node   mixed  meeting node to be saved
+ * @param $node
+ *   mixed  meeting node to be saved
  *
  * @return $node meeting
  */
 function os2dagsorden_speaker_paper_node_insert($node) {
   if ($node->type === 'os2web_meetings_spaper') {
-    if (isset($node->field_os2web_meetings_sp_shared['und'])){
+    if (isset($node->field_os2web_meetings_sp_shared['und'])) {
       foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
         $uid = $shared_with['target_id'];
         _os2dagsorden_speaker_paper_send_message($uid, $node);
       }
       foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
         $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
-        foreach($uids as $uid) {
+        foreach ($uids as $uid) {
           _os2dagsorden_speaker_paper_send_message($uid, $node);
         }
       }
@@ -39,15 +43,16 @@ function os2dagsorden_speaker_paper_node_insert($node) {
 
 /**
  * Hook to node_insert
- * The function will send the email to the user (if it wasn't sent before), with which this speaker paper has been shared
+ * The function will send the email to the user (if it wasn't sent before), with which this speaker paper has been shared.
  *
- * @param $node   mixed  meeting node to be saved
+ * @param $node
+ *   mixed  meeting node to be saved
  *
  * @return $node meeting
  */
 function os2dagsorden_speaker_paper_node_update($node) {
   if ($node->type === 'os2web_meetings_spaper') {
-    if (isset($node->field_os2web_meetings_sp_shared['und'])){
+    if (isset($node->field_os2web_meetings_sp_shared['und'])) {
       foreach ($node->field_os2web_meetings_sp_shared['und'] as $shared_with) {
         $uid = $shared_with['target_id'];
         if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
@@ -56,7 +61,7 @@ function os2dagsorden_speaker_paper_node_update($node) {
       }
       foreach ($node->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
         $uids = _os2dagsorden_speaker_paper_fetch_group_users($shared_with_group['tid']);
-        foreach($uids as $uid) {
+        foreach ($uids as $uid) {
           if (!_os2dagsorden_speaker_paper_is_message_sent($uid, $node->nid)) {
             _os2dagsorden_speaker_paper_send_message($uid, $node);
           }
@@ -77,14 +82,14 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
   $form['os2dagsorden_speaker_paper_settings'] = array(
     '#type' => 'fieldset',
     '#collapsible' => TRUE,
-    '#collapsed'=>TRUE,
+    '#collapsed' => TRUE,
     '#title' => t('Speaker paper settings'),
   );
   $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper'] = array(
     '#type' => 'checkbox',
     '#title' => t('Sharing speaker papers'),
     '#description' => t('This decides whether speaker paper can be shared'),
-    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper',TRUE),
+    '#default_value' => variable_get('os2dagsorden_shared_speaker_paper', TRUE),
   );
 
   $form['os2dagsorden_speaker_paper_settings']['os2dagsorden_speaper_paper_email_subject'] = array(
@@ -131,46 +136,49 @@ function os2dagsorden_speaker_paper_form_os2dagsorden_settings_settings_form_alt
     ),
   );
 
-  //sort items alphabetically
+  // Sort items alphabetically.
   ksort($form);
 }
 
 /**
- * Implements hook_form_alter
+ * Implements hook_form_alter.
  *
- * multiple modifications to speaper paper create/edit form
+ * Multiple modifications to speaper paper create/edit form.
  *
  * @param $form
  * @param $form_state
  * @param $form_id
  */
 function os2dagsorden_speaker_paper_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'os2web_meetings_spaper_node_form'){
-    //setting title
+  if ($form_id == 'os2web_meetings_spaper_node_form') {
+    // Setting title.
     drupal_set_title(t('Create speaker paper'));
 
-    //adding values into the body field, each time user is opening the speaker paper form, e.g.
+    // Adding values into the body field, each time user is opening the speaker paper form, e.g.
     // [..previous text..]
-    //admin, 03-08-2016:
+    // admin, 03-08-2016:
     global $user;
     $form['body']['und'][0]['#default_value'] .= empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
     $form['body']['und'][0]['#default_value'] .= ', ' . date('d-m-Y') . ':';
 
-    //modifying the shared with field, adding shared with user full name
-    foreach($form['field_os2web_meetings_sp_shared']['und']['#options'] as $uid => $user_login_name) {
-      if (intval($uid) > 0) {//eliminating all _none and 0 Anonym options
+    // Modifying the shared with field, adding shared with user full name.
+    foreach ($form['field_os2web_meetings_sp_shared']['und']['#options'] as $uid => $user_login_name) {
+      // Eliminating all _none and 0 Anonym options.
+      if (intval($uid) > 0) {
         $share_with_user = user_load($uid);
 
         if (!$share_with_user->status) {
-          //removing disabled users
+          // Removing disabled users.
           unset($form['field_os2web_meetings_sp_shared']['und']['#options'][$uid]);
-        } else {
+        }
+        else {
           $user_full_name = $share_with_user->field_user_full_name['und'][0]['value'];
           if (!empty($user_full_name)) {
             $form['field_os2web_meetings_sp_shared']['und']['#options'][$uid] = "$user_full_name ($user_login_name)";
           }
         }
-      } else {
+      }
+      else {
         unset($form['field_os2web_meetings_sp_shared']['und']['#options'][$uid]);
       }
     }
