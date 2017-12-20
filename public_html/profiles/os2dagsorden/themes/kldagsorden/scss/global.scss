@@ -14,7 +14,7 @@
 
 
 body {
-  background: $color-body;
+  background: $color-white;
   font-family: $font-basic;
   font-size: $font-size-body;
 }
@@ -146,13 +146,13 @@ div.content ul.menu li {
     &:hover, &.active:hover {
       background: $color-branding-secondary;
       background-size: 20px;
-      color: $color-body;
+      color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active {
       background-size: 20px;
       background: $color-branding-secondary;
-      color: $color-body;
+      color: $color-white;
     }
      &:before {
       content: "\E916";
@@ -185,12 +185,12 @@ div.content ul.menu li {
     }
     &:hover {
       background: $color-branding-secondary;
-      color: $color-body;
+      color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active, &.active:hover {
       background: $color-branding-secondary;
-      color: $color-body;
+      color: $color-white;
     }
   }
 }
@@ -226,8 +226,8 @@ ul li.leaf {
   top: 15px;
   right: 10px;
   float: right;
-  background-color: $color-body;
-  border: 1px solid $color-body;
+  background-color: rgba($color-white, 0.7);
+  border: 1px solid rgba($color-white, 0.7);
   border-radius: 50%;
   //background: url('../img/icon_help.png') no-repeat 50% top;
   cursor: pointer;
@@ -417,17 +417,17 @@ div.date-heading h3 {
       tr td {        
         &:nth-child(4), &:nth-child(5) {
           a {
-            border:  1px solid $color-body;
+            border:  1px solid $color-white;
             border-radius: $border-radius;
           }
         }
         &:nth-child(1) a{
-          border:  1px solid $color-body;
+          border:  1px solid $color-white;
           border-radius: $border-radius 0 0 $border-radius  ;
           border-left-width: 0;
         }
         &:nth-child(3) a{
-          border:  1px solid $color-body;
+          border:  1px solid $color-white;
           border-radius: 0  $border-radius $border-radius 0;
           border-right-width: 0;
         }
@@ -573,11 +573,11 @@ div {
 
 .view .date-nav-wrapper .pager {
   .date-prev a, .date-next a {
-    color: $color-body;
+    color: rgba($color-white, 0.7);
     font-size: 0;
     text-decoration: none;
-    background-color: $color-body;
-    border: 1px solid $color-body;
+    background-color: rgba($color-white, 0.7);
+    border: 1px solid rgba($color-white, 0.7);
     border-radius: 50%;
     width: 25px;
     height: 25px;
@@ -609,7 +609,7 @@ div {
     top: 5px;
     position: absolute;
     &:hover {
-      color: $color-body;
+      color: $color-white;
     }
   }
   .date-next a:after {
@@ -628,7 +628,7 @@ div {
     font-family: $font-basic;
     font-size: 12px;
     thead {
-      border: 1px solid $color-body;
+      border: 1px solid $color-white;
     }
     th.days {
       background: $color-background-primary;
@@ -777,7 +777,7 @@ a {
 
 a {
   &.form-submit, &.button {
-    color: $color-body;
+    color: $color-white;
   }
 }
 
@@ -880,7 +880,7 @@ pager li.pager-first {
   background: $color-branding-primary;
   border-style: solid;
   border-width: 0px;
-  color: $color-body;
+  color: $color-white;
   padding: 5px 10px 5px 10px;
   font-family: $font-basic;
   font-size: $font-size-button;
@@ -1043,10 +1043,10 @@ table {
     font-size: $font-size-body;
 
     a {
-      color: $color-body;
+      color: $color-white;
       font-weight: bold;
       &:hover {
-        color: $color-body;
+        color: $color-white;
         font-weight: bold;
       }
     }
@@ -1056,7 +1056,7 @@ table {
     margin-bottom: 0px;
   }
   &.views-table tbody tr {
-    border-bottom: 1px solid $color-body;
+    border-bottom: 1px solid $color-white;
     &:last-child{
       border-bottom: none;
     }
@@ -1070,7 +1070,7 @@ table {
       a {
         display: block;
         position: relative;
-        background: $color-body;
+        background: rgba($color-white, 0.7);
         color: $color-font-primary;
         padding: 8px;
         /*     vertical-align:center; */
@@ -1082,7 +1082,7 @@ table {
         overflow: hidden;
         text-overflow: ellipsis;
         border-style: solid;
-        border-color: $color-body;
+        border-color: rgba(255, 255, 255, 0.7);
         border-top-width: 1px;
         border-bottom-width: 1px;
 
@@ -1181,8 +1181,8 @@ table {
 
 /*meeting details table*/
 .view-meeting-details {
-  background: $color-body;
-  border: 1px solid $color-background-primary;
+  background: $color-white;
+  border: $border-solid;
   border-top: 0px;
   font-family: $font-basic;
   .form-submit {
@@ -1193,7 +1193,7 @@ table {
     margin-bottom: 10px;
     margin-top: 10px;
     .dropbtn.form-submit {
-      background: $color-body;
+      background: $color-white;
       color: $color-font-primary;
       text-transform: none;
       font-size: $font-size-button;
@@ -1226,7 +1226,7 @@ table {
       }
       tr {    
         td{
-          background: $color-body;          
+          background: $color-white;          
           &:nth-child(1) {
            border-radius: $border-radius 0 0 $border-radius;           
           }
@@ -1253,16 +1253,16 @@ table {
   }
   .attachment{
     .view-meeting-details {
-      background: $color-body;
+      background: $color-white;
       border: none;
     }
     .view-content {
       border-radius: 0;
       table.views-table {
         thead tr th{
-          background: $color-body;
+          background: $color-white;
           border-width: 1px;
-          border-color: $color-body;
+          border-color: $color-white;
           border-radius: $border-radius;
         }
         tr {
@@ -1275,7 +1275,7 @@ table {
       }
     }
     .bullet-point-attachments {
-      $background: $color-body;
+      $background: $color-white;
       .view-header {
         margin-bottom: 0;
         margin-top: 0;
@@ -1292,7 +1292,7 @@ table {
       }
 
       .view-content {
-        background: $color-body;
+        background: $color-white;
         padding-left: 0;
         padding-right: 0;
         .button {
@@ -1307,7 +1307,7 @@ table {
             font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
-            color: $color-body;
+            color: $color-white;
             cursor: pointer;
             top: 8px;
             left: 8px;
@@ -1317,7 +1317,7 @@ table {
             font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
-            color: $color-body;
+            color: $color-white;
             cursor: pointer;
             top: 8px;
             left: 8px;
@@ -1336,7 +1336,7 @@ table {
           .button.hide_show_all_attachments_text.opened:before{
             background: url('../img/arrow_right_black.png') no-repeat 50% top;
             position: absolute;
-            color: $color-body;
+            color: $color-white;
             font-family: $font-icons;
             font-size: $font-size-headings;
             cursor: pointer;
@@ -1355,7 +1355,7 @@ table {
             font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
-            color: $color-body;
+            color: $color-white;
             cursor: pointer;
             top: 15px;
             left: 8px;
@@ -1365,7 +1365,7 @@ table {
             font-family: $font-icons;
             font-size: $font-size-headings;
             position: absolute;
-            color: $color-body;
+            color: $color-white;
             cursor: pointer;
             top: 15px;
             left: 8px;
@@ -1373,18 +1373,18 @@ table {
         }
         table.views-table {
           thead tr th{
-            background: $color-body;
+            background: $color-white;
           }
           tr {
             border: none;
             td {
-              background: $color-body;
+              background: $color-white;
               border: none;
               padding: 7px 0;
               a {
                 display: block;
                 position: relative;
-                background-color: $color-body;
+                background-color: $color-white;
                 color: #001D2F;
                 padding: 3px 10px 3px 10px;
                 line-height: 30px;
@@ -1758,7 +1758,7 @@ a.annotator-wrapper {
 
 .button-active {
   background: $color-branding-primary;
-  color: $color-body;
+  color: $color-white;
 }
 
 /* ---------------------------- Breadcrumbs END---------------------------- */
@@ -1879,7 +1879,7 @@ a.annotator-wrapper {
     width: 28px;
     height: 31px;
     padding: 7px;
-    border: 5px solid $color-body;
+    border: 5px solid $color-white;
     opacity: 0.7;
   }
   left: 0;
@@ -1997,7 +1997,7 @@ a.annotator-wrapper {
 /* -- autocomplete input -- */
 
 #autocomplete {
-  background-color: $color-body;
+  background-color: $color-white;
   z-index: 900;
   ul {
     padding-left: 0;
@@ -2032,7 +2032,7 @@ a.annotator-wrapper {
 #edit-available-committee {
   float: right;
   overflow-y: scroll;
-  background: $color-body;
+  background: $color-white;
   &::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px;
@@ -2047,7 +2047,7 @@ a.annotator-wrapper {
 ul.droptrue {
   list-style: none;
   padding: 0;
-  background: $color-body;
+  background: $color-white;
   border: 1px solid rgb(169, 169, 169);
   min-height: 45px;
   li {
@@ -2101,7 +2101,7 @@ div.note {
 
 .dropbtn {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
-  color: $color-body;
+  color: $color-white;
   padding: 5px 10px 5px 10px;
   font-family: $font-basic;
   font-size: 13px;
@@ -2166,7 +2166,7 @@ div.note {
   }
   .dropbtn {
     background: darken($color-branding-secondary, 10%);
-    color: $color-body;
+    color: $color-white;
   }
 }
 
@@ -2179,7 +2179,7 @@ div.note {
   dl.node-type-list {
     dt a {
       background-color: $color-branding-secondary;
-      color: $color-body;
+      color: $color-white;
       padding: 10px 20px;
       width: 100%;
       display: inline-block;
