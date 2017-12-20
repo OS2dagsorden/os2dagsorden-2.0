@@ -333,7 +333,7 @@ div.content ul.menu li {
       background-size: 20px;
       background: #d7d9da url("../img/icon_home.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-print-kalendar {
-    background: #e3d6d6;
+    background: #f7f1f1;
     padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in;
@@ -359,7 +359,7 @@ div.content ul.menu li {
     div.content ul.menu li #menu-sog.active {
       background: #d7d9da url("../img/icon_search.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-simple-user-edit {
-    background: #e3d6d6;
+    background: #f7f1f1;
     background-size: 20px;
     padding-left: 75px;
     transition: background-color .1s ease-in;
