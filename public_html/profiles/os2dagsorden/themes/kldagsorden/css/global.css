@@ -563,21 +563,21 @@ div.date-heading h3 {
   padding: 5px 7px 0 7px; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(4) a, .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(5) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(4) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(5) a {
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid #FFF;
   border-radius: 3px; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(1) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(1) a {
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid #FFF;
   border-radius: 3px 0 0 3px;
   border-left-width: 0; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(3) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(3) a {
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid #FFF;
   border-radius: 0 3px 3px 0;
   border-right-width: 0; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table th:nth-child(4), .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table th:nth-child(4) {
-  padding-left: 18px; }
+  padding-left: 17px; }
 
 .node.brugerroller {
   background: none; }
@@ -1058,7 +1058,7 @@ table.views-table {
   margin-bottom: 0px; }
 
 table.views-table tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.7); }
+  border-bottom: 1px solid #FFF; }
   table.views-table tbody tr:last-child {
     border-bottom: none; }
   table.views-table tbody tr td {
@@ -1980,7 +1980,7 @@ div.note {
   box-sizing: border-box; }
 
 .block-views .view-user-logout-menu li div {
-  display: inline-block !important; }
+  display: inline-block; }
 
 .block-views .view-user-logout-menu li div.right {
-  float: none !important; }
+  float: none; }

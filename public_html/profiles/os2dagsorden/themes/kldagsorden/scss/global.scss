@@ -417,23 +417,23 @@ div.date-heading h3 {
       tr td {        
         &:nth-child(4), &:nth-child(5) {
           a {
-            border:  1px solid rgba($color-white, 0.7);
+            border:  1px solid $color-white;
             border-radius: $border-radius;
           }
         }
         &:nth-child(1) a{
-          border:  1px solid rgba($color-white, 0.7);
+          border:  1px solid $color-white;
           border-radius: $border-radius 0 0 $border-radius  ;
           border-left-width: 0;
         }
         &:nth-child(3) a{
-          border:  1px solid rgba($color-white, 0.7);
+          border:  1px solid $color-white;
           border-radius: 0  $border-radius $border-radius 0;
           border-right-width: 0;
         }
       }
       th:nth-child(4) {
-        padding-left: 18px;
+        padding-left: 17px;
       }
     }
   }
@@ -1056,7 +1056,7 @@ table {
     margin-bottom: 0px;
   }
   &.views-table tbody tr {
-    border-bottom: 1px solid rgba($color-white, 0.7);
+    border-bottom: 1px solid $color-white;
     &:last-child{
       border-bottom: none;
     }
@@ -2225,8 +2225,8 @@ div.note {
 }
 
 .block-views .view-user-logout-menu li div {
-  display: inline-block !important;
+  display: inline-block;
 }
 .block-views .view-user-logout-menu li div.right {
- float: none !important;
+ float: none;
 }
