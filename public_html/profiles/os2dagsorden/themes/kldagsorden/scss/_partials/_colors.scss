@@ -1,5 +1,4 @@
 // Base colors
-$color-white: #FFF;
 $color-grey: #d7d9da;
 $color-black: #000;
 
@@ -11,5 +10,5 @@ $color-font-primary: #373636;
 $color-background-primary: #f7f1f1;
 $color-background-secondary: #e3d6d6;
 
-$color-border-primary: #fbf8f8;
+$color-border-primary: $color-body;
 $color-border-dots: $color-font-primary;

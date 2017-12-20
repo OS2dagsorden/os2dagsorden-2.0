@@ -12,7 +12,7 @@
         border: $border-solid;
         padding: 5px 10px;
         border-radius: 2px;
-        background-color: $color-white;
+        background-color: $color-body;
         box-sizing:border-box;
         display: block;
         width: 100%;
@@ -24,7 +24,7 @@
         border: $border-solid;
         padding: 5px 10px;
         border-radius: 2px;
-        background-color: $color-white;
+        background-color: $color-body;
         box-sizing:border-box;
         display: block;
         width: 100%;
@@ -96,7 +96,7 @@
     border: $border-color-secondary;
     border-radius: $border-radius;
     -webkit-appearance: none;  
-    color: $color-white;
+    color: $color-body;
     padding: 5px 20px 5px 20px;
     font-family: $font-basic;
     font-size: 16px;
@@ -110,7 +110,7 @@
     }
     &.nav-button {
         background: $color-branding-secondary;
-        color: $color-white;
+        color: $color-body;
         padding: 5px 10px 5px 10px;
         font-family: $font-basic;
         font-size: 13px;
@@ -145,13 +145,13 @@
 }
 .form-textarea-wrapper textarea {
   border-radius: $border-radius;
-  border: 1px solid $color-white;
+  border: 1px solid $color-body;
 }
 .chosen-container-multi .chosen-choices {
   background-image: none;
-  background-color: $color-white;
+  background-color: $color-body;
   border-radius: $border-radius;
-  border: 1px solid $color-white;
+  border: 1px solid $color-body;
 }
 .chosen-container-active .chosen-choices {
   border-color: $color-background-secondary;
