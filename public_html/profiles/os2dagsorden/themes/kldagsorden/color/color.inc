@@ -8,6 +8,7 @@ $info['css'] = array('css/global.css');
 // Define the possible replaceable items and their labels.
 $info['fields'] = array(
   'color-body' => t('Body  color'),
+  'color-white' => t('Boxes color'),
   'color-branding-secondary' => t('Secondary Branding color'),
   'color-branding-primary' => t('Primary Branding color'),
   'color-background-primary' => t('Primary background color'),
@@ -22,11 +23,28 @@ $info['schemes'] = array(
   'default' => array(
 
     // Scheme title.
+    'title' => t('Default'),
+
+    // Scheme colors
+    'colors' => array(
+      'color-body' => '#fff',
+      'color-white' => '#fffffe',
+      'color-branding-secondary' => '#ae477d',
+      'color-branding-primary' => '#9c1a5e',
+      'color-background-primary' => '#f7f1f1',
+      'color-background-secondary' => '#e3d6d6',
+    ),
+  ),
+  
+  'syddjurs_scheme' => array(
+
+    // Scheme title.
     'title' => t('Syddjurs colouring'),
 
     // Scheme colors
     'colors' => array(
       'color-body' => '#fff',
+      'color-white' => '#fff',
       'color-branding-secondary' => '#ae477d',
       'color-branding-primary' => '#9c1a5e',
       'color-background-primary' => '#f7f1f1',
@@ -43,6 +61,7 @@ $info['schemes'] = array(
     // Scheme colors
     'colors' => array(
       'color-body' => '#fff',
+      'color-white' => '#fff',
       'color-branding-secondary' => '#2d8bc0',
       'color-branding-primary' => '#2c8abe',      
       'color-background-primary' => '#fbfcfd',

@@ -14,7 +14,7 @@
 
 
 body {
-  background: $color-white;
+  background: $color-body;
   font-family: $font-basic;
   font-size: $font-size-body;
 }
@@ -226,8 +226,8 @@ ul li.leaf {
   top: 15px;
   right: 10px;
   float: right;
-  background-color: rgba($color-white, 0.7);
-  border: 1px solid rgba($color-white, 0.7);
+  background-color: $color-white;
+  border: 1px solid $color-white;
   border-radius: 50%;
   //background: url('../img/icon_help.png') no-repeat 50% top;
   cursor: pointer;
@@ -573,11 +573,11 @@ div {
 
 .view .date-nav-wrapper .pager {
   .date-prev a, .date-next a {
-    color: rgba($color-white, 0.7);
+    color: $color-white;
     font-size: 0;
     text-decoration: none;
-    background-color: rgba($color-white, 0.7);
-    border: 1px solid rgba($color-white, 0.7);
+    background-color: $color-white;
+    border: 1px solid $color-white;
     border-radius: 50%;
     width: 25px;
     height: 25px;
@@ -645,7 +645,7 @@ div {
         background: $color-background-primary;
       }
       td.today, &.odd td.today, &.even td.today {
-        background: #fff;
+        background: $color-white;
         text-align: center;
         border-radius: 5px;
       }
@@ -1070,7 +1070,7 @@ table {
       a {
         display: block;
         position: relative;
-        background: rgba($color-white, 0.7);
+        background: $color-white;
         color: $color-font-primary;
         padding: 8px;
         /*     vertical-align:center; */
@@ -1082,7 +1082,7 @@ table {
         overflow: hidden;
         text-overflow: ellipsis;
         border-style: solid;
-        border-color: rgba(255, 255, 255, 0.7);
+        border-color: $color-white;
         border-top-width: 1px;
         border-bottom-width: 1px;
 
@@ -2229,4 +2229,8 @@ div.note {
 }
 .block-views .view-user-logout-menu li div.right {
  float: none;
+}
+
+#os2dagsorden-content-modify-user-edit-form {
+  background: $color-white;
 }

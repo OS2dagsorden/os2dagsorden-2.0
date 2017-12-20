@@ -23,7 +23,7 @@
         padding: 5px 10px 5px 30px;
     }*/ }
   .user-logout-block .user-logout-textbox {
-    color: #FFF;
+    color: #fffffe;
     font-family: "Source Sans Pro";
     font-weight: 400;
     font-size: 1em; }
@@ -31,7 +31,7 @@
     margin: 0 0 0 7px;
     -webkit-appearance: none; }
   .user-logout-block .settings-btn, .user-logout-block .user-logout-btn, .user-logout-block .user-guide-btn {
-    color: #FFF;
+    color: #fffffe;
     font-family: "Source Sans Pro";
     font-weight: 100;
     text-shadow: none;
@@ -82,7 +82,7 @@
   margin-right: auto;
   border: 1px solid #f7f1f1;
   border-radius: 3px;
-  background: #FFF; }
+  background: #fffffe; }
   #block-user-login .block-title {
     text-align: center; }
   #block-user-login .content {
@@ -111,7 +111,7 @@
     border: 1px solid #fbf8f8;
     padding: 5px 10px;
     border-radius: 2px;
-    background-color: #FFF;
+    background-color: #fffffe;
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -122,7 +122,7 @@
     border: 1px solid #fbf8f8;
     padding: 5px 10px;
     border-radius: 2px;
-    background-color: #FFF;
+    background-color: #fffffe;
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -181,7 +181,7 @@
   border: 1px solid #ae477d;
   border-radius: 3px;
   -webkit-appearance: none;
-  color: #FFF;
+  color: #fffffe;
   padding: 5px 20px 5px 20px;
   font-family: "Source Sans Pro";
   font-size: 16px;
@@ -194,7 +194,7 @@
     transition: background-color .3s ease-out; }
   .form-submit.nav-button {
     background: #ae477d;
-    color: #FFF;
+    color: #fffffe;
     padding: 5px 10px 5px 10px;
     font-family: "Source Sans Pro";
     font-size: 13px;
@@ -225,13 +225,13 @@
 
 .form-textarea-wrapper textarea {
   border-radius: 3px;
-  border: 1px solid #FFF; }
+  border: 1px solid #fffffe; }
 
 .chosen-container-multi .chosen-choices {
   background-image: none;
-  background-color: #FFF;
+  background-color: #fffffe;
   border-radius: 3px;
-  border: 1px solid #FFF; }
+  border: 1px solid #fffffe; }
 
 .chosen-container-active .chosen-choices {
   border-color: #e3d6d6; }
@@ -239,7 +239,7 @@
 /* This file will hold styles for the mobile version of your website (mobile first). */
 /* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
 body {
-  background: #FFF;
+  background: #fff;
   font-family: "Source Sans Pro";
   font-size: 14px; }
 
@@ -250,7 +250,7 @@ body {
   padding: 15px 0 15px 0; }
 
 .zone-content-wrapper {
-  border-top: 1px solid #FFF;
+  border-top: 1px solid #e5e5e5;
   padding-top: 15px; }
 
 .highlight {
@@ -341,12 +341,12 @@ div.content ul.menu li {
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
       background: #ae477d;
       background-size: 20px;
-      color: #FFF;
+      color: #fffffe;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-print-kalendar.active {
       background-size: 20px;
       background: #ae477d;
-      color: #FFF; }
+      color: #fffffe; }
     div.content ul.menu li #menu-print-kalendar:before {
       content: "\E916";
       font-family: "Material Icons";
@@ -373,11 +373,11 @@ div.content ul.menu li {
       left: 45px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
       background: #ae477d;
-      color: #FFF;
+      color: #fffffe;
       transition: background-color .3s ease-out; }
     div.content ul.menu li #menu-simple-user-edit.active, div.content ul.menu li #menu-simple-user-edit.active:hover {
       background: #ae477d;
-      color: #FFF; }
+      color: #fffffe; }
 
 /* general for all links with not pictures */
 /* specific for each link */
@@ -402,8 +402,8 @@ ul li.leaf {
   top: 15px;
   right: 10px;
   float: right;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background-color: #fffffe;
+  border: 1px solid #fffffe;
   border-radius: 50%;
   cursor: pointer; }
   .help-button:after {
@@ -563,16 +563,16 @@ div.date-heading h3 {
   padding: 5px 7px 0 7px; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(4) a, .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(5) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(4) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(5) a {
-  border: 1px solid #FFF;
+  border: 1px solid #fffffe;
   border-radius: 3px; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(1) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(1) a {
-  border: 1px solid #FFF;
+  border: 1px solid #fffffe;
   border-radius: 3px 0 0 3px;
   border-left-width: 0; }
 
 .view-id-kommende_m_der_i_mine_udvalg table.views-table tr td:nth-child(3) a, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ table.views-table tr td:nth-child(3) a {
-  border: 1px solid #FFF;
+  border: 1px solid #fffffe;
   border-radius: 0 3px 3px 0;
   border-right-width: 0; }
 
@@ -684,11 +684,11 @@ div.block-inner {
   right: 0; }
 
 .view .date-nav-wrapper .pager .date-prev a, .view .date-nav-wrapper .pager .date-next a {
-  color: rgba(255, 255, 255, 0.7);
+  color: #fffffe;
   font-size: 0;
   text-decoration: none;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background-color: #fffffe;
+  border: 1px solid #fffffe;
   border-radius: 50%;
   width: 25px;
   height: 25px;
@@ -715,7 +715,7 @@ div.block-inner {
   top: 5px;
   position: absolute; }
   .view .date-nav-wrapper .pager .date-prev a:after:hover {
-    color: #FFF; }
+    color: #fffffe; }
 
 .view .date-nav-wrapper .pager .date-next a:after {
   content: "\E315";
@@ -731,7 +731,7 @@ div.block-inner {
     font-family: "Source Sans Pro";
     font-size: 12px; }
     .calendar-calendar table.mini thead {
-      border: 1px solid #FFF; }
+      border: 1px solid #fffffe; }
     .calendar-calendar table.mini th.days {
       background: #f7f1f1;
       text-transform: uppercase;
@@ -744,7 +744,7 @@ div.block-inner {
       .calendar-calendar table.mini tr td.empty {
         background: #f7f1f1; }
       .calendar-calendar table.mini tr td.today, .calendar-calendar table.mini tr.odd td.today, .calendar-calendar table.mini tr.even td.today {
-        background: #fff;
+        background: #fffffe;
         text-align: center;
         border-radius: 5px; }
     .calendar-calendar table.mini .mini tr td.today a {
@@ -829,7 +829,7 @@ a:link, a:visited {
   text-decoration: none; }
 
 a.form-submit, a.button {
-  color: #FFF; }
+  color: #fffffe; }
 
 p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset {
   margin-bottom: 0; }
@@ -914,7 +914,7 @@ pager li.pager-first {
   background: #9c1a5e;
   border-style: solid;
   border-width: 0px;
-  color: #FFF;
+  color: #fffffe;
   padding: 5px 10px 5px 10px;
   font-family: "Source Sans Pro";
   font-size: 16px;
@@ -1047,10 +1047,10 @@ table tr th {
   font-weight: bold;
   font-size: 14px; }
   table tr th a {
-    color: #FFF;
+    color: #fffffe;
     font-weight: bold; }
     table tr th a:hover {
-      color: #FFF;
+      color: #fffffe;
       font-weight: bold; }
 
 table.views-table {
@@ -1058,7 +1058,7 @@ table.views-table {
   margin-bottom: 0px; }
 
 table.views-table tbody tr {
-  border-bottom: 1px solid #FFF; }
+  border-bottom: 1px solid #fffffe; }
   table.views-table tbody tr:last-child {
     border-bottom: none; }
   table.views-table tbody tr td {
@@ -1070,7 +1070,7 @@ table.views-table tbody tr {
     table.views-table tbody tr td a {
       display: block;
       position: relative;
-      background: rgba(255, 255, 255, 0.7);
+      background: #fffffe;
       color: #373636;
       padding: 8px;
       /*     vertical-align:center; */
@@ -1082,7 +1082,7 @@ table.views-table tbody tr {
       overflow: hidden;
       text-overflow: ellipsis;
       border-style: solid;
-      border-color: rgba(255, 255, 255, 0.7);
+      border-color: #fffffe;
       border-top-width: 1px;
       border-bottom-width: 1px; }
       table.views-table tbody tr td a:hover {
@@ -1152,7 +1152,7 @@ table .speaker-paper-link-container {
 
 /*meeting details table*/
 .view-meeting-details {
-  background: #FFF;
+  background: #fffffe;
   border: 1px solid #fbf8f8;
   border-top: 0px;
   font-family: "Source Sans Pro"; }
@@ -1163,7 +1163,7 @@ table .speaker-paper-link-container {
     margin-bottom: 10px;
     margin-top: 10px; }
     .view-meeting-details .view-header .dropbtn.form-submit {
-      background: #FFF;
+      background: #fffffe;
       color: #373636;
       text-transform: none;
       font-size: 16px;
@@ -1189,7 +1189,7 @@ table .speaker-paper-link-container {
     .view-meeting-details .view-content table.views-table thead tr {
       border: none; }
     .view-meeting-details .view-content table.views-table tr td {
-      background: #FFF; }
+      background: #fffffe; }
       .view-meeting-details .view-content table.views-table tr td:nth-child(1) {
         border-radius: 3px 0 0 3px; }
       .view-meeting-details .view-content table.views-table tr td:nth-last-child() {
@@ -1204,14 +1204,14 @@ table .speaker-paper-link-container {
     .view-meeting-details .view-content table.views-table tr th {
       padding: 10px; }
   .view-meeting-details .attachment .view-meeting-details {
-    background: #FFF;
+    background: #fffffe;
     border: none; }
   .view-meeting-details .attachment .view-content {
     border-radius: 0; }
     .view-meeting-details .attachment .view-content table.views-table thead tr th {
-      background: #FFF;
+      background: #fffffe;
       border-width: 1px;
-      border-color: #FFF;
+      border-color: #fffffe;
       border-radius: 3px; }
     .view-meeting-details .attachment .view-content table.views-table tr {
       border: none; }
@@ -1231,7 +1231,7 @@ table .speaker-paper-link-container {
       margin-bottom: 0;
       margin-top: 0; }
   .view-meeting-details .attachment .bullet-point-attachments .view-content {
-    background: #FFF;
+    background: #fffffe;
     padding-left: 0;
     padding-right: 0; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
@@ -1245,7 +1245,7 @@ table .speaker-paper-link-container {
       font-family: "Material Icons";
       font-size: 20px;
       position: absolute;
-      color: #FFF;
+      color: #fffffe;
       cursor: pointer;
       top: 8px;
       left: 8px; }
@@ -1254,7 +1254,7 @@ table .speaker-paper-link-container {
       font-family: "Material Icons";
       font-size: 20px;
       position: absolute;
-      color: #FFF;
+      color: #fffffe;
       cursor: pointer;
       top: 8px;
       left: 8px; }
@@ -1271,7 +1271,7 @@ table .speaker-paper-link-container {
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text.opened:before {
       background: url("../img/arrow_right_black.png") no-repeat 50% top;
       position: absolute;
-      color: #FFF;
+      color: #fffffe;
       font-family: "Material Icons";
       font-size: 20px;
       cursor: pointer;
@@ -1288,7 +1288,7 @@ table .speaker-paper-link-container {
         font-family: "Material Icons";
         font-size: 20px;
         position: absolute;
-        color: #FFF;
+        color: #fffffe;
         cursor: pointer;
         top: 15px;
         left: 8px; }
@@ -1297,22 +1297,22 @@ table .speaker-paper-link-container {
         font-family: "Material Icons";
         font-size: 20px;
         position: absolute;
-        color: #FFF;
+        color: #fffffe;
         cursor: pointer;
         top: 15px;
         left: 8px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
-      background: #FFF; }
+      background: #fffffe; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr {
       border: none; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td {
-        background: #FFF;
+        background: #fffffe;
         border: none;
         padding: 7px 0; }
         .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td a {
           display: block;
           position: relative;
-          background-color: #FFF;
+          background-color: #fffffe;
           color: #001D2F;
           padding: 3px 10px 3px 10px;
           line-height: 30px;
@@ -1609,7 +1609,7 @@ a.annotator-wrapper {
 
 .button-active {
   background: #9c1a5e;
-  color: #FFF; }
+  color: #fffffe; }
 
 /* ---------------------------- Breadcrumbs END---------------------------- */
 /* ---------------------------- CKEditor override START---------------------------- */
@@ -1709,7 +1709,7 @@ a.annotator-wrapper {
     width: 28px;
     height: 31px;
     padding: 7px;
-    border: 5px solid #FFF;
+    border: 5px solid #fffffe;
     opacity: 0.7; }
 
 /* with default 5% right is not good on iPad */
@@ -1799,7 +1799,7 @@ a.annotator-wrapper {
 /* ---------------------------- Search block END---------------------------- */
 /* -- autocomplete input -- */
 #autocomplete {
-  background-color: #FFF;
+  background-color: #fffffe;
   z-index: 900; }
   #autocomplete ul {
     padding-left: 0;
@@ -1826,7 +1826,7 @@ a.annotator-wrapper {
 #edit-available-committee {
   float: right;
   overflow-y: scroll;
-  background: #FFF; }
+  background: #fffffe; }
   #edit-available-committee::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px; }
@@ -1838,7 +1838,7 @@ a.annotator-wrapper {
 ul.droptrue {
   list-style: none;
   padding: 0;
-  background: #FFF;
+  background: #fffffe;
   border: 1px solid darkgray;
   min-height: 45px; }
   ul.droptrue li {
@@ -1881,7 +1881,7 @@ div.note {
 /* ---------------------------- Dropdown Button START ---------------------------- */
 .dropbtn {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
-  color: #FFF;
+  color: #fffffe;
   padding: 5px 10px 5px 10px;
   font-family: "Source Sans Pro";
   font-size: 13px;
@@ -1933,14 +1933,14 @@ div.note {
 
 .dropdown:hover .dropbtn {
   background: #8a3863;
-  color: #FFF; }
+  color: #fffffe; }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 /* ---------------------------- Dropdown Button END ---------------------------- */
 /* Add content */
 .content dl.node-type-list dt a {
   background-color: #ae477d;
-  color: #FFF;
+  color: #fffffe;
   padding: 10px 20px;
   width: 100%;
   display: inline-block;
@@ -1984,3 +1984,6 @@ div.note {
 
 .block-views .view-user-logout-menu li div.right {
   float: none; }
+
+#os2dagsorden-content-modify-user-edit-form {
+  background: #fffffe; }
