@@ -106,7 +106,6 @@ div.content ul.menu li {
     display: block;
     color: $color-font-primary;
     font-family: $font-basic;
-    border: $border-block-header;
     border-radius: $border-radius;
     font-size: 20px;
     text-decoration: none;
@@ -114,7 +113,6 @@ div.content ul.menu li {
     background: $color-branding-secondary;
     &:hover, &.active {
       background: $color-branding-secondary;
-      border: $border-color-secondary;
     }
   }
   margin: 0 0 10px 0;
@@ -592,12 +590,12 @@ div {
     }
     &:after:hover {
       background-color: $color-background-secondary;
-      color: $color-background-secondary;
       text-shadow: none;
     }
     &:hover{
       background-color: $color-background-secondary;
       color: $color-background-secondary;
+      border-color: $color-background-secondary;
       text-shadow: none;
     }
   }

@@ -309,15 +309,13 @@ div.content ul.menu li {
     display: block;
     color: #373636;
     font-family: "Source Sans Pro";
-    border: 1px solid #e3d6d6;
     border-radius: 3px;
     font-size: 20px;
     text-decoration: none;
     padding: 10px 10px 10px 50px;
     background: #ae477d; }
     div.content ul.menu li a:hover, div.content ul.menu li a.active {
-      background: #ae477d;
-      border: 1px solid #ae477d; }
+      background: #ae477d; }
   div.content ul.menu li #menu-byradet {
     background: #e3d6d6 url("../img/icon_byradet.png") no-repeat 45px 50%;
     padding-left: 75px;
@@ -700,11 +698,11 @@ div.block-inner {
     color: #373636; }
   .view .date-nav-wrapper .pager .date-prev a:after:hover, .view .date-nav-wrapper .pager .date-next a:after:hover {
     background-color: #e3d6d6;
-    color: #e3d6d6;
     text-shadow: none; }
   .view .date-nav-wrapper .pager .date-prev a:hover, .view .date-nav-wrapper .pager .date-next a:hover {
     background-color: #e3d6d6;
     color: #e3d6d6;
+    border-color: #e3d6d6;
     text-shadow: none; }
 
 .view .date-nav-wrapper .pager .date-prev a:after {
