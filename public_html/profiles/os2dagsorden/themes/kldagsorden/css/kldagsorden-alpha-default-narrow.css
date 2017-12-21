@@ -14,6 +14,9 @@
 .view-meetings-search .views-table td.views-field.views-field-php-3 {
   overflow: hidden; }
 
+div.content ul.menu li a {
+  font-size: 18px; }
+
 /* --------------------------- Drag and drop START -------------------------------*/
 #available_committee {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKklEQVQYV2NkIAIwEqGGgXRFO3fu/A8z2d3dHW4AiknUU4TLE6Q7HJdJAOgfDApc6n+qAAAAAElFTkSuQmCC) repeat-y;

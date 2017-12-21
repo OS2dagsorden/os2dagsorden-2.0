@@ -24,6 +24,9 @@
  // width:100%;
 }*/
 /*---------------------------- Date override START ----------------------------*/
+div.content ul.menu li a {
+  font-size: 20px; }
+
 div.date-heading h3 {
   font-size: 20px; }
   div.date-heading h3 a {
