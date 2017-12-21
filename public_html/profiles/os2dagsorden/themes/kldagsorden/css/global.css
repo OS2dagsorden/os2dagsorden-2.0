@@ -1237,6 +1237,8 @@ table .speaker-paper-link-container {
     background: #fffffe;
     padding-left: 0;
     padding-right: 0; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .item-list ul li {
+      margin: 0 0 0.25em 1.8em; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
       border-radius: 3px;
       color: transparent;

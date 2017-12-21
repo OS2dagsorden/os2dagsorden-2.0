@@ -294,12 +294,13 @@ function bullet_point_add_expand_behaviour(url, massive_bilag_expand, bullet_poi
           jQuery(this).attr("id","attachments_container_"+index);
           jQuery(this).hide();
 
-          jQuery(this).parent().parent().parent().children(".hide_show_button_container").append("<button class='button' id='btn_hide_show_attachments_"+index+"' value='⇓'></a>");
+          jQuery(this).parent().parent().parent().children(".hide_show_button_container").append("<button class='button' id='btn_hide_show_attachments_"+index+"' value='⇓'>⇓</button>");
 
          jQuery("#btn_hide_show_attachments_"+index).click(function(){
              jQuery("#attachments_container_"+index).toggle();
              if (jQuery("#btn_hide_show_attachments_"+index).val() == "⇓"){//closed
                 jQuery("#btn_hide_show_attachments_"+index).val("⇑");
+                jQuery("#btn_hide_show_attachments_"+index).text("⇑");
                 jQuery("#btn_hide_show_attachments_"+index).addClass('opened');
                 if (attachments_expand)
                     bullet_points_expand_all(this, index, url, massive_bilag_expand, attachments_expand);
@@ -308,6 +309,7 @@ function bullet_point_add_expand_behaviour(url, massive_bilag_expand, bullet_poi
             }
             else {//opened
                 jQuery("#btn_hide_show_attachments_"+index).val("⇓");
+                jQuery("#btn_hide_show_attachments_"+index).text("⇓");
                 jQuery("#btn_hide_show_attachments_"+index).removeClass('opened');
                 //saving in local storage
                 window.localStorage.setItem(pathname + "-attachments_container_"+index, "false");
@@ -371,8 +373,8 @@ function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url,
   var pathname = window.location.pathname;
 
   if (jQuery('li', bulletPoint).size() > 1) {
-      jQuery(bulletPoint).prepend("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" top' value='⇊'></a>");
-      jQuery(bulletPoint).append("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" bottom' value='⇊'></a>");
+      jQuery(bulletPoint).prepend("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" top' value='⇊'>⇊</button>");
+      jQuery(bulletPoint).append("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" bottom' value='⇊'>⇊</button>");
 
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
         if (jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
@@ -391,6 +393,7 @@ function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url,
         });
 
         jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
+        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇈")
         jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).addClass('opened');
         } else {
             jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
@@ -400,10 +403,12 @@ function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url,
 
           //handle single expand button
           jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
+          jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇓");
           jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
         });
 
         jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
+        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇊")
         jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
         }
       });
@@ -422,7 +427,7 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
     jQuery(this).attr("id","attachment_text_container_"+bulletPointIndex+"_"+index_attachment);
     jQuery(this).hide();
 
-    jQuery(this).parent().prepend("<button class='button hide_show_attachment_text' id='btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'></a>");
+    jQuery(this).parent().prepend("<button class='button hide_show_attachment_text' id='btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>⇓</button>");
     jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).click(function(){
       //hide or show the content container
       jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).toggle();
@@ -432,12 +437,14 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       //change the arrow button icon
       if (jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val() == "⇓"){//closed
 	jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
+  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇑");
   jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).addClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "true");
       }
       else {//opened
 	jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
+  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇓");
   jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "false");
@@ -447,8 +454,10 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       if (attachments_expand){
 	if (jQuery("[id^=btn_hide_show_attachment_text_"+bulletPointIndex+"_][value='⇓']").length > 0)
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
+      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇊");
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
+      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇈");
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).addClass('opened')
       } else {
 	var new_val = "⇈";
@@ -460,6 +469,7 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
 	  }
 	});
     jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val(new_val);
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text(new_val);
     if(new_val == "⇊") {
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
     }
@@ -524,7 +534,7 @@ function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex){
   jQuery(bulletPoint).children("li").children(".bilags_cases_container").each(function(index_attachment){
     jQuery(this).attr("id","bilags_cases_container_"+bulletPointIndex+"_"+index_attachment);
     jQuery(this).hide();
-    jQuery(this).parent().prepend("<button class='button hide_show_bilags_cases' id='btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>");
+    jQuery(this).parent().prepend("<button class='button hide_show_bilags_cases' id='btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>⇓</button>");
     jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).click(function(){
       //hide or show the content container
       jQuery("#bilags_cases_container_"+bulletPointIndex+"_"+index_attachment).toggle();
@@ -532,12 +542,14 @@ function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex){
       //change the arrow button icon
       if (jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val() == "⇓"){//closed
 	jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val("⇑");
+  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).text("⇑");
   jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).addClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-bilags_cases_container_"+bulletPointIndex+"_"+index_attachment, "true");
       }
       else {//opened
 	jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val("⇓");
+  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).text("⇓");
   jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-bilags_cases_container_"+bulletPointIndex+"_"+index_attachment, "false");

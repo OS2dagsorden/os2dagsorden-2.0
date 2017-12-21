@@ -1302,6 +1302,9 @@ table {
         background: $color-white;
         padding-left: 0;
         padding-right: 0;
+        .item-list ul li {
+          margin: 0 0 0.25em 1.8em; 
+        }
         .button {
           border-radius: $border-radius;
           color: transparent;
