@@ -23,8 +23,15 @@
   //max-width: 800px;
  // width:100%;
 }*/
-/*---------------------------- Date override START ----------------------------*/
+/*---------------------------- Sidepane override START ----------------------------*/
 div.content ul.menu li a {
+  font-size: 20px;
+  padding: 10px 10px 10px 50px; }
+
+div.content ul.menu li #menu-print-kalendar:before {
+  font-size: 20px; }
+
+div.content ul.menu li #menu-simple-user-edit:before {
   font-size: 20px; }
 
 div.date-heading h3 {
@@ -32,7 +39,7 @@ div.date-heading h3 {
   div.date-heading h3 a {
     font-size: 20px; }
 
-/*---------------------------- Date override END ----------------------------*/
+/*---------------------------- Sidepane override END ----------------------------*/
 .attachment_text_container .attachment_text_trimmed_container, .attachment_text_container .attachment_text_full_container, .attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_container .attachment_text_full_container.attachment_text_max_size, .attachment_text_container .attachment_text_max_size .attachment-text, .attachment_text_container .attachment-text {
   max-width: none; }
 

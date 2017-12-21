@@ -20,6 +20,13 @@
   }
 }
 div.content ul.menu li a {
+  font-size: 18px; 
+  padding: 10px 10px 10px 40px;
+}
+div.content ul.menu li #menu-print-kalendar:before {
+   font-size: 18px;   
+}
+div.content ul.menu li #menu-simple-user-edit:before{
   font-size: 18px;
 }
 /* --------------------------- Drag and drop START -------------------------------*/
