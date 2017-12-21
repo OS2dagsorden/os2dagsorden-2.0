@@ -1295,8 +1295,8 @@ table .speaker-paper-link-container {
         position: absolute;
         color: #fffffe;
         cursor: pointer;
-        top: 15px;
-        left: 10px; }
+        top: 16px;
+        left: 9px; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button.opened:before {
         content: "\E5CE";
         font-family: "Material Icons";
@@ -1304,8 +1304,8 @@ table .speaker-paper-link-container {
         position: absolute;
         color: #fffffe;
         cursor: pointer;
-        top: 15px;
-        left: 10px; }
+        top: 16px;
+        left: 9px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
       background: #fffffe; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr {
