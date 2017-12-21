@@ -1295,7 +1295,7 @@ table .speaker-paper-link-container {
         position: absolute;
         color: #fffffe;
         cursor: pointer;
-        top: 16px;
+        top: 17px;
         left: 9px; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button.opened:before {
         content: "\E5CE";
@@ -1304,7 +1304,7 @@ table .speaker-paper-link-container {
         position: absolute;
         color: #fffffe;
         cursor: pointer;
-        top: 16px;
+        top: 17px;
         left: 9px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
       background: #fffffe; }
