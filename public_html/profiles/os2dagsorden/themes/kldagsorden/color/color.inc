@@ -23,7 +23,7 @@ $info['schemes'] = array(
   'default' => array(
 
     // Scheme title.
-    'title' => t('Default'),
+    'title' => t('OS2dagsorden classic'),
 
     // Scheme colors
     'colors' => array(
@@ -39,7 +39,7 @@ $info['schemes'] = array(
   'syddjurs_scheme' => array(
 
     // Scheme title.
-    'title' => t('Syddjurs colouring'),
+    'title' => t('OS2dagsorden lynglilla'),
 
     // Scheme colors
     'colors' => array(
@@ -56,7 +56,7 @@ $info['schemes'] = array(
   'scheme_blue' => array(
 
     // Scheme title.
-    'title' => t('KL colouring (Blue shceme)'),
+    'title' => t('OS2dagsorden blå'),
 
     // Scheme colors
     'colors' => array(

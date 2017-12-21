@@ -1752,6 +1752,9 @@ a.annotator-wrapper {
     text-decoration: none;
     cursor: pointer;
   }
+  a {
+    text-decoration: underline;
+  }
 }
 
 .button-active {

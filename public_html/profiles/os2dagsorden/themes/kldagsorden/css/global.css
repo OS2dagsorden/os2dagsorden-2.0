@@ -7,7 +7,7 @@
 
 .content div.user-logout-block {
   position: absolute;
-  right: 30px;
+  right: 0;
   top: -15px;
   padding: 4px 0  5px 5px; }
 
@@ -108,7 +108,7 @@
   .form-item input.form-text, .views-exposed-widget input.form-text {
     font-size: 1.0em;
     line-height: 1em;
-    border: 1px solid #fbf8f8;
+    border: 1px solid #fffffe;
     padding: 5px 10px;
     border-radius: 2px;
     background-color: #fffffe;
@@ -119,7 +119,7 @@
   .form-item select.form-select, .views-exposed-widget select.form-select {
     font-size: 1.0em;
     line-height: 1em;
-    border: 1px solid #fbf8f8;
+    border: 1px solid #fffffe;
     padding: 5px 10px;
     border-radius: 2px;
     background-color: #fffffe;
@@ -627,7 +627,7 @@ h2.block-title, h1.title {
   border: 1px solid #e3d6d6;
   padding: 11px 5px 10px 11px;
   margin-bottom: 0;
-  border-bottom: 1px solid #fbf8f8; }
+  border-bottom: 1px solid #fffffe; }
 
 div.front-page-info-block, .node {
   padding: 10px; }
@@ -1151,7 +1151,7 @@ table .speaker-paper-link-container {
 /*meeting details table*/
 .view-meeting-details {
   background: #fffffe;
-  border: 1px solid #fbf8f8;
+  border: 1px solid #fffffe;
   border-top: 0px;
   font-family: "Source Sans Pro"; }
   .view-meeting-details .form-submit {
@@ -1604,6 +1604,8 @@ a.annotator-wrapper {
     font-size: 16px;
     text-decoration: none;
     cursor: pointer; }
+  #breadcrumb .breadcrumb a {
+    text-decoration: underline; }
 
 .button-active {
   background: #9c1a5e;
@@ -1970,7 +1972,7 @@ div.note {
 
 /* member of in sidebar */
 .views-field.views-field-field-os2web-meetings-com-shname {
-  border: 1px solid #fbf8f8;
+  border: 1px solid #fffffe;
   display: inline-block;
   margin-bottom: 3px;
   padding: 3px 5px;
