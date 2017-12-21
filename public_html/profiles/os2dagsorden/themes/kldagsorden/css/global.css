@@ -7,7 +7,7 @@
 
 .content div.user-logout-block {
   position: absolute;
-  right: 30px;
+  right: 0;
   top: -15px;
   padding: 4px 0  5px 5px; }
 
@@ -1431,11 +1431,40 @@ table .hide_show_attachment_text, table .hide_show_bilags_cases {
   left: -45px;
   margin-right: -45px; }
 
-table .hide_show_all_attachments_text {
+table .ul-item-list-dagsordenspunkt .hide_show_all_attachments_text {
   position: absolute;
   left: -35px; }
-  table .hide_show_all_attachments_text.bottom {
-    bottom: 8px; }
+  table .ul-item-list-dagsordenspunkt .hide_show_all_attachments_text.button {
+    border-radius: 3px;
+    color: transparent;
+    width: 38px;
+    height: 38px;
+    z-index: 9999;
+    cursor: pointer;
+    left: -15px; }
+    table .ul-item-list-dagsordenspunkt .hide_show_all_attachments_text.button:before {
+      background: url("../img/arrow_right_black_down.png") no-repeat 50% top;
+      position: absolute;
+      cursor: pointer;
+      top: 13px;
+      left: 9px;
+      background-size: 10px;
+      content: "";
+      width: 20px;
+      height: 20px; }
+    table .ul-item-list-dagsordenspunkt .hide_show_all_attachments_text.button.opened:before {
+      background: url("../img/arrow_right_black.png") no-repeat 50% top;
+      position: absolute;
+      color: #fffffe;
+      font-family: "Material Icons";
+      font-size: 20px;
+      cursor: pointer;
+      top: 13px;
+      left: 9px;
+      background-size: 10px;
+      content: "";
+      width: 20px;
+      height: 20px; }
 
 table .item-list-dagsordenspunkt .hide_show_all_attachments_text {
   left: -55px; }
