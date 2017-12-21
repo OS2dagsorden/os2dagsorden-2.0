@@ -1448,24 +1448,36 @@ div.speaker-paper-print {
     margin-top: 5px;
     font-style: italic;
   }
-   .ul-item-list-dagsordenspunkt .button {
+  .item-list ul li {
+        margin: 0 0 0.25em 1.7em;
+      }
+   .ul-item-list-dagsordenspunkt {
+     .button.hide_show_all_attachments_text {
+       left: -50px;
+    }
+   .button {
       border-radius: $border-radius;
       color: transparent;
       width: 38px;
       height: 38px;
-      z-index: 9999;
-      font-family: $font-icons;
-      font-size: $font-size-headings;
-      position: absolute;
-      color: $color-white;
+      z-index: 9999;      
       cursor: pointer;
-      left: -15px;
+      left: -45px;
+      
       &:before{
+        font-family: $font-icons;
+        font-size: $font-size-headings;
+        position: absolute;
+        color: $color-white;
         content: "\E5CF";
         top: 9px;
         left: 9px;
       }
       &.opened:before {
+        font-family: $font-icons;
+        font-size: $font-size-headings;
+        position: absolute;
+        color: $color-white;
         content: "\E5CE";
         top: 9px;
         left: 9px;
@@ -1492,7 +1504,7 @@ div.speaker-paper-print {
     font-size: 13px;
   }
 }
-
+}
 .form-submit.nav-button {
   display: inline-block;
   font-weight: normal;

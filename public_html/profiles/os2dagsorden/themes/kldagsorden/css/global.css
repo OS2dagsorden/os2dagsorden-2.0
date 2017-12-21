@@ -1354,39 +1354,49 @@ div.speaker-paper-print {
   margin-top: 5px;
   font-style: italic; }
 
+.view-speaking-paper .item-list ul li {
+  margin: 0 0 0.25em 1.7em; }
+
+.view-speaking-paper .ul-item-list-dagsordenspunkt .button.hide_show_all_attachments_text {
+  left: -50px; }
+
 .view-speaking-paper .ul-item-list-dagsordenspunkt .button {
   border-radius: 3px;
   color: transparent;
   width: 38px;
   height: 38px;
   z-index: 9999;
-  font-family: "Material Icons";
-  font-size: 20px;
-  position: absolute;
-  color: #fffffe;
   cursor: pointer;
-  left: -15px; }
+  left: -45px; }
   .view-speaking-paper .ul-item-list-dagsordenspunkt .button:before {
+    font-family: "Material Icons";
+    font-size: 20px;
+    position: absolute;
+    color: #fffffe;
     content: "\E5CF";
     top: 9px;
     left: 9px; }
   .view-speaking-paper .ul-item-list-dagsordenspunkt .button.opened:before {
+    font-family: "Material Icons";
+    font-size: 20px;
+    position: absolute;
+    color: #fffffe;
     content: "\E5CE";
     top: 9px;
     left: 9px; }
 
-.view-speaking-paper .main-text {
+.view-speaking-paper .ul-item-list-dagsordenspunkt .main-text {
   padding-bottom: 5px; }
 
-.view-speaking-paper .views-field-title-1 {
+.view-speaking-paper .ul-item-list-dagsordenspunkt .views-field-title-1 {
   margin-left: -5px;
   margin-right: -5px;
   padding-bottom: 10px; }
 
-.view-speaking-paper .views-row {
+.view-speaking-paper .ul-item-list-dagsordenspunkt .views-row {
   padding-bottom: 10px; }
 
-.view-speaking-paper .attachment .view-display-id-attachment_1 a {
+.view-speaking-paper .ul-item-list-dagsordenspunkt .attachment .view-display-id-attachment_1 a {
   display: block;
   color: #333333;
   padding: 3px 10px 3px 10px;
