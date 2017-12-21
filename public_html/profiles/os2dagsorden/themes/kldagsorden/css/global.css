@@ -7,7 +7,7 @@
 
 .content div.user-logout-block {
   position: absolute;
-  right: 0;
+  right: 30px;
   top: -15px;
   padding: 4px 0  5px 5px; }
 
@@ -517,7 +517,7 @@ ul li.leaf {
 /*---------------------------- Show hide menu Start ----------------------------*/
 #block-block-1 {
   float: right;
-  top: 23px;
+  top: 20px;
   position: relative;
   z-index: 1; }
 
