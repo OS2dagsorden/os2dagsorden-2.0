@@ -1226,6 +1226,7 @@ table {
         td{
           background: $color-white;          
           &:nth-child(1) {
+           padding-left: 10px; 
            border-radius: $border-radius 0 0 $border-radius;           
           }
           &:nth-last-child() {
@@ -1241,10 +1242,13 @@ table {
         }
         td{
           font-weight: normal;
-          padding: 10px 10px 7px 10px;
+          padding: 10px 10px 7px 2px;
         }
         th {
-           padding: 10px;
+           padding: 10px 10px 10px 2px;
+           &:nth-child(1) {
+              padding-left: 10px; 
+           }
         }
       }
     }
@@ -1258,7 +1262,7 @@ table {
       border-radius: 0;
       table.views-table {
         thead tr th{
-          background: $color-white;
+        //  background: $color-background-primary;
           border-width: 1px;
           border-color: $color-white;
           border-radius: $border-radius;
@@ -1266,7 +1270,7 @@ table {
         tr {
           border: none;
           td {
-            background: $color-background-primary;
+          //  background: $color-white;
             border: none;
           }
         }
@@ -1296,8 +1300,8 @@ table {
         .button {
           border-radius: $border-radius;
           color: transparent;
-          width: 35px;
-          height: 35px;
+          width: 38px;
+          height: 38px;
           z-index: 9999;
           }
         .button:before{
@@ -1307,8 +1311,8 @@ table {
             position: absolute;
             color: $color-white;
             cursor: pointer;
-            top: 8px;
-            left: 8px;
+            top: 15px;
+            left: 10px;
           }
           .button.opened:before {
             content: "\E5CE";
@@ -1317,15 +1321,15 @@ table {
             position: absolute;
             color: $color-white;
             cursor: pointer;
-            top: 8px;
-            left: 8px;
+            top: 15px;
+            left: 10px;
           }
           .button.hide_show_all_attachments_text:before{
             background: url('../img/arrow_right_black_down.png') no-repeat 50% top;
             position: absolute;
             cursor: pointer;
-            top: 12px;
-            left: 8px;
+            top: 15px;
+            left: 10px;
             background-size: 10px;
             content: "";
             width: 20px;
@@ -1338,8 +1342,8 @@ table {
             font-family: $font-icons;
             font-size: $font-size-headings;
             cursor: pointer;
-            top: 12px;
-            left: 8px;
+            top: 15px;
+            left: 10px;
             background-size: 10px;
             content: "";
             width: 20px;
@@ -1356,7 +1360,7 @@ table {
             color: $color-white;
             cursor: pointer;
             top: 15px;
-            left: 8px;
+            left: 10px;
           }
           .button.opened:before {
             content: "\E5CE";
@@ -1366,7 +1370,7 @@ table {
             color: $color-white;
             cursor: pointer;
             top: 15px;
-            left: 8px;
+            left: 10px;
           }
         }
         table.views-table {

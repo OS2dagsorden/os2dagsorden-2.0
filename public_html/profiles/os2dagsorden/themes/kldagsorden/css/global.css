@@ -1189,6 +1189,7 @@ table .speaker-paper-link-container {
     .view-meeting-details .view-content table.views-table tr td {
       background: #fffffe; }
       .view-meeting-details .view-content table.views-table tr td:nth-child(1) {
+        padding-left: 10px;
         border-radius: 3px 0 0 3px; }
       .view-meeting-details .view-content table.views-table tr td:nth-last-child() {
         border-radius: 0 3px 3px 0; }
@@ -1198,23 +1199,23 @@ table .speaker-paper-link-container {
       text-transform: none; }
     .view-meeting-details .view-content table.views-table tr td {
       font-weight: normal;
-      padding: 10px 10px 7px 10px; }
+      padding: 10px 10px 7px 2px; }
     .view-meeting-details .view-content table.views-table tr th {
-      padding: 10px; }
+      padding: 10px 10px 10px 2px; }
+      .view-meeting-details .view-content table.views-table tr th:nth-child(1) {
+        padding-left: 10px; }
   .view-meeting-details .attachment .view-meeting-details {
     background: #fffffe;
     border: none; }
   .view-meeting-details .attachment .view-content {
     border-radius: 0; }
     .view-meeting-details .attachment .view-content table.views-table thead tr th {
-      background: #fffffe;
       border-width: 1px;
       border-color: #fffffe;
       border-radius: 3px; }
     .view-meeting-details .attachment .view-content table.views-table tr {
       border: none; }
       .view-meeting-details .attachment .view-content table.views-table tr td {
-        background: #f7f1f1;
         border: none; }
   .view-meeting-details .attachment .bullet-point-attachments .view-header {
     margin-bottom: 0;
@@ -1235,8 +1236,8 @@ table .speaker-paper-link-container {
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button {
       border-radius: 3px;
       color: transparent;
-      width: 35px;
-      height: 35px;
+      width: 38px;
+      height: 38px;
       z-index: 9999; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button:before {
       content: "\E5CF";
@@ -1245,8 +1246,8 @@ table .speaker-paper-link-container {
       position: absolute;
       color: #fffffe;
       cursor: pointer;
-      top: 8px;
-      left: 8px; }
+      top: 15px;
+      left: 10px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.opened:before {
       content: "\E5CE";
       font-family: "Material Icons";
@@ -1254,14 +1255,14 @@ table .speaker-paper-link-container {
       position: absolute;
       color: #fffffe;
       cursor: pointer;
-      top: 8px;
-      left: 8px; }
+      top: 15px;
+      left: 10px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text:before {
       background: url("../img/arrow_right_black_down.png") no-repeat 50% top;
       position: absolute;
       cursor: pointer;
-      top: 12px;
-      left: 8px;
+      top: 15px;
+      left: 10px;
       background-size: 10px;
       content: "";
       width: 20px;
@@ -1273,8 +1274,8 @@ table .speaker-paper-link-container {
       font-family: "Material Icons";
       font-size: 20px;
       cursor: pointer;
-      top: 12px;
-      left: 8px;
+      top: 15px;
+      left: 10px;
       background-size: 10px;
       content: "";
       width: 20px;
@@ -1289,7 +1290,7 @@ table .speaker-paper-link-container {
         color: #fffffe;
         cursor: pointer;
         top: 15px;
-        left: 8px; }
+        left: 10px; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button.opened:before {
         content: "\E5CE";
         font-family: "Material Icons";
@@ -1298,7 +1299,7 @@ table .speaker-paper-link-container {
         color: #fffffe;
         cursor: pointer;
         top: 15px;
-        left: 8px; }
+        left: 10px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table thead tr th {
       background: #fffffe; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr {
