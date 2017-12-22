@@ -312,7 +312,7 @@ div.content ul.menu li {
     border-radius: 3px;
     font-size: 20px;
     text-decoration: none;
-    padding: 10px 10px 10px 50px;
+    padding: 10px 0;
     background: #ae477d; }
     div.content ul.menu li a:hover, div.content ul.menu li a.active {
       background: #ae477d; }
@@ -349,9 +349,9 @@ div.content ul.menu li {
       content: "\E916";
       font-family: "Material Icons";
       font-size: 20px;
-      position: absolute;
-      top: 10px;
-      left: 50px; }
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px; }
   div.content ul.menu li #menu-sog {
     background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
@@ -366,9 +366,9 @@ div.content ul.menu li {
       content: "\E8B8";
       font-family: "Material Icons";
       font-size: 20px;
-      position: absolute;
-      top: 10px;
-      left: 50px; }
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
       background: #ae477d;
       color: #fffffe;

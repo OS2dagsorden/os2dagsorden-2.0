@@ -109,7 +109,7 @@ div.content ul.menu li {
     border-radius: $border-radius;
     font-size: 20px;
     text-decoration: none;
-    padding: 10px 10px 10px 50px;
+    padding: 10px 0;
     background: $color-branding-secondary;
     &:hover, &.active {
       background: $color-branding-secondary;
@@ -156,9 +156,10 @@ div.content ul.menu li {
       content: "\E916";
       font-family: $font-icons;
       font-size: $font-size-headings;
-      position: absolute;
-      top: 10px;
-      left: 50px;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      
     }
   }
   #menu-sog {
@@ -177,9 +178,10 @@ div.content ul.menu li {
       content: "\E8B8";
       font-family: $font-icons;
       font-size: $font-size-headings;
-      position: absolute;
-      top: 10px;
-      left: 50px;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      
     }
     &:hover {
       background: $color-branding-secondary;

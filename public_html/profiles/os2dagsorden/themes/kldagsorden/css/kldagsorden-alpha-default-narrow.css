@@ -16,17 +16,18 @@
 
 div.content ul.menu li a {
   font-size: 18px;
-  padding: 10px 10px 10px 40px; }
+  padding: 10px 0; }
 
 div.content ul.menu li #menu-print-kalendar:before {
   font-size: 18px;
-  top: 11px;
-  left: 30px; }
+  padding-right: 5px; }
 
-div.content ul.menu li #menu-simple-user-edit:before {
+div.content ul.menu li #menu-simple-user-edit {
   font-size: 18px;
-  top: 11px;
-  left: 30px; }
+  padding: 10px 0; }
+  div.content ul.menu li #menu-simple-user-edit:before {
+    font-size: 18px;
+    padding-right: 5px; }
 
 /* --------------------------- Drag and drop START -------------------------------*/
 #available_committee {

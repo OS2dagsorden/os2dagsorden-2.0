@@ -27,21 +27,22 @@
 /*---------------------------- Sidepane override START ----------------------------*/
 div.content ul.menu li a {
   font-size: 20px;
-  padding: 10px 10px 10px 50px;
+  padding: 10px 0;
 }
 div.content ul.menu li #menu-print-kalendar {
   &:before {
      font-size: 20px;
-     top: 10px;
-     left: 50px;
+     padding-right: 15px;
+     
   }
 }  
 div.content ul.menu li #menu-simple-user-edit{
-
+  font-size: 20px;
+  padding: 10px 0;
   &:before{
-   font-size: 20px;
-   top: 10px;
-   left: 50px;
+    font-size: 20px;
+     padding-right: 15px
+   
  }
 }
 div.date-heading h3 {
