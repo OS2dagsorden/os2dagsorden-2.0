@@ -45,6 +45,13 @@ div.content ul.menu li #menu-simple-user-edit{
    
  }
 }
+div.content ul.menu li #menu-byradet{
+     font-size: 20px; 
+     padding: 10px 92px 10px 0;
+    &:before{
+      font-size: 20px;
+  }
+}
 div.date-heading h3 {
   a {
     font-size: 20px;
@@ -94,5 +101,5 @@ ul.droptrue li {
   display: inline-block;
   display: inline-block;
   float: initial;
-  margin-left: 5px;
+  margin-left: 0;
 }

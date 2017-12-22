@@ -44,7 +44,7 @@
       font-family: $font-icons; 
       font-size: $font-size-button;
       position: absolute;
-      top: 4px;
+      top: 6px;
       left: 5px;    
     }
     /*.user-logout-btn {
@@ -57,13 +57,22 @@
       font-family: $font-icons; 
       font-size: $font-size-button;
       position: absolute;
-      top: 4px;
+      top: 6px;
       left: 5px;    
     }
+    .user-guide-btn:before {
+      content: "\E0C6";
+      font-family: $font-icons; 
+      font-size: $font-size-button;
+      position: absolute;
+      top: 6px;
+      left: 5px; 
+    }  
+    /*
     .user-guide-btn {
         background: $color-branding-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
         padding: 5px 10px 5px 35px;
         white-space: nowrap;
         background-size: 25px 100%;
-    }
+    }*/
 }

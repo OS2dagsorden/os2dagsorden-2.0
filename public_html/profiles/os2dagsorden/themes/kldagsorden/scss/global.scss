@@ -118,12 +118,34 @@ div.content ul.menu li {
   margin: 0 0 10px 0;
   padding: 0;
   #menu-byradet {
-    background: $color-background-secondary url('../img/icon_byradet.png') no-repeat 45px 50%;
-    padding-left: 75px;
+    background: $color-background-primary;
     background-size: 20px;
-    &.active {
+    transition: background-color .1s ease-in;
+    position:relative;
+    text-align: center;
+    padding: 10px 92px 10px 0;
+    &:hover, &.active:hover {
+      background: $color-branding-secondary;
       background-size: 20px;
-      background: $color-grey url('../img/icon_byradet.png') no-repeat 45px 50%;
+      color: $color-white;
+      transition: background-color .3s ease-out;
+    }
+    
+    &.active {
+      background: $color-branding-secondary;
+      background-size: 20px;
+      color: $color-white;
+    }
+    
+     &:before {
+      content: "\E919";
+      font-family: $font-icons;
+      font-size: $font-size-headings;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      left: -2px;
+      
     }
   }
   #menu-home {
@@ -953,7 +975,7 @@ pager li.pager-first {
 
 .controls-right {
   float: right;
-  margin: 5px 1px 10px 10px;
+  margin: 5px 1px 20px 10px;
 }
 
 .controls-left {

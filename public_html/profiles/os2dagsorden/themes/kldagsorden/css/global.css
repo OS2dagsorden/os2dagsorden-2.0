@@ -21,6 +21,13 @@
         background: $color-branding-secondary url('../img/icon_log_out.png') no-repeat 10px 50%;
         white-space: nowrap;
         padding: 5px 10px 5px 30px;
+    }*/
+  /*
+    .user-guide-btn {
+        background: $color-branding-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
+        padding: 5px 10px 5px 35px;
+        white-space: nowrap;
+        background-size: 25px 100%;
     }*/ }
   .user-logout-block .user-logout-textbox {
     color: #fffffe;
@@ -48,20 +55,22 @@
     font-family: "Material Icons";
     font-size: 16px;
     position: absolute;
-    top: 4px;
+    top: 6px;
     left: 5px; }
   .user-logout-block .user-logout-btn:before {
     content: "\E5C8";
     font-family: "Material Icons";
     font-size: 16px;
     position: absolute;
-    top: 4px;
+    top: 6px;
     left: 5px; }
-  .user-logout-block .user-guide-btn {
-    background: #ae477d url("../img/icon_user_manual.png") no-repeat 5px 50%;
-    padding: 5px 10px 5px 35px;
-    white-space: nowrap;
-    background-size: 25px 100%; }
+  .user-logout-block .user-guide-btn:before {
+    content: "\E0C6";
+    font-family: "Material Icons";
+    font-size: 16px;
+    position: absolute;
+    top: 6px;
+    left: 5px; }
 
 .front.not-logged-in .zone-content-wrapper {
   padding-top: 30px; }
@@ -80,9 +89,8 @@
   min-height: 400px;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid #f7f1f1;
-  border-radius: 3px;
-  background: #fffffe; }
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  background: #f7f1f1; }
   #block-user-login .block-title {
     text-align: center; }
   #block-user-login .content {
@@ -90,13 +98,7 @@
 
 #user-login-form input.form-text {
   display: block;
-  width: 100%;
-  background: #f7f1f1;
-  padding: 10px;
-  border-radius: 3px; }
-
-#user-login-form .form-actions input:hover {
-  background: #9c1a5e; }
+  width: 100%; }
 
 .form-item, .views-exposed-widget {
   margin-bottom: 1em;
@@ -317,12 +319,29 @@ div.content ul.menu li {
     div.content ul.menu li a:hover, div.content ul.menu li a.active {
       background: #ae477d; }
   div.content ul.menu li #menu-byradet {
-    background: #e3d6d6 url("../img/icon_byradet.png") no-repeat 45px 50%;
-    padding-left: 75px;
-    background-size: 20px; }
-    div.content ul.menu li #menu-byradet.active {
+    background: #f7f1f1;
+    background-size: 20px;
+    transition: background-color .1s ease-in;
+    position: relative;
+    text-align: center;
+    padding: 10px 92px 10px 0; }
+    div.content ul.menu li #menu-byradet:hover, div.content ul.menu li #menu-byradet.active:hover {
+      background: #ae477d;
       background-size: 20px;
-      background: #d7d9da url("../img/icon_byradet.png") no-repeat 45px 50%; }
+      color: #fffffe;
+      transition: background-color .3s ease-out; }
+    div.content ul.menu li #menu-byradet.active {
+      background: #ae477d;
+      background-size: 20px;
+      color: #fffffe; }
+    div.content ul.menu li #menu-byradet:before {
+      content: "\E919";
+      font-family: "Material Icons";
+      font-size: 20px;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      left: -2px; }
   div.content ul.menu li #menu-home {
     background: #e3d6d6 url("../img/icon_home.png") no-repeat 45px 50%;
     padding-left: 75px;
@@ -975,7 +994,7 @@ pager li.pager-first {
 
 .controls-right {
   float: right;
-  margin: 5px 1px 10px 10px; }
+  margin: 5px 1px 20px 10px; }
 
 .controls-left {
   float: left;

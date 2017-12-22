@@ -40,6 +40,14 @@ div.content ul.menu li #menu-simple-user-edit{
       padding-right: 5px;
   }
 }
+div.content ul.menu li #menu-byradet{
+     font-size: 18px; 
+     padding: 10px 75px 10px 0;
+    &:before{
+      font-size: 18px;
+      padding-right: 5px;
+  }
+}
 
 /* --------------------------- Drag and drop START -------------------------------*/
 
