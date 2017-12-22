@@ -1185,7 +1185,8 @@ function os2dagsorden_access_helper_node_save($node) {
         $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
         $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
         $meeting_url = $base_url . '/meeting/' . $node->nid;
-        $mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
+        //$mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
+        $mLink = $meeting_url;
 
         //getting subject and body
         $subject_template = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
