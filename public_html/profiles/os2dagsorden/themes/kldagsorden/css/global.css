@@ -351,7 +351,8 @@ div.content ul.menu li {
       font-size: 20px;
       position: relative;
       vertical-align: middle;
-      padding-right: 10px; }
+      padding-right: 10px;
+      left: -2px; }
   div.content ul.menu li #menu-sog {
     background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
@@ -368,7 +369,8 @@ div.content ul.menu li {
       font-size: 20px;
       position: relative;
       vertical-align: middle;
-      padding-right: 10px; }
+      padding-right: 10px;
+      left: -2px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
       background: #ae477d;
       color: #fffffe;
