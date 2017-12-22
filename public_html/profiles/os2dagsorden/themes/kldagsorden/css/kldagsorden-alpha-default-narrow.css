@@ -14,9 +14,20 @@
 .view-meetings-search .views-table td.views-field.views-field-php-3 {
   overflow: hidden; }
 
-.block-views .view-user-logout-menu li div {
-  display: block;
-  margin-bottom: 10px; }
+div.content ul.menu li a {
+  font-size: 18px;
+  padding: 10px 0; }
+
+div.content ul.menu li #menu-print-kalendar:before {
+  font-size: 18px;
+  padding-right: 5px; }
+
+div.content ul.menu li #menu-simple-user-edit {
+  font-size: 18px;
+  padding: 10px 0; }
+  div.content ul.menu li #menu-simple-user-edit:before {
+    font-size: 18px;
+    padding-right: 5px; }
 
 /* --------------------------- Drag and drop START -------------------------------*/
 #available_committee {
@@ -35,7 +46,6 @@
 
 /* ---------------------------- arrows_reverse END ---------------------------- */
 .block-views .view-user-logout-menu li div {
-  display: block;
-  margin-bottom: 10px; }
+  display: inline-block; }
   .block-views .view-user-logout-menu li div.right {
-    float: right; }
+    float: none; }

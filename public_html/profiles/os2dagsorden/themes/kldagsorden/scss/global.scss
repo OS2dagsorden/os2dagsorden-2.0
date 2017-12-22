@@ -14,9 +14,9 @@
 
 
 body {
-  background: $color-white;
-  font-family: $font-paragraphs;
-  font-size: 16px;
+  background: $color-body;
+  font-family: $font-basic;
+  font-size: $font-size-body;
 }
 
 #region-footer-first, #region-postscript-first {
@@ -105,42 +105,62 @@ div.content ul.menu li {
   a {
     display: block;
     color: $color-font-primary;
-    font-family: $font-headings;
-
-    font-weight: 100;
+    font-family: $font-basic;
+    border-radius: $border-radius;
     font-size: 20px;
     text-decoration: none;
-    padding: 10px 10px 10px 50px;
-    background: $color-secondary;
+    padding: 10px 0;
+    background: $color-branding-secondary;
     &:hover, &.active {
-      background: $color-primary;
+      background: $color-branding-secondary;
     }
   }
   margin: 0 0 10px 0;
   padding: 0;
   #menu-byradet {
-    background: $color-background-secondary url('../img/icon_byradet.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_byradet.png') no-repeat 45px 50%;
+    padding-left: 75px;
+    background-size: 20px;
     &.active {
-      background: $color-grey url('../img/icon_byradet.png') no-repeat 15px 50%;
+      background-size: 20px;
+      background: $color-grey url('../img/icon_byradet.png') no-repeat 45px 50%;
     }
   }
   #menu-home {
-    background: $color-background-secondary url('../img/icon_home.png') no-repeat 15px 50%;
+    background: $color-background-secondary url('../img/icon_home.png') no-repeat 45px 50%;
+    padding-left: 75px;
+    background-size: 20px;
     &.active {
+      background-size: 20px;
       background: $color-grey url('../img/icon_home.png') no-repeat 15px 50%;
     }
   }
   #menu-print-kalendar {
-    background: $color-background-secondary url('../img/icon_print.png') no-repeat 15px 50%;
+    background: $color-background-primary;
+    background-size: 20px;
     transition: background-color .1s ease-in;
+    position:relative;
+    text-align: center;
     &:hover, &.active:hover {
-      background: $color-secondary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary;
+      background-size: 20px;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active {
-      background: $color-primary url('../img/icon_print_white.png') no-repeat 15px 50%;
+      background-size: 20px;
+      background: $color-branding-secondary;
       color: $color-white;
+    }
+     &:before {
+      content: "\E916";
+      font-family: $font-icons;
+      font-size: $font-size-headings;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      left: -2px;
+      
     }
   }
   #menu-sog {
@@ -150,15 +170,28 @@ div.content ul.menu li {
     }
   }
   #menu-simple-user-edit {
-    background: $color-background-secondary url('../img/icon_simple_user_edit.png') no-repeat 15px 50%;
+    background: $color-background-primary;
+    background-size: 20px;
     transition: background-color .1s ease-in;
+    position:relative;
+    text-align: center;
+    &:before {
+      content: "\E8B8";
+      font-family: $font-icons;
+      font-size: $font-size-headings;
+      position: relative;
+      vertical-align: middle;
+      padding-right: 10px;
+      left: -2px;
+      
+    }
     &:hover {
-      background: $color-secondary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary;
       color: $color-white;
       transition: background-color .3s ease-out;
     }
     &.active, &.active:hover {
-      background: $color-primary url('../img/icon_simple_user_edit_white.png') no-repeat 15px 50%;
+      background: $color-branding-secondary;
       color: $color-white;
     }
   }
@@ -168,9 +201,15 @@ div.content ul.menu li {
 
 /* specific for each link */
 
-#block-views-exp-meetings-search-page h2, #os2dagsorden-search-form h2 {
-  background: $color-background-secondary url('../img/icon_search.png') no-repeat 15px 50%;
-  padding-left: 45px;
+#block-views-exp-meetings-search-page {
+  h2, #os2dagsorden-search-form h2 {
+    background: $color-background-secondary url('../img/icon_search.png') no-repeat 15px 50%;
+    background-size: 20px;
+    padding-left: 45px;
+  }
+  .container-inline-date .form-item .form-item {
+    width: 100%;
+  }
 }
 
 ul li.leaf {
@@ -184,13 +223,25 @@ ul li.leaf {
 
 .help-button {
   position: absolute;
-  min-width: 30px;
-  min-height: 30px;
-  top: 10px;
+  width: 20px;
+  height: 20px;
+  top: 15px;
   right: 10px;
   float: right;
-  background: url('../img/icon_help.png') no-repeat 50% top;
+  background-color: $color-white;
+  border: 1px solid $color-white;
+  border-radius: 50%;
+  //background: url('../img/icon_help.png') no-repeat 50% top;
   cursor: pointer;
+  &:after{
+    content: '!';
+    left: 8px;
+    position: absolute;
+    top: 1px;
+    margin: auto;
+    font-weight: bold;
+
+  }
 }
 
 #ToolTipDiv {
@@ -310,16 +361,16 @@ ul li.leaf {
 
 #block-block-1 {
   float: right;
-  top: 25px;
+  top: 20px;
   position: relative;
   z-index: 1;
 }
 
 .content #show_hide_menu_container #show_hide_menu_button {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
   border-width: 0;
   text-shadow: none;
+  background-color: $color-branding-secondary;
+  border-radius: $border-radius;
 }
 
 /*---------------------------- Show hide menu End ----------------------------*/
@@ -328,12 +379,12 @@ ul li.leaf {
 
 .view-header h3, .view-content h3 {
   color: $color-font-primary;
-  text-transform: uppercase;
-  font-family: $font-headings;
+  text-transform: capitalize;
+  font-family: $font-basic;
   font-weight: 100;
-  font-size: 16px;
-  background-color: $color-background-secondary;
-  padding: 5px 10px;
+  font-size: 18px;
+  background-color: $color-background-primary;
+  padding: 5px 7px;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -341,6 +392,7 @@ ul li.leaf {
 .block-views-exp-meetings-search-page .views-exposed-form .views-exposed-widget .form-submit {
   margin-top: 0;
 }
+
 
 div.date-heading h3 {
   a {
@@ -356,12 +408,58 @@ div.date-heading h3 {
 }
 
 .view-id-events, .view-id-user_committee, .view-id-user_follow_committees, .view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_, .block-views-exp-meetings-search-page .views-exposed-form, .node-form, .node, .view-display-id-page {
-  background: $color-background-secondary;
-  border-bottom: $border-solid;
-  padding: 5px;
+  background: $color-background-primary;
+  border-radius: $border-radius;
+  border: $border-block-body;
+  padding: 5px 7px 0 7px;
 }
+.view-id-kommende_m_der_i_mine_udvalg, .view-id-seneste_8_m_der_i_de_st_ende_politiske_udvalg_ {
+  table {
+    &.views-table{
+      tr td {        
+        &:nth-child(4), &:nth-child(5) {
+          a {
+            border:  1px solid $color-white;
+            border-radius: $border-radius;
+          }
+        }
+        &:nth-child(1) a{
+          border:  1px solid $color-white;
+          border-radius: $border-radius 0 0 $border-radius  ;
+          border-left-width: 0;
+        }
+        &:nth-child(3) a{
+          border:  1px solid $color-white;
+          border-radius: 0  $border-radius $border-radius 0;
+          border-right-width: 0;
+        }
+      }
+      th:nth-child(4) {
+        padding-left: 17px;
+      }
+    }
+  }
+}
+
+.node.brugerroller{
+  background: none;
+  ul,  ul#available_committee{
+    background: $color-background-primary;
+    padding: 5px 20px;
+  }
+  ul#available_committee{
+    min-height: 95%;
+    margin-bottom: 0px;
+    border-color: $color-background-primary;
+  }
+}
+
+h1.title.brugerroller{
+  margin-top: 15px;
+}
+
 .node-form {
-    padding: 5px 15px;
+  padding: 5px 15px;
 }
 
 .block-views-exp-meetings-search-page div.views-exposed-form {
@@ -369,7 +467,7 @@ div.date-heading h3 {
 }
 
 div.attachment {
-  margin-top: 30px;
+  background: $color-background-primary;
 }
 
 .view-footer {
@@ -397,13 +495,14 @@ div.attachment {
 
 h2.block-title, h1.title {
   color: $color-font-primary;
-  text-transform: uppercase;
-  font-family: $font-headings;
-  font-weight: 100;
-  font-size: 20px;
+  font-family: $font-basic;
+  font-weight: bold;
+  font-size: $font-size-headings;
   margin-top: 0;
   background: $color-background-secondary;
-  padding: 5px 5px 3px 15px;
+  border-radius: $border-radius;
+  border: $border-block-header;
+  padding: 11px 5px 10px 11px;
   margin-bottom: 0;
   border-bottom: $border-solid;
 }
@@ -470,80 +569,146 @@ div {
 
 .block-views .view .date-nav-wrapper .date-next {
   left: auto;
-  right: 10px;
+  right: 0;
 }
 
 .view .date-nav-wrapper .pager {
   .date-prev a, .date-next a {
-    color: inherit;
-    font-size: 16px;
+    color: $color-white;
+    font-size: 0;
     text-decoration: none;
+    background-color: $color-white;
+    border: 1px solid $color-white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: block;
+    padding: 0;
+    &:hover {
+      color:  $color-branding-secondary;
+    }
+    &:after {
+      color:  #373636;
+      
+    }
+    &:after:hover {
+      background-color: $color-background-secondary;
+      text-shadow: none;
+    }
+    &:hover{
+      background-color: $color-background-secondary;
+      color: $color-background-secondary;
+      border-color: $color-background-secondary;
+      text-shadow: none;
+    }
+  }
+  .date-prev a:after {
+    content: "\E314";
+    font-family: $font-icons;
+    font-size: $font-size-button;
+    left: 16px;
+    top: 5px;
+    position: absolute;
+    &:hover {
+      color: $color-white;
+    }
+  }
+  .date-next a:after {
+    content: "\E315";
+    font-family: $font-icons;
+    font-size: $font-size-button;
+    right: 16px;
+    top: 5px;
+    position: absolute;
   }
 }
 
 .calendar-calendar {
-  tr {
-    td.today, &.odd td.today, &.even td.today {
-      background: none;
+  padding-bottom: 10px;
+  table.mini {
+    font-family: $font-basic;
+    font-size: 12px;
+    thead {
+      border: 1px solid $color-white;
     }
-  }
-  .mini tr td.today a {
-    background-color: $color-font-primary;
-    color: #feffff;
-    font-weight: bold;
-    border-radius: 5px;
-  }
-  .has-events a {
-    text-decoration: none;
-    background-color: #f9d4ed;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 3px 3px 3px 8px;
-  }
-  .has-no-events div.mini-day-off {
-    padding: 3px 3px 1px 8px;
-  }
-  td .inner div.day a {
-    color: $color-font-primary;
-  }
-  .month-view .full {
+    th.days {
+      background: $color-background-primary;
+      text-transform: uppercase;
+      border: none;
+    }
     tr {
+      border: none;
+      td {
+        text-align: center;
+        background: $color-background-primary;
+      }
+      td.empty {
+        background: $color-background-primary;
+      }
       td.today, &.odd td.today, &.even td.today {
-        background: none repeat scroll 0 0 transparent;
-        border-left: 2px solid $color-font-primary;
-        border-right: 2px solid $color-font-primary;
-      }
-      td.single-day.today {
-        border-bottom: 2px solid $color-font-primary;
+        background: $color-white;
+        text-align: center;
+        border-radius: 5px;
       }
     }
-    td.date-box.today {
-      border-color: $color-font-primary;
-      border-style: solid;
-      border-width: 2px 2px 0;
+    .mini tr td.today a {
+      //background-color: $color-font-primary;
+      color: #feffff;
+      font-weight: bold;
+      border-radius: 5px;
     }
-  }
-  tr {
-    td.today, &.odd td.today, &.even td.today, td.today a {
+    .has-events a {
+      text-decoration: none;
+      background-color: #f9d4ed;
+      font-weight: bold;
+      border-radius: 5px;
+      padding: 3px 3px 3px 8px;
+    }
+    .has-no-events div.mini-day-off {
+      padding: 3px 3px 1px 8px;
+    }
+    td .inner div.day a {
       color: $color-font-primary;
     }
-  }
-  td {
-    color: #777777;
-    vertical-align: bottom;
-  }
-  .month-view .full td .inner div.day {
-    width: 100%;
-    padding: 0;
-    a {
-      background-color: #f9d4ed;
-      border-radius: 5px;
-      padding: 0;
-      text-decoration: none;
+    .month-view .full {
+      tr {
+        td.today, &.odd td.today, &.even td.today {
+          background: none repeat scroll 0 0 transparent;
+          border-left: 2px solid $color-font-primary;
+          border-right: 2px solid $color-font-primary;
+        }
+        td.single-day.today {
+          border-bottom: 2px solid $color-font-primary;
+        }
+      }
+      td.date-box.today {
+        border-color: $color-font-primary;
+        border-style: solid;
+        border-width: 2px 2px 0;
+      }
     }
-  }
-  .inner a {
-    display: block;
+    tr {
+      td.today, &.odd td.today, &.even td.today, td.today a {
+        color: $color-font-primary;
+      }
+    }
+    td {
+      color: #777777;
+      vertical-align: bottom;
+    }
+    .month-view .full td .inner div.day {
+      width: 100%;
+      padding: 0;
+      a {
+        background-color: #f9d4ed;
+        border-radius: 5px;
+        padding: 0;
+        text-decoration: none;
+      }
+    }
+    .inner a {
+      display: block;
+    }
   }
 }
 
@@ -708,23 +873,21 @@ pager li.pager-first {
     text-decoration: none;
     text-transform: uppercase;
     cursor: pointer;
-    &:hover {
-      background: darken($color-grey, 10%);
-    }
+
   }
 }
 
-.button, #breadcrumb .breadcrumb a, .breadcrumb .breadcrumb-active {
-  background: $color-secondary;
+.button {
+  background: $color-branding-primary;
   border-style: solid;
   border-width: 0px;
   color: $color-white;
   padding: 5px 10px 5px 10px;
-  font-family: $font-button;
-  font-size: 13px;
+  font-family: $font-basic;
+  font-size: $font-size-button;
   text-decoration: none;
-  text-transform: uppercase;
   cursor: pointer;
+  -webkit-appearance: none; 
 }
 
 .pager li {
@@ -801,7 +964,7 @@ pager li.pager-first {
 .controls-right.breadcrumb-level {
   position: absolute;
   right: 0;
-  top: -41px;
+  top: -51px;
 }
 
 /*----------------------------Omega globals override END----------------------------*/
@@ -873,12 +1036,13 @@ table {
 
 table {
   tr th {
-    background: $color-background-secondary;
-    border-bottom-style: none;
-    border-top-style: none;
+    background: $color-background-primary;
+    border: none;
     color: $color-font-primary;
-    font-family: $font-headings;
+    font-family: $font-basic;
     font-weight: bold;
+    font-size: $font-size-body;
+
     a {
       color: $color-white;
       font-weight: bold;
@@ -888,65 +1052,64 @@ table {
       }
     }
   }
-  &.views-table tr td {
-    a {
-      display: block;
-      position: relative;
-      background-color: lighten($color-primary, 60%);
-      color: $color-font-primary;
-      padding: 3px 10px 3px 10px;
-      /*     vertical-align:center; */
-      line-height: 30px;
-      font-family: $font-paragraphs;
-      font-weight: bold;
-      font-size: 13px;
-      text-decoration: none;
-      border-color: #e5e5e5;
-      border-style: solid;
-      border-top-width: 1px;
-      border-bottom-width: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      &:hover {
+  &.views-table{
+    border: none;
+    margin-bottom: 0px;
+  }
+  &.views-table tbody tr {
+    border-bottom: 1px solid $color-white;
+    &:last-child{
+      border-bottom: none;
+    }
+    td {
+      padding: 7px 0;
+      background: none;
+      &:nth-child(4){
+        padding-left:7px;
+        padding-right: 7px;
+      }
+      a {
         display: block;
         position: relative;
-        background-color: lighten($color-primary, 60%);
-        
+        background: $color-white;
         color: $color-font-primary;
-        padding: 3px 10px 3px 10px;
+        padding: 8px;
         /*     vertical-align:center; */
-        line-height: 30px;
-        font-family: Arial,Helvetica,sans-serif;
-        font-weight: bold;
-        font-size: 13px;
+        font-family: $font-basic;
+        font-weight: normal;
+        font-size: 14px;
         text-decoration: none;
-        border-color: #e5e5e5;
-        border-style: solid;
-        border-top-width: 1px;
-        border-bottom-width: 1px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-    }
-    .bilag {
-      a {
-        line-height: 20px;
-        font-weight: normal;
-        padding-left: 3px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        border-style: solid;
+        border-color: $color-white;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+
         &:hover {
+          text-decoration: none;
+        }
+      }
+
+      .bilag {
+        a {
           line-height: 20px;
           font-weight: normal;
           padding-left: 3px;
           overflow: hidden;
           text-overflow: ellipsis;
+          &:hover {
+            line-height: 20px;
+            font-weight: normal;
+            padding-left: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
-      }
-      .hide_show_attachment_text {
-        padding: 3px 10px;
+        .hide_show_attachment_text {
+          padding: 3px 10px;
+        }
       }
     }
   }
@@ -963,7 +1126,7 @@ table tbody tr th {
 
 tr th {
   padding: 4px 9px;
-  border-right: 1px solid $color-background-secondary;
+  //border-right: 1px solid $color-background-secondary;
   text-align: left;
   /* LTR */
 }
@@ -1019,18 +1182,259 @@ table {
 
 /*meeting details table*/
 .view-meeting-details {
-  background: $color-background-primary;
-  border: $border-solid;
+  background: $color-white;
+  border: 1px solid $color-background-primary;
   border-top: 0px;
-  .view-meeting-details {
-    background: none;
-    border: none;
+  font-family: $font-basic;
+  .form-submit {
+    padding: 10px 50px 10px 50px;
+    font-size: $font-size-button;
   }
+  .view-header {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    .dropbtn.form-submit {
+      background: $color-white;
+      color: $color-font-primary;
+      text-transform: none;
+      font-size: $font-size-button;
+      border-color: $color-background-primary;
+    }
+    .dropdown-content {
+      background: $color-background-primary;
+      top: 25px;
+      border-width: 1px;
+      color: $color-font-primary;
+      border-color: $color-background-primary;
+      border-radius: $border-radius;
+      font-weight: bold;
+      width: 243px;
+      font-size: $font-size-button;
+      font-family: $font-basic;
+      text-transform: none;
+    }
+  }
+  .view-content {
+    background: $color-background-primary;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-weight: normal;
+    border-radius: $border-radius $border-radius 0 0;
+    table.views-table {
+      thead tr {
+        border: none;
+
+      }
+      tr {    
+        td{
+          background: $color-white;          
+          &:nth-child(1) {
+           padding-left: 10px; 
+           border-radius: $border-radius 0 0 $border-radius;           
+          }
+          &:nth-last-child() {
+            border-radius: 0 $border-radius $border-radius 0;
+          }
+        }       
+        
+        
+        th, td {
+          font-size: $font-size-button;
+          font-weight: bold;
+          text-transform: none;
+        }
+        td{
+          font-weight: normal;
+          padding: 10px 10px 7px 2px;
+        }
+        th {
+           padding: 10px 10px 10px 2px;
+           &:nth-child(1) {
+              padding-left: 10px; 
+           }
+        }
+      }
+    }
+  }
+  .attachment{
+    .view-meeting-details {
+      background: $color-white;
+      border: none;
+    }
+    .view-content {
+      border-radius: 0;
+      table.views-table {
+        border-top: 5px solid $color-background-primary;
+        thead tr th{
+          background: $color-white;
+          border-width: 1px;
+          border-color: $color-white;
+          border-radius: $border-radius $border-radius 0 0;
+          padding-bottom: 2.5px;
+          
+        }
+        
+        tr {
+          border: none;
+          td {
+              padding-top: 2.5px;
+          //  background: $color-white;
+              border-radius: 0 0 $border-radius $border-radius;
+            
+          }
+        }
+      }
+    }
+    .bullet-point-attachments {
+      $background: $color-white;
+      .view-header {
+        margin-bottom: 0;
+        margin-top: 0;
+        background: $color-background-primary;
+        border-radius: 0 0 $border-radius $border-radius;
+        h3 {
+          font-weight: bold;
+          font-size: $font-size-table-header;
+          margin-left: 7px;
+          padding: 10px;
+          margin-bottom: 0;
+          margin-top: 0;
+        }
+      }
+
+      .view-content {
+        background: $color-white;
+        padding-left: 0;
+        padding-right: 0;
+        .item-list ul li {
+          margin: 0 0 0.25em 1.8em; 
+        }
+        .button {
+          border-radius: $border-radius;
+          color: transparent;
+          width: 38px;
+          height: 38px;
+          z-index: 9999;
+          }
+        .button:before{
+            content: "\E5CF";
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            position: absolute;
+            color: $color-white;
+            cursor: pointer;
+            top: 9px;
+            left: 9px;
+          }
+          .button.opened:before {
+            content: "\E5CE";
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            position: absolute;
+            color: $color-white;
+            cursor: pointer;
+            top: 9px;
+            left: 9px;
+          }
+          .button.hide_show_all_attachments_text:before{
+            background: url('../img/arrow_right_black_down.png') no-repeat 50% top;
+            position: absolute;
+            cursor: pointer;
+            top: 13px;
+            left: 9px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
+          }
+          .button.hide_show_all_attachments_text.opened:before{
+            background: url('../img/arrow_right_black.png') no-repeat 50% top;
+            position: absolute;
+            color: $color-white;
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            cursor: pointer;
+            top: 13px;
+            left: 9px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
+          }
+
+         td.hide_show_button_container {
+          position: relative;
+          .button:before{
+            content: "\E5CF";
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            position: absolute;
+            color: $color-white;
+            cursor: pointer;
+            top: 17px;
+            left: 9px;
+          }
+          .button.opened:before {
+            content: "\E5CE";
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            position: absolute;
+            color: $color-white;
+            cursor: pointer;
+            top: 17px;
+            left: 9px;
+          }
+        }
+        table.views-table {
+          thead tr th{
+            background: $color-white;
+          }
+          tr {
+            border: none;
+            td {
+              background: $color-white;
+              border: none;
+              padding: 7px 0;
+              a {
+                display: block;
+                position: relative;
+                background-color: $color-white;
+                color: #001D2F;
+                padding: 3px 10px 3px 10px;
+                line-height: 30px;
+                font-family: $font-basic;
+                font-weight: bold;
+                font-size: $font-size-body;
+                text-decoration: none;
+                border-color: $color-background-primary;
+                border-style: solid;
+                border-top-width: 1px;
+                border-bottom-width: 1px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                border-radius: $border-radius $border-radius 0 0;
+              }
+              .ul-item-list-dagsordenspunkt {
+                a {
+                  background-color: $color-background-primary;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    table.views-table tr td a
+    .view-header {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: $font-size-table-header;
+    }    
+  }
+
 }
-/*.view-content {
-  border: $border-solid;
-  margin-bottom: 10px;
-}*/
+
 
 /*bullet point details table*/
 
@@ -1048,6 +1452,41 @@ div.speaker-paper-print {
     margin-top: 5px;
     font-style: italic;
   }
+  .item-list ul li {
+        margin: 0 0 0.25em 1.7em;
+      }
+   .ul-item-list-dagsordenspunkt {
+     .button.hide_show_all_attachments_text {
+       left: -50px;
+    }
+   .button {
+      border-radius: $border-radius;
+      color: transparent;
+      width: 38px;
+      height: 38px;
+      z-index: 9999;      
+      cursor: pointer;
+      left: -45px;
+      
+      &:before{
+        font-family: $font-icons;
+        font-size: $font-size-headings;
+        position: absolute;
+        color: $color-white;
+        content: "\E5CF";
+        top: 9px;
+        left: 9px;
+      }
+      &.opened:before {
+        font-family: $font-icons;
+        font-size: $font-size-headings;
+        position: absolute;
+        color: $color-white;
+        content: "\E5CE";
+        top: 9px;
+        left: 9px;
+      }
+   }
   .main-text {
     padding-bottom: 5px;
   }
@@ -1069,7 +1508,7 @@ div.speaker-paper-print {
     font-size: 13px;
   }
 }
-
+}
 .form-submit.nav-button {
   display: inline-block;
   font-weight: normal;
@@ -1116,12 +1555,43 @@ table {
     left: -45px;
     margin-right: -45px;
   }
-  .hide_show_all_attachments_text {
+  .ul-item-list-dagsordenspunkt .hide_show_all_attachments_text {
     position: absolute;
     left: -35px;
-    &.bottom {
-      bottom: 8px;
-    }
+    &.button {
+     border-radius: $border-radius;
+      color: transparent;
+      width: 38px;
+      height: 38px;
+      z-index: 9999;      
+      cursor: pointer;
+      left: -15px;
+    &:before{
+            background: url('../img/arrow_right_black_down.png') no-repeat 50% top;
+            position: absolute;
+            cursor: pointer;
+            top: 13px;
+            left: 9px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
+          }
+          &.opened:before{
+            background: url('../img/arrow_right_black.png') no-repeat 50% top;
+            position: absolute;
+            color: $color-white;
+            font-family: $font-icons;
+            font-size: $font-size-headings;
+            cursor: pointer;
+            top: 13px;
+            left: 9px;
+            background-size: 10px;
+            content: "";
+            width: 20px;
+            height: 20px
+          }
+    } 
   }
   .item-list-dagsordenspunkt .hide_show_all_attachments_text {
     left: -55px;
@@ -1349,32 +1819,28 @@ a.annotator-wrapper {
 /* ---------------------------- Bilag preview pdf2htmlEX PDF -> HTML START ---------------------------- */
 
 /* ---------------------------- Breadcrumbs START---------------------------- */
-
 #breadcrumb .breadcrumb {
-  padding-bottom: 15px;
-  a {
-    background: none;
-    text-decoration: underline;
+  margin-bottom: 15px;
+  margin-top: 15px;
+
+  a, .breadcrumb-active {
+    text-decoration: none;
     color: $color-font-primary;
+    border-style: solid;
+    border-width: 0px;
+    padding: 5px 10px 5px 10px;
+    font-family: $font-basic;
+    font-size: $font-size-button;
+    text-decoration: none;
+    cursor: pointer;
   }
-  .breadcrumb-active {
-    display: inline-block;
-    max-width: 150px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    vertical-align: bottom;
-    top: 3px;
-    position: relative;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    background: none;
-    color: $color-font-secondary;
-    cursor: default;
+  a {
+    text-decoration: underline;
   }
 }
 
 .button-active {
-  background: $color-primary;
+  background: $color-branding-primary;
   color: $color-white;
 }
 
@@ -1432,7 +1898,7 @@ a.annotator-wrapper {
 .grid-18  .attachment_text_container .attachment-text{
  overflow-y: hidden;
   max-width: 425px;
- 
+
 }
 
 .grid-24  .attachment_text_container .attachment-text{
@@ -1452,6 +1918,7 @@ a.annotator-wrapper {
     .attachment-text {
       overflow: auto;
       padding: 5px;
+      font-size: $font-size-body;
     }
     width: 100%;
   }
@@ -1560,19 +2027,19 @@ a.annotator-wrapper {
 }
 
 .form-save-submit {
-  background: $color-secondary url('../img/icon_save.png') no-repeat 5px 50%;
-  padding: 5px 10px 5px 25px;
+  //background: $color-branding-secondary url('../img/icon_save.png') no-repeat 5px 50%;
+  padding: 5px 20px 5px 20px;
 }
 
 .form-add-submit {
-  background: #c0c0c0 url('../img/icon_add.png') no-repeat 5px 50%;
+ /* background: #c0c0c0 url('../img/icon_add.png') no-repeat 5px 50%;
   background: url('../img/icon_add.png') no-repeat 5px 50%, linear-gradient(top, #fcfcfc 0%, #c0c0c0 100%);
   background: url('../img/icon_add.png') no-repeat 5px 50%, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#e7e7e7), to(#c0c0c0));
   background: url('../img/icon_add.png') no-repeat 5px 50%, -webkit-linear-gradient(top, #fcfcfc, #c0c0c0);
   background: url('../img/icon_add.png') no-repeat 5px 50%, -moz-linear-gradient(top, #fcfcfc, #c0c0c0);
   background: url('../img/icon_add.png') no-repeat 5px 50%, -ms-linear-gradient(top, #fcfcfc, #c0c0c0);
-  background: url('../img/icon_add.png') no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);
-  padding: 5px 10px 5px 25px;
+  background: url('../img/icon_add.png') no-repeat 5px 50%, -o-linear-gradient(top, #fcfcfc, #c0c0c0);*/
+  padding: 5px 20px 5px 20px;
 }
 
 .form-back {
@@ -1624,22 +2091,18 @@ a.annotator-wrapper {
 /* ---------------------------- arrows_reverse START ---------------------------- */
 
 .arrows-reverse {
-  display: none;
+  background-image: url(/profiles/os2dagsorden/themes/kldagsorden/img/img_arrows_reverse.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  
   /*displaying starting from default-normal*/
   width: 250px;
   min-height: 367px;
   float: left;
   margin: auto;
   position: relative;
-  > img {
-    width: 100%;
-    height: auto;
-    margin: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+  img{
+    display: none;
   }
 }
 
@@ -1726,7 +2189,7 @@ div.note {
   border-color: #b9b9b9 #b9b9b9 #BBBBBB;
   color: $color-white;
   padding: 5px 10px 5px 10px;
-  font-family: $font-button;
+  font-family: $font-basic;
   font-size: 13px;
   text-decoration: none;
   text-transform: uppercase;
@@ -1788,7 +2251,7 @@ div.note {
     display: block;
   }
   .dropbtn {
-    background: darken($color-secondary, 10%);
+    background: darken($color-branding-secondary, 10%);
     color: $color-white;
   }
 }
@@ -1801,7 +2264,7 @@ div.note {
 .content {
   dl.node-type-list {
     dt a {
-      background-color: $color-secondary;
+      background-color: $color-branding-secondary;
       color: $color-white;
       padding: 10px 20px;
       width: 100%;
@@ -1814,7 +2277,7 @@ div.note {
         margin-right: 7px;
       }
       &:hover {
-        background-color: $color-primary;
+        background-color: $color-branding-primary;
         transition: background-color .3s ease-out;
       }
     }
@@ -1829,10 +2292,10 @@ div.note {
     }
     dd {
       clear: both;
-      padding-top: 0; 
+      padding-top: 0;
       padding-left: 37px;
       padding-bottom: 0;
-      margin-bottom: 5px; 
+      margin-bottom: 5px;
     }
   }
 }
@@ -1845,4 +2308,15 @@ div.note {
   padding: 3px 5px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.block-views .view-user-logout-menu li div {
+  display: inline-block;
+}
+.block-views .view-user-logout-menu li div.right {
+ float: none;
+}
+
+#os2dagsorden-content-modify-user-edit-form {
+  background: $color-white;
 }

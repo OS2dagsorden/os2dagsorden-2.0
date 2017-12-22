@@ -1,43 +1,67 @@
 #section-header {
-    background: $color-primary;
+    background: $color-branding-primary;
 }
 
 .content div.user-logout-block {
     position: absolute;
     right: 0;
     top: -15px;
-    padding: 15px 0  5px 5px;
+    padding: 4px 0  5px 5px;
 }
 
 .user-logout-block {
     .user-logout-textbox {
         color: $color-white;
-        font-family: $font-headings;
+        font-family: $font-basic;
         font-weight: 400;
         font-size: 1em;
     }
+    .button {
+      margin: 0 0 0 7px;
+      -webkit-appearance: none; 
+    }
     .settings-btn, .user-logout-btn, .user-guide-btn{
         color: $color-white;
-        font-family: $font-paragraphs;
-        font-weight: bold;
+        font-family: $font-basic;
+        font-weight: 100;
         text-shadow: none;
-        border-color: $color-white;
-        border-style: solid;
-        border-width: 0px;
-        padding: 5px 10px 5px 10px;
-        background: $color-secondary;
-    } 
-    .settings-btn {
-        background: $color-secondary url('../img/icon_settings.png') no-repeat 5px 50%;
+        text-transform: none;
+        font-size: $font-size-button;
+        border: $border-button;
+        border-radius: $border-radius;
         padding: 5px 10px 5px 25px;
+        background: $color-branding-secondary;
+        display: inline-block;
+        position: relative;
     }
-    .user-logout-btn {
-        background: $color-secondary url('../img/icon_log_out.png') no-repeat 5px 50%;
+   /* .settings-btn {
+        background: $color-branding-secondary url('../img/icon_settings.png') no-repeat 10px 50%;
+        padding: 5px 10px 5px 30px;
+        background-size: 15px;
+    }*/
+    .settings-btn:before{
+      content: "\E8B8";
+      font-family: $font-icons; 
+      font-size: $font-size-button;
+      position: absolute;
+      top: 4px;
+      left: 5px;    
+    }
+    /*.user-logout-btn {
+        background: $color-branding-secondary url('../img/icon_log_out.png') no-repeat 10px 50%;
         white-space: nowrap;
-        padding: 5px 10px 5px 25px;
+        padding: 5px 10px 5px 30px;
+    }*/
+     .user-logout-btn:before{
+      content: "\E5C8";
+      font-family: $font-icons; 
+      font-size: $font-size-button;
+      position: absolute;
+      top: 4px;
+      left: 5px;    
     }
     .user-guide-btn {
-        background: $color-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
+        background: $color-branding-secondary url('../img/icon_user_manual.png') no-repeat 5px 50%;
         padding: 5px 10px 5px 35px;
         white-space: nowrap;
         background-size: 25px 100%;
