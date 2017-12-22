@@ -1282,8 +1282,20 @@ table {
     .view-meeting-details {
       background: $color-white;
       border: none;
-    }
-    .view-content {
+      &.view-display-id-attachment_4 {
+        .view-header {
+          margin-bottom: 0px;
+          display: block;        
+          .controls-right {
+            margin: 10px 1px 10px 10px;
+            a{
+              display: inline-block;
+            } 
+          }
+        }
+      }
+    } 
+     .view-content {
       border-radius: 0;
       table.views-table {
         border-top: 5px solid $color-background-primary;

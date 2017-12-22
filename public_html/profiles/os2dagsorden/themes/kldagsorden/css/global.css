@@ -1227,6 +1227,13 @@ table .speaker-paper-link-container {
   .view-meeting-details .attachment .view-meeting-details {
     background: #fffffe;
     border: none; }
+    .view-meeting-details .attachment .view-meeting-details.view-display-id-attachment_4 .view-header {
+      margin-bottom: 0px;
+      display: block; }
+      .view-meeting-details .attachment .view-meeting-details.view-display-id-attachment_4 .view-header .controls-right {
+        margin: 10px 1px 10px 10px; }
+        .view-meeting-details .attachment .view-meeting-details.view-display-id-attachment_4 .view-header .controls-right a {
+          display: inline-block; }
   .view-meeting-details .attachment .view-content {
     border-radius: 0; }
     .view-meeting-details .attachment .view-content table.views-table {
