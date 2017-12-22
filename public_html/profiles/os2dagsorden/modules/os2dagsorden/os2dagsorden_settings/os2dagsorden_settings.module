@@ -22,7 +22,6 @@ include_once 'os2dagsorden_settings.features.inc';
  * @return array - list of links
  */
 function os2dagsorden_settings_menu() {
-<<<<<<< HEAD
   $items['admin/config/os2dagsorden'] = array(
     'title' => 'OS2dagsorden Setup',
     'description' => 'Set up OS2 cms services',
