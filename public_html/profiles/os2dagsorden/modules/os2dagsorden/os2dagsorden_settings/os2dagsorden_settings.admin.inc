@@ -1282,6 +1282,11 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
   return system_settings_form($form);
 }
 
+ function os2dagsorden_settings_theme_settings() {
+   $theme = variable_get('theme_default');
+   drupal_goto('admin/appearance/settings/' . $theme );
+ }
+
 /**
  * Validates pdf2htmlEX installation by checking if which commands returns anything.
  *

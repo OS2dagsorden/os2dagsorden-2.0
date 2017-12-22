@@ -1,6 +1,6 @@
 .form-item, .views-exposed-widget {
     margin-bottom: 1em;
-    width: 100%;
+    width: 100%;   
     label {
         display: inline-block;
         font-size: 1.1em;
@@ -16,6 +16,7 @@
         box-sizing:border-box;
         display: block;
         width: 100%;
+        border-radius: $border-radius;
     }
     select.form-select {
         font-size: 1.0em;
@@ -27,6 +28,7 @@
         box-sizing:border-box;
         display: block;
         width: 100%;
+        border-radius: $border-radius;
     }
     .date-padding {
         float: none;
@@ -34,7 +36,7 @@
     .filter-wrapper &{
         padding: 0;
     }
-    
+
 }
 
 /* Title, Meeting ID, Meeting sub ID */
@@ -90,33 +92,35 @@
     }
 }
 .form-submit {
-    background-color: $color-secondary;
-    border: none;
+    background-color: $color-branding-primary;
+    border: $border-color-secondary;
+    border-radius: $border-radius;
+    -webkit-appearance: none;  
     color: $color-white;
     padding: 5px 20px 5px 20px;
-    font-family: $font-button;
-    font-size: 13px;
+    font-family: $font-basic;
+    font-size: 16px;
     text-decoration: none;
-    text-transform: uppercase;
     cursor: pointer;
+    font-weight: bold;
     transition: background-color .1s ease-in;
     &:hover {
-        background-color: $color-primary;
+        background-color: $color-branding-secondary;
         transition: background-color .3s ease-out;
     }
     &.nav-button {
-        background: $color-secondary;
+        background: $color-branding-secondary;
         color: $color-white;
         padding: 5px 10px 5px 10px;
-        font-family: $font-button;
+        font-family: $font-basic;
         font-size: 13px;
         text-decoration: none;
         text-transform: uppercase;
         cursor: pointer;
         &:hover {
-            background: $color-primary;
+            background: $color-branding-primary;
             padding: 5px 10px 5px 10px;
-            font-family: $font-button;
+            font-family: $font-basic;
             font-size: 13px;
             text-decoration: none;
             text-transform: uppercase;
@@ -126,4 +130,29 @@
     .form-actions.form-wrapper & {
         margin-right: 10px;
     }
+}
+.form-actions input:hover {
+   background: $color-branding-secondary
+}
+.ui-state-default {
+  border: 1px solid $color-branding-secondary;
+  border-radius: $border-radius;
+}
+
+.select-committee ul.droptrue {
+  border: 1px solid $color-background-primary;
+  border-radius: $border-radius;
+}
+.form-textarea-wrapper textarea {
+  border-radius: $border-radius;
+  border: 1px solid $color-white;
+}
+.chosen-container-multi .chosen-choices {
+  background-image: none;
+  background-color: $color-white;
+  border-radius: $border-radius;
+  border: 1px solid $color-white;
+}
+.chosen-container-active .chosen-choices {
+  border-color: $color-background-secondary;
 }

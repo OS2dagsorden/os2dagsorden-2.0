@@ -1,0 +1,105 @@
+/* This file will hold styles that are loaded using the same media query as the wide grid. */
+/*.grid-18 .attachment_text_container .attachment_text_trimmed_container,
+.grid-18 .attachment_text_container .attachment_text_full_container{
+ max-width: 600px;
+ width: 100%;
+}
+
+.grid-24 .attachment_text_container .attachment_text_trimmed_container,
+.grid-24 .attachment_text_container .attachment_text_full_container{
+  //max-width: 800px;
+ // width: 100%;
+}
+
+.grid-18 .attachment_text_container .attachment-text{
+  overflow: hidden;
+
+  //max-width: 600px;
+  //width: 100%;
+}
+
+.grid-24 .attachment_text_container .attachment-text{
+  overflow: hidden;
+  //max-width: 800px;
+ // width:100%;
+}*/
+
+/*---------------------------- Sidepane override START ----------------------------*/
+div.content ul.menu li a {
+  font-size: 20px;
+  padding: 10px 0;
+}
+div.content ul.menu li #menu-print-kalendar {
+  &:before {
+     font-size: 20px;
+     padding-right: 15px;
+     
+  }
+}  
+div.content ul.menu li #menu-simple-user-edit{
+  font-size: 20px;
+  padding: 10px 0;
+  &:before{
+    font-size: 20px;
+     padding-right: 15px
+   
+ }
+}
+div.content ul.menu li #menu-byradet{
+     font-size: 20px; 
+     padding: 10px 92px 10px 0;
+    &:before{
+      font-size: 20px;
+  }
+}
+div.date-heading h3 {
+  a {
+    font-size: 20px;
+  }
+  font-size: 20px;
+}
+
+/*---------------------------- Sidepane override END ----------------------------*/
+
+.attachment_text_container {
+  .attachment_text_trimmed_container, .attachment_text_full_container, .attachment_text_trimmed_container.attachment_text_max_size, .attachment_text_full_container.attachment_text_max_size, .attachment_text_max_size .attachment-text, .attachment-text {
+    max-width: none;
+  }
+}
+
+/* --------------------------- Drag and drop START -------------------------------*/
+
+#available_committee {
+  background-image: none;
+  padding-right: 0;
+}
+
+/* --------------------------- Drag and drop END -------------------------------*/
+/* ---------------------------- arrows_reverse START ---------------------------- */
+
+.arrows-reverse {
+  width: 280px;
+  > img {
+    padding: 0 40px 0 10px;
+  }
+}
+
+ul.droptrue li {
+  max-width: 250px;
+  &.can-subscribe span {
+    max-width: 190px;
+  }
+}
+
+/* ---------------------------- arrows_reverse END ---------------------------- */
+
+.breadcrumb .breadcrumb-active {
+  max-width: 300px;
+}
+
+.block-views .view-user-logout-menu li div {
+  display: inline-block;
+  display: inline-block;
+  float: initial;
+  margin-left: 0;
+}
