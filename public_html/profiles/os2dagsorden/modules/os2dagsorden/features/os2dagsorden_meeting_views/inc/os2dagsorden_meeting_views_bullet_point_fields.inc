@@ -21,11 +21,14 @@ function os2dagsorden_meeting_views_bullet_point_print_send_to_friend() {
     $meeting_id = $q[1];
     $bp_id = $q[3];
     print '<div class="controls-right">';
-    if (os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bp_id))
-      print '<a href="' . $base_url . '?q=meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/send_to_friend_form" class="form-submit" rel="lightframe">Send til en ven</a>';
-
     print '<a href="' . $base_url . '?q=/print/meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/print" class="form-submit print-button" target="_blank">Print</a>';
     print '</div>';
+    if (os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bp_id)) {
+      print '<div class="controls-right">';
+      print '<a href="' . $base_url . '?q=meeting/' . $meeting_id . '/bullet-point/' . $bp_id . '/send_to_friend_form" class="form-submit" rel="lightframe">Send til en ven</a>';
+      print '</div>';
+      
+    }
     print '<div class="clearfix"></div>';
   }
 }
