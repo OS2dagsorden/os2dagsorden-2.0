@@ -18,8 +18,10 @@ function os2dagsorden_meeting_views_meeting_details_agenda_and_edit_button() {
   $meeting_id = $q[1];
   if (module_exists('os2dagsorden_create_agenda') && user_access('administer os2web')) {
     print '<div class="controls-right">';
-    print '<a href="' . $base_url . '/agenda/meeting/' . $meeting_id . '" class="form-submit">Edit</a>';
     print '<a href="' . $base_url . '/agenda/meeting/' . $meeting_id . '?simple=1" class="form-submit">Simple Edit</a>';
+    print '</div>';
+    print '<div class="controls-right">';
+    print '<a href="' . $base_url . '/agenda/meeting/' . $meeting_id . '" class="form-submit">Edit</a>';
     print '</div>';
     print '<div class="clearfix"></div>';
   }
