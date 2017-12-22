@@ -1,18 +1,20 @@
 <?php
+
 /**
- * os2dagsorden_access_helper
+ * @file
+ * Os2dagsorden_access_helper.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  OS2Dagsorden_Access_Helper
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package OS2Dagsorden_Access_Helper
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
- * Implementation of hook_menu
+ * Implementation of hook_menu.
  *
  * @return array
  */
@@ -34,7 +36,7 @@ function os2dagsorden_access_helper_menu() {
     'type' => MENU_CALLBACK,
     'page callback' => 'os2dagsorden_access_helper_print_meeting_speaker_papers',
     'access arguments' => array('access content'),
-    'page arguments' => array(1)
+    'page arguments' => array(1),
   );
 
   $items['logout'] = array(
@@ -46,10 +48,12 @@ function os2dagsorden_access_helper_menu() {
 }
 
 /**
- * Returns the nice print version of the speaker paper
+ * Returns the nice print version of the speaker paper.
  *
- * @param int $bullet_point_id ID of the bullet point
- * @param int $speaker_paper_id ID of the speaker paper
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
+ * @param int $speaker_paper_id
+ *   ID of the speaker paper.
  *
  * @return html for nice printing of speaker paper
  */
@@ -67,11 +71,12 @@ function os2dagsorden_access_helper_print_speaker_paper($bullet_point_id, $speak
 }
 
 /**
- * Composes the print page for meeting's speaker papers for a current user
+ * Composes the print page for meeting's speaker papers for a current user.
  *
- * @param int $meeting_id id of a meeting
+ * @param int $meeting_id
+ *   id of a meeting
  *
- * return list of the speaker papers attached to that meeting
+ *   return list of the speaker papers attached to that meeting.
  */
 function os2dagsorden_access_helper_print_meeting_speaker_papers($meeting_id) {
   global $user;
@@ -84,7 +89,7 @@ function os2dagsorden_access_helper_print_meeting_speaker_papers($meeting_id) {
     }
     $bullet_point_unique = array_unique($bullet_point_unique);
     foreach ($bullet_point_unique as $bullet_point) {
-      //user own speaker paper
+      // User own speaker paper.
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->propertyCondition('type', array('os2web_meetings_spaper'))
@@ -94,12 +99,13 @@ function os2dagsorden_access_helper_print_meeting_speaker_papers($meeting_id) {
       $result = $query->execute();
       if (isset($result['node'])) {
         $nids = array_keys($result['node']);
-        foreach ($nids as $nid)
+        foreach ($nids as $nid) {
           $speaker_papers_print .= os2dagsorden_access_helper_print_speaker_paper($bullet_point, $nid);
+        }
       }
 
-      //shared speaker papers
-      if (variable_get('os2dagsorden_shared_speaker_paper', TRUE)){
+      // Shared speaker papers.
+      if (variable_get('os2dagsorden_shared_speaker_paper', TRUE)) {
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'node')
           ->propertyCondition('type', array('os2web_meetings_spaper'))
@@ -109,8 +115,9 @@ function os2dagsorden_access_helper_print_meeting_speaker_papers($meeting_id) {
         $result = $query->execute();
         if (isset($result['node'])) {
           $nids = array_keys($result['node']);
-          foreach ($nids as $nid)
+          foreach ($nids as $nid) {
             $speaker_papers_print .= os2dagsorden_access_helper_print_speaker_paper($bullet_point, $nid);
+          }
         }
       }
     }
@@ -122,7 +129,8 @@ function os2dagsorden_access_helper_print_meeting_speaker_papers($meeting_id) {
 /**
  * Checks if given meeting has speaker paper of the current user attached.
  *
- * @param int $meeting_id ID of the meeting
+ * @param int $meeting_id
+ *   ID of the meeting.
  *
  * @return true of false
  */
@@ -142,7 +150,8 @@ function os2dagsorden_access_helper_meeting_has_speaker_paper($meeting_id) {
 /**
  * Hook to file download. Allows or denies the file download based on user permissions.
  *
- * @param int $meeting_id ID of the meeting.
+ * @param int $meeting_id
+ *   ID of the meeting.
  *
  * @return -1 in case or refusal and file headers in case of success.
  */
@@ -150,8 +159,8 @@ function os2dagsorden_access_helper_file_download($uri) {
   $uri1 = str_replace('private://', 'private:///', $uri);
   $result = db_query("SELECT f.* FROM {file_managed} f WHERE uri = :uri or uri = :uri1", array('uri' => $uri, 'uri1' => $uri1));
   foreach ($result as $file) {
-    //find meeting by file->fid
-    //closed agenda?
+    // Find meeting by file->fid
+    // closed agenda?
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
       ->fieldCondition('field_os2web_meetings_full_doc_c', 'fid', $file->fid, '=');
@@ -159,7 +168,7 @@ function os2dagsorden_access_helper_file_download($uri) {
     $result = $query->execute();
 
     if (!isset($result['node'])) {
-      //closed additional agenda?
+      // Closed additional agenda?
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->fieldCondition('field_os2web_meetings_add_doc_c', 'fid', $file->fid, '=');
@@ -171,29 +180,31 @@ function os2dagsorden_access_helper_file_download($uri) {
       $meeting_id = reset($nids);
     }
 
-    if ($meeting_id) { //if meeting is found - meaning that the file is closed agenda or closed additional agenda. Perform deep check
+    // If meeting is found - meaning that the file is closed agenda or closed additional agenda. Perform deep check.
+    if ($meeting_id) {
       if (os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id)) {
         return array(
           'Content-Type' => $file->filemime,
           'Content-Length' => $file->filesize,
-          'Content-Disposition' => 'attachment; filename=' . $file->filename
+          'Content-Disposition' => 'attachment; filename=' . $file->filename,
         );
       }
       else {
         return -1;
       }
     }
-    else { //else check if user can view meeting information at all
+    // Else check if user can view meeting information at all.
+    else {
 
-      //find meeting by file->fid
-      //opened agenda?
+      // Find meeting by file->fid
+      // opened agenda?
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
         ->fieldCondition('field_os2web_meetings_full_doc', 'fid', $file->fid, '=');
 
       $result = $query->execute();
       if (!isset($result['node'])) {
-        //opened additional agenda?
+        // Opened additional agenda?
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'node')
           ->fieldCondition('field_os2web_meetings_add_doc', 'fid', $file->fid, '=');
@@ -205,31 +216,31 @@ function os2dagsorden_access_helper_file_download($uri) {
         $meeting_id = reset($nids);
       }
 
-     if($meeting_id) {
-       if (os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_id)) {
-        return array(
-          'Content-Type' => $file->filemime,
-          'Content-Length' => $file->filesize,
-          'Content-Disposition' => 'attachment; filename=' . $file->filename
-        );
+      if ($meeting_id) {
+        if (os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_id)) {
+          return array(
+            'Content-Type' => $file->filemime,
+            'Content-Length' => $file->filesize,
+            'Content-Disposition' => 'attachment; filename=' . $file->filename,
+          );
+        }
+        else {
+          return -1;
+        }
       }
       else {
-        return -1;
+        if (os2dagsorden_access_helper_check_user_can_download_bullet_point_attachment_file($file->fid)) {
+          return array(
+            'Content-Type' => $file->filemime,
+            'Content-Length' => $file->filesize,
+            'Content-Disposition' => 'attachment; filename=' . $file->filename,
+          );
+        }
+        else {
+          return -1;
+        }
       }
-     }
-     else {
-         if (os2dagsorden_access_helper_check_user_can_download_bullet_point_attachment_file($file->fid)){
-           return array(
-          'Content-Type' => $file->filemime,
-          'Content-Length' => $file->filesize,
-          'Content-Disposition' => 'attachment; filename=' . $file->filename
-        );
-      }
-      else {
-        return -1;
-      }
-         }
-     }
+    }
 
   }
 }
@@ -237,7 +248,8 @@ function os2dagsorden_access_helper_file_download($uri) {
 /**
  * Checks if a user can see the closed agenda of a given meeting.
  *
- * @param int $meeting_id ID of the meeting
+ * @param int $meeting_id
+ *   ID of the meeting.
  *
  * @return true of false
  */
@@ -248,7 +260,8 @@ function os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id
   }
   $meetings = entity_load('node', array($meeting_id), array('type' => 'os2web_meetings_meeting'));
   $meeting_committee_id = $meetings[$meeting_id]->field_os2web_meetings_committee['und'][0]['tid'];
-  if (!empty($user_ent->field_user_committee)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user_ent->field_user_committee)) {
     foreach ($user_ent->field_user_committee['und'] as $user_committee_id) {
       if (intval($meeting_committee_id) == $user_committee_id['tid']) {
         return TRUE;
@@ -256,7 +269,8 @@ function os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id
     }
   }
 
-  if (!empty($user_ent->field_follows_committee_plus)) { //follows committee PLUS
+  // Follows committee PLUS.
+  if (!empty($user_ent->field_follows_committee_plus)) {
     foreach ($user_ent->field_follows_committee_plus['und'] as $user_committee_id) {
       if (intval($meeting_committee_id) == $user_committee_id['tid']) {
         return TRUE;
@@ -264,7 +278,8 @@ function os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id
     }
   }
 
-  if (!empty($user_ent->field_follows_committee_pp)) { //follows committee PLUS
+  // Follows committee PLUS.
+  if (!empty($user_ent->field_follows_committee_pp)) {
     foreach ($user_ent->field_follows_committee_pp['und'] as $user_committee_id) {
       if (intval($meeting_committee_id) == $user_committee_id['tid']) {
         return TRUE;
@@ -272,15 +287,17 @@ function os2dagsorden_access_helper_check_user_can_see_closed_agenda($meeting_id
     }
   }
 
-  //none of the above, access denied
+  // None of the above, access denied.
   return FALSE;
 }
 
 /**
  * Checks if given bullet point has speaker paper of the current user attached.
  *
- * @param int     $bullet_point_id  ID of the bullet point
- * @param boolean $including_shared whether shared speaker papers should be included into decision process
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
+ * @param bool $including_shared
+ *   whether shared speaker papers should be included into decision process.
  *
  * @return true of false
  */
@@ -294,7 +311,7 @@ function os2dagsorden_access_helper_bullet_point_has_speaker_paper($bullet_point
 
   $result = $query->execute();
 
-  if (!isset($result['node']) && $including_shared){
+  if (!isset($result['node']) && $including_shared) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
       ->propertyCondition('type', array('os2web_meetings_spaper'))
@@ -310,8 +327,10 @@ function os2dagsorden_access_helper_bullet_point_has_speaker_paper($bullet_point
 /**
  * Checks is given speaker paper can be seen by user.
  *
- * @param int $sp_id the ID of speaker paper
- * @param boolean $including_shared whether shared speaker papers should be included into decision process
+ * @param int $sp_id
+ *   the ID of speaker paper.
+ * @param bool $including_shared
+ *   whether shared speaker papers should be included into decision process.
  *
  * @return true of false
  */
@@ -319,13 +338,15 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
   global $user;
   $sp = node_load($sp_id);
 
-  if (!$including_shared)
+  if (!$including_shared) {
     return ($user->uid == $sp->uid);
+  }
   else {
-    if ($user->uid == $sp->uid)
+    if ($user->uid == $sp->uid) {
       return TRUE;
+    }
     else {
-      //checking sharing with individuals
+      // Checking sharing with individuals.
       if (isset($sp->field_os2web_meetings_sp_shared['und'])) {
         foreach ($sp->field_os2web_meetings_sp_shared['und'] as $shared_with) {
           if (intval($shared_with['target_id'] == $user->uid)) {
@@ -333,7 +354,7 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
           }
         }
       }
-      //checking sharing with groups
+      // Checking sharing with groups.
       if (isset($sp->field_os2web_meetings_sp_shar_gr['und'])) {
         foreach ($sp->field_os2web_meetings_sp_shar_gr['und'] as $shared_with_group) {
           return in_array($shared_with_group['tid'], os2dagsorden_access_helper_get_user_sp_groups());
@@ -347,35 +368,35 @@ function os2dagsorden_access_helper_check_user_can_see_speaker_paper($sp_id, $in
 
 /**
  * Checks is given meeting can bee seen by the user.
- * The function checks user role, if user has role 'os2dagsorden limited' then only his own committees would be visible for him
+ * The function checks user role, if user has role 'os2dagsorden limited' then only his own committees would be visible for him.
  *
- * @param int $meeting the ID of the meeting or meeting object
+ * @param int $meeting
+ *   the ID of the meeting or meeting object.
  *
  * @return true of false
  */
-function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $committee_tid = null) {
+function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $committee_tid = NULL) {
   $user = os2dagsorden_access_helper_get_user();
   if (!$user->uid) {
     return FALSE;
   }
-  if (!is_object($meeting)){
+  if (!is_object($meeting)) {
     $meeting = node_load($meeting);
   }
 
-
-  if (!$committee_tid){
+  if (!$committee_tid) {
     $committee_tid = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
   }
 
-  //checking category
+  // Checking category.
   $committee = taxonomy_term_load($committee_tid);
   $access_granted = TRUE;
 
-  if (isset($committee->field_os2web_meetings_com_cat['und'])){
+  if (isset($committee->field_os2web_meetings_com_cat['und'])) {
     $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
-    if (isset($user->field_user_forrbidden_categories['und'])){
-      foreach ($user->field_user_forrbidden_categories['und'] as $user_cat){
-        if ($user_cat['value'] == $meeting_category){
+    if (isset($user->field_user_forrbidden_categories['und'])) {
+      foreach ($user->field_user_forrbidden_categories['und'] as $user_cat) {
+        if ($user_cat['value'] == $meeting_category) {
           $access_granted = FALSE;
           break;
         }
@@ -386,21 +407,23 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
     return FALSE;
   }
 
-  //has os2dagsorden limited role
+  // Has os2dagsorden limited role.
   if (in_array('os2dagsorden limited', $user->roles)) {
-    //is part of the committee
-    if (in_array($committee_tid, os2dagsorden_access_helper_get_user_member_of_committees())){
+    // Is part of the committee.
+    if (in_array($committee_tid, os2dagsorden_access_helper_get_user_member_of_committees())) {
       return TRUE;
     }
 
-    //follow PP
-    if (in_array($committee_tid, os2dagsorden_access_helper_get_user_follow_pp_committees())){
+    // Follow PP.
+    if (in_array($committee_tid, os2dagsorden_access_helper_get_user_follow_pp_committees())) {
       return TRUE;
     }
 
-    //none of the above
+    // None of the above.
     return FALSE;
-  } else {//does not have os2dagsorden limited role, therefore can see meeting basic information
+    // Does not have os2dagsorden limited role, therefore can see meeting basic information.
+  }
+  else {
     return TRUE;
   }
 }
@@ -408,56 +431,60 @@ function os2dagsorden_access_helper_check_user_can_see_meeting($meeting, $commit
 /**
  * Checks is given meeting can bee seen by the user on calendar page.
  *
- * @param int $meeting the ID of the meeting or meeting object
+ * @param int $meeting
+ *   the ID of the meeting or meeting object.
  *
  * @return true of false
  */
-function os2dagsorden_access_helper_check_user_can_see_meeting_in_calendar($meeting, $committee_tid = null) {
+function os2dagsorden_access_helper_check_user_can_see_meeting_in_calendar($meeting, $committee_tid = NULL) {
   $user = os2dagsorden_access_helper_get_user();
   if (!$user->uid) {
     return FALSE;
   }
-  if (!is_object($meeting)){
+  if (!is_object($meeting)) {
     $meeting = node_load($meeting);
   }
 
-
-  if (!$committee_tid){
+  if (!$committee_tid) {
     $committee_tid = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
   }
 
-  //checking category
+  // Checking category.
   $committee = taxonomy_term_load($committee_tid);
   $access_granted = FALSE;
 
-  if (isset($committee->field_os2web_meetings_com_cat['und'])){
+  if (isset($committee->field_os2web_meetings_com_cat['und'])) {
     $meeting_category = $committee->field_os2web_meetings_com_cat['und'][0]['value'];
-    if (isset($user->field_user_meetings_category['und'])){
-      foreach ($user->field_user_meetings_category['und'] as $user_cat){
-        if ($user_cat['value'] == $meeting_category){
+    if (isset($user->field_user_meetings_category['und'])) {
+      foreach ($user->field_user_meetings_category['und'] as $user_cat) {
+        if ($user_cat['value'] == $meeting_category) {
           $access_granted = TRUE;
           break;
         }
       }
     }
   }
- return $access_granted;
+  return $access_granted;
 }
+
 /**
- * Functions returns the user member of committees
+ * Functions returns the user member of committees.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_member_of_committees($uid = null){
+function os2dagsorden_access_helper_get_user_member_of_committees($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_user_committee)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_user_committee)) {
     foreach ($user->field_user_committee['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
     }
@@ -467,20 +494,23 @@ function os2dagsorden_access_helper_get_user_member_of_committees($uid = null){
 }
 
 /**
- * Functions returns the user follows committees
+ * Functions returns the user follows committees.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_committees($uid = null){
+function os2dagsorden_access_helper_get_user_follow_committees($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_follows_committee)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_follows_committee)) {
     foreach ($user->field_follows_committee['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
     }
@@ -490,20 +520,23 @@ function os2dagsorden_access_helper_get_user_follow_committees($uid = null){
 }
 
 /**
- * Functions returns the user follows subscribed committees
+ * Functions returns the user follows subscribed committees.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid = null) {
+function os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_follows_committee_subsc)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_follows_committee_subsc)) {
     foreach ($user->field_follows_committee_subsc['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
     }
@@ -513,20 +546,23 @@ function os2dagsorden_access_helper_get_user_follow_subscribed_committees($uid =
 }
 
 /**
- * Functions returns the user follows_plus committees
+ * Functions returns the user follows_plus committees.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = null){
+function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_follows_committee_plus)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_follows_committee_plus)) {
     foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
     }
@@ -536,20 +572,23 @@ function os2dagsorden_access_helper_get_user_follow_plus_committees($uid = null)
 }
 
 /**
- * Functions returns the user follows_plus_plus committees
+ * Functions returns the user follows_plus_plus committees.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array committees tids
  */
-function os2dagsorden_access_helper_get_user_follow_pp_committees($uid = null){
+function os2dagsorden_access_helper_get_user_follow_pp_committees($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_follows_committee_pp)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_follows_committee_pp)) {
     foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
       $tids[] = $user_committee_id['tid'];
     }
@@ -559,20 +598,23 @@ function os2dagsorden_access_helper_get_user_follow_pp_committees($uid = null){
 }
 
 /**
- * Functions returns the user speaker paper groups
+ * Functions returns the user speaker paper groups.
  *
- * @param $uid - uid of the user, if empty, current user is used
+ * @param $uid
+ *   - uid of the user, if empty, current user is used
  *
  * @return array speaker paper group tids
  */
-function os2dagsorden_access_helper_get_user_sp_groups($uid = null) {
+function os2dagsorden_access_helper_get_user_sp_groups($uid = NULL) {
   if (!$uid) {
     $user = os2dagsorden_access_helper_get_user();
-  } else {
+  }
+  else {
     $user = user_load($uid);
   }
   $tids = array();
-  if (!empty($user->field_user_sp_groups)) { //is part of the committee
+  // Is part of the committee.
+  if (!empty($user->field_user_sp_groups)) {
     foreach ($user->field_user_sp_groups['und'] as $user_group_id) {
       $tids[] = $user_group_id['tid'];
     }
@@ -584,7 +626,8 @@ function os2dagsorden_access_helper_get_user_sp_groups($uid = null) {
 /**
  * Checks is given meeting agenda can bee seen by the user.
  *
- * @param int $meeting_id the ID of the meeting
+ * @param int $meeting_id
+ *   the ID of the meeting.
  *
  * @return true of false
  */
@@ -601,8 +644,9 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
 
   $hidden_agendas = explode(',', variable_get('os2dagsorden_hidden_agenda_committee'));
   $in_hidden_list = FALSE;
-  if($meeting->status == 0 && !_os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $user_ent->uid))
+  if ($meeting->status == 0 && !_os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $user_ent->uid)) {
     return FALSE;
+  }
   if (strpos(strtolower($meeting->field_os2web_meetings_type['und'][0]['value']), "dagsorden") !== FALSE) {
     if (isset($committee->field_os2web_meetings_com_subid['und'])) {
       foreach ($committee->field_os2web_meetings_com_subid['und'] as $id_raw) {
@@ -614,7 +658,8 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
     }
 
     if ($in_hidden_list) {
-      if (!empty($user_ent->field_user_committee)) { //is part of the committee
+      // Is part of the committee.
+      if (!empty($user_ent->field_user_committee)) {
         foreach ($user_ent->field_user_committee['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -622,14 +667,16 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
         }
       }
 
-      if (!empty($user_ent->field_follows_committee_plus)) { //follows committee PLUS
+      // Follows committee PLUS.
+      if (!empty($user_ent->field_follows_committee_plus)) {
         foreach ($user_ent->field_follows_committee_plus['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
           }
         }
       }
-      if (!empty($user_ent->field_follows_committee_pp)) { //follows committee PLUS_PLUS
+      // Follows committee PLUS_PLUS.
+      if (!empty($user_ent->field_follows_committee_pp)) {
         foreach ($user_ent->field_follows_committee_pp['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -637,7 +684,7 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
         }
       }
 
-      //none of the above, access denied
+      // None of the above, access denied.
       return FALSE;
     }
   }
@@ -648,8 +695,10 @@ function os2dagsorden_access_helper_check_user_can_see_meeting_agenda($meeting_i
 /**
  * Checks if current user is allowed the access the bullet point.
  *
- * @param int $meeting_id ID of the meeting
- * @param int $bullet_point_id ID of the bullet point
+ * @param int $meeting_id
+ *   ID of the meeting.
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
  *
  * @return true of false
  */
@@ -674,14 +723,17 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
     $is_closed = $bullet_points[$bullet_point_id]->field_os2web_meetings_bul_closed['und'][0]['value'];
     $is_personal = $bullet_points[$bullet_point_id]->field_os2web_meetings_bul_pers['und'][0]['value'];
 
-    if (intval($is_closed) == 0 && intval($is_personal) == 0) { //is opened and not personal
+    // Is opened and not personal.
+    if (intval($is_closed) == 0 && intval($is_personal) == 0) {
       return TRUE;
     }
-    else { //is closed or personal
+    // Is closed or personal.
+    else {
       $meetings = entity_load('node', array($meeting_id), array('type' => 'os2web_meetings_meeting'));
       $meeting_committee_id = $meetings[$meeting_id]->field_os2web_meetings_committee['und'][0]['tid'];
 
-      if (!empty($user_ent->field_user_committee)) { //is part of the committee
+      // Is part of the committee.
+      if (!empty($user_ent->field_user_committee)) {
         foreach ($user_ent->field_user_committee['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -689,24 +741,26 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
         }
       }
 
-      if (!empty($user_ent->field_follows_committee_pp)) { //is part of the committee
+      // Is part of the committee.
+      if (!empty($user_ent->field_follows_committee_pp)) {
         foreach ($user_ent->field_follows_committee_pp['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
           }
         }
       }
-    //is closed and not personal
-    if(intval($is_closed) == 1 && intval($is_personal) == 0){
-      if (!empty($user_ent->field_follows_committee_plus)) { //follows committee PLUS PLUS
-        foreach ($user_ent->field_follows_committee_plus['und'] as $user_committee_id) {
-          if (intval($meeting_committee_id) == $user_committee_id['tid']) {
-            return TRUE;
+      // Is closed and not personal.
+      if (intval($is_closed) == 1 && intval($is_personal) == 0) {
+        // Follows committee PLUS PLUS.
+        if (!empty($user_ent->field_follows_committee_plus)) {
+          foreach ($user_ent->field_follows_committee_plus['und'] as $user_committee_id) {
+            if (intval($meeting_committee_id) == $user_committee_id['tid']) {
+              return TRUE;
+            }
           }
         }
       }
-    }
-      //none of the above, access denied
+      // None of the above, access denied.
       return FALSE;
     }
   }
@@ -719,9 +773,12 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id,
 /**
  * Checks if current user is allowed the access the bullet point attachment.
  *
- * @param int $meeting_id ID of the meeting
- * @param int $bullet_point_id ID of the bullet point
- * @param int $bullet_point_attachment_id ID of the attachment
+ * @param int $meeting_id
+ *   ID of the meeting.
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
+ * @param int $bullet_point_attachment_id
+ *   ID of the attachment.
  *
  * @return true of false
  */
@@ -734,7 +791,8 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($
       $meeting = node_load($meeting_id);
       $meeting_committee_id = $meeting->field_os2web_meetings_committee['und'][0]['tid'];
 
-      if (!empty($user->field_user_committee)) { //is part of the committee
+      // Is part of the committee.
+      if (!empty($user->field_user_committee)) {
         foreach ($user->field_user_committee['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -742,7 +800,8 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($
         }
       }
 
-      if (!empty($user->field_follows_committee_pp)) { //is part of the committee
+      // Is part of the committee.
+      if (!empty($user->field_follows_committee_pp)) {
         foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -750,7 +809,8 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($
         }
       }
 
-      if (!empty($user->field_follows_committee_plus)) { //follows committee PLUS
+      // Follows committee PLUS.
+      if (!empty($user->field_follows_committee_plus)) {
         foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
           if (intval($meeting_committee_id) == $user_committee_id['tid']) {
             return TRUE;
@@ -772,19 +832,21 @@ function os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($
 /**
  * Checks if the bullet point is actually part of the meeting (or any of its additional meetings).
  *
- * @param int $meeting_id ID of the meeting
- * @param int $bullet_point_id ID of the bullet point
+ * @param int $meeting_id
+ *   ID of the meeting.
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
  *
  * @return true of false
  */
 function os2dagsorden_access_helper_check_bullet_point_is_part_of_meeting($meeting_id, $bullet_point_id) {
-  //creating meeting list to check
+  // Creating meeting list to check.
   $possible_meetings = os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_id);
 
-  foreach($possible_meetings as $nid){
+  foreach ($possible_meetings as $nid) {
     $meeting = node_load($nid);
 
-    //checking meetings bullet points
+    // Checking meetings bullet points.
     if (!empty($meeting->field_os2web_meetings_bullets['und'])) {
       foreach ($meeting->field_os2web_meetings_bullets['und'] as $ref_bullet_point) {
         if (intval($bullet_point_id) == intval($ref_bullet_point['target_id'])) {
@@ -800,14 +862,15 @@ function os2dagsorden_access_helper_check_bullet_point_is_part_of_meeting($meeti
 /**
  * Returns an array of meetings additional agendas (tillaegs meetings).
  *
- * @param int $meeting_id initial meeting ID
+ * @param int $meeting_id
+ *   initial meeting ID.
  *
  * @return array of ids
  */
-function os2dagsorden_access_helper_tillaegs_meetings($meeting_id){
+function os2dagsorden_access_helper_tillaegs_meetings($meeting_id) {
   $possible_meetings = array();
 
-  //adding tillaegs meetings, if any
+  // Adding tillaegs meetings, if any.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
     ->fieldCondition('field_os2web_meetings_addendum', 'nid', $meeting_id, '=');
@@ -820,19 +883,20 @@ function os2dagsorden_access_helper_tillaegs_meetings($meeting_id){
 }
 
 /**
-  * Returns an array of ids of meeting and all of its additional (tillaegs meetings).
-  *
-  * @param int $meeting_id initial meeting ID
-  *
-  * @return array of ids
-  */
-function os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_id){
+ * Returns an array of ids of meeting and all of its additional (tillaegs meetings).
+ *
+ * @param int $meeting_id
+ *   initial meeting ID.
+ *
+ * @return array of ids
+ */
+function os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_id) {
   $possible_meetings = array($meeting_id);
 
-  //adding tillaegs meetings, if any
+  // Adding tillaegs meetings, if any.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-            ->fieldCondition('field_os2web_meetings_addendum', 'nid', $meeting_id, '=');
+    ->fieldCondition('field_os2web_meetings_addendum', 'nid', $meeting_id, '=');
   $result = $query->execute();
   if (isset($result['node'])) {
     $possible_meetings = array_merge($possible_meetings, array_keys($result['node']));
@@ -842,33 +906,35 @@ function os2dagsorden_access_helper_get_meeting_and_tillaegs_meetings($meeting_i
 }
 
 /**
-  * Returns main of (tillaegs meetings).
-  *
-  * @param int $meeting_id tillaegs meeting ID
-  *
-  * @return int nid of the main meeting
-  */
-function os2dagsorden_access_helper_get_main_meeting($meeting_id){
+ * Returns main of (tillaegs meetings).
+ *
+ * @param int $meeting_id
+ *   tillaegs meeting ID.
+ *
+ * @return int nid of the main meeting
+ */
+function os2dagsorden_access_helper_get_main_meeting($meeting_id) {
   $meeting = node_load($meeting_id);
 
-  if (!empty($meeting->field_os2web_meetings_addendum['und'])){
+  if (!empty($meeting->field_os2web_meetings_addendum['und'])) {
     return $meeting->field_os2web_meetings_addendum['und'][0]['nid'];
   }
 }
 
 /**
- * Returns a meeting associated with this bullet point
+ * Returns a meeting associated with this bullet point.
  *
- * @param int $bullet_point_id ID of the bullet point
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
  *
  * @return stdClass meeting
  */
 function os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point_id) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-        ->fieldCondition('field_os2web_meetings_bullets', 'target_id',  $bullet_point_id, '=');
+    ->fieldCondition('field_os2web_meetings_bullets', 'target_id', $bullet_point_id, '=');
   $result = $query->execute();
-  if (isset($result['node'])){
+  if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     $meeting_id = reset($nids);
     return node_load($meeting_id);
@@ -876,18 +942,19 @@ function os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point_id
 }
 
 /**
- * Returns a bullet point associated with this bullet point attachment
+ * Returns a bullet point associated with this bullet point attachment.
  *
- * @param int $bpa_id ID of the bullet point attachment
+ * @param int $bpa_id
+ *   ID of the bullet point attachment.
  *
  * @return stdClass bullet point
  */
 function os2dagsorden_access_helper_get_bullet_point_by_bpa($bpa_id) {
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-        ->fieldCondition('field_os2web_meetings_attach', 'target_id',  $bpa_id, '=');
+    ->fieldCondition('field_os2web_meetings_attach', 'target_id', $bpa_id, '=');
   $result = $query->execute();
-  if (isset($result['node'])){
+  if (isset($result['node'])) {
     $nids = array_keys($result['node']);
     $bullet_id = reset($nids);
     return node_load($bullet_id);
@@ -897,10 +964,12 @@ function os2dagsorden_access_helper_get_bullet_point_by_bpa($bpa_id) {
 /**
  * Checks if the bullet point attachment is actually part of the bullet point.
  *
- * @param int $bullet_point_id ID of the bullet point
- * @param int $bilag_id ID of the bullet point attachment
+ * @param int $bullet_point_id
+ *   ID of the bullet point.
+ * @param int $bilag_id
+ *   ID of the bullet point attachment.
  *
- * @return boolean
+ * @return bool
  */
 function os2dagsorden_access_helper_check_attachment_is_part_of_bullet_point($bullet_point_id, $bilag_id) {
   $bullet_point = node_load($bullet_point_id);
@@ -976,6 +1045,7 @@ function os2dagsorden_access_helper_logout() {
  *
  * @param $op
  * @param null $job
+ *
  * @return array
  */
 function os2dagsorden_access_helper_cronapi($op, $job = NULL) {
@@ -986,17 +1056,17 @@ function os2dagsorden_access_helper_cronapi($op, $job = NULL) {
 }
 
 /**
- * Checks if all of the meeitng bullet point bilag were converted to pdf/html and all the meetings descriptions have been converted to pdf
+ * Checks if all of the meeitng bullet point bilag were converted to pdf/html and all the meetings descriptions have been converted to pdf.
  *
  * @return TRUE or FALSE
  */
 function os2dagsorden_access_helper_meeting_fully_converted($meeting) {
-  //going through all the meetings bullet points
+  // Going through all the meetings bullet points.
   if (!empty($meeting->field_os2web_meetings_bullets['und'])) {
     foreach ($meeting->field_os2web_meetings_bullets['und'] as $ref_bullet_point) {
       $bullet_point = node_load($ref_bullet_point['target_id']);
 
-      //going through all the bullet points attachments
+      // Going through all the bullet points attachments.
       if (!empty($bullet_point->field_os2web_meetings_attach['und'])) {
         foreach ($bullet_point->field_os2web_meetings_attach['und'] as $ref_bullet_point_attachment) {
           $attachment = node_load($ref_bullet_point_attachment['target_id']);
@@ -1008,8 +1078,9 @@ function os2dagsorden_access_helper_meeting_fully_converted($meeting) {
     }
   }
 
-  //going through all the descriptions
-  if (isset($meeting->field_os2web_meetings_full_doc_c[$meeting->language])) { //closed agenda
+  // Going through all the descriptions
+  // closed agenda.
+  if (isset($meeting->field_os2web_meetings_full_doc_c[$meeting->language])) {
     $file_name = $meeting->field_os2web_meetings_full_doc_c[$meeting->language][0]['filename'];
     $file_name = explode('.', $file_name);
     $extention = strtoupper($file_name[1]);
@@ -1017,7 +1088,8 @@ function os2dagsorden_access_helper_meeting_fully_converted($meeting) {
       return FALSE;
     }
   }
-  if (isset($meeting->field_os2web_meetings_full_doc[$meeting->language])) { //opened agenda
+  // Opened agenda.
+  if (isset($meeting->field_os2web_meetings_full_doc[$meeting->language])) {
     $file_name = $meeting->field_os2web_meetings_full_doc[$meeting->language][0]['filename'];
     $file_name = explode('.', $file_name);
     $extention = strtoupper($file_name[1]);
@@ -1025,7 +1097,8 @@ function os2dagsorden_access_helper_meeting_fully_converted($meeting) {
       return FALSE;
     }
   }
-  if (isset($meeting->field_os2web_meetings_add_doc_c[$meeting->language])) { //additional closed agenda
+  // Additional closed agenda.
+  if (isset($meeting->field_os2web_meetings_add_doc_c[$meeting->language])) {
     foreach ($meeting->field_os2web_meetings_add_doc_c[$meeting->language] as $description_field) {
       $file_name = $description_field['filename'];
       $file_name = explode('.', $file_name);
@@ -1035,7 +1108,8 @@ function os2dagsorden_access_helper_meeting_fully_converted($meeting) {
       }
     }
   }
-  if (isset($meeting->field_os2web_meetings_add_doc[$meeting->language])) { //additional opened agenda
+  // Additional opened agenda.
+  if (isset($meeting->field_os2web_meetings_add_doc[$meeting->language])) {
     foreach ($meeting->field_os2web_meetings_add_doc[$meeting->language] as $description_field) {
       $file_name = $description_field['filename'];
       $file_name = explode('.', $file_name);
@@ -1072,9 +1146,8 @@ function os2dagsorden_access_helper_entity_insert($entity, $type) {
  * Implements hook_entity_update().
  */
 function os2dagsorden_access_helper_entity_update($entity, $type) {
-  drupal_register_shutdown_function('_os2dagsorden_access_helper_trigger_hook', $entity,  $type);
+  drupal_register_shutdown_function('_os2dagsorden_access_helper_trigger_hook', $entity, $type);
 }
-
 
 /**
  * Handler for meeting updates.
@@ -1099,7 +1172,8 @@ function _os2dagsorden_access_helper_trigger_hook($entity, $type) {
  * Hook to node_presave
  * The function will delete the connection to the member object, as well as the role object itself.
  *
- * @param $node   mixed  meeting node to be saved
+ * @param $node
+ *   mixed  meeting node to be saved
  *
  * @return $node meeting
  */
@@ -1110,27 +1184,27 @@ function os2dagsorden_access_helper_node_save($node) {
       $committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
       $committee = taxonomy_term_load($committee_id);
 
-      $notification_committees =array_map('strtolower',array_map('trim',explode(',', variable_get('os2dagsorden_send_notification_committee'))));
+      $notification_committees = array_map('strtolower', array_map('trim', explode(',', variable_get('os2dagsorden_send_notification_committee'))));
       $send_notification = FALSE;
-       if (in_array(strtolower($committee->name), $notification_committees)) {
-            $send_notification = TRUE;
-         }
-         else{
-          if (isset($committee->field_os2web_meetings_com_subid['und'])) {
-            foreach ($committee->field_os2web_meetings_com_subid['und'] as $id_raw) {
-               if (in_array(intval($id_raw['value']), $notification_committees)) {
-                $send_notification = TRUE;
-                break;
-              }
-           }
-         }
+      if (in_array(strtolower($committee->name), $notification_committees)) {
+        $send_notification = TRUE;
+      }
+      else {
+        if (isset($committee->field_os2web_meetings_com_subid['und'])) {
+          foreach ($committee->field_os2web_meetings_com_subid['und'] as $id_raw) {
+            if (in_array(intval($id_raw['value']), $notification_committees)) {
+              $send_notification = TRUE;
+              break;
+            }
+          }
+        }
       }
 
       $days_since_meeting_date = (time() - strtotime($node->field_os2web_meetings_date['und'][0]['value'])) / 60 / 60 / 24;
 
       if ($send_notification && $days_since_meeting_date < variable_get('os2dagsorden_send_timespan_of_notification', 10)) {
-        //send the email to involved people
-        //medlem
+        // Send the email to involved people
+        // medlem.
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
           ->fieldCondition('field_user_committee', 'tid', $committee_id, '=');
@@ -1142,7 +1216,7 @@ function os2dagsorden_access_helper_node_save($node) {
           $uids = array_keys($result['user']);
         }
 
-         //follow++
+        // follow++.
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
           ->fieldCondition('field_follows_committee_pp', 'tid', $committee_id, '=');
@@ -1151,7 +1225,7 @@ function os2dagsorden_access_helper_node_save($node) {
           $uids = array_merge($uids, array_keys($result['user']));
         }
 
-        //follow+
+        // follow+.
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
           ->fieldCondition('field_follows_committee_plus', 'tid', $committee_id, '=');
@@ -1160,7 +1234,7 @@ function os2dagsorden_access_helper_node_save($node) {
           $uids = array_merge($uids, array_keys($result['user']));
         }
 
-        //follow
+        // Follow.
         if (variable_get('os2dagsorden_follows_committee_send_notification', FALSE)) {
           $query = new EntityFieldQuery();
           $query->entityCondition('entity_type', 'user')
@@ -1170,7 +1244,7 @@ function os2dagsorden_access_helper_node_save($node) {
             $uids = array_merge($uids, array_keys($result['user']));
           }
         }
-        //follows subscribe
+        // Follows subscribe.
         $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'user')
           ->fieldCondition('field_follows_committee', 'tid', $committee_id, '=')
@@ -1182,23 +1256,23 @@ function os2dagsorden_access_helper_node_save($node) {
         global $base_url;
         $cName = taxonomy_term_load($committee_id)->name;
         $mName = check_plain($node->title);
-        $mDate =  format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
+        $mDate = format_date(strtotime($node->field_os2web_meetings_date['und'][0]['value']), 'short');
         $published_item = (strcasecmp($status, 'Dagsorden') == 0) ? 'en dagsorden' : 'et referat';
         $meeting_url = $base_url . '/meeting/' . $node->nid;
         //$mLink = '<a href="' . $meeting_url . '">' . $meeting_url . '</a>';
         $mLink = $meeting_url;
 
-        //getting subject and body
+        // Getting subject and body.
         $subject_template = variable_get('os2dagsorden_send_email_subject', '!meeting_type til !committee er publiceret');
         $body_template = variable_get('os2dagsorden_send_email_body', 'Til !user' . PHP_EOL . PHP_EOL .
           'Du abonnerer på !committee.' . PHP_EOL . 'Der er publiceret !meeting_type til !meeting_name !meeting_date.');
 
-        //removing duplicates
+        // Removing duplicates.
         $uids = array_unique($uids);
 
         foreach ($uids as $uid) {
-          //checking is there has been a notification for the same meeting, to the same user, with the same status
-          //in the previous hour
+          // Checking is there has been a notification for the same meeting, to the same user, with the same status
+          // in the previous hour.
           $query = db_select('os2dagsorden_notification_emails', 'ne');
           $query->fields('ne')
             ->condition('uid', $uid)
@@ -1207,48 +1281,48 @@ function os2dagsorden_access_helper_node_save($node) {
             ->condition('date', gmdate("Y-m-d H:i:s", strtotime("now - 1 hour")), ">=");
           $result = $query->execute();
 
-          //if result is empty, then send the mail
+          // If result is empty, then send the mail.
           if (!$result->rowCount()) {
             $user = user_load($uid);
 
             $uName = empty($user->field_user_full_name['und'][0]['value']) ? $user->name : $user->field_user_full_name['und'][0]['value'];
 
-            //composing search/replace
+            // Composing search/replace.
             $search = array('!committee', '!meeting_name', '!meeting_date', '!meeting_type', '!user', '!meeting_link', PHP_EOL);
             $replace = array($cName, $mName, $mDate, $published_item, $uName, $mLink, '<br/>');
 
-            //making replacements
+            // Making replacements.
             $subject = str_replace($search, $replace, $subject_template);
             $subject = ucfirst($subject);
             $body = str_replace($search, $replace, $body_template);
             $body = ucfirst($body);
 
             $from = variable_get('system_mail');
-            $params = array (
+            $params = array(
               'subject' => $subject,
               'body' => $body,
             );
             drupal_mail('os2dagsorden_access_helper', 'os2dagsorden_notification_email_', $user->mail, language_default(), $params, $from);
-           /* $message = array(
-              'to' => $user->mail,
-              'subject' => $subject,
-              'body' => $body,
-              'headers' => array(
-                'MIME-Version' => '1.0',
-                'From' => $from,
-                'Sender' => $from,
-                'Return-Path' => $from,
-                'Content-Type' => 'text/html;charset=utf-8',
-              ),
+            /* $message = array(
+            'to' => $user->mail,
+            'subject' => $subject,
+            'body' => $body,
+            'headers' => array(
+            'MIME-Version' => '1.0',
+            'From' => $from,
+            'Sender' => $from,
+            'Return-Path' => $from,
+            'Content-Type' => 'text/html;charset=utf-8',
+            ),
             );
             $system = drupal_mail_system("os2dagsorden_access_helper_node_save", "");
 
             // The format function must be called before calling the mail function.
             //$message = $system->format($message);
             $system->mail($message);
-            *
-            */
-            //setting the database entry about sent email
+             *
+             */
+            // setting the database entry about sent email.
             db_insert('os2dagsorden_notification_emails')
               ->fields(array(
                 'uid' => $uid,
@@ -1266,16 +1340,14 @@ function os2dagsorden_access_helper_node_save($node) {
 }
 
 /**
- *
-
-/**
+ * /**
  * Hook to node insert.
  * The function checks the committee of the meeting, and if it matched with the selected committeed for Budget in the settings,
  * then this meeting is considered as the right Budget meeting and the custom URL is updated to point to it.
  */
-function os2dagsorden_access_helper_node_insert($node){
-  if ($node->type === 'os2web_meetings_meeting'){
-    if ($node->field_os2web_meetings_committee['und'][0]['tid'] == variable_get('os2dagsorden_budget_committee', FALSE)){
+function os2dagsorden_access_helper_node_insert($node) {
+  if ($node->type === 'os2web_meetings_meeting') {
+    if ($node->field_os2web_meetings_committee['und'][0]['tid'] == variable_get('os2dagsorden_budget_committee', FALSE)) {
       $path['source'] = 'meeting/' . $node->nid;
       $path['alias'] = 'budget';
       path_save($path);
@@ -1285,17 +1357,19 @@ function os2dagsorden_access_helper_node_insert($node){
 
 /**
  * Function determines whether user should or should not be shown a special Byradet link.
- * Only members or followers+ will be shown the meeting
+ * Only members or followers+ will be shown the meeting.
  *
  * @return boolean TRUE or FALSE
  */
 function os2dagsorden_access_helper_show_byradet_menu() {
   $user = os2dagsorden_access_helper_get_user();
 
-  $term = _os2dagsorden_importer_get_committee_by_id(4); //Byradet committee only
+  // Byradet committee only.
+  $term = _os2dagsorden_importer_get_committee_by_id(4);
 
-  //hiding menu
-  if (!empty($user->field_user_committee)) { //is part of the committee
+  // Hiding menu
+  // is part of the committee.
+  if (!empty($user->field_user_committee)) {
     foreach ($user->field_user_committee['und'] as $user_committee_id) {
       if (intval($term->tid) == $user_committee_id['tid']) {
         return TRUE;
@@ -1303,7 +1377,8 @@ function os2dagsorden_access_helper_show_byradet_menu() {
     }
   }
 
-  if (!empty($user->field_follows_committee_plus)) { //follows committee PLUS
+  // Follows committee PLUS.
+  if (!empty($user->field_follows_committee_plus)) {
     foreach ($user->field_follows_committee_plus['und'] as $user_committee_id) {
       if (intval($term->tid) == $user_committee_id['tid']) {
         return TRUE;
@@ -1311,7 +1386,8 @@ function os2dagsorden_access_helper_show_byradet_menu() {
     }
   }
 
-   if (!empty($user->field_follows_committee_pp)) { //follows committee PLUS
+  // Follows committee PLUS.
+  if (!empty($user->field_follows_committee_pp)) {
     foreach ($user->field_follows_committee_pp['und'] as $user_committee_id) {
       if (intval($term->tid) == $user_committee_id['tid']) {
         return TRUE;
@@ -1323,7 +1399,7 @@ function os2dagsorden_access_helper_show_byradet_menu() {
 }
 
 /**
- * Helper function to return fully loaded current user
+ * Helper function to return fully loaded current user.
  *
  * @return mixed|null
  */
@@ -1346,48 +1422,52 @@ function os2dagsorden_access_helper_get_user() {
  * @param $account
  * @param $category
  */
-function os2dagsorden_access_helper_user_presave(&$edit, $account, $category){
-  if ($account->is_new && variable_get('os2dagsorden_user_default_meeting_category')){
-    $user_category= variable_get('os2dagsorden_user_default_meeting_category');
-    foreach($user_category as $key=>$value)
-      if ($value)
-         $edit['field_user_meetings_category']['und'][]=array('value' => $value);
+function os2dagsorden_access_helper_user_presave(&$edit, $account, $category) {
+  if ($account->is_new && variable_get('os2dagsorden_user_default_meeting_category')) {
+    $user_category = variable_get('os2dagsorden_user_default_meeting_category');
+    foreach ($user_category as $key => $value) {
+      if ($value) {
+        $edit['field_user_meetings_category']['und'][] = array('value' => $value);
+      }
+    }
   }
 }
 
 /**
- * Check if user can download attachment file
+ * Check if user can download attachment file.
  *
  * @param $fid
+ *
  * @return bool|true
  */
-function os2dagsorden_access_helper_check_user_can_download_bullet_point_attachment_file($fid){
+function os2dagsorden_access_helper_check_user_can_download_bullet_point_attachment_file($fid) {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->fieldCondition('field_os2web_meetings_bpa_file', 'fid', $fid, '=');
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $bullet_point_attachments_id = reset($nids);
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
-            ->fieldCondition('field_os2web_meetings_bpa_file', 'fid', $fid, '=');
+      ->fieldCondition('field_os2web_meetings_attach', 'target_id', $bullet_point_attachments_id, '=');
     $result = $query->execute();
     if (isset($result['node'])) {
+      $nids = array_keys($result['node']);
+      $bullet_point_id = reset($nids);
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+        ->fieldCondition('field_os2web_meetings_bullets', 'target_id', $bullet_point_id, '=');
+      $result = $query->execute();
+      if (isset($result['node'])) {
         $nids = array_keys($result['node']);
-        $bullet_point_attachments_id = reset($nids);
-        $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'node')
-                ->fieldCondition('field_os2web_meetings_attach', 'target_id', $bullet_point_attachments_id, '=');
-        $result = $query->execute();
-        if (isset($result['node'])) {
-            $nids = array_keys($result['node']);
-            $bullet_point_id = reset($nids);
-            $query = new EntityFieldQuery();
-            $query->entityCondition('entity_type', 'node')
-                ->fieldCondition('field_os2web_meetings_bullets', 'target_id',  $bullet_point_id, '=');
-             $result = $query->execute();
-            if (isset($result['node'])){
-              $nids = array_keys($result['node']);
-             $meeting_id = reset($nids);
-            }
-        }
-    if (isset($meeting_id) && isset($bullet_point_id))
-       return os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bullet_point_id);
+        $meeting_id = reset($nids);
+      }
     }
+    if (isset($meeting_id) && isset($bullet_point_id)) {
+      return os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bullet_point_id);
+    }
+  }
 
   return TRUE;
 }
@@ -1396,50 +1476,67 @@ function os2dagsorden_access_helper_check_user_can_download_bullet_point_attachm
  * Hook to hook_node_access.
  * Function checks whether a given user can or cannot edit/read the given speaker paper.
  */
-function os2dagsorden_access_helper_node_access($node, $op, $account){
+function os2dagsorden_access_helper_node_access($node, $op, $account) {
   // If Supervisor, do not allow to edit their own node.
   if ($node->type == 'os2web_meetings_spaper') {
     if ($op == 'update' || $op == 'read') {
-      if (os2dagsorden_access_helper_check_user_can_see_speaker_paper($node->nid, variable_get('os2dagsorden_shared_speaker_paper', TRUE)))
+      if (os2dagsorden_access_helper_check_user_can_see_speaker_paper($node->nid, variable_get('os2dagsorden_shared_speaker_paper', TRUE))) {
         return NODE_ACCESS_ALLOW;
-      else return NODE_ACCESS_DENY;
-    }
-  } else if ($node->type == 'os2web_meetings_meeting') {
-     $meeting_committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
-     $meeting_type = $node->field_os2web_meetings_type['und'][0]['value'];
-     if($node->status == 0 && _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $account->uid))
-      return NODE_ACCESS_ALLOW;
-     if ($op == 'read' || in_array('administrator++', $account->roles)){
-      if (os2dagsorden_access_helper_check_user_can_see_meeting($node))
-        return NODE_ACCESS_ALLOW;
-      else return NODE_ACCESS_DENY;
-    }
-  } else if ($node->type == 'os2web_meetings_bullet' ) {
-     if ($op == 'read' || in_array('administrator++', $account->roles)){
-        $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($node->nid);
-        if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting->nid ,$node->nid))
-          return NODE_ACCESS_ALLOW;
-        else return NODE_ACCESS_DENY;
-     }
-  } else if ($node->type == 'os2web_meetings_bullet_attach' ) {
-      if ($op == 'read' || in_array('administrator++', $account->roles)){
-        $bullet_point = os2dagsorden_access_helper_get_bullet_point_by_bpa($node->nid);
-        $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point->nid);
-        if (os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($meeting->nid, $bullet_point->nid, $node->nid))
-          return NODE_ACCESS_ALLOW;
-        else return NODE_ACCESS_DENY;
       }
+      else {
+        return NODE_ACCESS_DENY;
+      }
+    }
+  }
+  elseif ($node->type == 'os2web_meetings_meeting') {
+    $meeting_committee_id = $node->field_os2web_meetings_committee['und'][0]['tid'];
+    $meeting_type = $node->field_os2web_meetings_type['und'][0]['value'];
+    if ($node->status == 0 && _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $meeting_committee_id, $account->uid)) {
+      return NODE_ACCESS_ALLOW;
+    }
+    if ($op == 'read' || in_array('administrator++', $account->roles)) {
+      if (os2dagsorden_access_helper_check_user_can_see_meeting($node)) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        return NODE_ACCESS_DENY;
+      }
+    }
+  }
+  elseif ($node->type == 'os2web_meetings_bullet') {
+    if ($op == 'read' || in_array('administrator++', $account->roles)) {
+      $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($node->nid);
+      if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting->nid, $node->nid)) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        return NODE_ACCESS_DENY;
+      }
+    }
+  }
+  elseif ($node->type == 'os2web_meetings_bullet_attach') {
+    if ($op == 'read' || in_array('administrator++', $account->roles)) {
+      $bullet_point = os2dagsorden_access_helper_get_bullet_point_by_bpa($node->nid);
+      $meeting = os2dagsorden_access_helper_get_meeting_by_bullet_point($bullet_point->nid);
+      if (os2dagsorden_access_helper_check_user_can_see_bullet_point_attachment($meeting->nid, $bullet_point->nid, $node->nid)) {
+        return NODE_ACCESS_ALLOW;
+      }
+      else {
+        return NODE_ACCESS_DENY;
+      }
+    }
   }
 }
 
 /**
  * This checks whether a certain meeting has closed bullets poitns. If at least one bullet point is closed, TRUE is returned.
  *
- * @param $meeting_nid  int  meeting node id
+ * @param $meeting_nid
+ *   int  meeting node id
  *
- * @return boolean
+ * @return bool
  */
-function os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id){
+function os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id) {
   $meeting = node_load($meeting_id);
   if (isset($meeting->field_os2web_meetings_bullets['und'])) {
     foreach ($meeting->field_os2web_meetings_bullets['und'] as $bullet_point) {
@@ -1447,7 +1544,8 @@ function os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id)
       $is_closed = $bp_node->field_os2web_meetings_bul_closed['und'][0]['value'];
       $is_personal = $bp_node->field_os2web_meetings_bul_pers['und'][0]['value'];
 
-      if (intval($is_closed) == 1 || intval($is_personal) == 1) { //is closed or personal
+      // Is closed or personal.
+      if (intval($is_closed) == 1 || intval($is_personal) == 1) {
         return TRUE;
       }
     }
@@ -1455,51 +1553,52 @@ function os2dagsorden_access_helper_meeting_has_closed_bullet_point($meeting_id)
   return FALSE;
 }
 
-
 /**
  * Helper function. Returns the committee based on its sub id.
  *
- * @param int $com_subid committee sub id
+ * @param int $com_subid
+ *   committee sub id.
  *
  * @return the committee term, if found.
  */
-function  _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid, $name = NULL){
-    $vid = db_select('taxonomy_vocabulary', 'tv')
-            ->fields('tv', array('vid'))
-            ->condition('machine_name', 'os2web_meetings_tax_committee')
-            ->execute()
-            ->fetchField();
+function _os2dagsorden_access_helper_get_committee_by_subid_and_name($com_subid, $name = NULL) {
+  $vid = db_select('taxonomy_vocabulary', 'tv')
+    ->fields('tv', array('vid'))
+    ->condition('machine_name', 'os2web_meetings_tax_committee')
+    ->execute()
+    ->fetchField();
 
-    $query = new EntityFieldQuery();
-    $query->entityCondition('entity_type', 'taxonomy_term')
-            ->propertyCondition('vid', $vid)
-            ->fieldCondition('field_os2web_meetings_com_subid', 'value', intval($com_subid), '=');
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', $vid)
+    ->fieldCondition('field_os2web_meetings_com_subid', 'value', intval($com_subid), '=');
 
-    $result = $query->execute();
-    if (isset($result['taxonomy_term'])) {
-        $tids = array_keys($result['taxonomy_term']);
-        $tid = reset($tids);
-        $term = taxonomy_term_load($tid);
-        return $term;
+  $result = $query->execute();
+  if (isset($result['taxonomy_term'])) {
+    $tids = array_keys($result['taxonomy_term']);
+    $tid = reset($tids);
+    $term = taxonomy_term_load($tid);
+    return $term;
+  }
+  elseif ($name) {
+    $term = taxonomy_get_term_by_name($name, 'os2web_meetings_tax_committee');
+    if (!empty($term)) {
+      if (is_array($term)) {
+        $term = array_pop($term);
+      }
+      $term->field_os2web_meetings_com_subid['und'][]['value'] = $com_subid;
+      return $term;
     }
-    elseif ($name){
-        $term = taxonomy_get_term_by_name($name, 'os2web_meetings_tax_committee');
-        if (!empty($term)){
-          if (is_array($term)) {
-            $term = array_pop($term);
-          }
-          $term->field_os2web_meetings_com_subid['und'][]['value'] = $com_subid;
-          return $term;
-        }
-    }
-    return FALSE;
- }
+  }
+  return FALSE;
+}
 
 /**
- * Check if the user has permission to share a specific bullet point
+ * Check if the user has permission to share a specific bullet point.
  *
  * @param $meeting_id
  * @param $bullet_point_id
+ *
  * @return bool
  */
 function os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id, $bullet_point_id) {
@@ -1522,7 +1621,8 @@ function os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id
     $is_closed = $bullet_points[$bullet_point_id]->field_os2web_meetings_bul_closed['und'][0]['value'];
     $is_personal = $bullet_points[$bullet_point_id]->field_os2web_meetings_bul_pers['und'][0]['value'];
 
-    if (intval($is_closed) == 0 && intval($is_personal) == 0) { //is opened and not personal
+    // Is opened and not personal.
+    if (intval($is_closed) == 0 && intval($is_personal) == 0) {
       return TRUE;
     }
     else {
@@ -1536,12 +1636,12 @@ function os2dagsorden_access_helper_check_user_can_send_bullet_point($meeting_id
   }
 }
 
-
 /**
  * Callback function for sort methods, that compares the terms name using strnatcmp comparison.
  *
  * @param $term1
  * @param $term2
+ *
  * @return int
  */
 function os2dagsorden_access_helper_compare_term_by_name($term1, $term2) {
@@ -1549,7 +1649,7 @@ function os2dagsorden_access_helper_compare_term_by_name($term1, $term2) {
 }
 
 /**
- * Function that fetches the term, or if that fails creates one
+ * Function that fetches the term, or if that fails creates one.
  *
  * @param $name
  * @param $vocabulary_name
@@ -1562,7 +1662,7 @@ function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabu
     $term = array_pop($terms);
   }
 
-  //not found, create a new one
+  // Not found, create a new one.
   if (!$term) {
     $vid = db_select('taxonomy_vocabulary', 'tv')
       ->fields('tv', array('vid'))
@@ -1575,12 +1675,13 @@ function os2dagsorden_access_helper_fetch_or_create_taxonomy_term($name, $vocabu
     $term->name = $name;
     taxonomy_term_save($term);
   }
-  //return the fetched term or the one we have just created
+  // Return the fetched term or the one we have just created.
   return $term;
 }
 
 /**
  * Implements hook_mail()
+ *
  * @param $key
  * @param $message
  * @param $params
@@ -1591,15 +1692,16 @@ function os2dagsorden_access_helper_mail($key, &$message, $params) {
 }
 
 /**
- * Helper function to check if the user is admin of the certain committee
+ * Helper function to check if the user is admin of the certain committee.
  *
  * @param $meeting_type
  * @param $tid
  * @param $uid
+ *
  * @return bool
  */
 function _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type, $tid, $uid) {
-  //always true for admin
+  // Always true for admin.
   if ($uid == 1) {
     return TRUE;
   }

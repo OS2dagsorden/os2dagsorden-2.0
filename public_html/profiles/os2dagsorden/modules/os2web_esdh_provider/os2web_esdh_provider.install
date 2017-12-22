@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Implements install hooks
+ * Implements install hooks.
  */
 
 /**
@@ -41,25 +42,25 @@ function os2web_esdh_provider_requirements($phase) {
     'severity' => $severity,
     'description' => $desc,
   );
-  $meeting_path = drupal_realpath(variable_get('os2web_meetings_path'));  
-    $requirements['os2web_esdh_import_dir'] = array(
-      'title' => $t('OS2Web ESDH integration.'),
-      'value' => $t('Import directories')
-    );
-    if (!(is_dir($meeting_path) && is_writable($meeting_path))){
-      $requirements['os2web_esdh_import_dir']['severity'] = REQUIREMENT_ERROR;
-      $requirements['os2web_esdh_import_dir']['description'] = t('OS2Web meeting import dir %variable is not exists or not writable', array('%variable' => variable_get('os2web_meetings_path')));
-    }
-    else {
-      $requirements['os2web_esdh_import_dir']['severity'] = REQUIREMENT_OK;
-      $requirements['os2web_esdh_import_dir']['value'] = t('OS2Web meeting import dir is exists and writable');
+  $meeting_path = drupal_realpath(variable_get('os2web_meetings_path'));
+  $requirements['os2web_esdh_import_dir'] = array(
+    'title' => $t('OS2Web ESDH integration.'),
+    'value' => $t('Import directories'),
+  );
+  if (!(is_dir($meeting_path) && is_writable($meeting_path))) {
+    $requirements['os2web_esdh_import_dir']['severity'] = REQUIREMENT_ERROR;
+    $requirements['os2web_esdh_import_dir']['description'] = t('OS2Web meeting import dir %variable is not exists or not writable', array('%variable' => variable_get('os2web_meetings_path')));
+  }
+  else {
+    $requirements['os2web_esdh_import_dir']['severity'] = REQUIREMENT_OK;
+    $requirements['os2web_esdh_import_dir']['value'] = t('OS2Web meeting import dir is exists and writable');
 
-    }
+  }
   return $requirements;
 }
 
 /**
- * Creates the db table
+ * Creates the db table.
  */
 function os2web_esdh_provider_update_7001() {
   $schema = os2web_esdh_provider_schema();
@@ -68,7 +69,7 @@ function os2web_esdh_provider_update_7001() {
 }
 
 /**
- * Drops the existing db table and creates a new one (table has been completely remade
+ * Drops the existing db table and creates a new one (table has been completely remade.
  */
 function os2web_esdh_provider_update_7002() {
   $schema = os2web_esdh_provider_schema();

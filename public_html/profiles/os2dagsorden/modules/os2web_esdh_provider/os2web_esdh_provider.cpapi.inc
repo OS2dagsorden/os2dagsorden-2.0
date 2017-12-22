@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * This file implements the Content pushing inteface
+ * This file implements the Content pushing inteface.
  */
 
 /**

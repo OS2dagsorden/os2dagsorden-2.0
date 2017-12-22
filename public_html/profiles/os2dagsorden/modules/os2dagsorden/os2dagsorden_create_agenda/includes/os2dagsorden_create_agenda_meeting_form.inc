@@ -1,21 +1,23 @@
 <?php
 
 /**
- * os2dagsorden_create_agenda
+ * @file
+ * Os2dagsorden_create_agenda.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  Os2dagsorden_Create_Agenda
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package Os2dagsorden_Create_Agenda
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
  * Add to the form the field both used for simple and full agenda meeting creation.
  *
- * @param $form the form which should be modified
+ * @param $form
+ *   the form which should be modified
  *
  * @return $form the form with new field
  */
@@ -117,7 +119,7 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form) {
     '#attributes' => array('class' => array('improved-multi-select')),
   );
 
-  //finishing form
+  // Finishing form.
   $form['#attached']['css'] = array(
     drupal_get_path('module', 'os2dagsorden_create_agenda') . '/css/form_theme.css',
   );
@@ -128,18 +130,15 @@ function os2dagsorden_create_agenda_meeting_form_add_general_fields($form) {
 /**
  * Fill the general fields of the form with the values from meeting. Both used for simple and full agenda meeting creation.
  *
- * @param $form the form which should be filled
- * @param $node the meeting node, where the information should be taken from
+ * @param $form
+ *   the form which should be filled
+ * @param $node
+ *   the meeting node, where the information should be taken from
  *
  * @return $form the form with filled fields
  */
 function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node) {
   $form['title']['#default_value'] = $node->title;
-
-  /*if (field_get_items('node', $node, 'field_os2web_meetings_abbr')){
-     $short_title_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_abbr'));
-     $form['short_title']['#default_value'] = $short_title_field['safe_value'];
-   }*/
 
   $status_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_type'));
   $form['status']['#default_value'] = $status_field['value'];
@@ -167,9 +166,12 @@ function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $nod
     $participants_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_partic'));
     $participants = explode(',', $participants_field['safe_value']);
     foreach ($participants as $el => $value) {
-      $value = explode(' ', $value); //array
-      $value = end($value); //(name)
-      $username = substr($value, 1, strlen($value) - 2); //name
+      // Array.
+      $value = explode(' ', $value);
+      // (name)
+      $value = end($value);
+      // Name.
+      $username = substr($value, 1, strlen($value) - 2);
       $account = user_load_by_name($username);
       $selection[] = $account->uid;
     }
@@ -182,15 +184,17 @@ function os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $nod
 /**
  * Populates the meeting node (either new or existing depending on the content) with the information taken from the form.
  *
- * @param $form       the form where information is taken from
- * @param $form_state the current state of the form
+ * @param $form
+ *   the form where information is taken from
+ * @param $form_state
+ *   the current state of the form
  *
  * @return populated but unsaved(!) node
  */
 function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state) {
   $input = $form_state['input'];
 
-  //input extraction
+  // Input extraction.
   $title = $input['title'];
   $status = $input['status'];
   $hex_color = $input['hex_color'];
@@ -203,16 +207,17 @@ function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state)
   $participants = $input['participants'];
 
   if (!$form_state['meeting_id']) {
-    //node creating
+    // Node creating.
     $node = new stdClass();
     $node->type = "os2web_meetings_meeting";
     $node->language = LANGUAGE_NONE;
     node_object_prepare($node);
-  } else {
+  }
+  else {
     $node = node_load($form_state['meeting_id']);
   }
 
-  //node population
+  // Node population.
   $node->title = $title;
   $node->field_os2web_meetings_type['und'][0]['value'] = $status;
   $start_datetime = date_create_from_format("d/m/Y H:i", $start_date . ' ' . $start_time);
@@ -224,7 +229,9 @@ function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state)
   if (!empty($end_date)) {
     $end_datetime = date_create_from_format("d/m/Y H:i", $end_date . ' ' . $end_time);
     $node->field_os2web_meetings_date['und'][0]['value2'] = $end_datetime->format('Y-m-d H:i:s');
-  } else { //same as start date - default
+    // Same as start date - default.
+  }
+  else {
     $node->field_os2web_meetings_date['und'][0]['value2'] = $start_datetime->format('Y-m-d H:i:s');
   }
 
@@ -236,9 +243,10 @@ function os2dagsorden_create_agenda_populate_meeting_general($form, $form_state)
       $user = user_load($value);
       $participant_str .= $user->field_user_full_name['und'][0]['value'] . " ($user->name), ";
     }
-    //removing last coma
+    // Removing last coma.
     $node->field_os2web_meetings_partic['und'][0]['value'] = substr($participant_str, 0, strlen($participant_str) - 2);
-  } else {
+  }
+  else {
     $node->field_os2web_meetings_partic['und'][0]['value'] = '';
   }
 

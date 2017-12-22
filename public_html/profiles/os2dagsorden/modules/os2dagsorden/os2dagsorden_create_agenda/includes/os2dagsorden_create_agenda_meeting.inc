@@ -1,32 +1,34 @@
 <?php
 
 /**
- * os2dagsorden_create_agenda
+ * @file
+ * Os2dagsorden_create_agenda.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  Os2dagsorden_Create_Agenda
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package Os2dagsorden_Create_Agenda
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
-/**
- * Generates the form for meeting creating/modifying
- *
- * @param $form       the form to be created
- * @param $form_state the current state of the form
- *
- * @return $form the created form
- */
+ /**
+  * Generates the form for meeting creating/modifying.
+  *
+  * @param $form
+  *   the form to be created
+  * @param $form_state
+  *   the current state of the form
+  *
+  * @return $form the created form
+  */
 function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
   if (!empty($form_state['page_num']) && $form_state['page_num'] == 2) {
     return os2dagsorden_create_agenda_bullet_point($form, $form_state, $bullet_point_id);
-  } else {
-    if (!empty($form_state['page_num']) && $form_state['page_num'] == 3) {
-      return os2dagsorden_create_agenda_bpa($form, $form_state);
-    }
+  }
+  elseif (!empty($form_state['page_num']) && $form_state['page_num'] == 3) {
+    return os2dagsorden_create_agenda_bpa($form, $form_state);
   }
   $form_state['page_num'] = 1;
 
@@ -34,10 +36,10 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
     '#markup' => '<h1 class="title">' . t('Meeting') . '</h1>',
   );
 
-  //adding general fields
+  // Adding general fields.
   $form = os2dagsorden_create_agenda_meeting_form_add_general_fields($form);
 
-  //adding other fields
+  // Adding other fields.
   $form['description_opened'] = array(
     '#title' => t('Description opened:'),
     '#type' => 'managed_file',
@@ -68,21 +70,22 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
     '#collapsed' => FALSE,
   );
 
-  //filling the fields if meeting_id is not empty
+  // Filling the fields if meeting_id is not empty.
   if (!$meeting_id) {
+    // If meeting id is empty, try to fill it with form_state meeting_id value.
     $meeting_id = $form_state['meeting_id'];
   }
-  //if meeting id is empty, try to fill it with form_state meeting_id value
 
   if ($meeting_id) {
-    $form_state['meeting_id'] = $meeting_id; //saving for usage in the submit function
+    // Saving for usage in the submit function.
+    $form_state['meeting_id'] = $meeting_id;
 
     $node = node_load($meeting_id);
 
-    //filling general fields
+    // Filling general fields.
     $form = os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node);
 
-    //filling other fields
+    // Filling other fields.
     if (field_get_items('node', $node, 'field_os2web_meetings_full_doc')) {
       $description_opened_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_full_doc'));
       $form['description_opened']['#default_value'] = $description_opened_field['fid'];
@@ -151,7 +154,8 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
           $form['agenda'][] = array(
             '#markup' => '<span class="indicator-form-unlocked"></span>',
           );
-        } else {
+        }
+        else {
           $form['agenda'][] = array(
             '#markup' => '<span class="indicator-form-empty"></span>',
           );
@@ -162,7 +166,8 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
           $form['agenda'][] = array(
             '#markup' => '<span class="indicator-form-personal"></span>',
           );
-        } else {
+        }
+        else {
           $form['agenda'][] = array(
             '#markup' => '<span class="indicator-form-empty"></span>',
           );
@@ -182,7 +187,7 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
     }
   }
 
-  //finishing form
+  // Finishing form.
   $form['#attached']['css'] = array(
     drupal_get_path('module', 'os2dagsorden_create_agenda') . '/css/form_theme.css',
   );
@@ -217,21 +222,24 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
 }
 
 /**
- * Callback for deleting bullet point
+ * Callback for deleting bullet point.
  *
- * @param $form       the form
- * @param $form_state the current state of the form
- *
+ * @param $form
+ *   the form
+ * @param $form_state
+ *   the current state of the form
  */
 function os2dagsorden_create_agenda_bullet_point_delete_ajax($form, $form_state) {
   return $form['agenda'];
 }
 
 /**
- * Saves the meeting - either by creating new or modifying the existing
+ * Saves the meeting - either by creating new or modifying the existing.
  *
- * @param $form       the form
- * @param $form_state the current state of the form
+ * @param $form
+ *   the form
+ * @param $form_state
+ *   the current state of the form
  *
  * @return $node meeting
  */
@@ -239,18 +247,20 @@ function os2dagsorden_create_agenda_save_meeting($form, $form_state) {
   $node = os2dagsorden_create_agenda_populate_meeting_general($form, $form_state);
 
   $input = $form_state['input'];
-  //file extraction
+  // File extraction.
   $description_opened = $form_state['values']['description_opened'];
   $description_closed = $form_state['values']['description_closed'];
 
   if ($description_opened != 0) {
+    // Resaving file permanently.
     $description_opened = file_load($description_opened);
     $description_opened->status = FILE_STATUS_PERMANENT;
     $description_opened->display = 1;
     file_save($description_opened);
 
     $node->field_os2web_meetings_full_doc['und'][0] = (array) $description_opened;
-  } else {
+  }
+  else {
     if (field_get_items('node', $node, 'field_os2web_meetings_full_doc')) {
       $description_opened_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_full_doc'));
       $to_del_file = file_load($description_opened_field['fid']);
@@ -260,13 +270,15 @@ function os2dagsorden_create_agenda_save_meeting($form, $form_state) {
   }
 
   if ($description_closed != 0) {
-    //resaving file permanently
+    // Resaving file permanently.
     $description_closed = file_load($description_closed);
     $description_closed->status = FILE_STATUS_PERMANENT;
     $description_closed->display = 1;
     file_save($description_closed);
+
     $node->field_os2web_meetings_full_doc_c['und'][0] = (array) $description_closed;
-  } else {
+  }
+  else {
     if (field_get_items('node', $node, 'field_os2web_meetings_full_doc_c')) {
       $description_closed_field = array_pop(field_get_items('node', $node, 'field_os2web_meetings_full_doc_c'));
       $to_del_file = file_load($description_closed_field['fid']);
@@ -285,8 +297,10 @@ function os2dagsorden_create_agenda_save_meeting($form, $form_state) {
 /**
  * Helper functions, meeting form submit. Calls meeting save and redirects to the calendar view.
  *
- * @param $form       the form
- * @param $form_state the current state of the form
+ * @param $form
+ *   the form
+ * @param $form_state
+ *   the current state of the form
  *
  * @return none
  */
@@ -302,15 +316,16 @@ function os2dagsorden_create_agenda_meeting_submit($form, &$form_state) {
 /**
  * Calls os2dagsorden_create_agenda_save_meeting and redirects to bullet point creation/modification page.
  *
- * @param $bullet_point_id int id of the bullet point
- * @param $bpa_id          int id of the bullet point attachment
- *
+ * @param $bullet_point_id
+ *   int id of the bullet point
+ * @param $bpa_id
+ *   int id of the bullet point attachment
  */
 function os2dagsorden_create_agenda_meeting_submit_add_edit_bullet_point($form, &$form_state) {
   $node = os2dagsorden_create_agenda_save_meeting($form, $form_state);
 
   $form_state['meeting_id'] = $node->nid;
-  //if empty - will be treated as new node creation
+  // If empty - will be treated as new node creation.
   $form_state['bullet_point_id'] = $form_state['triggering_element']['#bp_nid'];
 
   $form_state['page_num'] = 2;
@@ -320,8 +335,10 @@ function os2dagsorden_create_agenda_meeting_submit_add_edit_bullet_point($form, 
 /**
  * Helper functions to delete bullet point.
  *
- * @param $form       the form
- * @param $form_state the current state of the form
+ * @param $form
+ *   the form
+ * @param $form_state
+ *   the current state of the form
  *
  * @return none
  */
@@ -338,10 +355,12 @@ function os2dagsorden_create_agenda_meeting_submit_delete_bullet_point($form, &$
 }
 
 /**
- * Removes the bullet point from the meeting
+ * Removes the bullet point from the meeting.
  *
- * @param $bullet_point_id id of the bullet point
- * @param $bpa_id          id of the bullet point attachment
+ * @param $bullet_point_id
+ *   id of the bullet point
+ * @param $bpa_id
+ *   id of the bullet point attachment
  *
  * @return $meeting meeting
  */

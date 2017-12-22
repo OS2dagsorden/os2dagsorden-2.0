@@ -7,10 +7,11 @@
 
 /**
  * Helper function. Makes danish characters ascii-safe.
+ *
  * @access protected
  *
  * @param string $str
- *   Input string
+ *   Input string.
  *
  * @return string
  *   Safe string
@@ -21,10 +22,11 @@ function _os2web_qbrick_safedk($str) {
 
 /**
  * Gets the chapters of a movie.
+ *
  * @access protected
  *
  * @param string $movie_id
- *   Movie id
+ *   Movie id.
  *
  * @return array
  *   List of chapters. False on error.
@@ -40,17 +42,19 @@ function _os2web_qbrick_get_chapters($movie_id) {
       $chapters[$id[1]] = (int) $chapter['time'];
     }
     return $chapters;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
 
 /**
  * Returns the movie_id for a given meeting.
+ *
  * @access protected
  *
  * @param int $nid
- *   Node id
+ *   Node id.
  *
  * @return string
  *   Movie id, or False on error.
@@ -59,7 +63,8 @@ function _os2web_qbrick_get_movie_id($nid) {
   $search_url = 'http://vms.api.qbrick.com/rest/v3/Search/444777D8/';
   if (is_numeric($nid)) {
     $node = node_load($nid);
-  } else {
+  }
+  else {
     $node = $nid;
   }
   if (!is_object($node)) {
@@ -70,13 +75,14 @@ function _os2web_qbrick_get_movie_id($nid) {
   $date = format_date(strtotime($node->field_os2web_meetings_date[$node->language][0]['value']), 'custom', 'dmY', $node->field_os2web_meetings_date[$node->language][0]['timezone']);
   // $html.=$committee . ' ' . $date;
   // $html.='
-  // ' . print_r($node, 1);
+  // ' . print_r($node, 1);.
   $url = $search_url . rawurlencode($committee . ' ' . $date);
   $xml = simplexml_load_file($url);
   $movie_id = (string) ($xml->media->item['id']);
   if (strlen($movie_id) == 8) {
     return $movie_id;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -86,6 +92,7 @@ function _os2web_qbrick_get_movie_id($nid) {
 /**
  * Implements hook_field_info().
  */
+
 function os2web_qbrick_field_info() {
   $field = array();
   $field['os2web_qbrick_movie'] = array(
@@ -110,6 +117,7 @@ function os2web_qbrick_field_is_empty($item, $field) {
 /**
  * Implments hook_field_widget_info().
  */
+
 function os2web_qbrick_field_widget_info() {
   $widgets = array();
   $widgets['os2web_qbrick_movie_simple'] = array(
@@ -212,7 +220,7 @@ function os2web_qbrick_field_formatter_view($entity_type, $entity, $field, $inst
           $element[$delta]['#markup'] = format_string($embed_script, array(
             '!playerid' => $player_id,
             '!movieid' => $item['id'],
-            '!seek' => $item['seek']
+            '!seek' => $item['seek'],
           ));
         }
       }

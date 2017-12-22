@@ -2,11 +2,11 @@
 
 /**
  * @file
- * This file describes the MM plugin as implemented by SBsys
+ * This file describes the MM plugin as implemented by SBsys.
  */
 
 /**
- * Plugin definition with callbacks
+ * Plugin definition with callbacks.
  */
 $plugin = array(
   'description' => t('SBsys ESDH MM Backend'),
@@ -41,7 +41,7 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
   $dir = variable_get('os2web_sbsys_ishoj_esdh_mm_path', MM_IMPORT_DIR);
 
   foreach (file_scan_directory($dir, '/\.xml$/i', array('recurse' => TRUE)) as $xml_file) {
-    // Skip preview.xml files
+    // Skip preview.xml files.
     if ($xml_file->name !== 'preview') {
       $pathinfo = pathinfo($xml_file->uri);
       $pub_id = (int) str_replace($dir . '/Publication', '', $pathinfo['dirname']);
@@ -51,18 +51,18 @@ function os2web_sbsys_ishoj_esdh_mm_get_import_list() {
   return $uris;
 }
 
-
 /**
  * Strip illegal characters from the XML.
- * Ex &#xC = ASCII new line feed
+ * Ex &#xC = ASCII new line feed.
  *
- * @param $string string to sanitise
+ * @param $string
+ *   string to sanitise
  *
- * $return array
+ *   $return array
  *   The string sanitised
  */
 function utf8_for_xml($string) {
-  #$replace_me = "&#xC;";
+  // $replace_me = "&#xC;";.
   $replace_me = variable_get('os2web_sbsys_ishoj_esdh_banned_special_char');
   $str_new = str_replace($replace_me, "", $string);
   return $str_new;
@@ -87,7 +87,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
   if ($real_path !== FALSE && is_file($real_path)) {
     libxml_use_internal_errors(TRUE);
     $manifest = simplexml_load_string(utf8_for_xml(file_get_contents($real_path)), 'SimpleXMLElement', LIBXML_NOCDATA);
-    //print_r($manifest);
+    // print_r($manifest);
     libxml_clear_errors();
     libxml_use_internal_errors(FALSE);
 
@@ -99,16 +99,16 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
     }
     if (is_object($manifest)) {
       $committee = $manifest->xpath("Møde/@UdvalgID");
-      //$committee_group_id = $manifest->xpath("Agendas/Agenda/Committee/CommitteeGroup/@ID");
+      // $committee_group_id = $manifest->xpath("Agendas/Agenda/Committee/CommitteeGroup/@ID");.
       $committee_name = $manifest->xpath("Møde/@Udvalg");
-      //$meeting_uri = $manifest->xpath("/Publication/OutputFileName");
-      //$meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
-      //$meeting_public = $manifest->xpath("@Åben");
+      // $meeting_uri = $manifest->xpath("/Publication/OutputFileName");
+      // $meeting_data = $manifest->xpath("/Publication/Agendas/Agenda/Meeting");
+      // $meeting_public = $manifest->xpath("@Åben");.
       $meeting_id = $manifest->xpath("Møde/@MødeID");
       $sys_id = $manifest->xpath("@DagsordenID");
-      //$meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
-      //$acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
-      //$members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");
+      // $meeting_name = $manifest->xpath("/Publication/Agendas/Agenda/Name");
+      // $acadre_version = $manifest->xpath("/Publication/GeneratorSettings/@ID");
+      // $members = $manifest->xpath("Agendas/Agenda/Meeting/Members/MeetingMember");.
       $meeting_type = $manifest->xpath('@Dagsordentype');
       $meeting_date_when_date = $manifest->xpath("Møde/@Mødedato");
       $meeting_date_when_time = $manifest->xpath("Møde/@Mødetid");
@@ -116,22 +116,21 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       $additional_agenda = $manifest->xpath("@Tillægsdagsorden");
 
       $committee = (string) $committee[0]['UdvalgID'];
-      //$committee_group_id = (string) $committee_group_id[0][ID];
+      // $committee_group_id = (string) $committee_group_id[0][ID];.
       $committee_name = (string) $committee_name[0];
       $sys_id = (string) $sys_id[0];
       $meeting_id = (string) $meeting_id[0]['MødeID'];
-      //$meeting_public = (string) $meeting_public[0];
+      // $meeting_public = (string) $meeting_public[0];.
       $meeting_type = (string) $meeting_type[0];
       $additional_agenda = (string) $additional_agenda[0];
 
       $meeting_date_when = $meeting_date_when_date[0]['Mødedato'] . ' ' . $meeting_date_when_time[0]['Mødetid'];
-      //$meeting_date_until = $meeting_data[0]->Until;
+      // $meeting_date_until = $meeting_data[0]->Until;.
       $meeting_where = (string) $meeting_where[0]['Mødested'][0];
       $meeting_name = $committee_name;
-      //$meeting_uri = (string) $meeting_uri[0];
-      //$acadre_version = (string) $acadre_version[0][ID];
-      //$directory_name = dirname($real_path);
-
+      // $meeting_uri = (string) $meeting_uri[0];
+      // $acadre_version = (string) $acadre_version[0][ID];
+      // $directory_name = dirname($real_path);
       $folder_uri = str_replace(basename($file), '', $file);
 
       $full_doc = array(
@@ -148,19 +147,19 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
 
       // Fix dates.
       $meeting_date_when = str_ireplace(array(
-          ". januar ",
-          ". februar ",
-          ". marts ",
-          ". april ",
-          ". maj ",
-          ". juni ",
-          ". juli ",
-          ". august ",
-          ". september ",
-          ". oktober ",
-          ". november ",
-          ". december "
-        ),
+        ". januar ",
+        ". februar ",
+        ". marts ",
+        ". april ",
+        ". maj ",
+        ". juni ",
+        ". juli ",
+        ". august ",
+        ". september ",
+        ". oktober ",
+        ". november ",
+        ". december ",
+      ),
         array(
           "-1-",
           "-2-",
@@ -173,14 +172,14 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
           "-9-",
           "-10-",
           "-11-",
-          "-12-"
+          "-12-",
         ), $meeting_date_when);
       $date_obj = date_create($meeting_date_when);
-      //date_timezone_set($date_obj, timezone_open('UTC'));
+      // date_timezone_set($date_obj, timezone_open('UTC'));.
       $meeting_date_when = date_format($date_obj, 'Y-m-d H:i');
 
-      ////Members
-      //foreach ($members as $member){
+      // Members
+      // foreach ($members as $member){
       //  // Changed by skifter@bellcom.dk 01.08.2013 - to handle "no show" members and messages for "no shoW"
       //  if (!empty($member->ParticipationNote)) {
       //    $member->ParticipationNote = ", " . $member->ParticipationNote;
@@ -196,8 +195,7 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
       //  else {
       //    $participants_cancellation[] = (string) $member->Name . " - " . $member->ParticipationStatusAsText . $member->ParticipationNote;
       //  }
-      //}
-
+      // }.
       $meeting = array(
         'system_id' => $sys_id,
         'meeting_id' => $meeting_id,
@@ -222,38 +220,41 @@ function os2web_sbsys_ishoj_esdh_mm_import_meeting($meeting) {
         if (!$meeting_agendas) {
           if (sizeof($agenda_instance->xpath("Dagsordenpunkt"))) {
             $meeting_agendas = $agenda_instance->xpath("Dagsordenpunkt");
-          } else {
-            //importing open agenda
+          }
+          else {
+            // Importing open agenda.
             $meeting_agendas = $agenda_instance->xpath("Gruppe[@navn='Åbne dagsordenspunkter']/Dagsordenpunkt");
-            //importing closed agenda
+            // Importing closed agenda.
             if (variable_get('os2web_meetings_import_closed_agenda', FALSE)) {
               $meeting_agendas = array_merge($meeting_agendas, $agenda_instance->xpath("Gruppe[@navn='Lukkede dagsordenspunkter']/Dagsordenpunkt"));
             }
           }
-        } else {
+        }
+        else {
           foreach ($agenda_instance->xpath("Dagsordenpunkt") as $items_child) {
             $meeting_agendas[] = $items_child;
-            //$toDom = dom_import_simplexml($meeting_agendas[0]);
-            //$fromDom = dom_import_simplexml($items_child);
-            //$toDom->appendChild($toDom->ownerDocument->importNode($meeting_agendas, true));
+            // $toDom = dom_import_simplexml($meeting_agendas[0]);
+            // $fromDom = dom_import_simplexml($items_child);
+            // $toDom->appendChild($toDom->ownerDocument->importNode($meeting_agendas, true));.
           }
         }
       }
 
-      //$meeting_pdf = $manifest->xpath('/Meeting/MeetingAgendaTypes/MeetingAgendaType/PDFDocument');
-      //$meeting['pdf'] = (string) $meeting_pdf[0];
-      //$meeting['state'] = (string) $meeting_state[0];
+      // $meeting_pdf = $manifest->xpath('/Meeting/MeetingAgendaTypes/MeetingAgendaType/PDFDocument');
+      // $meeting['pdf'] = (string) $meeting_pdf[0];
+      // $meeting['state'] = (string) $meeting_state[0];.
       if (empty($meeting_agendas)) {
         watchdog('SBsys MM', 'Empty list of import items in %file.', array('%file' => $file), WATCHDOG_WARNING);
       }
-      //foreach ($meeting_agendas as $meeting_agenda) {
+      // Foreach ($meeting_agendas as $meeting_agenda) {.
       $imported = _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda($meeting, $meeting_agendas);
       if (is_array($imported)) {
         $imported['publish'] = TRUE;
         $meetings[] = $imported;
       }
-      //}
-    } else {
+      // }.
+    }
+    else {
       watchdog('SBsys MM', 'Failed to parse XML in %file during import.', array('%file' => $file), WATCHDOG_WARNING);
     }
   }
@@ -298,7 +299,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda(&$meeting, $agenda_xm
  *   Meeting array.
  *
  * @param SimpleXMLElement $xml
- *   Xml segment containing the item
+ *   Xml segment containing the item.
  *
  * @return array
  *   The imported item.
@@ -307,7 +308,7 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) 
   $xml_item = array();
   $xml_item['id'] = (string) $xml->attributes()->DagsordenpunktID;
   $xml_item['number'] = (string) $xml->attributes()->Nummer;
-  //$xml_item['pdf'] = (string) $xml->PDFDocument;
+  // $xml_item['pdf'] = (string) $xml->PDFDocument;.
   $xml_item_document = $xml->Bilagsliste;
   $xml_item_bullet = $xml->Indhold;
   $xml_item['name'] = (string) $xml->attributes()->Nummer . '. ' . $xml->Overskrift;
@@ -324,22 +325,22 @@ function _os2web_sbsys_ishoj_esdh_mm_import_meeting_agenda_item($meeting, $xml) 
   );
 
   if (strcasecmp($item['access'], 'true') != 0) {
-    //rewriting the access field to match esdh provider module
+    // Rewriting the access field to match esdh provider module.
     $item['access'] = 'Lukket';
   }
-  //importing open bullets only, or open and closed if it is permitted
+  // Importing open bullets only, or open and closed if it is permitted.
   if ($item['access'] !== 'Lukket' || variable_get('os2web_meetings_import_closed_agenda', FALSE)) {
-    //// Process attachments.
+    // Process attachments.
     $xml_item_bullet = (array) $xml_item_bullet;
     foreach ($xml_item_bullet as $title => $body) {
       $item['bullets'][] = array(
         'title' => (string) $title,
         'body' => (string) $body,
-        //'sysid' => (string) $bullet_xml['ID'],
+        // 'sysid' => (string) $bullet_xml['ID'],.
       );
     }
 
-    //// Process enclosures.
+    // Process enclosures.
     foreach ($xml_item_document->Bilag as $enclosure) {
       $item['enclosures'][] = array(
         'uri' => $meeting['folder'] . (string) $enclosure->attributes()->BilagUrl,
@@ -407,10 +408,11 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
       // Duplicate meeting detected.
       watchdog('SBsys MM', 'Duplicate import found for meeting %mid. Deleting nid=%nid.', array(
         '%mid' => $meeting_id['value'],
-        '%nid' => $node->nid
+        '%nid' => $node->nid,
       ), WATCHDOG_WARNING);
       node_delete($node->nid);
-    } else {
+    }
+    else {
       $meetings[$meeting_id[0]['value']][$meeting_sub_id[0]['value']] = $node->nid;
     }
   }
@@ -438,7 +440,8 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
         if (is_array($addenum_to)) {
           $addenum_to = array_shift($addenum_to);
           $addenum_to = array_shift($addenum_to);
-        } else {
+        }
+        else {
           $addenum_to = FALSE;
         }
 
@@ -449,17 +452,19 @@ function _os2web_sbsys_ishoj_esdh_mm_order_addenums($drush = FALSE) {
           $node->field_os2web_meetings_addendum[LANGUAGE_NONE][0]['nid'] = $primary->nid;
           node_save($node);
         }
-      } else {
+      }
+      else {
         error_log('MARK - ' . basename(__FILE__) . ':' . __LINE__ . ' in ' . __FUNCTION__ . '()');
         error_log(basename(__FILE__) . ':' . __LINE__ . " jm@bellcom.dk: wanted to delete $node->nid");
-        // node_delete($node->nid);
+        // node_delete($node->nid);.
       }
       // Remove node from final nids_with_addendums.
       unset($nids_with_addendums[$node->nid]);
       if ($drush === TRUE) {
         if ($primary) {
           drush_log("Updated meeting $m_id..", 'ok');
-        } else {
+        }
+        else {
           drush_log("Removed stale addenum $m_id..", 'ok');
         }
       }

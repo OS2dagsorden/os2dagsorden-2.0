@@ -1,9 +1,14 @@
 <?php
+
+/**
+ * @file
+ */
+
 module_load_include('inc', 'os2dagsorden_content_modify', '/includes/os2dagsorden_content_modify.user');
 module_load_include('inc', 'os2dagsorden_content_modify', '/includes/os2dagsorden_content_modify.user.batch');
 
 /**
- * Implementation of hook_menu
+ * Implementation of hook_menu.
  *
  * @return list of links
  */
@@ -73,8 +78,8 @@ function os2dagsorden_content_modify_menu() {
  *
  * @return none
  */
-function _os2dagsorden_content_modify_committee(){
-    drupal_goto('admin/structure/taxonomy/os2web_meetings_tax_committee');
+function _os2dagsorden_content_modify_committee() {
+  drupal_goto('admin/structure/taxonomy/os2web_meetings_tax_committee');
 }
 
 /**
@@ -82,8 +87,8 @@ function _os2dagsorden_content_modify_committee(){
  *
  * @return none
  */
-function _os2dagsorden_content_modify_user_position(){
-    drupal_goto('admin/structure/taxonomy/user_position');
+function _os2dagsorden_content_modify_user_position() {
+  drupal_goto('admin/structure/taxonomy/user_position');
 }
 
 /**
@@ -91,8 +96,8 @@ function _os2dagsorden_content_modify_user_position(){
  *
  * @return none
  */
-function _os2dagsorden_content_modify_users(){
-    drupal_goto('admin/people');
+function _os2dagsorden_content_modify_users() {
+  drupal_goto('admin/people');
 }
 
 /**
@@ -115,11 +120,12 @@ function os2dagsorden_content_modify_user_operations() {
  * Redirect for the user edit link from user operation menu.
  * Redirects to simple edit link.
  *
- * @param $accounts array array of the user ids.
+ * @param $accounts
+ *   array array of the user ids.
  *
  * @return none
  */
-function _os2dagsorden_content_modify_user_edit_redirect($accounts){
+function _os2dagsorden_content_modify_user_edit_redirect($accounts) {
   $account = array_pop($accounts);
   drupal_goto('user/' . $account . '/simple_edit');
 }
@@ -128,19 +134,20 @@ function _os2dagsorden_content_modify_user_edit_redirect($accounts){
  * Calls form for user simple edit.
  * If user has no administer os2web rights, he will be allowed only to edit his own profile.
  *
- * @param $uid int id of the user to modify.
+ * @param $uid
+ *   int id of the user to modify.
  *
  * @return form
  */
-function _os2dagsorden_content_modify_user_edit_page($uid = null){
+function _os2dagsorden_content_modify_user_edit_page($uid = NULL) {
   $full_user = os2dagsorden_access_helper_get_user();
 
-  if (empty($uid)){
-      $uid = $full_user->uid;
+  if (empty($uid)) {
+    $uid = $full_user->uid;
   }
 
-  if (!user_access('administer users', $full_user)){
-    if ($full_user->uid != $uid){
+  if (!user_access('administer users', $full_user)) {
+    if ($full_user->uid != $uid) {
       drupal_goto('user/simple_edit');
     }
   }
@@ -150,11 +157,11 @@ function _os2dagsorden_content_modify_user_edit_page($uid = null){
 /**
  * Callback for users batch edit page.
  *
- *
- * @param $uids CSV of the user ID's (uid) that will be affected by this batch process
+ * @param $uids
+ *   CSV of the user ID's (uid) that will be affected by this batch process
  *
  * @return form
  */
-function _os2dagsorden_content_modify_user_batch_edit_page($uids){
+function _os2dagsorden_content_modify_user_batch_edit_page($uids) {
   return drupal_get_form('os2dagsorden_content_modify_user_batch_edit_form', $uids);
 }

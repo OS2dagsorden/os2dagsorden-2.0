@@ -1,23 +1,25 @@
 <?php
 
 /**
- * os2dagsorden_create_agenda
+ * @file
+ * Os2dagsorden_create_agenda.
  *
  * PHP version 5
  *
  * @category OS2Dagsorden
- * @package  Os2dagsorden_Create_Agenda
- * @author   Stanislav Kutasevits <stan@bellcom.dk>
- * @license  http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
- * @link     http://bellcom.dk
+ * @package Os2dagsorden_Create_Agenda
+ * @author Stanislav Kutasevits <stan@bellcom.dk>
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2
+ * @link http://bellcom.dk
  */
 
 /**
- * Generates form for meeting simple edit
+ * Generates form for meeting simple edit.
  *
  * @param $form
  * @param $form_state
  * @param $meeting_id
+ *
  * @return array|the
  */
 function os2dagsorden_create_agenda_meeting_simple($form, &$form_state, $meeting_id) {
@@ -25,25 +27,26 @@ function os2dagsorden_create_agenda_meeting_simple($form, &$form_state, $meeting
     '#markup' => '<h1 class="title">' . t('Meeting') . '</h1>',
   );
 
-  //adding general fields
+  // Adding general fields.
   $form = os2dagsorden_create_agenda_meeting_form_add_general_fields($form);
 
-  //filling the fields if meeting_id is not empty
+  // Filling the fields if meeting_id is not empty.
   if (!$meeting_id) {
+    // If meeting id is empty, try to fill it with form_state meeting_id value.
     $meeting_id = $form_state['meeting_id'];
   }
-  //if meeting id is empty, try to fill it with form_state meeting_id value
 
   if ($meeting_id) {
-    $form_state['meeting_id'] = $meeting_id; //saving for usage in the submit function
+    // Saving for usage in the submit function.
+    $form_state['meeting_id'] = $meeting_id;
 
     $node = node_load($meeting_id);
 
-    //filling general fields
+    // Filling general fields.
     $form = os2dagsorden_create_agenda_meeting_form_fill_general_fields($form, $node);
   }
 
-  //finishing form
+  // Finishing form.
   $form['#attached']['css'] = array(
     drupal_get_path('module', 'os2dagsorden_create_agenda') . '/css/form_theme.css',
   );
@@ -64,10 +67,11 @@ function os2dagsorden_create_agenda_meeting_simple($form, &$form_state, $meeting
 }
 
 /**
- * Saves the meeting from the submitted form
+ * Saves the meeting from the submitted form.
  *
  * @param $form
  * @param $form_state
+ *
  * @return populated
  */
 function os2dagsorden_create_agenda_save_meeting_simple($form, $form_state) {
@@ -82,7 +86,7 @@ function os2dagsorden_create_agenda_save_meeting_simple($form, $form_state) {
 }
 
 /**
- * Meeting simple form submit callback
+ * Meeting simple form submit callback.
  *
  * @param $form
  * @param $form_state
