@@ -20,11 +20,13 @@ div.content ul.menu li a {
 
 div.content ul.menu li #menu-print-kalendar:before {
   font-size: 18px;
-  top: 11px; }
+  top: 11px;
+  left: 30px; }
 
 div.content ul.menu li #menu-simple-user-edit:before {
   font-size: 18px;
-  top: 11px; }
+  top: 11px;
+  left: 30px; }
 
 /* --------------------------- Drag and drop START -------------------------------*/
 #available_committee {

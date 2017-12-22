@@ -137,10 +137,10 @@ div.content ul.menu li {
   }
   #menu-print-kalendar {
     background: $color-background-primary;
-    padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in;
     position:relative;
+    text-align: center;
     &:hover, &.active:hover {
       background: $color-branding-secondary;
       background-size: 20px;
@@ -158,7 +158,7 @@ div.content ul.menu li {
       font-size: $font-size-headings;
       position: absolute;
       top: 10px;
-      left: 45px;
+      left: 50px;
     }
   }
   #menu-sog {
@@ -170,16 +170,16 @@ div.content ul.menu li {
   #menu-simple-user-edit {
     background: $color-background-primary;
     background-size: 20px;
-    padding-left: 75px;
     transition: background-color .1s ease-in;
     position:relative;
+    text-align: center;
     &:before {
       content: "\E8B8";
       font-family: $font-icons;
       font-size: $font-size-headings;
       position: absolute;
       top: 10px;
-      left: 45px;
+      left: 50px;
     }
     &:hover {
       background: $color-branding-secondary;
@@ -2097,6 +2097,9 @@ a.annotator-wrapper {
   float: left;
   margin: auto;
   position: relative;
+  img{
+    display: none;
+  }
 }
 
 /* ---------------------------- arrows_reverse END ---------------------------- */

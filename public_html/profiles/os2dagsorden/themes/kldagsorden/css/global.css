@@ -332,10 +332,10 @@ div.content ul.menu li {
       background: #d7d9da url("../img/icon_home.png") no-repeat 15px 50%; }
   div.content ul.menu li #menu-print-kalendar {
     background: #f7f1f1;
-    padding-left: 75px;
     background-size: 20px;
     transition: background-color .1s ease-in;
-    position: relative; }
+    position: relative;
+    text-align: center; }
     div.content ul.menu li #menu-print-kalendar:hover, div.content ul.menu li #menu-print-kalendar.active:hover {
       background: #ae477d;
       background-size: 20px;
@@ -351,7 +351,7 @@ div.content ul.menu li {
       font-size: 20px;
       position: absolute;
       top: 10px;
-      left: 45px; }
+      left: 50px; }
   div.content ul.menu li #menu-sog {
     background: #e3d6d6 url("../img/icon_search.png") no-repeat 15px 50%; }
     div.content ul.menu li #menu-sog.active {
@@ -359,16 +359,16 @@ div.content ul.menu li {
   div.content ul.menu li #menu-simple-user-edit {
     background: #f7f1f1;
     background-size: 20px;
-    padding-left: 75px;
     transition: background-color .1s ease-in;
-    position: relative; }
+    position: relative;
+    text-align: center; }
     div.content ul.menu li #menu-simple-user-edit:before {
       content: "\E8B8";
       font-family: "Material Icons";
       font-size: 20px;
       position: absolute;
       top: 10px;
-      left: 45px; }
+      left: 50px; }
     div.content ul.menu li #menu-simple-user-edit:hover {
       background: #ae477d;
       color: #fffffe;
@@ -1883,6 +1883,8 @@ a.annotator-wrapper {
   float: left;
   margin: auto;
   position: relative; }
+  .arrows-reverse img {
+    display: none; }
 
 /* ---------------------------- arrows_reverse END ---------------------------- */
 /* -- user_simple_edit drag&drop -- */

@@ -29,13 +29,20 @@ div.content ul.menu li a {
   font-size: 20px;
   padding: 10px 10px 10px 50px;
 }
-div.content ul.menu li #menu-print-kalendar:before {
+div.content ul.menu li #menu-print-kalendar {
+  &:before {
+     font-size: 20px;
+     top: 10px;
+     left: 50px;
+  }
+}  
+div.content ul.menu li #menu-simple-user-edit{
+
+  &:before{
    font-size: 20px;
-   top: 10px
-}
-div.content ul.menu li #menu-simple-user-edit:before{
-  font-size: 20px;
-  top: 10px;
+   top: 10px;
+   left: 50px;
+ }
 }
 div.date-heading h3 {
   a {
