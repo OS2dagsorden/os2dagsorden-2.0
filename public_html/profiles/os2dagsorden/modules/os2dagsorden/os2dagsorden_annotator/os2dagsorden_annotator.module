@@ -403,8 +403,8 @@ HTML;
       $pageAmount = $bilag->field_os2web_meetings_bpa_pages['und'][0]['value'];
     }
 
-    // Disallowing PDF download.
-    if (variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+    // Restricting PDF download.
+    if (os2dagsorden_access_helper_check_pdf_download_enabled()) {
       // Creating link for downloading pdf version.
       $download_pdf_link = file_create_url($bilag->field_os2web_meetings_bpa_file['und'][0]['uri']);
 

@@ -117,29 +117,37 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether a meeting type field is visible on meeting view.'),
     '#default_value' => variable_get('os2dagsorden_show_meeting_type', TRUE),
   );
-  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_samlet_dokument_link'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show samlet dokument link on meeting view'),
-    '#description' => t('This decides whether a samlet dokument link is visible on meeting view.'),
-    '#default_value' => variable_get('os2dagsorden_show_samlet_dokument_link', TRUE),
-  );
+  if (module_exists('os2web_print_send_to_friend')) {
+    $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show print icon on bullets in agenda'),
+      '#description' => t('This decides whether a print button is visible on each bullet point on meeting view.'),
+      '#default_value' => variable_get('os2dagsorden_show_print_icon', FALSE),
+    );
+    $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_send_to_friend_icon'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show send to friend icon on bullets in agenda'),
+      '#description' => t('This decides whether a send to friend button is visible on each bullet point on meeting view.'),
+      '#default_value' => variable_get('os2dagsorden_show_send_to_friend_icon', FALSE),
+    );
+    $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_generate_pdf_link'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show generate PDF link on meeting view'),
+      '#description' => t('This decides whether a generate PDF link is visible on meeting view.'),
+      '#default_value' => variable_get('os2dagsorden_show_generate_pdf_link', TRUE),
+    );
+    $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_generate_pdf_link_full'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show generate PDF link (full) on meeting view'),
+      '#description' => t('This decides whether a generate PDF link (with attachments) is visible on meeting view.'),
+      '#default_value' => variable_get('os2dagsorden_show_generate_pdf_link_full', TRUE),
+    );
+  }
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_participants_afbud'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show cancelled participants'),
     '#description' => t('This decides whether a list of cancelled participants  is visible on meeting view'),
     '#default_value' => variable_get('os2dagsorden_show_participants_afbud', FALSE),
-  );
-  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show print icon on bullets in agenda'),
-    '#description' => t('This decides whether a print button is visible on each bullet point on meeting view.'),
-    '#default_value' => variable_get('os2dagsorden_show_print_icon', FALSE),
-  );
-  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_send_to_friend_icon'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show send to friend icon on bullets in agenda'),
-    '#description' => t('This decides whether a send to friend button is visible on each bullet point on meeting view.'),
-    '#default_value' => variable_get('os2dagsorden_show_send_to_friend_icon', FALSE),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bullet_case_id_link'] = array(
     '#type' => 'checkbox',
@@ -158,7 +166,6 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
       ),
     ),
   );
-
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show comments on meeting view'),
@@ -189,11 +196,22 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('This decides whether bullet point <i>"Afgøres i"</i> will be shown'),
     '#default_value' => variable_get('os2dagsorden_show_bp_comname', FALSE),
   );
-  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_allow_pdf_download'] = array(
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_pdf_download_whitelist_enabled'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Allow download meeting document and attachment as PDF'),
-    '#description' => t('This decides whether meeting and attachments are available for download as PDF'),
-    '#default_value' => variable_get('os2dagsorden_allow_pdf_download', TRUE),
+    '#title' => t('Enable PDF download whitelist'),
+    '#description' => t('This decides whether PDF download for meeting and attachments is allowed only to whitelisted IP\'s'),
+    '#default_value' => variable_get('os2dagsorden_pdf_download_whitelist_enabled', FALSE),
+  );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_pdf_download_whitelist'] = array(
+    '#type' => 'textfield',
+    '#title' => t('PDF download whitelist'),
+    '#description' => t('Provide list of IP\'s, to which PDF download is visible. Partial matches are also possible<br>E.g. 192.168.1.1, or 192.168.1'),
+    '#default_value' => variable_get('os2dagsorden_pdf_download_whitelist', FALSE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="os2dagsorden_pdf_download_whitelist_enabled"]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title'] = array(
     '#type' => 'textfield',
@@ -223,12 +241,19 @@ function os2dagsorden_settings_settings_form($form, $form_state) {
     '#description' => t('Title of the meeting description download dropdown button'),
     '#default_value' => variable_get('os2dagsorden_meeting_description_download_dropdown', 'Hent dokumenter'),
   );
-  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title'] = array(
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_generate_pdf_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Meeting description download button'),
+    '#title' => t('Meeting description generate PDF button'),
     '#maxlength' => 200,
-    '#description' => t('Title of the meeting description download button'),
-    '#default_value' => variable_get('os2dagsorden_meeting_description_download_title', 'Hent samlet dokument i PDF'),
+    '#description' => t('Title of the meeting description PDF generate button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_generate_pdf_title', 'Samlet dokument i PDF'),
+  );
+  $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_generate_pdf_full_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Meeting description generate full PDF button'),
+    '#maxlength' => 200,
+    '#description' => t('Title of the meeting description full PDF generate button'),
+    '#default_value' => variable_get('os2dagsorden_meeting_description_generate_pdf_full_title', 'Samlet dokument med bilag i PDF'),
   );
   $form['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_with_att_download_title'] = array(
     '#type' => 'textfield',
@@ -1508,9 +1533,11 @@ function os2dagsorden_settings_import_from_file($form, &$form_state) {
     variable_set('os2dagsorden_show_meeting_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_committee']);
     variable_set('os2dagsorden_show_meeting_enddate', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_enddate']);
     variable_set('os2dagsorden_show_meeting_type', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_meeting_type']);
-    variable_set('os2dagsorden_show_samlet_dokument_link', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_samlet_dokument_link']);
     variable_set('os2dagsorden_show_participants_afbud', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_participants_afbud']);
     variable_set('os2dagsorden_show_print_icon', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_print_icon']);
+    variable_set('os2dagsorden_show_send_to_friend_icon', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_send_to_friend_icon']);
+    variable_set('os2dagsorden_show_generate_pdf_link', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_generate_pdf_link']);
+    variable_set('os2dagsorden_show_generate_pdf_link_full', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_generate_pdf_link_full']);
     variable_set('os2dagsorden_show_bullet_case_id_link', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bullet_case_id_link']);
     variable_set('os2dagsorden_bullet_case_id_link_url', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_bullet_case_id_link_url']);
     variable_set('os2dagsorden_show_comments', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_comments']);
@@ -1518,14 +1545,17 @@ function os2dagsorden_settings_import_from_file($form, &$form_state) {
     variable_set('os2dagsorden_show_bilag', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bilag']);
     variable_set('os2dagsorden_use_abbr', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_use_abbr']);
     variable_set('os2dagsorden_show_bp_comname', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_show_bp_comname']);
-    variable_set('os2dagsorden_allow_pdf_download', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_allow_pdf_download']);
-
+    //FIXME: new variable
+    variable_set('os2dagsorden_pdf_download_whitelist_enabled', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_pdf_download_whitelist_enabled']);
+    variable_set('os2dagsorden_pdf_download_whitelist', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_pdf_download_whitelist']);
     variable_set('os2dagsorden_sager_group_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_sager_group_title']);
     variable_set('os2dagsorden_group_closed_bullet_points', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_group_closed_bullet_points']);
     variable_set('os2dagsorden_hidden_agenda_committee', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_hidden_agenda_committee']);
     variable_set('os2dagsorden_meeting_description_download_dropdown', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_dropdown']);
     variable_set('os2dagsorden_meeting_description_download_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title']);
     variable_set('os2dagsorden_meeting_description_download_title_additional', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_download_title_additional']);
+    variable_set('os2dagsorden_meeting_description_generate_pdf_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_generate_pdf_title']);
+    variable_set('os2dagsorden_meeting_description_generate_pdf_full_title', $setting_array['os2dagsorden_meeting_view_settings']['os2dagsorden_meeting_description_generate_pdf_full_title']);
 
     variable_set('os2dagsorden_shared_speaker_paper', $setting_array['os2dagsorden_speaker_paper_settings']['os2dagsorden_shared_speaker_paper']);
 
