@@ -166,7 +166,7 @@ function os2web_print_send_to_friend_generate_pdf_bullet_point($bullet_point_id,
               $newPortaitPageRequired = TRUE;
             } catch (Exception $e) {
               watchdog('Print send to friend', 'This file !uri cannot be included. Maybe it is still not converted to PDF 1.4? Failed with this message: !message. ' . $e->getMessage(),
-                array('uri' => $uri, '!message' => $e->getMessage()), WATCHDOG_WARNING);
+                array('!uri' => $uri, '!message' => $e->getMessage()), WATCHDOG_WARNING);
             }
           }
         }

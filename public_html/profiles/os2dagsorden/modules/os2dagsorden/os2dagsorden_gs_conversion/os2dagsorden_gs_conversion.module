@@ -31,7 +31,7 @@ function os2dagsorden_gs_conversion_file_presave($file) {
         'fid' => $file->fid,
         'uri' => $file->uri,
         'filename' => $file->filename,
-        'pdf_version' => os2dagsorden_gs_conversion_get_pdf_version($file->uri),
+        'pdf_version' => $pdf_version,
         'status' => $status,
       ))
       ->execute();
@@ -150,6 +150,6 @@ function os2dagsorden_gs_conversion_get_pdf_version($uri) {
     return NULL;
   }
   else {
-    return $version;
+    return substr($version, 0, 5);
   }
 }
