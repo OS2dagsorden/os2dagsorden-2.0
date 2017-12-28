@@ -66,6 +66,20 @@ function os2dagsorden_gs_conversion_file_update($file) {
 }
 
 /**
+ * Implements hook_file_delete().
+ *
+ * Removes entry from database table.
+ *
+ * @param $file
+ */
+function os2dagsorden_gs_conversion_file_delete($file) {
+  // Updating database entry.
+  db_delete('os2dagsorden_gs_conversion_files')
+    ->condition('fid', $file->fid)
+    ->execute();
+}
+
+/**
  * Implements hook_cron().
  * Internallu calls os2dagsorden_gs_conversion_convert.
  */
