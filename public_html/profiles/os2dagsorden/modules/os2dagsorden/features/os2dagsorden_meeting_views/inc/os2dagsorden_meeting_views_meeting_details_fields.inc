@@ -29,7 +29,7 @@ function os2dagsorden_meeting_views_meeting_details_agenda_and_edit_button() {
 
 function os2dagsorden_meeting_views_meeting_details_description_download() {
   //disallowing PDF download
-  if (!variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+  if (!os2dagsorden_access_helper_check_pdf_download_enabled()) {
     return '';
   }
 
