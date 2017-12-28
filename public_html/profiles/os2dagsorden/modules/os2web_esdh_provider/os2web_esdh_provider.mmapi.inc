@@ -1352,12 +1352,10 @@ function _os2web_esdh_provider_remove_img_tags($data) {
  *
  * @param $str
  * @param $tags
- * @param bool $stripContent
- *   , if true the content will be also stripped.
  *
  * @return mixed
  */
-function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = FALSE) {
+function _os2web_esdh_provider_strip_tags($str, $tags) {
   $content = '';
   if (!is_array($tags)) {
     $tags = (strpos($str, '>') !== FALSE ? explode('>', str_replace('<', '', $tags)) : array($tags));
@@ -1369,10 +1367,8 @@ function _os2web_esdh_provider_strip_tags($str, $tags, $stripContent = FALSE) {
     if (empty($tag)) {
       continue;
     }
-    if ($stripContent) {
-      $content = '(.+</' . $tag . '[^>]*>|)';
-    }
-    $str = preg_replace('#</?' . $tag . '[^>]*>' . $content . '#is', '', $str);
+
+    $str = preg_replace('#</?' . $tag . ' [^>]*>' . $content . '#is', '', $str);
   }
   return $str;
 }
