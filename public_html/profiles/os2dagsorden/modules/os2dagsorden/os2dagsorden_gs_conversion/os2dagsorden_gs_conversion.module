@@ -113,10 +113,12 @@ function os2dagsorden_gs_conversion_convert_single($fid, $uri) {
   shell_exec('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dQUIET -dBATCH -sOutputFile=' . $shell_file_path_real . ' ' . $shell_file_path_real . ' 2>&1');
 
   // Successful conversion?
-  if (strcasecmp(os2dagsorden_gs_conversion_get_pdf_version($uri), '1.4') == 0) {
+  $new_pdf_version = os2dagsorden_gs_conversion_get_pdf_version($uri);
+  if (strcasecmp($new_pdf_version, '1.4') == 0) {
     db_update('os2dagsorden_gs_conversion_files')
       ->fields(array(
         'status' => 'Converted',
+        'pdf_version' => $new_pdf_version
       ))
       ->condition('fid', $fid)
       ->execute();
