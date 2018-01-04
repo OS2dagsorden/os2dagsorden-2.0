@@ -10,219 +10,229 @@
 function os2dagsorden_rules_and_permissions_user_default_permissions() {
   $permissions = array();
 
-  // Exported permission: access PDF version.
+  // Exported permission: 'access PDF version'.
   $permissions['access PDF version'] = array(
     'name' => 'access PDF version',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'print_pdf',
   );
 
-  // Exported permission: access administration pages.
+  // Exported permission: 'access administration pages'.
   $permissions['access administration pages'] = array(
     'name' => 'access administration pages',
     'roles' => array(
-      0 => 'administrator+',
-      1 => 'administrator++',
+      'administrator+' => 'administrator+',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'system',
   );
 
-  // Exported permission: access content.
+  // Exported permission: 'access content'.
   $permissions['access content'] = array(
     'name' => 'access content',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: access content overview.
+  // Exported permission: 'access content overview'.
   $permissions['access content overview'] = array(
     'name' => 'access content overview',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: access print.
+  // Exported permission: 'access print'.
   $permissions['access print'] = array(
     'name' => 'access print',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'print',
   );
 
-  // Exported permission: access toolbar.
+  // Exported permission: 'access toolbar'.
   $permissions['access toolbar'] = array(
     'name' => 'access toolbar',
     'roles' => array(
-      0 => 'administrator+',
-      1 => 'administrator++',
+      'administrator+' => 'administrator+',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'toolbar',
   );
 
-  // Exported permission: access user profiles.
+  // Exported permission: 'access user profiles'.
   $permissions['access user profiles'] = array(
     'name' => 'access user profiles',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'user',
   );
 
-  // Exported permission: administer menu.
+  // Exported permission: 'administer menu'.
   $permissions['administer menu'] = array(
     'name' => 'administer menu',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'menu',
   );
-  
+
+  // Exported permission: 'administer nodes'.
   $permissions['administer nodes'] = array(
     'name' => 'administer nodes',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: administer os2web.
+  // Exported permission: 'administer os2web'.
   $permissions['administer os2web'] = array(
     'name' => 'administer os2web',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'os2web_settings',
   );
 
-  // Exported permission: administer permissions.
+  // Exported permission: 'administer permissions'.
   $permissions['administer permissions'] = array(
     'name' => 'administer permissions',
     'roles' => array(),
     'module' => 'user',
   );
 
-  // Exported permission: administer taxonomy.
+  // Exported permission: 'administer taxonomy'.
   $permissions['administer taxonomy'] = array(
     'name' => 'administer taxonomy',
     'roles' => array(
-      0 => 'administrator+',
-      1 => 'administrator++',
+      'administrator+' => 'administrator+',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'taxonomy',
   );
 
-  // Exported permission: administer ultimate cron.
+  // Exported permission: 'administer themes'.
+  $permissions['administer themes'] = array(
+    'name' => 'administer themes',
+    'roles' => array(
+      'administrator++' => 'administrator++',
+    ),
+    'module' => 'system',
+  );
+
+  // Exported permission: 'administer ultimate cron'.
   $permissions['administer ultimate cron'] = array(
     'name' => 'administer ultimate cron',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'ultimate_cron',
   );
 
-  // Exported permission: administer users.
+  // Exported permission: 'administer users'.
   $permissions['administer users'] = array(
     'name' => 'administer users',
     'roles' => array(
-      0 => 'administrator+',
-      1 => 'administrator++',
+      'administrator+' => 'administrator+',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'user',
   );
 
-  // Exported permission: create os2web_meetings_spaper content.
+  // Exported permission: 'create os2web_meetings_spaper content'.
   $permissions['create os2web_meetings_spaper content'] = array(
     'name' => 'create os2web_meetings_spaper content',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: delete own os2web_meetings_spaper content.
+  // Exported permission: 'delete own os2web_meetings_spaper content'.
   $permissions['delete own os2web_meetings_spaper content'] = array(
     'name' => 'delete own os2web_meetings_spaper content',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
-  
-  // Exported permission: edit any os2web_meetings_meeting content.
+
+  // Exported permission: 'edit any os2web_meetings_meeting content'.
   $permissions['edit any os2web_meetings_meeting content'] = array(
     'name' => 'edit any os2web_meetings_meeting content',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
-   'module' => 'node',
+    'module' => 'node',
   );
 
-  // Exported permission: edit context.
+  // Exported permission: 'edit context'.
   $permissions['edit context'] = array(
     'name' => 'edit context',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
 
-  // Exported permission: edit own os2web_meetings_spaper content.
+  // Exported permission: 'edit own os2web_meetings_spaper content'.
   $permissions['edit own os2web_meetings_spaper content'] = array(
     'name' => 'edit own os2web_meetings_spaper content',
     'roles' => array(
-      0 => 'authenticated user',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'node',
   );
 
-  // Exported permission: edit own user account.
+  // Exported permission: 'edit own user account'.
   $permissions['edit own user account'] = array(
     'name' => 'edit own user account',
     'roles' => array(
-      0 => 'os2dagsorden',
+      'os2dagsorden' => 'os2dagsorden',
     ),
     'module' => 'edit_own_user_account_permission',
   );
 
-  // Exported permission: list context.
+  // Exported permission: 'list context'.
   $permissions['list context'] = array(
     'name' => 'list context',
     'roles' => array(
-      0 => 'administrator++',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'context_permissions',
   );
 
-  // Exported permission: use text format filtered_html.
+  // Exported permission: 'use text format filtered_html'.
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
     'roles' => array(
-      0 => 'administrator++',
-      1 => 'authenticated user',
+      'administrator++' => 'administrator++',
+      'authenticated user' => 'authenticated user',
     ),
     'module' => 'filter',
   );
 
-  // Exported permission: use text format full_html.
+  // Exported permission: 'use text format full_html'.
   $permissions['use text format full_html'] = array(
     'name' => 'use text format full_html',
     'roles' => array(),
     'module' => 'filter',
   );
 
-  // Exported permission: view the administration theme.
+  // Exported permission: 'view the administration theme'.
   $permissions['view the administration theme'] = array(
     'name' => 'view the administration theme',
     'roles' => array(
-      0 => 'administrator+',
-      1 => 'administrator++',
+      'administrator+' => 'administrator+',
+      'administrator++' => 'administrator++',
     ),
     'module' => 'system',
   );
