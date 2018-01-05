@@ -97,7 +97,7 @@ function os2dagsorden_create_agenda_bullet_point($form, $form_state, $bullet_poi
         $form['bpas'][] = array(
           '#type' => 'image_button',
           '#button_type' => 'submit-edit',
-          '#src' => drupal_get_path('theme', 'os2dagsorden_theme') . '/img/icon_edit.png',
+          '#src' => drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/img/icon_edit.png',
           '#name' => 'edit_' . $bpa->nid,
           '#submit' => array('os2dagsorden_create_agenda_bullet_point_submit_add_edit_bpa'),
           '#bpa_nid' => $bpa->nid,
@@ -105,7 +105,7 @@ function os2dagsorden_create_agenda_bullet_point($form, $form_state, $bullet_poi
         $form['bpas'][] = array(
           '#type' => 'image_button',
           '#button_type' => 'submit-delete',
-          '#src' => drupal_get_path('theme', 'os2dagsorden_theme') . '/img/icon_delete.png',
+          '#src' => drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/img/icon_delete.png',
           '#name' => 'delete_' . $bpa->nid,
           '#submit' => array('os2dagsorden_create_agenda_bullet_point_submit_delete_bpa'),
           '#bpa_nid' => $bpa->nid,

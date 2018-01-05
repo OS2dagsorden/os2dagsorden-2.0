@@ -1,0 +1,48 @@
+/* This file will hold styles that are loaded using the same media query as the narrow grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the normal and widescreen layouts. You may override these styles in the normal
+ *  and widescreen CSS files as appropriate. */
+.view-meetings-search .views-table th.views-field.views-field-php-7 {
+  width: 75px;
+}
+.view-meetings-search .views-table th.views-field.views-field-field-os2web-meetings-date {
+  width: 100px;
+}
+.view-meetings-search .views-table th.views-field.views-field-php-3 {
+  width: 300px;
+}
+.view-meetings-search .views-table td.views-field.views-field-php-3 {
+  overflow: hidden;
+}
+.block-views .view-user-logout-menu li div {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* --------------------------- Drag and drop START -------------------------------*/
+#available_committee {
+  background: url(
+    data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAKklEQVQYV2NkIAIwEqGGgXRFO3fu/A8z2d3dHW4AiknUU4TLE6Q7HJdJAOgfDApc6n+qAAAAAElFTkSuQmCC
+                                                        ) repeat-y;
+  padding-right: 20px;
+  background-position: 98% top;
+}
+/* --------------------------- Drag and drop END -------------------------------*/
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+  display: none;
+}
+
+.available_committee {
+  float: right;
+}
+/* ---------------------------- arrows_reverse END ---------------------------- */
+
+.block-views .view-user-logout-menu li div {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.block-views .view-user-logout-menu li div.right {
+  float: right;
+}

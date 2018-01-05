@@ -1,7 +1,38 @@
-/** global: Drupal */
-/** global: DocumentTouch */
-/** global: pageScroller */
-/** global: screen */
+(function($) {
+if (!Array.prototype.indexOf) {
+  Array.prototype.indexOf = function (searchElement  ) {
+    'use strict';
+    if (this == null) {
+      throw new TypeError();
+    }
+    var n, k, t = Object(this),
+        len = t.length >>> 0;
+
+    if (len === 0) {
+      return -1;
+    }
+    n = 0;
+    if (arguments.length > 1) {
+      n = Number(arguments[1]);
+      if (n != n) { // shortcut for verifying if it's NaN
+        n = 0;
+      } else if (n != 0 && n != Infinity && n != -Infinity) {
+        n = (n > 0 || -1) * Math.floor(Math.abs(n));
+      }
+    }
+    if (n >= len) {
+      return -1;
+    }
+    for (k = n >= 0 ? n : Math.max(len - Math.abs(n), 0); k < len; k++) {
+      if (k in t && t[k] === searchElement) {
+        return k;
+      }
+    }
+    return -1;
+  };
+}
+
+})(jQuery);
 
 /**
  * Hides print buttons for the iPad
@@ -140,7 +171,7 @@ function set_up_button_position(button_id, region_sidebar_second, frontpage, wid
 }
 /* Changed ddmmyy and ddmmyyyy date formats to dd-mm-yyyy  */
 function prepareDate(dateValue) {
-   var fromDateArray = dateValue.match( /^([0-9]{2})([0-9]{2})([0-9]{2,4})$/);
+   fromDateArray=dateValue.match( /^([0-9]{2})([0-9]{2})([0-9]{2,4})$/);
    if (fromDateArray){
     if (fromDateArray[3].length<4)
       fromDateArray[3]=2000 + parseInt(fromDateArray[3]);
@@ -170,7 +201,7 @@ function add_indicator_help_text(){
  */
 function add_tablet_orientation_listener(){
   jQuery(document).ready(function() {
-      jQuery(window).bind('orientationchange', function() {
+      jQuery(window).bind('orientationchange', function(e) {
           switch (window.orientation) {
               case -90:
               case 90:
@@ -294,14 +325,12 @@ function bullet_point_add_expand_behaviour(url, massive_bilag_expand, bullet_poi
           jQuery(this).attr("id","attachments_container_"+index);
           jQuery(this).hide();
 
-          jQuery(this).parent().parent().parent().children(".hide_show_button_container").append("<button class='button' id='btn_hide_show_attachments_"+index+"' value='⇓'>⇓</button>");
+          jQuery(this).parent().parent().parent().children(".hide_show_button_container").append("<input type='button' class='button' id='btn_hide_show_attachments_"+index+"' value='⇓'></a>");
 
          jQuery("#btn_hide_show_attachments_"+index).click(function(){
              jQuery("#attachments_container_"+index).toggle();
              if (jQuery("#btn_hide_show_attachments_"+index).val() == "⇓"){//closed
                 jQuery("#btn_hide_show_attachments_"+index).val("⇑");
-                jQuery("#btn_hide_show_attachments_"+index).text("⇑");
-                jQuery("#btn_hide_show_attachments_"+index).addClass('opened');
                 if (attachments_expand)
                     bullet_points_expand_all(this, index, url, massive_bilag_expand, attachments_expand);
                 //saving in local storage
@@ -309,8 +338,6 @@ function bullet_point_add_expand_behaviour(url, massive_bilag_expand, bullet_poi
             }
             else {//opened
                 jQuery("#btn_hide_show_attachments_"+index).val("⇓");
-                jQuery("#btn_hide_show_attachments_"+index).text("⇓");
-                jQuery("#btn_hide_show_attachments_"+index).removeClass('opened');
                 //saving in local storage
                 window.localStorage.setItem(pathname + "-attachments_container_"+index, "false");
             }
@@ -341,27 +368,26 @@ function bullet_point_details_init(url, massive_bilag_expand, attachments_expand
     jQuery(".item-list-dagsordenspunkt .ul-item-list-dagsordenspunkt").each(function(index) {
 	attachment_add_expand_all_behaviour(this, index, url, massive_bilag_expand);
 	attachment_add_expand_behaviour(this, index, url, massive_bilag_expand);
-        bilag_cases_add_expand_behaviour(this, index);
+        bilag_cases_add_expand_behaviour(this, index, url, massive_bilag_expand);
        if (attachments_expand)
             bullet_points_expand_all(this, index, url, massive_bilag_expand, attachments_expand);
     });
   });
 }
 
-function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bilag_expand, attachments_expand) {
-    jQuery("#attachments_container_" + bulletPointIndex).show();
-    jQuery("#btn_hide_show_attachments_" + bulletPointIndex).val("⇑");
-    jQuery("#btn_hide_show_attachments_" + bulletPointIndex).addClass('opened');
-    if (attachments_expand) {
-        jQuery("[id^=attachment_text_container_" + bulletPointIndex + "_]").each(function (index_attachment) {
+function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bilag_expand, attachments_expand){
+  var pathname = window.location.pathname;
+        jQuery("#attachments_container_"+bulletPointIndex).show();
+        jQuery("#btn_hide_show_attachments_"+bulletPointIndex).val("⇑");
+        if (attachments_expand){
+          jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
             attachment_load_content(bulletPointIndex, index_attachment, url);
-            jQuery("#btn_hide_show_attachment_text_" + bulletPointIndex + "_" + index_attachment).val("⇑");
-            jQuery("#btn_hide_show_attachments_" + bulletPointIndex).addClass('opened');
-            jQuery(this).show();
+                jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
+                jQuery(this).show();
 
-        });
-    }
-    jQuery(".btn_hide_show_all_attachments_text_" + bulletPointIndex).val('⇈');
+          });
+      }
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val('⇈');
 }
 /**
  * Add expand all behavious for bullet point - opens all of its children.
@@ -371,48 +397,38 @@ function bullet_points_expand_all(bulletPoint, bulletPointIndex, url, massive_bi
  */
 function attachment_add_expand_all_behaviour(bulletPoint, bulletPointIndex, url, massive_bilag_expand){
   var pathname = window.location.pathname;
+  jQuery(bulletPoint).prepend("<input type='button' class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" top' value='⇊'></a>");
+  jQuery(bulletPoint).append("<input type='button' class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" bottom' value='⇊'></a>");
 
-  if (jQuery('li', bulletPoint).size() > 1) {
-      jQuery(bulletPoint).prepend("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" top' value='⇊'>⇊</button>");
-      jQuery(bulletPoint).append("<button class='button hide_show_all_attachments_text btn_hide_show_all_attachments_text_"+bulletPointIndex+" bottom' value='⇊'>⇊</button>");
+  jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
+    if (jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
+	jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
+	  if (massive_bilag_expand || !jQuery(this).children().first().hasClass("attachment_text_trimmed_container")){//skip bilags
+	    //saving in the local storage
+	    window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "true");
+	    jQuery(this).show();
 
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).click(function(){
-        if (jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val() == "⇊"){
-        jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
-          if (massive_bilag_expand || !jQuery(this).children().first().hasClass("attachment_text_trimmed_container")){//skip bilags
-            //saving in the local storage
-            window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "true");
-            jQuery(this).show();
+	    //handle single expand button
+	    jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
+	  }
 
-            //handle single expand button
-            jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
-            jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).addClass('opened');
-          }
+	  attachment_load_content(bulletPointIndex, index_attachment, url);
+	});
 
-          attachment_load_content(bulletPointIndex, index_attachment, url);
-        });
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
+    } else {
+      	jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
+	  //saving in the local storage
+	  window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "false");
+	  jQuery(this).hide();
 
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇈")
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).addClass('opened');
-        } else {
-            jQuery("[id^=attachment_text_container_"+bulletPointIndex+"_]").each(function(index_attachment){
-          //saving in the local storage
-          window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "false");
-          jQuery(this).hide();
+	  //handle single expand button
+	  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
+	});
 
-          //handle single expand button
-          jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
-          jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇓");
-          jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
-        });
-
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇊")
-        jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
-        }
-      });
-  }
+    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
+    }
+  });
 }
 
 /**
@@ -427,7 +443,7 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
     jQuery(this).attr("id","attachment_text_container_"+bulletPointIndex+"_"+index_attachment);
     jQuery(this).hide();
 
-    jQuery(this).parent().prepend("<button class='button hide_show_attachment_text' id='btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>⇓</button>");
+    jQuery(this).parent().prepend("<input type='button' class='button hide_show_attachment_text' id='btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'></a>");
     jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).click(function(){
       //hide or show the content container
       jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).toggle();
@@ -437,15 +453,11 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       //change the arrow button icon
       if (jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val() == "⇓"){//closed
 	jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇑");
-  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇑");
-  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).addClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "true");
       }
       else {//opened
 	jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).val("⇓");
-  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).text("⇓");
-  jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-attachment_text_container_"+bulletPointIndex+"_"+index_attachment, "false");
       }
@@ -454,11 +466,8 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       if (attachments_expand){
 	if (jQuery("[id^=btn_hide_show_attachment_text_"+bulletPointIndex+"_][value='⇓']").length > 0)
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇊");
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇊");
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
+	else
       jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val("⇈");
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text("⇈");
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).addClass('opened')
       } else {
 	var new_val = "⇈";
 	jQuery("[id^=btn_hide_show_attachment_text_"+bulletPointIndex+"_]").each(function(){
@@ -469,14 +478,6 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
 	  }
 	});
     jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).val(new_val);
-    jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).text(new_val);
-    if(new_val == "⇊") {
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).removeClass('opened');
-    }
-    else {
-      jQuery(".btn_hide_show_all_attachments_text_"+bulletPointIndex).addClass('opened');
-    }
-      
       }
     });
 
@@ -485,10 +486,10 @@ function attachment_add_expand_behaviour(bulletPoint, bulletPointIndex, url, mas
       jQuery("#btn_hide_show_attachment_text_"+bulletPointIndex+"_"+index_attachment).click();
     }
   });
-  jQuery("#attachments_container_"+bulletPointIndex).each(function() {
+  jQuery("#attachments_container_"+bulletPointIndex).each(function(index) {
       jQuery(this).children("li.bilags_cases").children(".bilags_cases_container").attr("id","bilags_cases_container_"+bulletPointIndex);
       jQuery(this).children("li.bilags_cases").children(".bilags_cases_container").hide();
-      bilag_cases_add_expand_behaviour(this,bulletPointIndex);
+      bilag_cases_add_expand_behaviour(this,bulletPointIndex, url, massive_bilag_expand);
     });
   }
 
@@ -501,12 +502,12 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
     //load the content on first click and add the annotator
     if (jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().contents().first().text() == "Vent venligst..."){
       //get meeting id, bullet-point id and bilag id
-      var classes = jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().attr('class').split(' ');
-      var cl = jQuery.grep(classes, function(string){
-	    return (string.indexOf("bpa-") == 0);
+      classes = jQuery("#attachment_text_container_"+bulletPointIndex+"_"+index_attachment).children().attr('class').split(' ');
+      var cl = jQuery.grep(classes, function(string, i){
+	return (string.indexOf("bpa-") == 0);
       });
 
-      var cl_arr = String(cl).split("-");
+      cl_arr = String(cl).split("-");
       var bilag_id = cl_arr[3];
       var bullet_point_id = cl_arr[2];
       var meeting_id = cl_arr[1];
@@ -528,13 +529,13 @@ function attachment_load_content(bulletPointIndex, index_attachment, url){
       });
     }
 }
-function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex){
+function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex, url, massive_bilag_expand){
   var pathname = window.location.pathname;
 
   jQuery(bulletPoint).children("li").children(".bilags_cases_container").each(function(index_attachment){
     jQuery(this).attr("id","bilags_cases_container_"+bulletPointIndex+"_"+index_attachment);
     jQuery(this).hide();
-    jQuery(this).parent().prepend("<button class='button hide_show_bilags_cases' id='btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>⇓</button>");
+    jQuery(this).parent().prepend("<input type='button' class='button hide_show_bilags_cases' id='btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment+"' value='⇓'>");
     jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).click(function(){
       //hide or show the content container
       jQuery("#bilags_cases_container_"+bulletPointIndex+"_"+index_attachment).toggle();
@@ -542,15 +543,11 @@ function bilag_cases_add_expand_behaviour(bulletPoint, bulletPointIndex){
       //change the arrow button icon
       if (jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val() == "⇓"){//closed
 	jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val("⇑");
-  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).text("⇑");
-  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).addClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-bilags_cases_container_"+bulletPointIndex+"_"+index_attachment, "true");
       }
       else {//opened
 	jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).val("⇓");
-  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).text("⇓");
-  jQuery("#btn_hide_bilags_cases_"+bulletPointIndex+"_"+index_attachment).removeClass('opened');
 	//saving in local storage
 	window.localStorage.setItem(pathname + "-bilags_cases_container_"+bulletPointIndex+"_"+index_attachment, "false");
       }
@@ -609,7 +606,7 @@ function addPagescroller(){
 		      e.preventDefault();
           //console.log(pageScroller.current);
 		      //pageScroller.goTo(page);
-              pageScroller.next();
+		      pageScroller.next();
 	      });
 
   	    // assigns 'previous' API command to link
@@ -650,7 +647,7 @@ function hide_search_block_title(){
 function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
   jQuery(document).ready(function() {
    if (expand_bilags)  {
-    jQuery("li.bilags").children(".hide_show_bilags_cases").each(function() {
+    jQuery("li.bilags").children(".hide_show_bilags_cases").each(function(index) {
        if (jQuery(this).val() == '⇓') {
 
 	jQuery(this).click();
@@ -658,7 +655,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     });
   }
   if(expand_cases)  {
-    jQuery("li.cases").children(".hide_show_bilags_cases").each(function() {
+    jQuery("li.cases").children(".hide_show_bilags_cases").each(function(index) {
       if (jQuery(this).val() == '⇓') {
 	jQuery(this).click();
       }
@@ -676,7 +673,7 @@ function open_all_bilag_case_bullet_points(expand_bilags, expand_cases) {
     $(".help-button").each(function() {
       var offset = $(this).offset();
 
-      $(this).click(function() {
+      $(this).click(function(e) {
         if ($("#ToolTipDiv").css('display') == 'block') {
           $("#ToolTipDiv").css({'position': 'absolute', 'bottom': '', 'right': ''});
           if ($("#ToolTipDiv").hasClass($(this).attr('id'))) {

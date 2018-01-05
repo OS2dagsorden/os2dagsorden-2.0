@@ -21,10 +21,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => '',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'footer_first',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -22,
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -45,6 +45,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-22',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'footer_first',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => -22,
+      ),
     ),
     'title' => '',
     'visibility' => 0,
@@ -59,10 +65,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => 'nemid',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'content',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-19',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -83,6 +89,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-19',
       ),
+       'os2dagsorden_theme' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => '-19',
+      ),
     ),
     'title' => '',
     'visibility' => 0,
@@ -99,10 +111,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'sidebar_second',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -19,
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -123,6 +135,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-19',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'sidebar_second',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => -19,
+      ),
     ),
     'title' => 'Søg',
     'visibility' => 0,
@@ -137,10 +155,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'content',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-15',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -161,6 +179,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-15',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => '-15',
+      ),
     ),
     'title' => '',
     'visibility' => 1,
@@ -175,10 +199,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'content',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -17,
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -199,6 +223,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-17',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => -17,
+      ),
     ),
     'title' => '',
     'visibility' => 1,
@@ -213,10 +243,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'content',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -16,
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -237,6 +267,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-16',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => -16,
+      ),
     ),
     'title' => '',
     'visibility' => 1,
@@ -253,10 +289,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'sidebar_second',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -21,
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -277,6 +313,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'theme' => 'os2dagsorden_theme_ringsted',
         'weight' => '-21',
       ),
+      'os2dagsorden_theme' => array(
+        'region' => 'sidebar_second',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
+        'weight' => -21,
+      ),
     ),
     'title' => '',
     'visibility' => 0,
@@ -291,10 +333,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
     'pages' => '<front>',
     'roles' => array(),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'content',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-18',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -313,6 +355,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'region' => 'content',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
+        'weight' => '-18',
+      ),
+      'os2dagsorden_theme' => array(
+        'region' => 'content',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
         'weight' => '-18',
       ),
     ),
@@ -331,10 +379,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'sidebar_second',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-18',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -353,6 +401,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
+        'weight' => '-18',
+      ),
+      'os2dagsorden_theme' => array(
+        'region' => 'sidebar_second',
+        'status' => 1,
+        'theme' => 'os2dagsorden_theme',
         'weight' => '-18',
       ),
     ),
@@ -371,10 +425,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'sidebar_second',
         'status' => '1',
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-17',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -393,6 +447,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'region' => 'sidebar_second',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
+        'weight' => '-17',
+      ),
+      'os2dagsorden_theme' => array(
+        'region' => 'sidebar_second',
+        'status' => '1',
+        'theme' => 'os2dagsorden_theme',
         'weight' => '-17',
       ),
     ),
@@ -411,10 +471,10 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'menu',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-21',
       ),
       'os2dagsorden_theme_ballerup' => array(
@@ -433,6 +493,12 @@ function os2dagsorden_blocks_positioning_default_fe_block_settings() {
         'region' => 'menu',
         'status' => '1',
         'theme' => 'os2dagsorden_theme_ringsted',
+        'weight' => '-21',
+      ),
+      'os2dagsorden_theme' => array(
+        'region' => 'menu',
+        'status' => 1,
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => '-21',
       ),
     ),

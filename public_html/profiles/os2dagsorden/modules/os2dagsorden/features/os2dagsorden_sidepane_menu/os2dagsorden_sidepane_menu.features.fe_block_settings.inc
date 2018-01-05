@@ -23,10 +23,10 @@ function os2dagsorden_sidepane_menu_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'menu',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -20,
       ),
       'rubik' => array(
@@ -51,10 +51,10 @@ function os2dagsorden_sidepane_menu_default_fe_block_settings() {
       'authenticated user' => 2,
     ),
     'themes' => array(
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'region' => 'sidebar_second',
         'status' => 1,
-        'theme' => 'os2dagsorden_theme',
+        'theme' => 'os2dagsorden_classic_theme',
         'weight' => -20,
       ),
       'rubik' => array(

@@ -122,7 +122,7 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
         $form['agenda'][] = array(
           '#type' => 'image_button',
           '#button_type' => 'submit-edit',
-          '#src' => drupal_get_path('theme', 'os2dagsorden_theme') . '/img/icon_edit.png',
+          '#src' => drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/img/icon_edit.png',
           '#name' => 'edit_' . $bp->nid,
           '#submit' => array('os2dagsorden_create_agenda_meeting_submit_add_edit_bullet_point'),
           '#bp_nid' => $bp->nid,
@@ -130,7 +130,7 @@ function os2dagsorden_create_agenda_meeting($form, &$form_state, $meeting_id) {
         $form['agenda'][] = array(
           '#type' => 'image_button',
           '#button_type' => 'submit-delete',
-          '#src' => drupal_get_path('theme', 'os2dagsorden_theme') . '/img/icon_delete.png',
+          '#src' => drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/img/icon_delete.png',
           '#name' => 'delete_' . $bp->nid,
           '#submit' => array('os2dagsorden_create_agenda_meeting_submit_delete_bullet_point'),
           '#bp_nid' => $bp->nid,

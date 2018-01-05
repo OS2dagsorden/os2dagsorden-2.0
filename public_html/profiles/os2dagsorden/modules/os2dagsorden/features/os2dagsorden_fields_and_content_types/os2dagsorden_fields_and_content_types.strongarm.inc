@@ -15,7 +15,7 @@ function os2dagsorden_fields_and_content_types_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'chosen_disabled_themes';
   $strongarm->value = array(
-    'os2dagsorden_theme' => 0,
+    'os2dagsorden_classic_theme' => 0,
   );
   $export['chosen_disabled_themes'] = $strongarm;
 

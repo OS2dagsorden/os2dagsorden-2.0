@@ -1,0 +1,80 @@
+/* This file will hold styles that are loaded using the same media query as the wide grid. */
+/*.grid-18 .attachment_text_container .attachment_text_trimmed_container,
+.grid-18 .attachment_text_container .attachment_text_full_container{
+ max-width: 600px;
+ width: 100%;
+}
+
+.grid-24 .attachment_text_container .attachment_text_trimmed_container,
+.grid-24 .attachment_text_container .attachment_text_full_container{
+  //max-width: 800px;
+ // width: 100%;
+}
+
+.grid-18 .attachment_text_container .attachment-text{
+  overflow: hidden;
+
+  //max-width: 600px;
+  //width: 100%;
+}
+
+.grid-24 .attachment_text_container .attachment-text{
+  overflow: hidden;
+  //max-width: 800px;
+ // width:100%;
+}*/
+
+/*---------------------------- Date override START ----------------------------*/
+
+div.date-heading h3 a,
+div.date-heading h3 {
+  font-size: 20px;
+}
+
+/*---------------------------- Date override END ----------------------------*/
+.attachment_text_container .attachment_text_trimmed_container,
+.attachment_text_container .attachment_text_full_container,
+.attachment_text_container .attachment_text_trimmed_container.attachment_text_max_size,
+.attachment_text_container .attachment_text_full_container.attachment_text_max_size {
+  max-width: none;
+}
+
+.attachment_text_container .attachment_text_max_size .attachment-text,
+.attachment_text_container .attachment-text {
+  max-width: none;
+}
+
+/* --------------------------- Drag and drop START -------------------------------*/
+#available_committee {
+  background-image: none;
+  padding-right: 0;
+}
+/* --------------------------- Drag and drop END -------------------------------*/
+/* ---------------------------- arrows_reverse START ---------------------------- */
+.arrows-reverse {
+  width: 280px;
+}
+
+.arrows-reverse > img {
+  padding: 0 40px 0 10px;
+}
+
+ul.droptrue li {
+  max-width: 250px
+}
+
+ul.droptrue li.can-subscribe span {
+  max-width: 190px;
+}
+/* ---------------------------- arrows_reverse END ---------------------------- */
+.breadcrumb .breadcrumb-active {
+  max-width: 300px;
+}
+.block-views .view-user-logout-menu li div {
+  display: inline-block;
+}
+.block-views .view-user-logout-menu li div {
+  display: inline-block;
+  float: initial;
+  margin-left: 5px;
+}
