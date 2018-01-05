@@ -67,9 +67,8 @@ function os2web_edoc_esdh_form_os2web_settings_settings_form_alter(&$form, &$for
     ),
   );
   $form['meetings']['os2web_edoc_esdh_approved_committees'] = array(
-    '#type' => 'textfield',
+    '#type' => 'textarea',
     '#title' => 'Godkendte Udvalg',
-    '#maxlength' => 200,
     '#description' => 'Komma sepereret liste over udvalgs-id der er godkendt til publisering.',
     '#default_value' => variable_get('os2web_edoc_esdh_approved_committees', MM_DEFAULT_APPROVED),
   );
