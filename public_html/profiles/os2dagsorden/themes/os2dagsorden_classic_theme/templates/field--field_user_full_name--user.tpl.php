@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file field.tpl.php
+ * @file Field.tpl.php
  * Default template implementation to display the value of a field.
  *
  * This file is not used and is here as a starting point for customization only.
@@ -56,7 +56,7 @@ HTML comment.
   <?php endif; ?>
   <span class="field-items"<?php print $content_attributes; ?>>
     <?php foreach ($items as $delta => $item): ?>
-      <span class="field-item <?php print $delta % 2 ? 'odd' : 'even'; ?>"<?php print $item_attributes[$delta]; ?>><?php print '(' . render($item) . ')'; ?></span>
+      <span class="field-item <?php print $delta % 2 ? 'odd' : 'even'; ?>"<?php print $item_attributes[$delta]; ?>><?php print render($item); ?></span>
     <?php endforeach; ?>
   </span>
 </span>

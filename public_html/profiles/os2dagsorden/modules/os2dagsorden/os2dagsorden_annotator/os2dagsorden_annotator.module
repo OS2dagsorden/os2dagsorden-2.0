@@ -340,7 +340,7 @@ function _os2dagsorden_annotator_view($meeting_id, $bullet_point_id, $bilag_id) 
   $mode = (isset($_GET['search_param'])) ? 'search_mode' : 'annotator_mode';
 
   if ($mode === 'search_mode') {
-    drupal_add_js(drupal_get_path('theme', 'os2dagsorden_theme') . '/js/jquery.highlight.js');
+    drupal_add_js(drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/js/jquery.highlight.js');
     $search_param = $_GET['search_param'];
     drupal_add_js('highlight_wrapper(".node","' . $search_param . '");', 'inline');
 

@@ -61,7 +61,7 @@ function os2dagsorden_blocks_positioning_context_default_contexts() {
           'dashboard_inactive' => 0,
         ),
       ),
-      'os2dagsorden_theme' => array(
+      'os2dagsorden_classic_theme' => array(
         'disable' => array(
           'page_top' => 'page_top',
           'page_bottom' => 'page_bottom',

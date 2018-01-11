@@ -328,7 +328,7 @@ function _os2dagsorden_content_modify_render_drag_and_drop_controls(&$form, $uid
     //printing arrows reverse
     $form[]['#markup'] =
       '<div class="arrows-reverse">
-      <img src = "' . base_path() . drupal_get_path('theme', 'os2dagsorden_theme') . '/img/img_arrows_reverse.png">
+      <img src = "' . base_path() . drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/img/img_arrows_reverse.png">
       </div>';
 
     //printing available committees

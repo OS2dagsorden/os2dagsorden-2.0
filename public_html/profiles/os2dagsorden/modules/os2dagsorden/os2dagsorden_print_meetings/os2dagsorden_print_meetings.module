@@ -43,7 +43,7 @@ function _os2dagsorden_print_meetings_callback() {
   drupal_set_breadcrumb($breadcrumb);
 
   drupal_add_css(drupal_get_path('module', 'os2dagsorden_print_meetings') . '/css/os2dagsorden_print_meetings.css');
-  drupal_add_css(drupal_get_path('theme', 'os2dagsorden_theme') . '/css/global.css');
+  drupal_add_css(drupal_get_path('theme', 'os2dagsorden_classic_theme') . '/css/global.css');
 
   return drupal_get_form('_os2dagsorden_print_meetings_form');
 }
