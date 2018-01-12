@@ -424,12 +424,11 @@ ul li.leaf {
   background-color: #fffffe;
   border: 1px solid #fffffe;
   border-radius: 50%;
+  text-align: center;
   cursor: pointer; }
   .help-button:after {
     content: '!';
-    left: 8px;
-    position: absolute;
-    top: 1px;
+    position: relative;
     margin: auto;
     font-weight: bold; }
 
@@ -762,9 +761,11 @@ div.block-inner {
       .calendar-calendar table.mini tr td.empty {
         background: #f7f1f1; }
       .calendar-calendar table.mini tr td.today, .calendar-calendar table.mini tr.odd td.today, .calendar-calendar table.mini tr.even td.today {
-        background: #fffffe;
-        text-align: center;
-        border-radius: 5px; }
+        background: #f7f1f1;
+        text-align: center; }
+        .calendar-calendar table.mini tr td.today div.mini-day-off, .calendar-calendar table.mini tr.odd td.today div.mini-day-off, .calendar-calendar table.mini tr.even td.today div.mini-day-off {
+          background: #fffffe;
+          border-radius: 5px; }
     .calendar-calendar table.mini .mini tr td.today a {
       color: #feffff;
       font-weight: bold;
@@ -774,9 +775,11 @@ div.block-inner {
       background-color: #f9d4ed;
       font-weight: bold;
       border-radius: 5px;
-      padding: 3px 3px 3px 8px; }
+      padding: 3px 8px 3px 8px;
+      display: inline-block; }
     .calendar-calendar table.mini .has-no-events div.mini-day-off {
-      padding: 3px 3px 1px 8px; }
+      padding: 3px 8px 3px 8px;
+      display: inline-block; }
     .calendar-calendar table.mini td .inner div.day a {
       color: #373636; }
     .calendar-calendar table.mini .month-view .full tr td.today, .calendar-calendar table.mini .month-view .full tr.odd td.today, .calendar-calendar table.mini .month-view .full tr.even td.today {
