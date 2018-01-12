@@ -15,9 +15,10 @@ function os2dagsorden_gs_conversion_file_insert($file) {
   $status = NULL;
 
   // Checking the version prior to schedule, maybe the file is already in the correct version
-  if (strcasecmp($pdf_version, '1.4') == 0) {
-    $status = 'Completed';
-  }
+// Removed as now now everything needs to be force converted to A4
+//  if (strcasecmp($pdf_version, '1.4') == 0) {
+//    $status = 'Completed';
+//  }
 
   db_insert('os2dagsorden_gs_conversion_files')
     ->fields(array(
@@ -49,9 +50,10 @@ function os2dagsorden_gs_conversion_file_update($file) {
     $status = NULL;
 
     // Checking the version prior to schedule, maybe the file is already in the correct version
-    if (strcasecmp($pdf_version, '1.4') == 0) {
-      $status = 'Completed';
-    }
+// Removed as now now everything needs to be force converted to A4
+//    if (strcasecmp($pdf_version, '1.4') == 0) {
+//      $status = 'Completed';
+//    }
 
     db_insert('os2dagsorden_gs_conversion_files')
       ->fields(array(
@@ -153,7 +155,7 @@ function os2dagsorden_gs_conversion_convert_single($fid, $uri) {
   $shell_file_path_real = escapeshellarg($file_path_real);
   $shell_file_path_converted = escapeshellarg($file_path_converted);
 
-  shell_exec('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dQUIET -dBATCH -sOutputFile=' . $shell_file_path_converted . ' ' . $shell_file_path_real . ' 2>&1');
+  shell_exec('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sPAPERSIZE=a4 -dFIXEDMEDIA -dPDFFitPage -dNOPAUSE -dQUIET -dBATCH -sOutputFile=' . $shell_file_path_converted . ' ' . $shell_file_path_real . ' 2>&1');
 
   // Successful conversion?
   $new_pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file_path_converted);
