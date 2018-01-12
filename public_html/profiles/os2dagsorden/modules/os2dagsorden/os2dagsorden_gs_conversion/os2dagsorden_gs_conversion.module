@@ -11,49 +11,15 @@ define('DEFAULT_GS_CONVERSION_LIMIT', 500);
  * @param $file
  */
 function os2dagsorden_gs_conversion_file_insert($file) {
-  $pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file->uri);
-  $status = NULL;
-
-  // Checking the version prior to schedule, maybe the file is already in the correct version
-// Removed as now now everything needs to be force converted to A4
-//  if (strcasecmp($pdf_version, '1.4') == 0) {
-//    $status = 'Completed';
-//  }
-
-  db_insert('os2dagsorden_gs_conversion_files')
-    ->fields(array(
-      'fid' => $file->fid,
-      'uri' => $file->uri,
-      'filename' => $file->filename,
-      'pdf_version' => $pdf_version,
-      'status' => $status,
-    ))
-    ->execute();
-}
-
-/**
- * Implements hook_file_update().
- *
- * Schedules a PDF file for conversion if its PDF version is not 1.4.
- *
- * @param $file
- */
-function os2dagsorden_gs_conversion_file_update($file) {
-  $result = db_select('os2dagsorden_gs_conversion_files', 'o')
-    ->fields('o')
-    ->condition('fid', $file->fid)
-    ->execute()
-    ->fetchAllAssoc('fid');
-
-  if (!isset($result[$file->fid])) {
+  if ($file->fid && $file->filemime == 'application/pdf') {
     $pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file->uri);
     $status = NULL;
 
     // Checking the version prior to schedule, maybe the file is already in the correct version
 // Removed as now now everything needs to be force converted to A4
-//    if (strcasecmp($pdf_version, '1.4') == 0) {
-//      $status = 'Completed';
-//    }
+//  if (strcasecmp($pdf_version, '1.4') == 0) {
+//    $status = 'Completed';
+//  }
 
     db_insert('os2dagsorden_gs_conversion_files')
       ->fields(array(
@@ -64,6 +30,44 @@ function os2dagsorden_gs_conversion_file_update($file) {
         'status' => $status,
       ))
       ->execute();
+  }
+}
+
+/**
+ * Implements hook_file_update().
+ *
+ * Schedules a PDF file for conversion if its PDF version is not 1.4.
+ *
+ * @param $file
+ */
+function os2dagsorden_gs_conversion_file_update($file) {
+  if ($file->fid && $file->filemime == 'application/pdf') {
+    $result = db_select('os2dagsorden_gs_conversion_files', 'o')
+      ->fields('o')
+      ->condition('fid', $file->fid)
+      ->execute()
+      ->fetchAllAssoc('fid');
+
+    if (!isset($result[$file->fid])) {
+      $pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file->uri);
+      $status = NULL;
+
+      // Checking the version prior to schedule, maybe the file is already in the correct version
+// Removed as now now everything needs to be force converted to A4
+//    if (strcasecmp($pdf_version, '1.4') == 0) {
+//      $status = 'Completed';
+//    }
+
+      db_insert('os2dagsorden_gs_conversion_files')
+        ->fields(array(
+          'fid' => $file->fid,
+          'uri' => $file->uri,
+          'filename' => $file->filename,
+          'pdf_version' => $pdf_version,
+          'status' => $status,
+        ))
+        ->execute();
+    }
   }
 }
 
