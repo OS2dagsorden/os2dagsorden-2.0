@@ -403,8 +403,8 @@ HTML;
       $pageAmount = $bilag->field_os2web_meetings_bpa_pages['und'][0]['value'];
     }
 
-    // Disallowing PDF download.
-    if (variable_get('os2dagsorden_allow_pdf_download', TRUE)) {
+    // Restricting PDF download.
+    if (os2dagsorden_access_helper_check_pdf_download_enabled()) {
       // Creating link for downloading pdf version.
       $download_pdf_link = file_create_url($bilag->field_os2web_meetings_bpa_file['und'][0]['uri']);
 
@@ -417,16 +417,16 @@ HTML;
       }
 
       $html .= '<input class="form-submit" type="button" onclick="window.open(\'' . $download_pdf_link . '\')" value="Hent ' . $extention . '-version">';
+
+      // Composing the print link.
+      $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
+      $html .=
+        '<input class="form-submit next-control print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print noter">';
     }
 
-    // Composing the print link.
-    $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
-
     // Composing html output.
-    $html .=
-    '<input class="form-submit next-control print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print noter">' .
-    '</div>' . '<div class="clearfix"></div>' .
-    _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageAmount) .
+    $html .= '</div><div class="clearfix"></div>' .
+      _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageAmount) .
     '<div id="content"><div class="attachment-text">' . $text . '</div></div>' .
     _os2dagsorden_annotator_get_pager_html($meeting_id, $bullet_point_id, $bilag_id, $pageAmount) .
     '</div>';
@@ -442,11 +442,16 @@ HTML;
     // Getting text.
     $text = '<div class="attachment-text attachment_text_full_container">' . $bilag->field_os2web_meetings_bpa_body['und'][0]['value'] . '</div>';
 
-    // Composing the print link.
-    $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
+    // Restricting PDF download.
+    if (os2dagsorden_access_helper_check_pdf_download_enabled()) {
+      // Composing the print link.
+      $print_link = $GLOBALS['base_url'] . '/print/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id . '/bullet-point-attachment/' . $bilag_id . '/print';
+
+      $html .= '<input class="form-submit print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print">';
+    }
 
     // Composing html output.
-    $html .= '<input class="form-submit print-button" type="button" onclick="window.open(\'' . $print_link . '\')" value="Print"></div>' .
+    $html .= '</div>' .
           '<div class="clearfix"></div>' .
           '<div class="clearfix" id="content">' . $text . '</div>' .
           '</div>';

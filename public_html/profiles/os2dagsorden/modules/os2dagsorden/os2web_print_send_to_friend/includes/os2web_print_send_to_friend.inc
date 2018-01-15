@@ -53,22 +53,10 @@ function os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_poi
 }
 
 /**
- * Return tiltle of bullet point for printing.
+ * Returns a list of files that are associated with the provided bullet point.
  *
- * @param int $bullet_point_id
- *   bullet point id.
- */
-function os2web_print_send_to_friend_print_bullet_point_title($bullet_point_id) {
-  $bullet_point = node_load($bullet_point_id);
-  if (strcmp($bullet_point->type, 'os2web_meetings_bullet') == 0) {
-    $html = '<h2>' . $bullet_point->title . '</h2>';
-
-  }
-  return ('<div class="node" id="content">' . $html . '</div>');
-}
-
-/**
- *
+ * @param $bullet_point_id
+ * @return array of files
  */
 function os2web_print_send_to_friend_print_bullet_point_attachments($bullet_point_id) {
   $bullet_point = node_load($bullet_point_id);
@@ -115,7 +103,7 @@ function os2web_print_send_to_friend_send_to_friend_form($meeting_id, $bullet_po
   if ($bullet_point->field_os2web_meetings_bul_closed['und'][0]['value'] == 1) {
     $confirm_popup = 'onclick ="if(!confirm(\'Du er ved at sende indhold fra et lukket dagsordenspunkt. Vil du stadig sende mailen?\')){return false;}"';
   }
-  $html .= t('Udfyld felterne herunder og tryk "Send", når du vil sende beskeden.');
+  $html = t('Udfyld felterne herunder og tryk "Send", når du vil sende beskeden.');
   $html .= '<form id="send_to_friend_form">';
   $html .= '<label>' . t('Dit navn') . ':</label><input type="text" name="name" />';
   $html .= '<label>' . t('Besked') . ':</label><textarea name="message"></textarea>';
@@ -167,7 +155,11 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
   // $system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;
   if (module_exists('os2dagsorden_logging')) {
-    os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was sent to %to', array('%title' => $subject, '%uri' => $bullet_point_uri, '%to' => $to_email), WATCHDOG_INFO,
+    os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was sent to %to', array(
+        '%title' => $subject,
+        '%uri' => $bullet_point_uri,
+        '%to' => $to_email
+      ), WATCHDOG_INFO,
       array(
         'uid' => $user->uid,
         'text' => check_plain(trim($_POST['message'])),
@@ -177,58 +169,14 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
 }
 
 /**
+ * Implements hook_mail().
  *
+ * @param $key
+ * @param $message
+ * @param $params
  */
 function os2web_print_send_to_friend_mail($key, &$message, $params) {
   $message['subject'] = $params['subject'];
   $message['body'][] = $params['body'];
   $message['params']['attachments'] = $params['params']['attachments'];
-}
-
-/**
- * Prepares the pring version of meeting and all its bullet point and bullet point attachments.
- *
- * @param int $meeting_id
- *   meeting id.
- */
-function os2web_print_send_to_friend_print_dagsorden($meeting_id) {
-  // Hiding regions not needed for printing
-  // drupal_add_css(drupal_get_path('theme', 'rubik') . '/css/style.css');
-  // drupal_add_css('.view-display-id-attachment_2{ display: none;}', 'inline');.
-  drupal_add_css('.view-display-id-attachment_1{ display: none;}', 'inline');
-  drupal_add_css('.view-display-id-attachment_5{ display: none;}', 'inline');
-  drupal_add_css('.lukket-dagsorden{ display: none;}', 'inline');
-  // drupal_add_css('.view-display-id-attachment_4{ display: none;}', 'inline');.
-  drupal_add_css('.hide-on-print{ display: none; }', 'inline');
-  drupal_add_css('.form-submit {display: none; }', 'inline');
-  // Changing table width, overrriding styles to match website representation.
-  drupal_add_css('table{ width: 100%; border:none!important}', 'inline');
-  $overriden_css = 'td,tr { background: none !important; border:none !important}
-    th {padding: 7px 5px; text-align:left;
-    background-color: #B5B5B5;
-    color: #000;}
-    td {border: none!important; background-color: #DCDCDC;}
-    table {margin: 1.2em 0;}
-    ';
-  drupal_add_css($overriden_css, 'inline');
-
-  $view = views_get_view('meeting_details');
-  $view->set_display('page');
-  $view->set_arguments(array($meeting_id));
-  $view->execute();
-  // Print $view->render();
-  $html .= $view->render();
-  $meeting = node_load($meeting_id);
-  if (isset($meeting->field_os2web_meetings_bullets['und'])) {
-    foreach ($meeting->field_os2web_meetings_bullets['und'] as $bullet_point) {
-      if (os2dagsorden_access_helper_check_user_can_see_bullet_point($meeting_id, $bullet_point['target_id'])) {
-        $html .= os2web_print_send_to_friend_print_bullet_point($meeting_id, $bullet_point['target_id'], FALSE);
-      }
-      else {
-        $html .= os2web_print_send_to_friend_print_bullet_point_title($meeting_id, $bullet_point['target_id']);
-      }
-    }
-  }
-
-  return $html;
 }

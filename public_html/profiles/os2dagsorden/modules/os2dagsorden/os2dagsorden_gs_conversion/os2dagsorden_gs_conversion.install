@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * Creates a table in the database that will controll the workflow of the module.
+ *
+ * @return created schema
+ */
+function os2dagsorden_gs_conversion_schema() {
+  $schema['os2dagsorden_gs_conversion_files'] = array(
+    'description' => 'This table is used as schedule for PDF -> PDF with Ghostscript',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'The file entity fid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uri' => array(
+        'description' => 'The URI of the file',
+        'type' => 'varchar',
+        'length' => 1024,
+        'serialize' => TRUE,
+      ),
+      'filename' => array(
+        'description' => 'The name of the file',
+        'type' => 'varchar',
+        'length' => 1024,
+        'serialize' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'The information about the job',
+        'type' => 'varchar',
+        'length' => 1024,
+        'serialize' => TRUE,
+      ),
+      'pdf_version' => array(
+        'description' => 'The PDF version of the file',
+        'type' => 'varchar',
+        'length' => 5,
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('fid'),
+  );
+  return $schema;
+}

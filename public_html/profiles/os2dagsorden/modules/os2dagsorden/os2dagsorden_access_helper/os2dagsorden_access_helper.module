@@ -1724,3 +1724,28 @@ function _os2dagsorden_access_helper_check_user_is_committee_admin($meeting_type
   }
   return FALSE;
 }
+
+/**
+ * Checks if the PDF download is available on this installation for user with that IP address.
+ *
+ * @return bool
+ */
+function os2dagsorden_access_helper_check_pdf_download_enabled() {
+  if (variable_get('os2dagsorden_pdf_download_whitelist_enabled')) {
+    $whitelisted_ips = explode(',', variable_get('os2dagsorden_pdf_download_whitelist'));
+    $remote_ip = $_SERVER['REMOTE_ADDR'];
+
+    foreach ($whitelisted_ips as $whitelisted_ip) {
+      // If we the client request is from one of the IP's, login using SimpleSAMLphp; otherwise use nemid login.
+      // If check for only parts of the ip address.
+      // This makes it possible to add only the beginning of the IP range.
+      // F.ex. 192.168 will allow all ip adresses including 192.168 as part of the io.
+      if (strpos($remote_ip, $whitelisted_ip) !== FALSE) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  return TRUE;
+}

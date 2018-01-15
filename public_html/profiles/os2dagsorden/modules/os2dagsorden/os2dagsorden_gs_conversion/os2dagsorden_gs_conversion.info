@@ -1,0 +1,4 @@
+name = OS2Dagsorden Ghoscript Conversion
+description = This is a helped module to convert all PDF file to PDF 1.4 compatible files, depends on Ghostscript
+package = OS2Dagsorden
+core = 7.x

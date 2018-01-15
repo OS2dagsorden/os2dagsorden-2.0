@@ -1,0 +1,211 @@
+<?php
+
+// Number of files to handle at once.
+define('DEFAULT_GS_CONVERSION_LIMIT', 500);
+
+/**
+ * Implements hook_file_insert().
+ *
+ * Schedules a PDF file for conversion if its PDF version is not 1.4.
+ *
+ * @param $file
+ */
+function os2dagsorden_gs_conversion_file_insert($file) {
+  if ($file->fid && $file->filemime == 'application/pdf') {
+    $pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file->uri);
+    $status = NULL;
+
+    // Checking the version prior to schedule, maybe the file is already in the correct version
+// Removed as now now everything needs to be force converted to A4
+//  if (strcasecmp($pdf_version, '1.4') == 0) {
+//    $status = 'Completed';
+//  }
+
+    db_insert('os2dagsorden_gs_conversion_files')
+      ->fields(array(
+        'fid' => $file->fid,
+        'uri' => $file->uri,
+        'filename' => $file->filename,
+        'pdf_version' => $pdf_version,
+        'status' => $status,
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_file_update().
+ *
+ * Schedules a PDF file for conversion if its PDF version is not 1.4.
+ *
+ * @param $file
+ */
+function os2dagsorden_gs_conversion_file_update($file) {
+  if ($file->fid && $file->filemime == 'application/pdf') {
+    $result = db_select('os2dagsorden_gs_conversion_files', 'o')
+      ->fields('o')
+      ->condition('fid', $file->fid)
+      ->execute()
+      ->fetchAllAssoc('fid');
+
+    if (!isset($result[$file->fid])) {
+      $pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file->uri);
+      $status = NULL;
+
+      // Checking the version prior to schedule, maybe the file is already in the correct version
+// Removed as now now everything needs to be force converted to A4
+//    if (strcasecmp($pdf_version, '1.4') == 0) {
+//      $status = 'Completed';
+//    }
+
+      db_insert('os2dagsorden_gs_conversion_files')
+        ->fields(array(
+          'fid' => $file->fid,
+          'uri' => $file->uri,
+          'filename' => $file->filename,
+          'pdf_version' => $pdf_version,
+          'status' => $status,
+        ))
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_file_delete().
+ *
+ * Removes entry from database table.
+ *
+ * @param $file
+ */
+function os2dagsorden_gs_conversion_file_delete($file) {
+  // Updating database entry.
+  db_delete('os2dagsorden_gs_conversion_files')
+    ->condition('fid', $file->fid)
+    ->execute();
+}
+
+/**
+ * Implements hook_cron().
+ * Internallu calls os2dagsorden_gs_conversion_convert.
+ */
+function os2dagsorden_gs_conversion_cron() {
+  os2dagsorden_gs_conversion_convert();
+}
+
+/**
+ * Runs throgh all the files (respecting the batch limit DEFAULT_GS_CONVERSION_LIMIT) and calls the conversion function on them.
+ * Later on calls the file_save function to update file entity metadata (size etc).
+ *
+ */
+function os2dagsorden_gs_conversion_convert() {
+  // Select files for conversion.
+  $query = db_select('os2dagsorden_gs_conversion_files', 'f');
+  $query->fields('f', array('fid', 'uri'))
+    ->isNull('f.status')
+    ->range(0, DEFAULT_GS_CONVERSION_LIMIT);
+  $result = $query->execute();
+
+  while ($record = $result->fetchAssoc()) {
+    os2dagsorden_gs_conversion_convert_single($record['fid'], $record['uri']);
+  }
+
+  // Go through the finished tasks.
+  $query = db_select('os2dagsorden_gs_conversion_files', 'f');
+  $query->fields('f')
+    ->condition('status', 'Converted');
+  $result = $query->execute();
+
+  while ($record = $result->fetchAssoc()) {
+    // Updating the file to refresh file metadata (size etc).
+    $file = file_load($record['fid']);
+    file_save($file);
+
+    // Updating database entry.
+    db_update('os2dagsorden_gs_conversion_files')
+      ->fields(array(
+        'status' => 'Completed',
+      ))
+      ->condition('fid', $record['fid'])
+      ->execute();
+  }
+}
+
+/**
+ * Does the actual conversion of a single file into PDF v1.4.
+ * Internally calls Ghostscript (gs) shell command to do the job.
+ *
+ * If the file is not found, the information about it is removed.
+ * After the job if run status is updated to Converted/Not converted depending on the result.
+ *
+ * @param $fid
+ * @param $uri
+ */
+function os2dagsorden_gs_conversion_convert_single($fid, $uri) {
+  // Deleting entry if the file does not exist
+  if (!file_exists($uri)) {
+    db_delete('os2dagsorden_gs_conversion_files')
+      ->condition('fid', $fid)
+      ->execute();
+    return;
+  }
+
+  // With file name.
+  $file_path_real = drupal_realpath($uri);
+  $file_path_converted = $file_path_real . '.tmp';
+
+  // One has to know the exact locale of the system, otherwise uncomment the lines.
+  setlocale(LC_CTYPE, "en_DK.UTF-8");
+  $shell_file_path_real = escapeshellarg($file_path_real);
+  $shell_file_path_converted = escapeshellarg($file_path_converted);
+
+  shell_exec('gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sPAPERSIZE=a4 -dFIXEDMEDIA -dPDFFitPage -dNOPAUSE -dQUIET -dBATCH -sOutputFile=' . $shell_file_path_converted . ' ' . $shell_file_path_real . ' 2>&1');
+
+  // Successful conversion?
+  $new_pdf_version = os2dagsorden_gs_conversion_get_pdf_version($file_path_converted);
+  if (strcasecmp($new_pdf_version, '1.4') == 0) {
+    // Removing original file
+    unlink($file_path_real);
+    // Renaming new file
+    rename($file_path_converted, $file_path_real);
+
+    db_update('os2dagsorden_gs_conversion_files')
+      ->fields(array(
+        'status' => 'Converted',
+        'pdf_version' => $new_pdf_version
+      ))
+      ->condition('fid', $fid)
+      ->execute();
+  }
+  else {
+    db_update('os2dagsorden_gs_conversion_files')
+      ->fields(array(
+        'status' => 'Not converted',
+      ))
+      ->condition('fid', $fid)
+      ->execute();
+  }
+}
+
+/**
+ * Helper function to extract PDF version of the provided file.
+ * This is done by using a head shell command.
+ *
+ * @param $uri
+ * @return mixed|null
+ */
+function os2dagsorden_gs_conversion_get_pdf_version($uri) {
+  setlocale(LC_CTYPE, "en_DK.UTF-8");
+  $file_path_real = drupal_realpath($uri);
+  $shell_file_path_real = escapeshellarg($file_path_real);
+
+  $head_return = shell_exec('head -n 1 ' . $shell_file_path_real);
+
+  $version = preg_replace("/[^0-9.]/", "", $head_return);
+  if (empty($version)) {
+    return NULL;
+  }
+  else {
+    return substr($version, 0, 5);
+  }
+}
