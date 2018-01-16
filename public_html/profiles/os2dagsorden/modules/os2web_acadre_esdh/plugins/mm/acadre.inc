@@ -745,7 +745,21 @@ function _os2web_acadre_esdh_pdf_file_path($path, $name) {
 function _acadre_esdh_mm_improve_body_html($data) {
   $data = _acadre_esdh_mm_remove_empty_tags($data);
   $url_strip_count = variable_get('os2dagsorden_url_strip_count', '100');
-  $data = preg_replace('/(<a.+?>)(.{0,' . $url_strip_count . '}).*?(<\/a>)/is', '$1$2...$3', $data);
+   //looking for all <a tags>
+  preg_match_all('/(<a.+?>).*?(<\/a>)/is', $data, $matches, PREG_SET_ORDER, 0);
+  //foreach <a> tag
+  foreach($matches as $match) {
+    $match = reset($match);
+    // get link text
+    preg_match('/<a ?.*>(.*)<\/a>/is', $match, $arr, PREG_OFFSET_CAPTURE, 0); 
+    $str = (reset($arr[1]));
+      // if strlen > $url_strip_count strip link text
+    if(strlen($str) > $url_strip_count) {
+      $striped_text = preg_replace('/(<a.+?>)(.{0,' . $url_strip_count . '})(.*?)(<\/a>)/is', '$1$2...$4', $match);
+      $data = str_replace($match, $striped_text, $data);
+    }
+  }
+  /* $data = preg_replace('/(<a.+?>)(.{0,' . $url_strip_count . '}).*?(<\/a>)/is', '$1$2...$3', $data);*/
   $doc = new DOMDocument();
   $doc->loadHTML($data);
   $elements = $doc->getElementsByTagName('img');
