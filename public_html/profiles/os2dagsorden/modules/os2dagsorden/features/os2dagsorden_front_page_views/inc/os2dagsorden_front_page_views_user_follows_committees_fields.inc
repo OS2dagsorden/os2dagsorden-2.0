@@ -64,7 +64,7 @@ function os2dagsorden_front_page_views_user_follows_committees_fields_print_comm
     elseif ($com['field'] == 'c_pp') {
       $link .= '<b>++</b>';
     }
-    print '<a href="/meetings-search?field_os2web_meetings_committee_tid=' .$com['tid'] . '&from_date=&to_date">' . $link . '</a></br>';
+    print '<a href="/meetings-search?field_os2web_meetings_committee_tid_depth=' .$com['tid'] . '&from_date=&to_date">' . $link . '</a></br>';
   }
 }
 /////////////////////////////////////////BLOCK END /////////////////////////////////////////

@@ -436,8 +436,8 @@ function os2dagsorden_settings_form_alter(&$form, &$form_state, $form_id) {
       $com_pos_list[$com->tid] = $com->name;
     }
     if (!empty($active_commitees)) {
-      $form['field_os2web_meetings_committee_tid']['#empty_option'] = array('All' => 'Alle');
-      $form['field_os2web_meetings_committee_tid']['#options'] = $com_pos_list;
+      $form['field_os2web_meetings_committee_tid_depth']['#empty_option'] = array('All' => 'Alle');
+      $form['field_os2web_meetings_committee_tid_depth']['#options'] = $com_pos_list;
     }
   }
 

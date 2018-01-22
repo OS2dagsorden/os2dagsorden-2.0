@@ -62,55 +62,6 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_comment_document';
-  $strongarm->value = 0;
-  $export['print_display_comment_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_comment_speaker_paper';
-  $strongarm->value = 0;
-  $export['print_display_comment_speaker_paper'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_document';
-  $strongarm->value = 1;
-  $export['print_display_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_speaker_paper';
-  $strongarm->value = 1;
-  $export['print_display_speaker_paper'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_sys_urllist';
-  $strongarm->value = 0;
-  $export['print_display_sys_urllist'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_urllist_document';
-  $strongarm->value = 1;
-  $export['print_display_urllist_document'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_display_urllist_speaker_paper';
-  $strongarm->value = 1;
-  $export['print_display_urllist_speaker_paper'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'print_footer_options';
   $strongarm->value = '0';
   $export['print_footer_options'] = $strongarm;
@@ -143,6 +94,8 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->value = array(
     'link' => 0,
     'corner' => 0,
+    'block' => 'block',
+    'help' => 'help',
   );
   $export['print_html_link_pos'] = $strongarm;
 
@@ -166,20 +119,6 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->name = 'print_html_new_window';
   $strongarm->value = 1;
   $export['print_html_new_window'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_html_node_link_pages';
-  $strongarm->value = '';
-  $export['print_html_node_link_pages'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_html_node_link_visibility';
-  $strongarm->value = '1';
-  $export['print_html_node_link_visibility'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -377,7 +316,8 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->value = array(
     'link' => 0,
     'corner' => 0,
-    'block' => 0,
+    'block' => 'block',
+    'help' => 'help',
   );
   $export['print_pdf_link_pos'] = $strongarm;
 
@@ -398,20 +338,6 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'print_pdf_node_link_pages';
-  $strongarm->value = '';
-  $export['print_pdf_node_link_pages'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'print_pdf_node_link_visibility';
-  $strongarm->value = '1';
-  $export['print_pdf_node_link_visibility'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_page_orientation';
   $strongarm->value = 'landscape';
   $export['print_pdf_page_orientation'] = $strongarm;
@@ -427,7 +353,7 @@ function os2dagsorden_meeting_views_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'print_pdf_pdf_tool';
-  $strongarm->value = 'profiles/os2dagsorden/libraries/dompdf/dompdf_config.inc.php';
+  $strongarm->value = 'print_pdf_mpdf|profiles/os2dagsorden/libraries/mpdf/mpdf.php';
   $export['print_pdf_pdf_tool'] = $strongarm;
 
   $strongarm = new stdClass();

@@ -19,6 +19,6 @@ include_once 'inc/os2dagsorden_meeting_views_coming_meetings_fields.inc';
 function os2dagsorden_meeting_views_form_alter(&$form, &$form_state, $form_id) {
   // The 'All' option in the exposed views filter isn't translated.
   if ($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-meetings-search-page') {
-    $form['field_os2web_meetings_committee_tid']['#options']['All'] = 'Alle';
+    $form['field_os2web_meetings_committee_tid_depth']['#options']['All'] = 'Alle';
   }
 }
