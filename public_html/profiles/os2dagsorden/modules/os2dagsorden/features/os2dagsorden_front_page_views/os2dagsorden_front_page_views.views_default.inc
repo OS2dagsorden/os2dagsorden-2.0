@@ -32,6 +32,7 @@ function os2dagsorden_front_page_views_views_default_views() {
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Acceptér';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -75,7 +76,7 @@ os2dagsorden_front_page_views_user_committees_help_text();
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['field'] = 'field_os2web_meetings_com_shname';
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['label'] = '';
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['alter']['make_link'] = TRUE;
-  $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['alter']['path'] = 'meetings-search?field_os2web_meetings_committee_tid=[tid]&from_date=&to_date';
+  $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['alter']['path'] = 'meetings-search?field_os2web_meetings_committee_tid_depth=[tid]&from_date=&to_date';
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['field_os2web_meetings_com_shname']['empty'] = '[name]';
   /* Sort criterion: Ord i ordforråd: Name short (field_os2web_meetings_com_shname) */
@@ -89,6 +90,13 @@ os2dagsorden_front_page_views_user_committees_help_text();
   $handler->display->display_options['filters']['uid_current']['relationship'] = 'reverse_field_user_committee_user';
   $handler->display->display_options['filters']['uid_current']['value'] = '1';
   $handler->display->display_options['filters']['uid_current']['group'] = 1;
+  /* Filter criterion: Ord i ordforråd: Active (field_os2web_meetings_com_active) */
+  $handler->display->display_options['filters']['field_os2web_meetings_com_active_value']['id'] = 'field_os2web_meetings_com_active_value';
+  $handler->display->display_options['filters']['field_os2web_meetings_com_active_value']['table'] = 'field_data_field_os2web_meetings_com_active';
+  $handler->display->display_options['filters']['field_os2web_meetings_com_active_value']['field'] = 'field_os2web_meetings_com_active_value';
+  $handler->display->display_options['filters']['field_os2web_meetings_com_active_value']['value'] = array(
+    1 => '1',
+  );
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
@@ -97,7 +105,7 @@ os2dagsorden_front_page_views_user_committees_help_text();
     t('Master'),
     t('Medlem af'),
     t('more'),
-    t('Apply'),
+    t('Acceptér'),
     t('Gendan'),
     t('Sort by'),
     t('Asc'),
@@ -134,6 +142,7 @@ os2dagsorden_front_page_views_user_committees_help_text();
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Acceptér';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['pager']['options']['offset'] = '0';
@@ -187,7 +196,7 @@ os2dagsorden_front_page_views_user_follows_committees_fields_print_committees();
     t('Master'),
     t('Jeg følger'),
     t('more'),
-    t('Apply'),
+    t('Acceptér'),
     t('Gendan'),
     t('Sort by'),
     t('Asc'),
@@ -220,6 +229,7 @@ os2dagsorden_front_page_views_user_follows_committees_help_text();
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Acceptér';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
   $handler->display->display_options['pager']['type'] = 'some';
   $handler->display->display_options['pager']['options']['items_per_page'] = '5';
@@ -337,7 +347,7 @@ os2dagsorden_front_page_views_fields_text_log_off();
   $translatables['user_logout_menu'] = array(
     t('Master'),
     t('more'),
-    t('Apply'),
+    t('Acceptér'),
     t('Gendan'),
     t('Sort by'),
     t('Asc'),
