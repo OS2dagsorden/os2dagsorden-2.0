@@ -372,6 +372,14 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
     return;
   }
 
+  // If Ghostscript convertsion is enabled, check that the file is optimized.
+  if (module_exists('os2dagsorden_gs_conversion')) {
+    // Do to try pdf->html conversion on this file if Ghostscript has not done it's part.
+    if (!os2dagsorden_gs_conversion_is_file_converted($fid)) {
+      return;
+    }
+  }
+
   $file = file_load($fid);
 
   // With file name.
@@ -402,7 +410,6 @@ function os2dagsorden_pdf2htmlex_convert($fid, $did) {
       // $shell_file_path_real = "'" . str_replace("'", "'\''", $file_path_real) . "'";
       // $shell_dest_dir_real = "'" . str_replace("'", "\'", $dest_dir_real) . "'";.
       shell_exec(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
-      drupal_set_message(variable_get('os2dagsorden_pdf2htmlex_path') . ' ' . $shell_file_path_real . '  --dest-dir ' . $shell_dest_dir_real . ' --zoom ' . DEFAULT_PDF_HTML_ZOOM . ' 2>&1');
 
       // Successful conversion?
       if (file_exists($path)) {

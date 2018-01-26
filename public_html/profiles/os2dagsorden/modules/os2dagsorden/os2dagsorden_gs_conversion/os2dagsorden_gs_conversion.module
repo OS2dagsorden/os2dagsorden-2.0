@@ -209,3 +209,19 @@ function os2dagsorden_gs_conversion_get_pdf_version($uri) {
     return substr($version, 0, 5);
   }
 }
+
+/**
+ * Helper function that checks if a single file has been successfully converted
+ *
+ * @param $fid
+ * @return bool
+ */
+function os2dagsorden_gs_conversion_is_file_converted($fid) {
+  $status = db_select('os2dagsorden_gs_conversion_files', 'o')
+    ->fields('o', array('status'))
+    ->condition('fid', $fid)
+    ->execute()
+    ->fetchField();
+
+  return (strcasecmp($status, 'Completed') == 0);
+}
