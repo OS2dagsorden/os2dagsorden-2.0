@@ -1317,6 +1317,8 @@ table .speaker-paper-link-container {
       content: "";
       width: 20px;
       height: 20px; }
+    .view-meeting-details .attachment .bullet-point-attachments .view-content .button.hide_show_all_attachments_text.bottom {
+      bottom: 0px; }
     .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container {
       position: relative; }
       .view-meeting-details .attachment .bullet-point-attachments .view-content td.hide_show_button_container .button:before {
