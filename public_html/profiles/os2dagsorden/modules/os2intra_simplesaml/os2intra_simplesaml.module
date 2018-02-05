@@ -55,6 +55,13 @@ function os2intra_simplesaml_monolog_channel_info() {
  * Form callback for settings.
  */
 function os2intra_simplesaml_settings_form($form, &$form_state) {
+  $form['os2intra_simplesaml_auth_authsource'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Autenticaton source for this SP (default: default-sp)'),
+    '#default_value' => variable_get('os2intra_simplesaml_auth_authsource', 'default-sp'),
+    '#description' => t('The name of the source to use from /var/simplesamlphp/config/authsources.php'),
+  );
+
   $form['os2intra_simplesaml_simplesaml_enable'] = array(
     '#title' => t('Enabled SimpleSAML redirect'),
     '#type' => 'checkbox',
@@ -196,7 +203,7 @@ function os2intra_simplesaml_init() {
             if (module_exists('simplesamlphp_auth')) {
               // Loading the Simplesamlphp autoloader.
               require_once variable_get('simplesamlphp_auth_installdir') . '/lib/_autoload.php';
-              $as = new SimpleSAML_Auth_Simple(variable_get('simplesamlphp_auth_authsource'));
+              $as = new SimpleSAML_Auth_Simple(variable_get('os2intra_simplesaml_auth_authsource', 'default-sp'));
               $as->requireAuth();
             }
           }

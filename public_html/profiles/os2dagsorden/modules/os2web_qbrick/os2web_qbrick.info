@@ -6,6 +6,4 @@ php = 5.2.4
 version = 7.x-1.0-beta1
 project = os2web_qbrick
 dependencies[] = features
-explanation = Anvendte felttyper - se <a href="/admin/reports/fields">feltliste</a>
 features[features_api][] = api:1
-required = 1

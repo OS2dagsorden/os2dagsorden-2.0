@@ -154,7 +154,7 @@ function os2web_print_send_to_friend_send_to_friend($meeting_id, $bullet_point_i
   drupal_mail('os2web_print_send_to_friend', 'send_to_friend_', $to_email, language_default(), $params, $from);
   // $system->mail($message);
   $bullet_point_uri = $GLOBALS['base_url'] . '/meeting/' . $meeting_id . '/bullet-point/' . $bullet_point_id;
-  if (module_exists('os2dagsorden_logging')) {
+  if (module_exists('os2logging')) {
     os2web_print_send_to_friend_add_to_log('Bullet point %title (%uri) was sent to %to', array(
         '%title' => $subject,
         '%uri' => $bullet_point_uri,

@@ -34,6 +34,7 @@ function os2dagsorden_meetings_calendar_view_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['exposed_form']['options']['submit_button'] = 'Acceptér';
   $handler->display->display_options['exposed_form']['options']['reset_button_label'] = 'Gendan';
   $handler->display->display_options['pager']['type'] = 'date_views_pager';
   $handler->display->display_options['pager']['options']['date_id'] = 'month';
@@ -504,7 +505,7 @@ os2dagsorden_meetings_calendar_view_block_help_text();
     t('Master'),
     t('Kalender'),
     t('more'),
-    t('Apply'),
+    t('Acceptér'),
     t('Gendan'),
     t('Sort by'),
     t('Asc'),

@@ -6,6 +6,7 @@ version = 7.x-1.0
 project = os2logging
 dependencies[] = ctools
 dependencies[] = monolog
+dependencies[] = monolog_logging
 features[ctools][] = monolog:monolog:1
 features[features_api][] = api:2
 features[monolog_profile][] = os2logging

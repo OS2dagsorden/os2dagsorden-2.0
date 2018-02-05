@@ -122,12 +122,13 @@ function os2web_print_send_to_friend_add_to_log($message, $variables = array(), 
 
     // Perform a partial bootstrap if watchdog is called prior to the
     // DRUPAL_BOOTSTRAP_FULL phase.
-    if (!function_exists('monolog')) {
-      os2dagsorden_logging_bootstrap();
+    if (!function_exists('monolog') || !function_exists('monolog_logging_get_contexts')) {
+      os2logging_bootstrap();
     }
+
     $logger = monolog('os2web_send_to_friend_channel');
     $message = addslashes(strip_tags(format_string($message, $variables)));
-    $level = os2dagsorden_logging_map_severity_level($severity);
+    $level = monolog_logging_map_severity_level($severity);
 
     $logger->log($level, $message, $context);
   }
