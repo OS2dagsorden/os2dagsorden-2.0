@@ -669,6 +669,10 @@ div.view {
   padding: 5px 10px 0  20px;
 }
 
+.block-views-exp-meetings-search-page div.views-exposed-form select {
+  width: 100%;
+}
+
 div.attachment {
   margin-top: 30px;
 }
