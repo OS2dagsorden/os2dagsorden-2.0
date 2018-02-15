@@ -1368,6 +1368,14 @@ table .speaker-paper-link-container {
           border-radius: 3px 3px 0 0; }
         .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td .ul-item-list-dagsordenspunkt a {
           background-color: #f7f1f1; }
+        .view-meeting-details .attachment .bullet-point-attachments .view-content table.views-table tr td .ul-item-list-dagsordenspunkt .attachment_text_container .attachment-text a {
+          background-color: inherit;
+          border: none;
+          padding: inherit;
+          font-weight: inherit;
+          font-size: inherit;
+          text-decoration: underline;
+          color: #9c1a5e; }
   .view-meeting-details .attachment table.views-table tr td a
 .view-header {
     margin-top: 10px;
@@ -1767,6 +1775,10 @@ a.annotator-wrapper {
 }*/
 .attachment-text img {
   max-width: 100%; }
+
+.attachment_text_full_container.attachment-text a {
+  color: #ae477d;
+  text-decoration: underline; }
 
 .attachment_text_container .attachment_text_full_container {
   width: 100%; }
