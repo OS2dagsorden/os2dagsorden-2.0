@@ -1,7 +1,0 @@
-name = OS2Web Print or Send to Friend
-description = A module allowing print bullet point ot send it to friend via email.
-core = 7.x
-package = OS2Web
-
-dependencies[] = "os2logging"
-dependencies[] = "print_pdf_mpdf"
