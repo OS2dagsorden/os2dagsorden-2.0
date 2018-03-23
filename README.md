@@ -29,7 +29,7 @@ Bellcom OS2Dagsorden included to project as [git submodule](https://git-scm.com/
 To clone project repo with submodules and define project folder
 structure please following command:
 ```
-curl -o- https://raw.githubusercontent.com/bellcom/os2dagsorden-2.0/f/DAGS-411_os2dagsorden_install_profile/init.sh | sh
+curl -o- https://raw.githubusercontent.com/bellcom/os2dagsorden-2.0/master/init.sh | sh
 ```
 
 After successful script finishing you should get all required files and
