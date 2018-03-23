@@ -1,0 +1,3 @@
+[submodule "public_html/profiles/os2dagsorden"]
+	path = public_html/profiles/os2dagsorden
+	url = https://github.com/bellcom/os2dagsorden_profile

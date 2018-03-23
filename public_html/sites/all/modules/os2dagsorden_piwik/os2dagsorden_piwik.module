@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the OS2Dagsorden piwik feature.
+ */
+
+include_once 'os2dagsorden_piwik.features.inc';
