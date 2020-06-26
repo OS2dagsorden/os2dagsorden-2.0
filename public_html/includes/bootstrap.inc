@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.54');
+define('VERSION', '7.63');
 
 /**
  * Core API compatibility.
@@ -254,8 +254,13 @@ define('DRUPAL_PHP_FUNCTION_PATTERN', '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*'
  * http://tools.ietf.org/html/rfc7231#section-7.1.1.1
  *
  * Example: Sun, 06 Nov 1994 08:49:37 GMT
+ *
+ * This constant was introduced in PHP 7.0.19 and PHP 7.1.5 but needs to be
+ * defined by Drupal for earlier PHP versions.
  */
-define('DATE_RFC7231', 'D, d M Y H:i:s \G\M\T');
+if (!defined('DATE_RFC7231')) {
+  define('DATE_RFC7231', 'D, d M Y H:i:s \G\M\T');
+}
 
 /**
  * Provides a caching wrapper to be used in place of large array structures.
@@ -699,6 +704,19 @@ function drupal_environment_initialize() {
   // Set sane locale settings, to ensure consistent string, dates, times and
   // numbers handling.
   setlocale(LC_ALL, 'C');
+
+  // PHP's built-in phar:// stream wrapper is not sufficiently secure. Override
+  // it with a more secure one, which requires PHP 5.3.3. For lower versions,
+  // unregister the built-in one without replacing it. Sites needing phar
+  // support for lower PHP versions must implement hook_stream_wrappers() to
+  // register their desired implementation.
+  if (in_array('phar', stream_get_wrappers(), TRUE)) {
+    stream_wrapper_unregister('phar');
+    if (version_compare(PHP_VERSION, '5.3.3', '>=')) {
+      include_once DRUPAL_ROOT . '/includes/file.phar.inc';
+      file_register_phar_wrapper();
+    }
+  }
 }
 
 /**
@@ -2627,6 +2645,10 @@ function _drupal_bootstrap_configuration() {
   timer_start('page');
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
+
+  // Sanitize unsafe keys from the request.
+  require_once DRUPAL_ROOT . '/includes/request-sanitizer.inc';
+  DrupalRequestSanitizer::sanitize();
 }
 
 /**
@@ -3771,8 +3793,12 @@ function _drupal_shutdown_function() {
   chdir(DRUPAL_ROOT);
 
   try {
-    while (list($key, $callback) = each($callbacks)) {
+    // Manually iterate over the array instead of using a foreach loop.
+    // A foreach operates on a copy of the array, so any shutdown functions that
+    // were added from other shutdown functions would never be called.
+    while ($callback = current($callbacks)) {
       call_user_func_array($callback['callback'], $callback['arguments']);
+      next($callbacks);
     }
   }
   catch (Exception $exception) {
